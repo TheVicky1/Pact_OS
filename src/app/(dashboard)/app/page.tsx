@@ -1,8 +1,14 @@
 import { createClient } from '@/lib/supabase/server';
-import { signOutAction } from '@/features/auth/actions';
-import { PactLogo } from '@/components/brand/pact-logo';
+import { AppHeader } from '@/components/ui/app-header';
 import { redirect } from 'next/navigation';
-import { User, ShieldCheck, LogOut, Clock, Globe } from 'lucide-react';
+import Link from 'next/link';
+import { User, ShieldCheck, Target, ArrowRight } from 'lucide-react';
+import { getGoals } from '@/features/goals/data-access';
+
+export const metadata = {
+  title: 'Dashboard | PACT',
+  description: 'PACT Personal Operating System Dashboard',
+};
 
 export default async function ProtectedAppPage() {
   const supabase = await createClient();
@@ -18,32 +24,14 @@ export default async function ProtectedAppPage() {
   const fullName = user.user_metadata?.full_name || 'User';
   const timezone = user.user_metadata?.timezone || 'UTC';
 
+  const { data: goals } = await getGoals();
+  const activeGoalsCount = goals ? goals.filter((g) => g.status === 'active').length : 0;
+
   return (
     <div className="min-h-screen bg-[#09090b] text-zinc-100 flex flex-col">
-      {/* Top Application Header */}
-      <header className="w-full border-b border-zinc-800/80 bg-[#121217]/60 backdrop-blur-md px-6 py-4 flex items-center justify-between">
-        <PactLogo size="md" />
+      <AppHeader timezone={timezone} />
 
-        <div className="flex items-center gap-4">
-          <div className="hidden sm:flex items-center gap-2 text-xs text-zinc-400 bg-zinc-900 border border-zinc-800 px-3 py-1.5 rounded-lg">
-            <Globe className="w-3.5 h-3.5 text-[#d4af37]" />
-            <span>Timezone: {timezone}</span>
-          </div>
-
-          <form action={signOutAction}>
-            <button
-              type="submit"
-              className="inline-flex items-center gap-2 text-xs font-medium bg-zinc-900 hover:bg-zinc-800 text-zinc-300 hover:text-zinc-100 border border-zinc-800 px-3.5 py-1.5 rounded-lg transition-colors cursor-pointer"
-            >
-              <LogOut className="w-3.5 h-3.5" />
-              <span>Sign Out</span>
-            </button>
-          </form>
-        </div>
-      </header>
-
-      {/* Main Application Shell Foundation */}
-      <main className="flex-1 max-w-5xl w-full mx-auto p-6 sm:p-10 flex flex-col items-center justify-center">
+      <main className="flex-1 max-w-5xl w-full mx-auto p-6 sm:p-10 flex flex-col items-center justify-center space-y-8">
         <div className="w-full glass-card p-8 rounded-3xl border border-zinc-800/80 max-w-2xl text-center space-y-6">
           <div className="w-16 h-16 rounded-2xl bg-[#d4af37]/10 border border-[#d4af37]/30 flex items-center justify-center mx-auto text-[#d4af37]">
             <User className="w-8 h-8" />
@@ -60,26 +48,31 @@ export default async function ProtectedAppPage() {
             <p className="text-sm text-zinc-400 mt-1">{userEmail}</p>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-left pt-4 border-t border-zinc-800/80">
-            <div className="bg-zinc-950/60 p-4 rounded-xl border border-zinc-800">
-              <div className="flex items-center gap-2 text-xs text-zinc-400 mb-1">
-                <Clock className="w-3.5 h-3.5 text-[#d4af37]" />
-                <span>Session ID</span>
+          {/* Goals Slice Overview Card */}
+          <div className="bg-zinc-950/80 p-5 rounded-2xl border border-zinc-800 text-left flex items-center justify-between gap-4">
+            <div className="flex items-center gap-3.5">
+              <div className="w-10 h-10 rounded-xl bg-[#d4af37]/10 border border-[#d4af37]/30 flex items-center justify-center text-[#d4af37] shrink-0">
+                <Target className="w-5 h-5" />
               </div>
-              <p className="text-xs font-mono text-zinc-300 truncate">{user.id}</p>
+              <div>
+                <h3 className="text-sm font-semibold text-zinc-100">Goals Module</h3>
+                <p className="text-xs text-zinc-400">
+                  {activeGoalsCount} active long-term {activeGoalsCount === 1 ? 'objective' : 'objectives'}
+                </p>
+              </div>
             </div>
 
-            <div className="bg-zinc-950/60 p-4 rounded-xl border border-zinc-800">
-              <div className="flex items-center gap-2 text-xs text-zinc-400 mb-1">
-                <Globe className="w-3.5 h-3.5 text-[#d4af37]" />
-                <span>Configured Timezone</span>
-              </div>
-              <p className="text-xs font-mono text-zinc-300">{timezone}</p>
-            </div>
+            <Link
+              href="/app/goals"
+              className="inline-flex items-center gap-1.5 bg-zinc-800 hover:bg-zinc-700 text-zinc-100 px-3.5 py-2 rounded-xl text-xs font-medium transition-colors border border-zinc-700/80 cursor-pointer shrink-0"
+            >
+              <span>Manage Goals</span>
+              <ArrowRight className="w-3.5 h-3.5 text-[#d4af37]" />
+            </Link>
           </div>
 
           <div className="pt-2 text-xs text-zinc-500">
-            Phase 1 Foundation Operational • Protected Server Authorization Enforced
+            Phase 2B Vertical Slice Operational • Real Database RLS Enforced
           </div>
         </div>
       </main>
