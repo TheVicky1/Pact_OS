@@ -1,7 +1,7 @@
 'use client';
 
 import { TaskWithParents } from '../data-access';
-import { deleteTaskAction, updateTaskAction } from '../actions';
+import { deleteTaskAction, updateTaskAction, completeTaskAction } from '../actions';
 import { TaskCard } from './task-card';
 import { TaskFormModal } from './task-form-modal';
 import { DeleteTaskModal } from './delete-task-modal';
@@ -105,7 +105,10 @@ export function TasksView({ initialTasks, availableGoals, availableProjects }: T
       prev.map((t) => (t.id === taskId ? { ...t, status: newStatus } : t))
     );
 
-    const res = await updateTaskAction(taskId, { status: newStatus });
+    const res = newStatus === 'completed'
+      ? await completeTaskAction(taskId)
+      : await updateTaskAction(taskId, { status: newStatus });
+
     if (!res.success) {
       setActionError(res.error || 'Failed to update task status.');
       // Rollback optimistic update

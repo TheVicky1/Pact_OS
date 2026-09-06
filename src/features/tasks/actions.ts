@@ -180,6 +180,13 @@ export async function updateTaskAction(
       }
     }
 
+    if (validation.data.status === 'completed' || validation.data.status === 'missed') {
+      return {
+        success: false,
+        error: `Direct status update to '${validation.data.status}' is prohibited. Use authoritative completion or missed transition actions.`,
+      };
+    }
+
     const updatePayload: Record<string, unknown> = {};
     if (validation.data.title !== undefined) updatePayload.title = validation.data.title;
     if (validation.data.description !== undefined) updatePayload.description = validation.data.description;
@@ -209,6 +216,88 @@ export async function updateTaskAction(
     return { success: true, data: data as Task };
   } catch {
     return { success: false, error: 'An unexpected error occurred while updating the task.' };
+  }
+}
+
+/**
+ * Server action to authoritatively complete a Task owned by the authenticated user.
+ * Invokes the database RPC function `complete_task` with row locking and temporal deadline validation.
+ */
+export async function completeTaskAction(taskId: string): Promise<TaskActionResult<Task>> {
+  try {
+    const supabase = await createClient();
+    const { data: { user }, error: authError } = await supabase.auth.getUser();
+
+    if (authError || !user) {
+      return { success: false, error: 'Authentication required to complete task.' };
+    }
+
+    const uuidValidation = z.string().uuid().safeParse(taskId);
+    if (!uuidValidation.success) {
+      return { success: false, error: 'Invalid task identifier format.' };
+    }
+
+    const { data, error } = await supabase.rpc('complete_task', { p_task_id: taskId });
+
+    if (error || !data) {
+      return { success: false, error: 'Failed to execute task completion RPC.' };
+    }
+
+    const rpcRes = data as { success: boolean; code?: string; error?: string; data?: Task };
+
+    if (!rpcRes.success) {
+      return { success: false, error: rpcRes.error || 'Task completion was rejected.' };
+    }
+
+    revalidatePath('/app/tasks');
+    revalidatePath('/app/projects');
+    revalidatePath('/app/goals');
+    revalidatePath('/app');
+
+    return { success: true, data: rpcRes.data as Task };
+  } catch {
+    return { success: false, error: 'An unexpected error occurred while completing the task.' };
+  }
+}
+
+/**
+ * Server action to authoritatively mark an eligible Task as missed.
+ * Invokes the database RPC function `mark_task_missed` with row locking and temporal deadline validation.
+ */
+export async function markTaskMissedAction(taskId: string): Promise<TaskActionResult<Task>> {
+  try {
+    const supabase = await createClient();
+    const { data: { user }, error: authError } = await supabase.auth.getUser();
+
+    if (authError || !user) {
+      return { success: false, error: 'Authentication required to mark task missed.' };
+    }
+
+    const uuidValidation = z.string().uuid().safeParse(taskId);
+    if (!uuidValidation.success) {
+      return { success: false, error: 'Invalid task identifier format.' };
+    }
+
+    const { data, error } = await supabase.rpc('mark_task_missed', { p_task_id: taskId });
+
+    if (error || !data) {
+      return { success: false, error: 'Failed to execute missed transition RPC.' };
+    }
+
+    const rpcRes = data as { success: boolean; code?: string; error?: string; data?: Task };
+
+    if (!rpcRes.success) {
+      return { success: false, error: rpcRes.error || 'Missed transition was rejected.' };
+    }
+
+    revalidatePath('/app/tasks');
+    revalidatePath('/app/projects');
+    revalidatePath('/app/goals');
+    revalidatePath('/app');
+
+    return { success: true, data: rpcRes.data as Task };
+  } catch {
+    return { success: false, error: 'An unexpected error occurred while marking the task missed.' };
   }
 }
 
