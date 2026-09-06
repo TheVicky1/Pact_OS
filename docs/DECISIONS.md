@@ -65,5 +65,15 @@ Every architectural item in PACT documentation is categorized into one of five e
 - **Status**: [CONFIRMED]
 - **Decision**: Implement the Tasks & Commitments vertical slice (`Database -> Server Data Access -> Server Actions -> Zod Validation -> UI Components -> Route Pages`). Tasks support optional association with user-owned Goals (`goal_id`) and/or user-owned Projects (`project_id`), or independent operation. Server actions (`createTaskAction`, `updateTaskAction`, `archiveTaskAction`, `deleteTaskAction`) derive `user.id` strictly from the server auth session and independently verify that provided `goal_id` and `project_id` belong to the authenticated user. PostgreSQL RLS policies on `public.tasks` enforce parent entity ownership subquery checks for both `INSERT` and `UPDATE` operations. Direct client setting or update of trusted lifecycle fields (`completed_at`, `missed_at`) is prohibited by database trigger `enforce_task_trusted_fields()`. Verified via real Supabase database adversarial audit and Zod unit tests (`tests/tasks-validation.test.ts`, `tests/adversarial-rls-audit.sql`).
 
+### ADR-014: Deadline & Timezone Engine Architecture [CONFIRMED]
+- **Status**: [CONFIRMED]
+- **Decision**: Implement deterministic, timezone-aware temporal evaluation for PACT Tasks (`src/lib/time.ts`). Key architectural guarantees:
+  1. **UTC Storage Invariance**: Stored timestamps represent absolute UTC instants in `public.tasks.deadline_at` (`TIMESTAMPTZ`). User profile timezone changes alter local display representation only without modifying the underlying UTC instant.
+  2. **Canonical IANA Timezone Validation**: Require full IANA identifiers (e.g. `Asia/Kolkata`, `America/New_York`, `Europe/London`, `UTC`). Reject non-canonical 3-letter abbreviations (`IST`, `PST`, `EST`).
+  3. **Temporal Boundary Evaluation**: `isDeadlineReached(deadlineAt, clock)` performs exact 1-second boundary checks (`now >= deadlineAt`).
+  4. **DST Spring-Forward & Fall-Back Handling**: `localToUtc()` flags nonexistent spring-forward local wall-clock times (`isNonexistent = true`) and detects ambiguous fall-back local wall-clock times (`isAmbiguous = true`).
+  5. **Injected TestClock Abstraction**: Pure temporal methods accept an optional `Clock` dependency, enabling deterministic unit testing without system clock flakiness.
+  6. **Phase 2F Boundary Isolation**: Pure temporal engine answers temporal evaluation questions without triggering business state transitions (`completed_at`, `missed_at`), keeping execution lifecycle strictly isolated for Phase 2F. Verified via unit test suite (`tests/temporal-engine.test.ts`).
+
 
 

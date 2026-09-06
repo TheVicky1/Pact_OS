@@ -126,4 +126,15 @@ For Phase 2D, Tasks support optional parent Goal (`goal_id`) and/or parent Proje
    - Direct `INSERT` or `UPDATE` of `completed_at` or `missed_at` is blocked by trigger.
    - Anonymous access to `public.tasks` is blocked (0 rows / `42501`).
 
+---
+
+## 7. Phase 2E Deadline & Timezone Evaluation Engine [CONFIRMED]
+
+For Phase 2E, temporal evaluation logic was isolated into a pure, deterministic engine (`src/lib/time.ts`). Security and temporal integrity guarantees include:
+1. **UTC Instant Storage Invariance**: `public.tasks.deadline_at` columns store timestamps strictly as `TIMESTAMPTZ` representing absolute UTC instants. Changing a user profile's local timezone alters only wall-clock display formatting without modifying stored UTC instants.
+2. **Strict Canonical IANA Timezone Validation**: Timezones are validated against canonical IANA identifiers (e.g. `Asia/Kolkata`, `America/New_York`, `Europe/London`, `UTC`). Non-canonical 3-letter abbreviations (`IST`, `PST`, `EST`) are rejected at the Zod and application boundary (`ianaTimezoneSchema`).
+3. **One-Second Temporal Boundary Integrity**: `isDeadlineReached(deadlineAt, clock)` enforces standard 1-second precision (`now >= deadlineAt`), ensuring instant-level boundary consistency.
+4. **DST Spring-Forward & Fall-Back Edge Handling**: Local wall-clock inputs are parsed cleanly via `localToUtc()`. Nonexistent spring-forward local times are flagged (`isNonexistent = true`) with explicit error messaging. Ambiguous fall-back local times are flagged (`isAmbiguous = true`) to prevent silent time shift corruption.
+5. **Phase 2F Boundary Isolation**: Pure temporal engine methods answer temporal state questions without triggering business state transitions (`completed_at`, `missed_at`), keeping execution lifecycle strictly isolated for Phase 2F. Verified via unit test suite (`tests/temporal-engine.test.ts`).
+
 

@@ -24,8 +24,8 @@ Because Phase 0 establishes the specification foundation prior to implementation
 | **Forged `completed_at` Timestamp** | Server Action / API Test | `VERIFIED AGAINST REAL DATABASE (Phase 2A & 2D)` |
 | **Forged `missed_at` Timestamp** | Server Action / API Test | `VERIFIED AGAINST REAL DATABASE (Phase 2A & 2D)` |
 | **Forged Consequence State** | Server Action / API Test | `FUTURE TEST — REQUIRED BEFORE FEATURE COMPLETION` |
-| **Deadline Boundary Logic** | Unit & Integration Test | `FUTURE TEST — REQUIRED BEFORE FEATURE COMPLETION` |
-| **Timezone Boundary Edge Cases** | Unit & Integration Test | `FUTURE TEST — REQUIRED BEFORE FEATURE COMPLETION` |
+| **Deadline Boundary Logic** | Unit & Integration Test | `VERIFIED (Phase 2E)` |
+| **Timezone Boundary Edge Cases** | Unit & Integration Test | `VERIFIED (Phase 2E)` |
 | **Concurrent Completion Race Condition** | DB Transaction Race Test | `FUTURE TEST — REQUIRED BEFORE FEATURE COMPLETION` |
 | **Unauthorized API Call** | API Gateway Security Test | `FUTURE TEST — REQUIRED BEFORE FEATURE COMPLETION` |
 | **Malformed Input Payloads** | Zod Schema Validation Test | `VERIFIED (Phase 1, 2B, 2C, 2D)` |
