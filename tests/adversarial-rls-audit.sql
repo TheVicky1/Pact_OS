@@ -11,6 +11,8 @@ DECLARE
   v_project_a_id UUID;
   v_project_b_id UUID;
   v_task_a_id UUID;
+  v_task_expired_id UUID;
+  v_res JSONB;
   v_count INT;
 BEGIN
   -- 1. Create test auth users & profiles (Postgres Admin setup)
@@ -216,6 +218,101 @@ BEGIN
   IF v_count <> 0 THEN RAISE EXCEPTION 'SECURITY VIOLATION: Anonymous read tasks!'; END IF;
 
   INSERT INTO _rls_audit_results VALUES ('5.1 Anonymous Access Blocked for All Core Domain Tables', 'PASS');
+
+  -- ----------------------------------------------------------------
+  -- SECTION 6: AUTHORITATIVE TASK LIFECYCLE AUDIT
+  -- ----------------------------------------------------------------
+  RESET ROLE;
+  SET LOCAL ROLE authenticated;
+  SET LOCAL "request.jwt.claim.sub" = '11111111-1111-1111-1111-111111111111';
+
+  -- 6.1 Direct UPDATE of status = 'completed' Blocked by Trigger
+  BEGIN
+    UPDATE public.tasks SET status = 'completed' WHERE id = v_task_a_id;
+    RAISE EXCEPTION 'SECURITY VIOLATION: Direct UPDATE of status = completed allowed!';
+  EXCEPTION WHEN OTHERS THEN
+    INSERT INTO _rls_audit_results VALUES ('6.1 Direct UPDATE status = completed Blocked', 'PASS');
+  END;
+
+  -- 6.2 Direct UPDATE of status = 'missed' Blocked by Trigger
+  BEGIN
+    UPDATE public.tasks SET status = 'missed' WHERE id = v_task_a_id;
+    RAISE EXCEPTION 'SECURITY VIOLATION: Direct UPDATE of status = missed allowed!';
+  EXCEPTION WHEN OTHERS THEN
+    INSERT INTO _rls_audit_results VALUES ('6.2 Direct UPDATE status = missed Blocked', 'PASS');
+  END;
+
+  -- 6.3 Authoritative complete_task before deadline succeeds
+  SELECT public.complete_task(v_task_a_id) INTO v_res;
+  IF (v_res->>'success')::boolean IS NOT TRUE THEN
+    RAISE EXCEPTION 'Authoritative completion failed: %', v_res;
+  END IF;
+  INSERT INTO _rls_audit_results VALUES ('6.3 Authoritative Task Completion Before Deadline Succeeded', 'PASS');
+
+  -- 6.4 ATTACK: User B attempts to complete User A\'s Task A
+  SET LOCAL "request.jwt.claim.sub" = '22222222-2222-2222-2222-222222222222';
+  SELECT public.complete_task(v_task_a_id) INTO v_res;
+  IF (v_res->>'success')::boolean IS TRUE THEN
+    RAISE EXCEPTION 'SECURITY VIOLATION: User B completed User A Task!';
+  END IF;
+  INSERT INTO _rls_audit_results VALUES ('6.4 Cross-User Task Completion Blocked', 'PASS');
+
+  -- 6.5 Switch back to User A: Repeated completion is idempotent
+  SET LOCAL "request.jwt.claim.sub" = '11111111-1111-1111-1111-111111111111';
+  SELECT public.complete_task(v_task_a_id) INTO v_res;
+  IF (v_res->>'code') <> 'ALREADY_COMPLETED' THEN
+    RAISE EXCEPTION 'Repeated completion did not return ALREADY_COMPLETED: %', v_res;
+  END IF;
+  INSERT INTO _rls_audit_results VALUES ('6.5 Idempotent Repeated Task Completion Verified', 'PASS');
+
+  -- 6.6 Attempting to mark a completed task as missed fails
+  SELECT public.mark_task_missed(v_task_a_id) INTO v_res;
+  IF (v_res->>'code') <> 'ALREADY_COMPLETED' THEN
+    RAISE EXCEPTION 'Marking completed task as missed did not return ALREADY_COMPLETED: %', v_res;
+  END IF;
+  INSERT INTO _rls_audit_results VALUES ('6.6 Transition Completed -> Missed Blocked', 'PASS');
+
+  -- 6.7 Create Task A2 with expired deadline in the past
+  INSERT INTO public.tasks (user_id, title, deadline_at)
+  VALUES (v_user_a, 'Expired Task A2', now() - interval '1 hour')
+  RETURNING id INTO v_task_expired_id;
+
+  -- 6.8 Completion of expired task is rejected
+  SELECT public.complete_task(v_task_expired_id) INTO v_res;
+  IF (v_res->>'code') <> 'DEADLINE_REACHED' THEN
+    RAISE EXCEPTION 'Completing expired task did not return DEADLINE_REACHED: %', v_res;
+  END IF;
+  INSERT INTO _rls_audit_results VALUES ('6.8 Completion of Expired Task Rejected', 'PASS');
+
+  -- 6.9 Authoritative mark_task_missed on expired task succeeds
+  SELECT public.mark_task_missed(v_task_expired_id) INTO v_res;
+  IF (v_res->>'success')::boolean IS NOT TRUE THEN
+    RAISE EXCEPTION 'Marking expired task missed failed: %', v_res;
+  END IF;
+  INSERT INTO _rls_audit_results VALUES ('6.9 Authoritative Missed Transition Succeeded', 'PASS');
+
+  -- 6.10 Repeated mark_task_missed is idempotent
+  SELECT public.mark_task_missed(v_task_expired_id) INTO v_res;
+  IF (v_res->>'code') <> 'ALREADY_MISSED' THEN
+    RAISE EXCEPTION 'Repeated missed transition did not return ALREADY_MISSED: %', v_res;
+  END IF;
+  INSERT INTO _rls_audit_results VALUES ('6.10 Idempotent Repeated Missed Transition Verified', 'PASS');
+
+  -- 6.11 Attempting to complete a missed task fails
+  SELECT public.complete_task(v_task_expired_id) INTO v_res;
+  IF (v_res->>'code') <> 'ALREADY_MISSED' THEN
+    RAISE EXCEPTION 'Completing missed task did not return ALREADY_MISSED: %', v_res;
+  END IF;
+  INSERT INTO _rls_audit_results VALUES ('6.11 Transition Missed -> Completed Blocked', 'PASS');
+
+  -- 6.12 Anonymous execution of RPC functions blocked
+  SET LOCAL ROLE anon;
+  SET LOCAL "request.jwt.claim.sub" = '';
+  SELECT public.complete_task(v_task_a_id) INTO v_res;
+  IF (v_res->>'code') <> 'UNAUTHENTICATED' THEN
+    RAISE EXCEPTION 'Anonymous complete_task execution allowed!';
+  END IF;
+  INSERT INTO _rls_audit_results VALUES ('6.12 Anonymous Lifecycle RPC Execution Blocked', 'PASS');
 
   -- Clean up test records
   RESET ROLE;
