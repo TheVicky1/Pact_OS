@@ -53,3 +53,7 @@ Every architectural item in PACT documentation is categorized into one of five e
 - **Status**: [CONFIRMED]
 - **Decision**: Adversarial verification on the real Supabase PostgreSQL database revealed that `protect_task_trusted_fields` trigger was attached only `BEFORE UPDATE`, leaving `INSERT` vulnerable to timestamp forgery. The trigger was remediated to `BEFORE INSERT OR UPDATE ON public.tasks`, enforcing field immutability for both `INSERT` and `UPDATE` operations from non-`service_role` clients. All 18 adversarial security tests (RLS CRUD matrix, cross-user parent linkage attacks, forged user_id, client timestamp forgery, and anonymous access) passed against the real database.
 
+### ADR-011: Goal Vertical Slice Implementation Architecture [CONFIRMED]
+- **Status**: [CONFIRMED]
+- **Decision**: Implement the Goal vertical slice end-to-end (`Database -> Server Data Access -> Server Actions -> Validation -> UI Components -> Pages`). Goal CRUD mutations (`createGoalAction`, `updateGoalAction`, `archiveGoalAction`, `deleteGoalAction`) extract `user_id` strictly from the server-side Supabase auth session. Client-side input validation uses Zod (`createGoalSchema`, `updateGoalSchema`) for UX, while PostgreSQL RLS (`auth.uid() = user_id`) serves as the immutable security boundary. Verified via real database integration & unit test suites (`tests/goals-validation.test.ts`, `tests/adversarial-rls-audit.sql`).
+
