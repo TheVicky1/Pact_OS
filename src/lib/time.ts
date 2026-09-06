@@ -146,16 +146,6 @@ export function localToUtc(localDateTimeStr: string, timeZone: string): LocalToU
     hour12: false,
   });
 
-  const checkParts = checkFormatter.formatToParts(reverseDate);
-  const checkPart = (t: string) => parseInt(checkParts.find((p) => p.type === t)?.value || '0', 10);
-
-  const chkYear = checkPart('year');
-  const chkMonth = checkPart('month') - 1;
-  const chkDay = checkPart('day');
-  let chkHour = checkPart('hour');
-  if (chkHour === 24) chkHour = 0;
-  const chkMin = checkPart('minute');
-
   // Helper function to check if a UTC timestamp formats back to the target wall-clock time
   const formatsToTarget = (utcMs: number) => {
     const p = checkFormatter.formatToParts(new Date(utcMs));
