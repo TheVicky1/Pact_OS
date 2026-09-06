@@ -84,5 +84,16 @@ Every architectural item in PACT documentation is categorized into one of five e
   4. **Idempotency & Terminal States**: Repeated completion calls return `ALREADY_COMPLETED` while preserving original `completed_at`. Missed tasks cannot be completed (`ALREADY_MISSED`). Completed tasks cannot be marked missed (`ALREADY_COMPLETED`).
   5. **Pure GET Reads**: Data-access functions (`getTasks()`, `getTaskById()`) remain 100% pure reads with zero hidden side-effect writes. Verified against real remote Supabase PostgreSQL database (`tests/adversarial-rls-audit.sql`).
 
+### ADR-016: Unified Core OS UI Integration & Information Architecture [CONFIRMED]
+- **Status**: [CONFIRMED]
+- **Decision**: Unify Goals, Projects, Tasks, Deadline Engine, and Authoritative Lifecycle vertical slices into a coherent PACT Personal Operating System experience. Key architectural choices:
+  1. **Authenticated Shell & Layout**: Implement `DashboardLayout` (`src/app/(dashboard)/layout.tsx`) wrapping all authenticated `/app` routes with a consistent header, navigation drawer for mobile (`sm` breakpoint), active route indicators, user profile context, and ambient glow.
+  2. **Central Overview Entry Point**: Transform `/app` into an intentional commitment overview (`OverviewView`) prioritizing 1) Immediate commitments & nearest deadlines, 2) Active work (Goals & Projects progress), 3) Total commitments metrics (Pending, In Progress, Completed, Missed), and 4) Domain hierarchy mapping (Goal -> Project -> Task).
+  3. **Cross-Domain Relationship Links**: Embed bidirectional relationship links and parent entity badges in `GoalCard`, `ProjectCard`, and `TaskCard`.
+  4. **Timezone-Aware Temporal Display**: All UI task deadline displays use Phase 2E canonical utility `utcToLocal(task.deadline_at, timezone)`.
+  5. **Non-Gamified Missed Visibility**: Surface missed tasks as a calm lifecycle state without consequences, punishments, XP, coins, flames, or gamification.
+  6. **Side-Effect Free Reads & Authoritative Mutations**: Overview and domain views read state purely via server data-access layers (`getGoals`, `getProjects`, `getTasks`). Task completion executes authoritatively via `completeTaskAction` server action. Verified via unit and contract test suite (`tests/ui-integration.test.ts`).
+
+
 
 
