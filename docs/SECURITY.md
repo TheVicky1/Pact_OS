@@ -111,3 +111,19 @@ For Phase 2C, Projects support optional parent Goal linkage. Security enforcemen
    - Cross-user Project `UPDATE` setting `goal_id` to another user's Goal ID is blocked by RLS.
    - Independent projects with `goal_id = NULL` operate without restriction.
 
+---
+
+## 6. Phase 2D Tasks Parent Entity Authorization & Trusted Field Protection [CONFIRMED]
+
+For Phase 2D, Tasks support optional parent Goal (`goal_id`) and/or parent Project (`project_id`) linkage. Security enforcement guarantees that a user cannot link a Task to parent entities owned by another user:
+1. **Server Action Authorization**: `createTaskAction` and `updateTaskAction` independently verify that provided `goal_id` exists in `public.goals` matching `user_id = user.id` AND `project_id` exists in `public.projects` matching `user_id = user.id` prior to executing any mutation.
+2. **PostgreSQL RLS Boundary**: PostgreSQL RLS policies on `public.tasks` enforce:
+   `WITH CHECK (auth.uid() = user_id AND (goal_id IS NULL OR EXISTS (SELECT 1 FROM public.goals g WHERE g.id = goal_id AND g.user_id = auth.uid())) AND (project_id IS NULL OR EXISTS (SELECT 1 FROM public.projects p WHERE p.id = project_id AND p.user_id = auth.uid())))`.
+3. **Trusted Field Protection**: PostgreSQL trigger `enforce_task_trusted_fields()` enforces immutability of `completed_at` and `missed_at` timestamps for non-`service_role` clients on both `INSERT` and `UPDATE` statements.
+4. **Adversarial Verification**: Verified against real remote Supabase PostgreSQL database via `tests/adversarial-rls-audit.sql`:
+   - Cross-user Task `INSERT` / `UPDATE` with another user's Project ID is blocked by RLS (`42501`).
+   - Cross-user Task `INSERT` / `UPDATE` with another user's Goal ID is blocked by RLS (`42501`).
+   - Direct `INSERT` or `UPDATE` of `completed_at` or `missed_at` is blocked by trigger.
+   - Anonymous access to `public.tasks` is blocked (0 rows / `42501`).
+
+
