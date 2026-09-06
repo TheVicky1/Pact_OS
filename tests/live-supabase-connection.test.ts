@@ -22,12 +22,10 @@ async function runLiveSupabaseCheck() {
   console.log('Running Real Supabase Project Connectivity & Database Inspection...\n');
 
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const supabaseKey =
-    process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY ||
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+  const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY;
 
   assert.ok(supabaseUrl, 'NEXT_PUBLIC_SUPABASE_URL is missing in environment!');
-  assert.ok(supabaseKey, 'NEXT_PUBLIC_SUPABASE_ANON_KEY / PUBLISHABLE_KEY is missing in environment!');
+  assert.ok(supabaseKey, 'NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY is missing in environment!');
 
   console.log(`Connecting to Supabase Project URL: ${supabaseUrl}`);
   console.log(`Using API Key: ${supabaseKey.substring(0, 16)}...`);
