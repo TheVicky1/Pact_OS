@@ -15,12 +15,12 @@ Because Phase 0 establishes the specification foundation prior to implementation
 
 | Security Requirement / Attack Scenario | Test Classification | Execution Contract Status |
 |---|---|---|
-| **Cross-User SELECT** | Direct Database RLS Test | `VERIFIED AGAINST REAL DATABASE (Phase 2A)` |
-| **Cross-User INSERT** | Direct Database RLS Test | `VERIFIED AGAINST REAL DATABASE (Phase 2A)` |
-| **Cross-User UPDATE** | Direct Database RLS Test | `VERIFIED AGAINST REAL DATABASE (Phase 2A)` |
-| **Cross-User DELETE** | Direct Database RLS Test | `VERIFIED AGAINST REAL DATABASE (Phase 2A)` |
-| **ID Manipulation (UUID Guessing)** | API & Database RLS Test | `VERIFIED AGAINST REAL DATABASE (Phase 2A)` |
-| **Forged userId Injection** | Server Action / API Test | `VERIFIED AGAINST REAL DATABASE (Phase 2A)` |
+| **Cross-User SELECT** | Direct Database RLS Test | `VERIFIED AGAINST REAL DATABASE (Phase 2A & 2C)` |
+| **Cross-User INSERT** | Direct Database RLS Test | `VERIFIED AGAINST REAL DATABASE (Phase 2A & 2C)` |
+| **Cross-User UPDATE** | Direct Database RLS Test | `VERIFIED AGAINST REAL DATABASE (Phase 2A & 2C)` |
+| **Cross-User DELETE** | Direct Database RLS Test | `VERIFIED AGAINST REAL DATABASE (Phase 2A & 2C)` |
+| **ID Manipulation (UUID Guessing)** | API & Database RLS Test | `VERIFIED AGAINST REAL DATABASE (Phase 2A & 2C)` |
+| **Forged userId Injection** | Server Action / API Test | `VERIFIED AGAINST REAL DATABASE (Phase 2A & 2C)` |
 | **Forged `completed_at` Timestamp** | Server Action / API Test | `VERIFIED AGAINST REAL DATABASE (Phase 2A)` |
 | **Forged `missed_at` Timestamp** | Server Action / API Test | `VERIFIED AGAINST REAL DATABASE (Phase 2A)` |
 | **Forged Consequence State** | Server Action / API Test | `FUTURE TEST — REQUIRED BEFORE FEATURE COMPLETION` |
@@ -28,7 +28,7 @@ Because Phase 0 establishes the specification foundation prior to implementation
 | **Timezone Boundary Edge Cases** | Unit & Integration Test | `FUTURE TEST — REQUIRED BEFORE FEATURE COMPLETION` |
 | **Concurrent Completion Race Condition** | DB Transaction Race Test | `FUTURE TEST — REQUIRED BEFORE FEATURE COMPLETION` |
 | **Unauthorized API Call** | API Gateway Security Test | `FUTURE TEST — REQUIRED BEFORE FEATURE COMPLETION` |
-| **Malformed Input Payloads** | Zod Schema Validation Test | `FUTURE TEST — REQUIRED BEFORE FEATURE COMPLETION` |
+| **Malformed Input Payloads** | Zod Schema Validation Test | `VERIFIED (Phase 1, 2B, 2C)` |
 | **Session Expiry & Token Revocation** | Auth Integration Test | `VERIFIED AGAINST REAL DATABASE (Phase 1)` |
 | **Consequence Data Exposure Attempt** | Database & API Security Test| `FUTURE TEST — REQUIRED BEFORE FEATURE COMPLETION` |
 

@@ -97,3 +97,17 @@ USING (auth.uid() = user_id);
 Consequence data confidentiality is enforced strictly at the database / data-access layer:
 1. `consequences` table rows containing `encrypted_payload` are inaccessible to standard client queries while `is_revealed = false`.
 2. Transitioning `is_revealed` to `true` is executed exclusively by trusted server-side cron workers or security-definer RPC stored procedures upon verified deadline failure.
+
+---
+
+## 5. Phase 2C Projects Goal Parent Authorization Verification [CONFIRMED]
+
+For Phase 2C, Projects support optional parent Goal linkage. Security enforcement guarantees that a user cannot link a Project to a Goal owned by another user:
+1. **Server Action Authorization**: `createProjectAction` and `updateProjectAction` explicitly query `public.goals` matching `id = goal_id` AND `user_id = user.id` prior to performing any database mutation. If the Goal is not owned by the authenticated user, the mutation fails immediately with `"Selected Goal does not exist or does not belong to you."`.
+2. **PostgreSQL RLS Boundary**: PostgreSQL RLS policies on `public.projects` enforce:
+   `WITH CHECK (goal_id IS NULL OR EXISTS (SELECT 1 FROM public.goals g WHERE g.id = goal_id AND g.user_id = auth.uid()))`.
+3. **Adversarial Verification**: Verified against the real remote Supabase database via `tests/adversarial-rls-audit.sql`:
+   - Cross-user Project `INSERT` with another user's Goal ID is blocked by RLS.
+   - Cross-user Project `UPDATE` setting `goal_id` to another user's Goal ID is blocked by RLS.
+   - Independent projects with `goal_id = NULL` operate without restriction.
+

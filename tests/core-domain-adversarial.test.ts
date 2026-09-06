@@ -37,38 +37,53 @@ async function runAdversarialSecuritySuite() {
 
   const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
-  const timestamp = Date.now();
-  const emailA = `security.usera.${timestamp}@gmail.com`;
-  const emailB = `security.userb.${timestamp}@gmail.com`;
+  const emailA = `security.usera.test@example.com`;
+  const emailB = `security.userb.test@example.com`;
+  const password = 'SecurityTestPassword123!';
 
-  console.log('1. Registering User A and User B with rate-limit protection...');
-  await delay(1500);
-  const { data: signUpA, error: errA } = await clientA.auth.signUp({
-    email: emailA,
-    password: 'SecurityTestPassword123!',
-    options: { data: { full_name: 'Security User A' } },
-  });
+  console.log('1. Authenticating User A and User B...');
+  let userA: any = null;
+  let userB: any = null;
 
-  if (errA || !signUpA.user) {
-    console.error('❌ User A Registration Error:', errA?.message);
-    throw errA;
+  // Try sign in User A
+  const { data: signInA } = await clientA.auth.signInWithPassword({ email: emailA, password });
+  if (signInA?.user) {
+    userA = signInA.user;
+    console.log(`✅ User A signed in (UUID: ${userA.id})`);
+  } else {
+    await delay(1000);
+    const { data: signUpA, error: errA } = await clientA.auth.signUp({
+      email: emailA,
+      password,
+      options: { data: { full_name: 'Security User A' } },
+    });
+    if (errA || !signUpA.user) {
+      console.error('❌ User A Registration Error:', errA?.message);
+      throw errA;
+    }
+    userA = signUpA.user;
+    console.log(`✅ User A registered & authenticated (UUID: ${userA.id})`);
   }
-  const userA = signUpA.user;
-  console.log(`✅ User A authenticated (UUID: ${userA.id})`);
 
-  await delay(1500);
-  const { data: signUpB, error: errB } = await clientB.auth.signUp({
-    email: emailB,
-    password: 'SecurityTestPassword123!',
-    options: { data: { full_name: 'Security User B' } },
-  });
-
-  if (errB || !signUpB.user) {
-    console.error('❌ User B Registration Error:', errB?.message);
-    throw errB;
+  // Try sign in User B
+  const { data: signInB } = await clientB.auth.signInWithPassword({ email: emailB, password });
+  if (signInB?.user) {
+    userB = signInB.user;
+    console.log(`✅ User B signed in (UUID: ${userB.id})`);
+  } else {
+    await delay(1000);
+    const { data: signUpB, error: errB } = await clientB.auth.signUp({
+      email: emailB,
+      password,
+      options: { data: { full_name: 'Security User B' } },
+    });
+    if (errB || !signUpB.user) {
+      console.error('❌ User B Registration Error:', errB?.message);
+      throw errB;
+    }
+    userB = signUpB.user;
+    console.log(`✅ User B registered & authenticated (UUID: ${userB.id})\n`);
   }
-  const userB = signUpB.user;
-  console.log(`✅ User B authenticated (UUID: ${userB.id})\n`);
 
   // ----------------------------------------------------------------
   // SECTION 2: GOALS SECURITY AUDIT
