@@ -27,7 +27,11 @@ CREATE POLICY "Users can update own profile"
 
 -- Function: Automatically create profile on new user signup
 CREATE OR REPLACE FUNCTION public.handle_new_user()
-RETURNS TRIGGER AS $$
+RETURNS TRIGGER
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = public
+AS $$
 BEGIN
   INSERT INTO public.profiles (id, full_name, timezone)
   VALUES (
@@ -37,7 +41,7 @@ BEGIN
   );
   RETURN new;
 END;
-$$ LANGUAGE plpgsql SECURITY DEFINER;
+$$;
 
 -- Trigger: Execute handle_new_user function on auth.users insert
 CREATE OR REPLACE TRIGGER on_auth_user_created
