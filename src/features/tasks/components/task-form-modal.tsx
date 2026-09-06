@@ -3,7 +3,7 @@
 import { TaskWithParents } from '../data-access';
 import { createTaskAction, updateTaskAction } from '../actions';
 import { TaskPriority, TaskStatus } from '@/types/domain';
-import { X, Calendar, AlertCircle, Loader2 } from 'lucide-react';
+import { X, AlertCircle, Loader2 } from 'lucide-react';
 import { useEffect, useState } from 'react';
 
 interface TaskFormModalProps {

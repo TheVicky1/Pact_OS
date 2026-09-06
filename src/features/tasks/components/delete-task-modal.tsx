@@ -59,7 +59,7 @@ export function DeleteTaskModal({
             Are you sure you want to permanently delete this task commitment?
           </p>
           <div className="rounded-xl border border-zinc-800 bg-zinc-950/80 p-3 text-sm font-semibold text-amber-400">
-            "{taskTitle}"
+            &quot;{taskTitle}&quot;
           </div>
           <p className="text-xs text-zinc-500">
             This action cannot be undone. All record of this task commitment will be permanently removed.

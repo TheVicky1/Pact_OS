@@ -2,7 +2,7 @@
 
 import { TaskWithParents } from '../data-access';
 import { TaskPriority, TaskStatus } from '@/types/domain';
-import { Calendar, CheckCircle2, Clock, MoreVertical, Trash2, Edit3, Target, FolderKanban } from 'lucide-react';
+import { Calendar, CheckCircle2, MoreVertical, Trash2, Edit3, Target, FolderKanban } from 'lucide-react';
 import { useState } from 'react';
 
 interface TaskCardProps {

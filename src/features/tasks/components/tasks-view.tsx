@@ -169,7 +169,7 @@ export function TasksView({ initialTasks, availableGoals, availableProjects }: T
             <Filter className="absolute left-3 h-3.5 w-3.5 text-zinc-400 pointer-events-none" />
             <select
               value={priorityFilter}
-              onChange={(e) => setPriorityFilter(e.target.value as any)}
+              onChange={(e) => setPriorityFilter(e.target.value as TaskPriority | 'all')}
               className="rounded-xl border border-zinc-800 bg-zinc-900/80 pl-8 pr-4 py-1.5 text-xs text-zinc-300 focus:border-amber-400/60 focus:outline-none transition-all"
             >
               <option value="all">All Priorities</option>
