@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { PactLogo } from '@/components/brand/pact-logo';
 import { signOutAction } from '@/features/auth/actions';
-import { LogOut, Globe, Target, FolderKanban, LayoutDashboard } from 'lucide-react';
+import { LogOut, Globe, Target, FolderKanban, LayoutDashboard, CheckSquare } from 'lucide-react';
 
 interface AppHeaderProps {
   timezone?: string;
@@ -16,6 +16,7 @@ export function AppHeader({ timezone = 'UTC' }: AppHeaderProps) {
   const isDashboardActive = pathname === '/app';
   const isGoalsActive = pathname === '/app/goals' || pathname.startsWith('/app/goals/');
   const isProjectsActive = pathname === '/app/projects' || pathname.startsWith('/app/projects/');
+  const isTasksActive = pathname === '/app/tasks' || pathname.startsWith('/app/tasks/');
 
   return (
     <header className="w-full border-b border-zinc-800/80 bg-[#121217]/80 backdrop-blur-md px-4 sm:px-8 py-3.5 flex items-center justify-between sticky top-0 z-40">
@@ -59,6 +60,18 @@ export function AppHeader({ timezone = 'UTC' }: AppHeaderProps) {
           >
             <FolderKanban className="w-3.5 h-3.5 text-[#d4af37]" />
             <span>Projects</span>
+          </Link>
+
+          <Link
+            href="/app/tasks"
+            className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ${
+              isTasksActive
+                ? 'bg-zinc-800 text-zinc-100 border border-zinc-700/80'
+                : 'text-zinc-400 hover:text-zinc-200 hover:bg-zinc-900/60'
+            }`}
+          >
+            <CheckSquare className="w-3.5 h-3.5 text-[#d4af37]" />
+            <span>Tasks</span>
           </Link>
         </nav>
       </div>
