@@ -1,0 +1,20 @@
+# PACT — Threat Model & Security Boundaries Specification
+
+## 1. Overview & Threat Model Philosophy [CONFIRMED]
+
+This threat model outlines the explicit security boundaries, threat actors, assets, and mitigations for PACT. In alignment with PACT's zero-trust architecture, **security is enforced server-side and database-side**, assuming that client devices, network traffic, and frontend code can be compromised or manipulated.
+
+---
+
+## 2. Threat Matrix by Threat Actor [CONFIRMED]
+
+| Threat Actor | Target Asset | Attack Surface | Threat Description | Security Boundary | Mitigation Strategy | Required Test (Marked Future) |
+|---|---|---|---|---|---|---|
+| **Unauthenticated Attacker** | User accounts, Private user data | Public Auth API, Login / Register endpoints | Account enumeration, brute-force password guessing, unauthorized API access | Supabase Auth Server & API Gateway | Generic error responses (no "email exists" leakage), rate-limiting on auth routes, strict JWT requirement on all non-public endpoints. | `FUTURE TEST — Unauthenticated API Access & Account Enumeration` |
+| **Authenticated Malicious User** | System resources, Database performance | Authenticated Server Actions, API routes | Denial of service via payload bloat, resource exhaustion, invalid state manipulation | Zod Schema Validation & DB Constraints | Schema-based payload validation, rate-limiting per user ID, DB column length & type constraints. | `FUTURE TEST — Malformed Payload & Rate Limit Resilience` |
+| **Cross-Account Attacker** | Another user's tasks, goals, expenses, consequences | REST/RPC API endpoints, DB tables | Querying, modifying, or deleting User B's records by manipulating UUID parameters | PostgreSQL Row Level Security (RLS) | Mandatory RLS policies (`auth.uid() = user_id`) on all user-owned tables. Direct DB authorization enforcement. | `FUTURE TEST — Cross-User SELECT/INSERT/UPDATE/DELETE Prevention` |
+| **Compromised Browser/Client** | Untrusted completion timestamps, optimistic UI | Client LocalStorage, DOM state, JavaScript execution | Forging `completed_at` or `missed_at` timestamps to bypass deadlines and avoid consequences | Server API / DB Trigger Boundaries | Client-provided timestamps are IGNORED. `completed_at` is generated exclusively via server `now()` during atomic completion execution. | `FUTURE TEST — Client Timestamp Forgery & Deadline Integrity` |
+| **Manipulated API Client** | Unrevealed consequence data | REST API, RPC function calls | Bypassing UI elements to directly request hidden consequence payloads before deadline failure | Data Access Boundary (RLS / View / Security Definer RPC) | Consequence payload fields (`encrypted_payload`) are excluded from DB queries / RLS views until `is_revealed = true` is set by server logic. | `FUTURE TEST — Unrevealed Consequence Confidentiality Exposure` |
+| **Direct Database Attacker** | Database rows, table constraints | Direct Postgres connection (via leaked anon key or compromise) | Executing raw SQL queries to bypass application server validation | PostgreSQL Database Engine & RLS | RLS policy engine operates inside Postgres core. Even raw SQL via anon key cannot read or mutate another user's rows. | `FUTURE TEST — Direct Database RLS Bypass Attempt` |
+| **Stolen Session Token** | User account session | HTTP headers, JWT Auth Bearer token | Impersonating valid user using intercepted or leaked JWT token | Auth Token Expiry & Revocation | Short-lived JWT access tokens, secure HTTPS-only cookies, token revocation on logout. | `FUTURE TEST — Expired & Revoked Token Rejection` |
+| **Compromised Integration Credential** | Third-party OAuth tokens (GitHub, Codeforces, LeetCode) | Database storage, internal sync jobs | Exfiltrating plaintext OAuth tokens to access external user accounts | Server-Only Access Boundary & Encryption | Integration tokens stored encrypted at rest; decrypted strictly within server-only background sync routes. Never exposed to frontend. | `FUTURE TEST — Integration Credential Non-Exposure` |
