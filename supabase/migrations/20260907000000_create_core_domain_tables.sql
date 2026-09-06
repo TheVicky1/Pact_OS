@@ -190,17 +190,27 @@ AS $$
 BEGIN
   -- If invoked by standard authenticated user role (not service_role), enforce field immutability
   IF (current_setting('role', true) <> 'service_role') THEN
-    IF (NEW.completed_at IS DISTINCT FROM OLD.completed_at) THEN
-      RAISE EXCEPTION 'Field completed_at is a trusted server-controlled field and cannot be updated directly.';
-    END IF;
-    IF (NEW.missed_at IS DISTINCT FROM OLD.missed_at) THEN
-      RAISE EXCEPTION 'Field missed_at is a trusted server-controlled field and cannot be updated directly.';
+    IF (TG_OP = 'INSERT') THEN
+      IF (NEW.completed_at IS NOT NULL) THEN
+        RAISE EXCEPTION 'Field completed_at is a trusted server-controlled field and cannot be set directly on INSERT.';
+      END IF;
+      IF (NEW.missed_at IS NOT NULL) THEN
+        RAISE EXCEPTION 'Field missed_at is a trusted server-controlled field and cannot be set directly on INSERT.';
+      END IF;
+    ELSIF (TG_OP = 'UPDATE') THEN
+      IF (NEW.completed_at IS DISTINCT FROM OLD.completed_at) THEN
+        RAISE EXCEPTION 'Field completed_at is a trusted server-controlled field and cannot be updated directly.';
+      END IF;
+      IF (NEW.missed_at IS DISTINCT FROM OLD.missed_at) THEN
+        RAISE EXCEPTION 'Field missed_at is a trusted server-controlled field and cannot be updated directly.';
+      END IF;
     END IF;
   END IF;
   RETURN NEW;
 END;
 $$;
 
+DROP TRIGGER IF EXISTS protect_task_trusted_fields ON public.tasks;
 CREATE OR REPLACE TRIGGER protect_task_trusted_fields
-  BEFORE UPDATE ON public.tasks
+  BEFORE INSERT OR UPDATE ON public.tasks
   FOR EACH ROW EXECUTE FUNCTION public.enforce_task_trusted_fields();
