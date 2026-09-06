@@ -44,3 +44,8 @@ Every architectural item in PACT documentation is categorized into one of five e
 ### ADR-008: Mandatory Security Test Mapping [CONFIRMED]
 - **Status**: [CONFIRMED]
 - **Decision**: Map all 16 security requirement scenarios to `FUTURE TEST — REQUIRED BEFORE FEATURE COMPLETION` entries in `docs/TESTING.md`.
+
+### ADR-009: Phase 2A Core Domain Schema & Cross-User RLS Defense [CONFIRMED]
+- **Status**: [CONFIRMED]
+- **Decision**: Migrate `goals`, `projects`, and `tasks` domain tables. Enforce strict database-level RLS policies requiring `auth.uid() = user_id`. Validate parent entity ownership (`goal_id`/`project_id`) via RLS subqueries to prevent cross-user resource hijacking. Protect trusted lifecycle fields (`completed_at`, `missed_at`) via PostgreSQL trigger `enforce_task_trusted_fields()`.
+

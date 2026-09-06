@@ -35,7 +35,7 @@ profiles (1:1 with auth.users)
 - `updated_at`: `timestamptz` (NOT NULL, DEFAULT `now()`)
 - **Ownership & RLS**: 1:1 with authenticated user; user can read/update own profile.
 
-### Table: `goals`
+### Table: `goals` [CONFIRMED / MIGRATED]
 - `id`: `uuid` (PRIMARY KEY, DEFAULT `gen_random_uuid()`)
 - `user_id`: `uuid` (NOT NULL, REFERENCES `profiles(id)` ON DELETE CASCADE)
 - `title`: `text` (NOT NULL)
@@ -43,19 +43,22 @@ profiles (1:1 with auth.users)
 - `target_date`: `timestamptz` (NULLABLE)
 - `status`: `text` (ENUM: `'active'`, `'completed'`, `'archived'`, DEFAULT `'active'`)
 - `created_at`: `timestamptz` (NOT NULL, DEFAULT `now()`)
+- `updated_at`: `timestamptz` (NOT NULL, DEFAULT `now()`)
 - **Ownership & RLS**: Owned by `user_id`; strictly isolated by RLS.
 
-### Table: `projects`
+### Table: `projects` [CONFIRMED / MIGRATED]
 - `id`: `uuid` (PRIMARY KEY, DEFAULT `gen_random_uuid()`)
 - `user_id`: `uuid` (NOT NULL, REFERENCES `profiles(id)` ON DELETE CASCADE)
 - `goal_id`: `uuid` (NULLABLE, REFERENCES `goals(id)` ON DELETE SET NULL)
 - `title`: `text` (NOT NULL)
+- `description`: `text` (NULLABLE)
 - `color_accent`: `text` (NULLABLE)
-- `status`: `text` (ENUM: `'active'`, `'completed'`, `'paused'`, DEFAULT `'active'`)
+- `status`: `text` (ENUM: `'active'`, `'completed'`, `'paused'`, `'archived'`, DEFAULT `'active'`)
 - `created_at`: `timestamptz` (NOT NULL, DEFAULT `now()`)
-- **Ownership & RLS**: Owned by `user_id`; strictly isolated by RLS.
+- `updated_at`: `timestamptz` (NOT NULL, DEFAULT `now()`)
+- **Ownership & RLS**: Owned by `user_id`; strictly isolated by RLS with cross-user parent goal validation.
 
-### Table: `tasks` (Commitments)
+### Table: `tasks` (Commitments) [CONFIRMED / MIGRATED]
 - `id`: `uuid` (PRIMARY KEY, DEFAULT `gen_random_uuid()`)
 - `user_id`: `uuid` (NOT NULL, REFERENCES `profiles(id)` ON DELETE CASCADE)
 - `project_id`: `uuid` (NULLABLE, REFERENCES `projects(id)` ON DELETE SET NULL)
@@ -64,11 +67,12 @@ profiles (1:1 with auth.users)
 - `description`: `text` (NULLABLE)
 - `priority`: `text` (ENUM: `'low'`, `'medium'`, `'high'`, `'urgent'`, DEFAULT `'medium'`)
 - `deadline_at`: `timestamptz` (NOT NULL)
-- `status`: `text` (ENUM: `'pending'`, `'in_progress'`, `'completed'`, `'missed'`, DEFAULT `'pending'`)
+- `status`: `text` (ENUM: `'pending'`, `'in_progress'`, `'completed'`, `'missed'`, `'archived'`, DEFAULT `'pending'`)
 - `completed_at`: `timestamptz` (NULLABLE, **TRUSTED FIELD — Server Controlled**)
 - `missed_at`: `timestamptz` (NULLABLE, **TRUSTED FIELD — Server Controlled**)
 - `created_at`: `timestamptz` (NOT NULL, DEFAULT `now()`)
-- **Ownership & RLS**: Owned by `user_id`; RLS prevents cross-user access. Trusted fields restricted from client UPDATEs.
+- `updated_at`: `timestamptz` (NOT NULL, DEFAULT `now()`)
+- **Ownership & RLS**: Owned by `user_id`; RLS prevents cross-user access and cross-user parent references (`goal_id`, `project_id`). Trusted fields protected via `enforce_task_trusted_fields` DB trigger.
 
 ### Table: `consequences` (Accountability Payload)
 - `id`: `uuid` (PRIMARY KEY, DEFAULT `gen_random_uuid()`)
