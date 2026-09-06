@@ -104,15 +104,18 @@ profiles (1:1 with auth.users)
 
 ---
 
-## 3. Trusted Lifecycle Fields Strategy [CONFIRMED]
+## 3. Trusted Lifecycle Fields Strategy [VERIFIED AGAINST REAL DATABASE]
 
 To prevent client timestamp manipulation:
-- Fields marked as **TRUSTED FIELD** (`completed_at`, `missed_at`, `activated_at`, `is_revealed`) CANNOT be updated via standard client UPDATE calls.
-- DB Triggers or Server Action API endpoints validate user identity, evaluate deadline condition, and set these fields using server clock (`now()`).
+- Fields marked as **TRUSTED FIELD** (`completed_at`, `missed_at`) CANNOT be set or modified via client `INSERT` or `UPDATE` calls.
+- DB Trigger `protect_task_trusted_fields` (`BEFORE INSERT OR UPDATE ON public.tasks`) enforces strict immutability for non-`service_role` roles.
+- Lifecycle state transitions (`pending` -> `completed` / `missed`) are intentionally deferred to Phase 2D/2E server actions and database functions.
 
 ---
 
-## 4. Indexing & Foreign Key Integrity [PROPOSED]
+## 4. Indexing & Foreign Key Integrity [CONFIRMED / MIGRATED]
 
-- All foreign key columns (`user_id`, `project_id`, `goal_id`, `task_id`, `category_id`) are indexed to optimize join performance.
+- All foreign key columns (`user_id`, `project_id`, `goal_id`) are indexed to optimize join performance.
 - Composite indexes on `(user_id, status)` and `(user_id, deadline_at)` accelerate dashboard queries and deadline background evaluators.
+- Foreign keys use `ON DELETE CASCADE` for `user_id` -> `profiles(id)` and `ON DELETE SET NULL` for parent relationships (`goal_id`, `project_id`) to preserve historical commitment data when parent goals or projects are archived/deleted.
+- **Phase 2A-SECURITY Adversarial Audit**: Fully verified against the real remote Supabase PostgreSQL database. All cross-user CRUD attempts, cross-user parent reference linkages, forged user IDs, and client timestamp forgery attempts were DENIED by RLS and database triggers.

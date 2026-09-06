@@ -49,3 +49,7 @@ Every architectural item in PACT documentation is categorized into one of five e
 - **Status**: [CONFIRMED]
 - **Decision**: Migrate `goals`, `projects`, and `tasks` domain tables. Enforce strict database-level RLS policies requiring `auth.uid() = user_id`. Validate parent entity ownership (`goal_id`/`project_id`) via RLS subqueries to prevent cross-user resource hijacking. Protect trusted lifecycle fields (`completed_at`, `missed_at`) via PostgreSQL trigger `enforce_task_trusted_fields()`.
 
+### ADR-010: Task Trusted Field Protection Hardening & Real DB Adversarial Verification [CONFIRMED]
+- **Status**: [CONFIRMED]
+- **Decision**: Adversarial verification on the real Supabase PostgreSQL database revealed that `protect_task_trusted_fields` trigger was attached only `BEFORE UPDATE`, leaving `INSERT` vulnerable to timestamp forgery. The trigger was remediated to `BEFORE INSERT OR UPDATE ON public.tasks`, enforcing field immutability for both `INSERT` and `UPDATE` operations from non-`service_role` clients. All 18 adversarial security tests (RLS CRUD matrix, cross-user parent linkage attacks, forged user_id, client timestamp forgery, and anonymous access) passed against the real database.
+
