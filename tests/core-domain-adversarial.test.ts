@@ -1,7 +1,7 @@
 import assert from 'node:assert';
 import fs from 'node:fs';
 import path from 'node:path';
-import { createClient } from '@supabase/supabase-js';
+import { createClient, type User } from '@supabase/supabase-js';
 
 // Load .env.local variables
 const envPath = path.join(process.cwd(), '.env.local');
@@ -42,8 +42,8 @@ async function runAdversarialSecuritySuite() {
   const password = 'SecurityTestPassword123!';
 
   console.log('1. Authenticating User A and User B...');
-  let userA: any = null;
-  let userB: any = null;
+  let userA: User | null = null;
+  let userB: User | null = null;
 
   // Try sign in User A
   const { data: signInA } = await clientA.auth.signInWithPassword({ email: emailA, password });
