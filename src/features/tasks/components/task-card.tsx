@@ -4,15 +4,18 @@ import { TaskWithParents } from '../data-access';
 import { TaskPriority, TaskStatus } from '@/types/domain';
 import { Calendar, CheckCircle2, MoreVertical, Trash2, Edit3, Target, FolderKanban } from 'lucide-react';
 import { useState } from 'react';
+import { utcToLocal } from '@/lib/time';
+import Link from 'next/link';
 
 interface TaskCardProps {
   task: TaskWithParents;
   onEdit: (task: TaskWithParents) => void;
   onDelete: (task: TaskWithParents) => void;
   onStatusChange?: (taskId: string, newStatus: TaskStatus) => void;
+  timezone?: string;
 }
 
-export function TaskCard({ task, onEdit, onDelete, onStatusChange }: TaskCardProps) {
+export function TaskCard({ task, onEdit, onDelete, onStatusChange, timezone = 'UTC' }: TaskCardProps) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const getPriorityStyle = (priority: TaskPriority) => {
@@ -45,23 +48,8 @@ export function TaskCard({ task, onEdit, onDelete, onStatusChange }: TaskCardPro
     }
   };
 
-  const formatDeadline = (isoString: string) => {
-    try {
-      const date = new Date(isoString);
-      return date.toLocaleString('en-US', {
-        month: 'short',
-        day: 'numeric',
-        year: 'numeric',
-        hour: 'numeric',
-        minute: '2-digit',
-      });
-    } catch {
-      return isoString;
-    }
-  };
-
   return (
-    <div className="group relative rounded-xl border border-zinc-800/80 bg-zinc-900/60 p-5 backdrop-blur-sm transition-all duration-200 hover:border-amber-500/30 hover:bg-zinc-900/80 hover:shadow-lg hover:shadow-amber-500/5">
+    <div className="group relative rounded-xl border border-zinc-800/80 bg-zinc-900/60 p-5 backdrop-blur-sm transition-all duration-200 hover:border-[#d4af37]/30 hover:bg-zinc-900/80 hover:shadow-lg hover:shadow-[#d4af37]/5">
       <div className="flex items-start justify-between gap-3">
         <div className="flex-1 space-y-1.5">
           <div className="flex items-center gap-2 flex-wrap">
@@ -73,7 +61,7 @@ export function TaskCard({ task, onEdit, onDelete, onStatusChange }: TaskCardPro
             </span>
           </div>
 
-          <h3 className="font-semibold text-zinc-100 text-lg group-hover:text-amber-400 transition-colors">
+          <h3 className="font-semibold text-zinc-100 text-lg group-hover:text-[#d4af37] transition-colors">
             {task.title}
           </h3>
 
@@ -88,7 +76,7 @@ export function TaskCard({ task, onEdit, onDelete, onStatusChange }: TaskCardPro
         <div className="relative">
           <button
             onClick={() => setIsMenuOpen(!isMenuOpen)}
-            className="rounded-lg p-1.5 text-zinc-400 hover:bg-zinc-800 hover:text-zinc-200 transition-colors focus:outline-none focus:ring-1 focus:ring-amber-500/50"
+            className="rounded-lg p-1.5 text-zinc-400 hover:bg-zinc-800 hover:text-zinc-200 transition-colors focus:outline-none focus:ring-1 focus:ring-[#d4af37]/50 cursor-pointer"
             aria-label="Task options"
           >
             <MoreVertical className="h-4 w-4" />
@@ -103,7 +91,7 @@ export function TaskCard({ task, onEdit, onDelete, onStatusChange }: TaskCardPro
                     setIsMenuOpen(false);
                     onEdit(task);
                   }}
-                  className="flex w-full items-center gap-2 rounded-md px-3 py-1.5 text-xs text-zinc-300 hover:bg-zinc-800 hover:text-zinc-100 transition-colors"
+                  className="flex w-full items-center gap-2 rounded-md px-3 py-1.5 text-xs text-zinc-300 hover:bg-zinc-800 hover:text-zinc-100 transition-colors cursor-pointer"
                 >
                   <Edit3 className="h-3.5 w-3.5 text-zinc-400" />
                   Edit Task
@@ -114,7 +102,7 @@ export function TaskCard({ task, onEdit, onDelete, onStatusChange }: TaskCardPro
                       setIsMenuOpen(false);
                       onStatusChange(task.id, 'completed');
                     }}
-                    className="flex w-full items-center gap-2 rounded-md px-3 py-1.5 text-xs text-emerald-400 hover:bg-zinc-800 transition-colors"
+                    className="flex w-full items-center gap-2 rounded-md px-3 py-1.5 text-xs text-emerald-400 hover:bg-zinc-800 transition-colors cursor-pointer"
                   >
                     <CheckCircle2 className="h-3.5 w-3.5" />
                     Complete
@@ -125,7 +113,7 @@ export function TaskCard({ task, onEdit, onDelete, onStatusChange }: TaskCardPro
                     setIsMenuOpen(false);
                     onDelete(task);
                   }}
-                  className="flex w-full items-center gap-2 rounded-md px-3 py-1.5 text-xs text-red-400 hover:bg-red-500/10 transition-colors"
+                  className="flex w-full items-center gap-2 rounded-md px-3 py-1.5 text-xs text-red-400 hover:bg-red-500/10 transition-colors cursor-pointer"
                 >
                   <Trash2 className="h-3.5 w-3.5" />
                   Delete
@@ -140,24 +128,31 @@ export function TaskCard({ task, onEdit, onDelete, onStatusChange }: TaskCardPro
       <div className="mt-4 pt-3 border-t border-zinc-800/60 flex flex-wrap items-center justify-between gap-2 text-xs text-zinc-400">
         <div className="flex items-center gap-2 flex-wrap">
           {task.projects && (
-            <span className="inline-flex items-center gap-1 rounded bg-zinc-800/80 px-2 py-0.5 text-zinc-300 border border-zinc-700/50">
-              <FolderKanban className="h-3 w-3 text-amber-400" />
-              {task.projects.title}
-            </span>
+            <Link
+              href="/app/projects"
+              className="inline-flex items-center gap-1 rounded-lg bg-zinc-800/80 px-2.5 py-1 text-zinc-300 border border-zinc-700/50 hover:border-[#d4af37]/50 hover:text-zinc-100 transition-colors"
+            >
+              <FolderKanban className="h-3 w-3 text-[#d4af37]" />
+              <span className="max-w-[120px] truncate">{task.projects.title}</span>
+            </Link>
           )}
           {task.goals && (
-            <span className="inline-flex items-center gap-1 rounded bg-zinc-800/80 px-2 py-0.5 text-zinc-300 border border-zinc-700/50">
-              <Target className="h-3 w-3 text-amber-400" />
-              {task.goals.title}
-            </span>
+            <Link
+              href="/app/goals"
+              className="inline-flex items-center gap-1 rounded-lg bg-zinc-800/80 px-2.5 py-1 text-zinc-300 border border-zinc-700/50 hover:border-[#d4af37]/50 hover:text-zinc-100 transition-colors"
+            >
+              <Target className="h-3 w-3 text-[#d4af37]" />
+              <span className="max-w-[120px] truncate">{task.goals.title}</span>
+            </Link>
           )}
         </div>
 
-        <div className="flex items-center gap-1 text-zinc-400 font-mono">
-          <Calendar className="h-3.5 w-3.5 text-amber-400/80" />
-          <span>{formatDeadline(task.deadline_at)}</span>
+        <div className="flex items-center gap-1 text-zinc-400 font-mono text-xs">
+          <Calendar className="h-3.5 w-3.5 text-[#d4af37]" />
+          <span>{utcToLocal(task.deadline_at, timezone)}</span>
         </div>
       </div>
     </div>
   );
 }
+

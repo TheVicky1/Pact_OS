@@ -1,3 +1,4 @@
+import { createClient } from '@/lib/supabase/server';
 import { getTasks } from '@/features/tasks/data-access';
 import { getGoals } from '@/features/goals/data-access';
 import { getProjects } from '@/features/projects/data-access';
@@ -9,6 +10,10 @@ export const metadata = {
 };
 
 export default async function TasksPage() {
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  const timezone = user?.user_metadata?.timezone || 'UTC';
+
   const [tasksRes, goalsRes, projectsRes] = await Promise.all([
     getTasks(),
     getGoals(),
@@ -20,12 +25,14 @@ export default async function TasksPage() {
   const projects = (projectsRes.data || []).map((p) => ({ id: p.id, title: p.title }));
 
   return (
-    <div className="mx-auto max-w-6xl p-4 sm:p-6 lg:p-8">
+    <main className="max-w-6xl w-full mx-auto p-4 sm:p-8">
       <TasksView
         initialTasks={tasks}
         availableGoals={goals}
         availableProjects={projects}
+        timezone={timezone}
       />
-    </div>
+    </main>
   );
 }
+

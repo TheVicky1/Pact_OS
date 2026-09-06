@@ -13,9 +13,10 @@ interface TasksViewProps {
   initialTasks: TaskWithParents[];
   availableGoals: Array<{ id: string; title: string }>;
   availableProjects: Array<{ id: string; title: string }>;
+  timezone?: string;
 }
 
-export function TasksView({ initialTasks, availableGoals, availableProjects }: TasksViewProps) {
+export function TasksView({ initialTasks, availableGoals, availableProjects, timezone = 'UTC' }: TasksViewProps) {
   const [tasks, setTasks] = useState<TaskWithParents[]>(initialTasks);
   const [activeTab, setActiveTab] = useState<'all' | TaskStatus>('all');
   const [priorityFilter, setPriorityFilter] = useState<'all' | TaskPriority>('all');
@@ -122,7 +123,7 @@ export function TasksView({ initialTasks, availableGoals, availableProjects }: T
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between border-b border-zinc-800/80 pb-5">
         <div>
           <h1 className="text-2xl font-bold tracking-tight text-zinc-100 flex items-center gap-2.5">
-            <CheckSquare className="h-6 w-6 text-amber-400" />
+            <CheckSquare className="h-6 w-6 text-[#d4af37]" />
             Tasks & Commitments
           </h1>
           <p className="text-sm text-zinc-400 mt-1">
@@ -132,7 +133,7 @@ export function TasksView({ initialTasks, availableGoals, availableProjects }: T
 
         <button
           onClick={handleOpenCreateModal}
-          className="inline-flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 px-4 py-2.5 text-xs font-semibold text-zinc-950 hover:from-amber-400 hover:to-amber-500 shadow-md shadow-amber-500/10 transition-all"
+          className="inline-flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-[#d4af37] to-[#b89528] px-4 py-2.5 text-xs font-semibold text-zinc-950 hover:from-[#e5be48] hover:to-[#c9a432] shadow-md shadow-[#d4af37]/10 transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-[#d4af37] cursor-pointer"
         >
           <Plus className="h-4 w-4" />
           <span>New Task</span>
@@ -150,13 +151,13 @@ export function TasksView({ initialTasks, availableGoals, availableProjects }: T
       <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
         {/* Status Tabs */}
         <div className="flex items-center gap-1 overflow-x-auto rounded-xl border border-zinc-800 bg-zinc-900/80 p-1 backdrop-blur-sm">
-          {(['all', 'pending', 'in_progress', 'completed', 'archived'] as const).map((tab) => (
+          {(['all', 'pending', 'in_progress', 'completed', 'missed', 'archived'] as const).map((tab) => (
             <button
               key={tab}
               onClick={() => setActiveTab(tab)}
-              className={`rounded-lg px-3 py-1.5 text-xs font-medium capitalize transition-all whitespace-nowrap ${
+              className={`rounded-lg px-3 py-1.5 text-xs font-medium capitalize transition-all whitespace-nowrap focus:outline-none focus-visible:ring-2 focus-visible:ring-[#d4af37] cursor-pointer ${
                 activeTab === tab
-                  ? 'bg-amber-400 text-zinc-950 font-semibold shadow-sm'
+                  ? 'bg-[#d4af37] text-zinc-950 font-semibold shadow-sm'
                   : 'text-zinc-400 hover:bg-zinc-800 hover:text-zinc-200'
               }`}
             >
@@ -173,7 +174,7 @@ export function TasksView({ initialTasks, availableGoals, availableProjects }: T
             <select
               value={priorityFilter}
               onChange={(e) => setPriorityFilter(e.target.value as TaskPriority | 'all')}
-              className="rounded-xl border border-zinc-800 bg-zinc-900/80 pl-8 pr-4 py-1.5 text-xs text-zinc-300 focus:border-amber-400/60 focus:outline-none transition-all"
+              className="rounded-xl border border-zinc-800 bg-zinc-900/80 pl-8 pr-4 py-1.5 text-xs text-zinc-300 focus:border-[#d4af37]/60 focus:outline-none transition-all cursor-pointer"
             >
               <option value="all">All Priorities</option>
               <option value="urgent">Urgent</option>
@@ -191,7 +192,7 @@ export function TasksView({ initialTasks, availableGoals, availableProjects }: T
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Search tasks, goals, or projects..."
-              className="w-full rounded-xl border border-zinc-800 bg-zinc-950/80 pl-9 pr-4 py-1.5 text-xs text-zinc-200 placeholder-zinc-500 focus:border-amber-400/60 focus:outline-none transition-all"
+              className="w-full rounded-xl border border-zinc-800 bg-zinc-950/80 pl-9 pr-4 py-1.5 text-xs text-zinc-200 placeholder-zinc-500 focus:border-[#d4af37]/60 focus:outline-none transition-all"
             />
           </div>
         </div>
@@ -207,15 +208,16 @@ export function TasksView({ initialTasks, availableGoals, availableProjects }: T
               onEdit={handleOpenEditModal}
               onDelete={handleOpenDeleteModal}
               onStatusChange={handleStatusChange}
+              timezone={timezone}
             />
           ))}
         </div>
       ) : (
         <div className="rounded-2xl border border-dashed border-zinc-800/80 bg-zinc-900/30 p-12 text-center backdrop-blur-sm">
-          <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-2xl border border-zinc-800 bg-zinc-900 text-amber-400">
+          <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-2xl border border-zinc-800 bg-zinc-900 text-[#d4af37]">
             <CheckSquare className="h-6 w-6" />
           </div>
-          <h3 className="mt-4 text-lg font-semibold text-zinc-200">No Task Commitments Found</h3>
+          <h3 className="mt-4 text-lg font-semibold text-zinc-200">Make your next commitment.</h3>
           <p className="mt-1 text-xs text-zinc-500 max-w-sm mx-auto">
             {searchQuery || activeTab !== 'all' || priorityFilter !== 'all'
               ? 'No tasks match your filter criteria. Try resetting search or filter tabs.'
@@ -224,7 +226,7 @@ export function TasksView({ initialTasks, availableGoals, availableProjects }: T
           {!(searchQuery || activeTab !== 'all' || priorityFilter !== 'all') && (
             <button
               onClick={handleOpenCreateModal}
-              className="mt-6 inline-flex items-center gap-2 rounded-xl bg-amber-400 px-4 py-2 text-xs font-semibold text-zinc-950 hover:bg-amber-300 transition-all"
+              className="mt-6 inline-flex items-center gap-2 rounded-xl bg-[#d4af37] px-4 py-2 text-xs font-semibold text-zinc-950 hover:bg-[#e5be48] transition-all cursor-pointer"
             >
               <Plus className="h-4 w-4" />
               <span>Create First Task</span>
@@ -255,3 +257,4 @@ export function TasksView({ initialTasks, availableGoals, availableProjects }: T
     </div>
   );
 }
+
