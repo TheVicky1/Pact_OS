@@ -220,7 +220,7 @@ export function ProjectsView({ initialProjects, availableGoals, error }: Project
 
           <div>
             <h3 className="text-base font-semibold text-zinc-200">
-              {searchQuery || goalFilter !== 'all' ? 'No matching projects found' : 'No projects defined yet'}
+              {searchQuery || goalFilter !== 'all' ? 'No matching projects found' : 'Turn a goal into a body of work.'}
             </h3>
             <p className="text-xs text-zinc-400 mt-1 leading-relaxed">
               {searchQuery || goalFilter !== 'all'

@@ -2,7 +2,8 @@
 
 import { ProjectStatus } from '@/types/domain';
 import { ProjectWithGoal } from '@/features/projects/data-access';
-import { Edit3, Trash2, Archive, FolderKanban, Target, Layers } from 'lucide-react';
+import { Edit3, Trash2, Archive, FolderKanban, Target, Layers, CheckSquare } from 'lucide-react';
+import Link from 'next/link';
 
 interface ProjectCardProps {
   project: ProjectWithGoal;
@@ -110,22 +111,36 @@ export function ProjectCard({ project, onEdit, onDelete, onArchive }: ProjectCar
         </div>
       </div>
 
-      {/* Footer: Parent Goal Badge */}
+      {/* Footer: Parent Goal Badge & Task Link */}
       <div className="pt-3 border-t border-zinc-800/60 flex items-center justify-between text-xs text-zinc-400">
         {project.goals ? (
-          <div className="flex items-center gap-1.5 truncate text-[#d4af37]">
+          <Link
+            href="/app/goals"
+            className="flex items-center gap-1.5 truncate text-[#d4af37] hover:underline"
+            title={`Parent Goal: ${project.goals.title}`}
+          >
             <Target className="w-3.5 h-3.5 shrink-0" />
-            <span className="truncate font-medium text-[11px]" title={`Goal: ${project.goals.title}`}>
+            <span className="truncate font-medium text-[11px]">
               Goal: {project.goals.title}
             </span>
-          </div>
+          </Link>
         ) : (
           <div className="flex items-center gap-1.5 text-zinc-500 text-[11px]">
             <Layers className="w-3.5 h-3.5 shrink-0" />
             <span>Independent Project</span>
           </div>
         )}
+
+        <Link
+          href="/app/tasks"
+          className="inline-flex items-center gap-1 text-[11px] text-zinc-400 hover:text-[#d4af37] transition-colors"
+          title="View project tasks"
+        >
+          <CheckSquare className="w-3 h-3 text-[#d4af37]" />
+          <span>Tasks</span>
+        </Link>
       </div>
     </div>
   );
 }
+

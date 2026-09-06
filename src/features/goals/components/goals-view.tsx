@@ -175,7 +175,7 @@ export function GoalsView({ initialGoals, error }: GoalsViewProps) {
 
           <div>
             <h3 className="text-base font-semibold text-zinc-200">
-              {searchQuery ? 'No matching goals found' : 'No goals defined yet'}
+              {searchQuery ? 'No matching goals found' : 'Start with what matters most.'}
             </h3>
             <p className="text-xs text-zinc-400 mt-1 leading-relaxed">
               {searchQuery

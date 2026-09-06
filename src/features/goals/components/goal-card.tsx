@@ -1,7 +1,8 @@
 'use client';
 
 import { Goal, GoalStatus } from '@/types/domain';
-import { Calendar, Edit3, Trash2, Archive, CheckCircle2, Target } from 'lucide-react';
+import { Calendar, Edit3, Trash2, Archive, CheckCircle2, Target, FolderKanban, CheckSquare } from 'lucide-react';
+import Link from 'next/link';
 
 interface GoalCardProps {
   goal: Goal;
@@ -37,7 +38,7 @@ export function GoalCard({ goal, onEdit, onDelete, onArchive }: GoalCardProps) {
     : null;
 
   return (
-    <div className="glass-card p-5 sm:p-6 rounded-2xl border border-zinc-800/80 flex flex-col justify-between space-y-4 hover:border-zinc-700/80 transition-all group">
+    <div className="glass-card p-5 sm:p-6 rounded-2xl border border-zinc-800/80 flex flex-col justify-between space-y-4 hover:border-[#d4af37]/30 transition-all group">
       <div className="space-y-3">
         {/* Card Header: Icon, Badge, Actions */}
         <div className="flex items-start justify-between gap-3">
@@ -99,20 +100,33 @@ export function GoalCard({ goal, onEdit, onDelete, onArchive }: GoalCardProps) {
         </div>
       </div>
 
-      {/* Card Footer: Target Date */}
-      <div className="pt-3 border-t border-zinc-800/60 flex items-center justify-between text-xs text-zinc-500">
+      {/* Card Footer: Target Date & Cross-domain Navigation */}
+      <div className="pt-3 border-t border-zinc-800/60 flex flex-wrap items-center justify-between gap-2 text-xs text-zinc-400">
         <div className="flex items-center gap-1.5">
-          <Calendar className="w-3.5 h-3.5 text-zinc-400" />
+          <Calendar className="w-3.5 h-3.5 text-[#d4af37]" />
           <span>{formattedDate ? `Target: ${formattedDate}` : 'No target date'}</span>
         </div>
 
-        {goal.status === 'completed' && (
-          <div className="flex items-center gap-1 text-amber-400 text-[11px] font-medium">
-            <CheckCircle2 className="w-3.5 h-3.5" />
-            <span>Achieved</span>
-          </div>
-        )}
+        <div className="flex items-center gap-2">
+          <Link
+            href="/app/projects"
+            className="inline-flex items-center gap-1 text-[11px] text-zinc-400 hover:text-[#d4af37] transition-colors"
+            title="View projects"
+          >
+            <FolderKanban className="w-3 h-3 text-[#d4af37]" />
+            <span>Projects</span>
+          </Link>
+          <Link
+            href="/app/tasks"
+            className="inline-flex items-center gap-1 text-[11px] text-zinc-400 hover:text-[#d4af37] transition-colors"
+            title="View tasks"
+          >
+            <CheckSquare className="w-3 h-3 text-[#d4af37]" />
+            <span>Tasks</span>
+          </Link>
+        </div>
       </div>
     </div>
   );
 }
+
