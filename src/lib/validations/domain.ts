@@ -1,4 +1,12 @@
 import { z } from 'zod';
+import { isValidIanaTimezone } from '../time';
+
+export const ianaTimezoneSchema = z
+  .string()
+  .trim()
+  .refine((tz) => isValidIanaTimezone(tz), {
+    message: 'Must be a valid canonical IANA timezone identifier (e.g. Asia/Kolkata, America/New_York).',
+  });
 
 export const goalStatusSchema = z.enum(['active', 'completed', 'archived']);
 export const projectStatusSchema = z.enum(['active', 'completed', 'paused', 'archived']);

@@ -12,10 +12,20 @@ import {
   projectStatusSchema,
   taskPrioritySchema,
   taskStatusSchema,
+  ianaTimezoneSchema,
 } from '../src/lib/validations/domain';
 
 async function runDomainValidationTests() {
   console.log('Running Phase 2A Domain Validation & Schema Structural Tests...\n');
+
+  // Test 0: IANA Timezone schema validation
+  assert.strictEqual(ianaTimezoneSchema.safeParse('Asia/Kolkata').success, true);
+  assert.strictEqual(ianaTimezoneSchema.safeParse('America/New_York').success, true);
+  assert.strictEqual(ianaTimezoneSchema.safeParse('Europe/London').success, true);
+  assert.strictEqual(ianaTimezoneSchema.safeParse('UTC').success, true);
+  assert.strictEqual(ianaTimezoneSchema.safeParse('IST').success, false, 'Abbreviation IST must fail');
+  assert.strictEqual(ianaTimezoneSchema.safeParse('PST').success, false, 'Abbreviation PST must fail');
+  assert.strictEqual(ianaTimezoneSchema.safeParse('Invalid/Zone').success, false);
 
   // Test 1: Goal Zod validation
   const validGoalInput = {

@@ -2,6 +2,7 @@
 
 import { createClient } from '@/lib/supabase/server';
 import { createTaskSchema, updateTaskSchema } from '@/lib/validations/domain';
+import { localToUtc } from '@/lib/time';
 import { Task } from '@/types/domain';
 import { revalidatePath } from 'next/cache';
 import { z } from 'zod';
@@ -29,7 +30,21 @@ export async function createTaskAction(
       return { success: false, error: 'Authentication required to create a task.' };
     }
 
-    const validation = createTaskSchema.safeParse(payload);
+    // Preprocess payload if local_deadline and timezone are supplied
+    let processedPayload = payload;
+    if (typeof payload === 'object' && payload !== null) {
+      const p = payload as Record<string, unknown>;
+      if (!p.deadline_at && p.local_deadline && typeof p.local_deadline === 'string') {
+        const tz = (typeof p.timezone === 'string' && p.timezone) || 'UTC';
+        const conv = localToUtc(p.local_deadline, tz);
+        if (conv.error || !conv.utcIso) {
+          return { success: false, error: conv.error || 'Invalid local deadline or timezone.' };
+        }
+        processedPayload = { ...p, deadline_at: conv.utcIso };
+      }
+    }
+
+    const validation = createTaskSchema.safeParse(processedPayload);
     if (!validation.success) {
       const firstIssue = validation.error.issues[0];
       return { success: false, error: firstIssue?.message || 'Invalid task details provided.' };
@@ -115,7 +130,21 @@ export async function updateTaskAction(
       return { success: false, error: 'Invalid task identifier.' };
     }
 
-    const validation = updateTaskSchema.safeParse(payload);
+    // Preprocess payload if local_deadline and timezone are supplied
+    let processedPayload = payload;
+    if (typeof payload === 'object' && payload !== null) {
+      const p = payload as Record<string, unknown>;
+      if (!p.deadline_at && p.local_deadline && typeof p.local_deadline === 'string') {
+        const tz = (typeof p.timezone === 'string' && p.timezone) || 'UTC';
+        const conv = localToUtc(p.local_deadline, tz);
+        if (conv.error || !conv.utcIso) {
+          return { success: false, error: conv.error || 'Invalid local deadline or timezone.' };
+        }
+        processedPayload = { ...p, deadline_at: conv.utcIso };
+      }
+    }
+
+    const validation = updateTaskSchema.safeParse(processedPayload);
     if (!validation.success) {
       const firstIssue = validation.error.issues[0];
       return { success: false, error: firstIssue?.message || 'Invalid task update details.' };
