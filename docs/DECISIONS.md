@@ -75,5 +75,14 @@ Every architectural item in PACT documentation is categorized into one of five e
   5. **Injected TestClock Abstraction**: Pure temporal methods accept an optional `Clock` dependency, enabling deterministic unit testing without system clock flakiness.
   6. **Phase 2F Boundary Isolation**: Pure temporal engine answers temporal evaluation questions without triggering business state transitions (`completed_at`, `missed_at`), keeping execution lifecycle strictly isolated for Phase 2F. Verified via unit test suite (`tests/temporal-engine.test.ts`).
 
+### ADR-015: Authoritative Task Lifecycle State Machine & Concurrency Strategy [CONFIRMED]
+- **Status**: [CONFIRMED]
+- **Decision**: Implement server/database authoritative lifecycle execution for Tasks (`complete_task` and `mark_task_missed` RPC functions). Key architectural guarantees:
+  1. **Database-Authoritative Execution**: Task completion (`complete_task`) and missed transitions (`mark_task_missed`) execute inside PostgreSQL `SECURITY DEFINER` stored procedures. Client attempts to directly set `status = 'completed'` or `status = 'missed'` or alter `completed_at` / `missed_at` via direct REST/SQL queries are blocked by hardened trigger `enforce_task_trusted_fields()`.
+  2. **Row Locking & Race Safety**: Both RPC functions lock the target task row via `SELECT ... FOR UPDATE`, ensuring atomic evaluation and absolute race condition protection for concurrent requests.
+  3. **Temporal Integration**: Deadline expiration (`transaction_timestamp() >= deadline_at`) is evaluated inside the locked transaction using Phase 2E temporal semantics. Completion of expired tasks returns `DEADLINE_REACHED`.
+  4. **Idempotency & Terminal States**: Repeated completion calls return `ALREADY_COMPLETED` while preserving original `completed_at`. Missed tasks cannot be completed (`ALREADY_MISSED`). Completed tasks cannot be marked missed (`ALREADY_COMPLETED`).
+  5. **Pure GET Reads**: Data-access functions (`getTasks()`, `getTaskById()`) remain 100% pure reads with zero hidden side-effect writes. Verified against real remote Supabase PostgreSQL database (`tests/adversarial-rls-audit.sql`).
+
 
 

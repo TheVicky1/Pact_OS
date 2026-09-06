@@ -137,4 +137,15 @@ For Phase 2E, temporal evaluation logic was isolated into a pure, deterministic 
 4. **DST Spring-Forward & Fall-Back Edge Handling**: Local wall-clock inputs are parsed cleanly via `localToUtc()`. Nonexistent spring-forward local times are flagged (`isNonexistent = true`) with explicit error messaging. Ambiguous fall-back local times are flagged (`isAmbiguous = true`) to prevent silent time shift corruption.
 5. **Phase 2F Boundary Isolation**: Pure temporal engine methods answer temporal state questions without triggering business state transitions (`completed_at`, `missed_at`), keeping execution lifecycle strictly isolated for Phase 2F. Verified via unit test suite (`tests/temporal-engine.test.ts`).
 
+---
+
+## 8. Phase 2F Authoritative Task Lifecycle Security & Direct Status Bypass Protection [CONFIRMED]
+
+For Phase 2F, Task execution lifecycle transitions were made fully server-authoritative and race-condition protected:
+1. **Direct Status & Timestamp Mutation Block**: Hardened database trigger `enforce_task_trusted_fields()` blocks direct client REST/SQL attempts to mutate `status` to `'completed'` or `'missed'`, as well as setting/updating `completed_at` or `missed_at`.
+2. **Authoritative RPC Functions**: `complete_task(p_task_id)` and `mark_task_missed(p_task_id)` execute inside PostgreSQL `SECURITY DEFINER` functions with `SET search_path = public`.
+3. **Atomicity & Row Locking**: Transactions execute `SELECT ... FOR UPDATE` on `public.tasks` to lock the target row, preventing race conditions between concurrent requests.
+4. **Idempotency & State Invariants**: `completed` and `missed` states are terminal. Idempotent repeated calls preserve original authoritative transaction timestamps without overwriting data.
+5. **Adversarial Real Database Verification**: Verified against real remote Supabase PostgreSQL database (`tests/adversarial-rls-audit.sql` Section 6, 29/29 checks passed).
+
 
