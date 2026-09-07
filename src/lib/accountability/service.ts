@@ -3,6 +3,7 @@ import {
   ConsequenceDefinition,
   UserAccountabilityPreferences,
   TaskAccountabilityCommitment,
+  AccountabilityEvent,
   CreateConsequenceDefinitionInput,
   UpdateConsequenceDefinitionInput,
   UpdateUserAccountabilityPreferencesInput,
@@ -362,4 +363,63 @@ export async function getTaskAccountabilityCommitment(
 
   return data as TaskAccountabilityCommitment | null;
 }
+
+/**
+ * Fetches auditable accountability event history for a commitment.
+ */
+export async function getAccountabilityEvents(
+  commitmentId: string
+): Promise<AccountabilityEvent[]> {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) {
+    throw new Error('Authentication required.');
+  }
+
+  const { data, error } = await supabase
+    .from('accountability_events')
+    .select('*')
+    .eq('commitment_id', commitmentId)
+    .eq('user_id', user.id)
+    .order('created_at', { ascending: true });
+
+  if (error) {
+    throw new Error(`Failed to fetch accountability events: ${error.message}`);
+  }
+
+  return data as AccountabilityEvent[];
+}
+
+/**
+ * Fetches auditable accountability event history for a task.
+ */
+export async function getTaskAccountabilityEventHistory(
+  taskId: string
+): Promise<AccountabilityEvent[]> {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) {
+    throw new Error('Authentication required.');
+  }
+
+  const { data, error } = await supabase
+    .from('accountability_events')
+    .select('*')
+    .eq('task_id', taskId)
+    .eq('user_id', user.id)
+    .order('created_at', { ascending: true });
+
+  if (error) {
+    throw new Error(`Failed to fetch task accountability event history: ${error.message}`);
+  }
+
+  return data as AccountabilityEvent[];
+}
+
 

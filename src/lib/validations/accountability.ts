@@ -49,3 +49,8 @@ export const createTaskAccountabilitySchema = z.object({
   consequence_id: z.string().uuid('Invalid Consequence UUID format.').nullable().optional(),
 });
 
+export const commitmentStatusSchema = z.enum(['committed', 'activated', 'fulfilled', 'waived']);
+
+export const accountabilityEventTypeSchema = z.enum(['activated', 'fulfilled', 'waived', 'resolved']);
+
+

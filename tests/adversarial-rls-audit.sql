@@ -514,8 +514,211 @@ BEGIN
     INSERT INTO _rls_audit_results VALUES ('8.8 Anonymous Access Blocked for Task Commitments Table', 'PASS');
   END;
 
+  -- ----------------------------------------------------------------
+  -- SECTION 9: PHASE 3 MILESTONE 3 CONSEQUENCE ACTIVATION & EVENT HISTORY AUDIT
+  -- ----------------------------------------------------------------
+  DECLARE
+    v_m3_cons_a_id UUID;
+    v_m3_task_comp_id UUID;
+    v_m3_commit_comp_id UUID;
+    v_m3_task_miss_id UUID;
+    v_m3_commit_miss_id UUID;
+    v_m3_task_deleted_source_id UUID;
+    v_m3_commit_deleted_source_id UUID;
+    v_m3_event_count INT;
+    v_m3_comm_status TEXT;
+    v_m3_activated_at TIMESTAMPTZ;
+  BEGIN
+    -- 9.1 Setup User A consequence definition & completed task commitment
+    SET LOCAL ROLE authenticated;
+    SET LOCAL "request.jwt.claim.sub" = '11111111-1111-1111-1111-111111111111';
+
+    INSERT INTO public.consequence_definitions (user_id, title, consequence_type, action_statement)
+    VALUES (v_user_a, 'User A Activation Test Consequence', 'personal_restriction', 'No social media 24h')
+    RETURNING id INTO v_m3_cons_a_id;
+
+    -- Task completed before deadline
+    INSERT INTO public.tasks (user_id, title, status, deadline_at)
+    VALUES (v_user_a, 'User A Completed Accountable Task', 'pending', transaction_timestamp() + interval '1 hour')
+    RETURNING id INTO v_m3_task_comp_id;
+
+    INSERT INTO public.task_accountability_commitments (
+      task_id, user_id, source_consequence_id, consequence_snapshot, commitment_status
+    ) VALUES (
+      v_m3_task_comp_id, v_user_a, v_m3_cons_a_id, jsonb_build_object(
+        'title', 'User A Activation Test Consequence',
+        'consequence_type', 'personal_restriction',
+        'action_statement', 'No social media 24h'
+      ), 'committed'
+    ) RETURNING id INTO v_m3_commit_comp_id;
+
+    -- Complete task authoritatively
+    SELECT public.complete_task(v_m3_task_comp_id) INTO v_res;
+    IF (v_res->>'success')::boolean IS NOT TRUE THEN
+      RAISE EXCEPTION 'Task completion failed in Section 9: %', v_res;
+    END IF;
+
+    -- Verify completion produced ZERO activation and ZERO events
+    SELECT commitment_status, activated_at INTO v_m3_comm_status, v_m3_activated_at
+    FROM public.task_accountability_commitments WHERE id = v_m3_commit_comp_id;
+
+    IF v_m3_comm_status <> 'committed' OR v_m3_activated_at IS NOT NULL THEN
+      RAISE EXCEPTION 'SECURITY VIOLATION: Completed task activated consequence!';
+    END IF;
+
+    SELECT count(*) INTO v_m3_event_count FROM public.accountability_events WHERE commitment_id = v_m3_commit_comp_id;
+    IF v_m3_event_count <> 0 THEN
+      RAISE EXCEPTION 'SECURITY VIOLATION: Completed task generated accountability event!';
+    END IF;
+    INSERT INTO _rls_audit_results VALUES ('9.1 Task Completion Produced Zero Consequence Activation', 'PASS');
+
+    -- 9.2 Authoritative mark_task_missed activates commitment & logs event atomically
+    INSERT INTO public.tasks (user_id, title, status, deadline_at)
+    VALUES (v_user_a, 'User A Missed Accountable Task', 'pending', transaction_timestamp() - interval '1 hour')
+    RETURNING id INTO v_m3_task_miss_id;
+
+    INSERT INTO public.task_accountability_commitments (
+      task_id, user_id, source_consequence_id, consequence_snapshot, commitment_status
+    ) VALUES (
+      v_m3_task_miss_id, v_user_a, v_m3_cons_a_id, jsonb_build_object(
+        'title', 'User A Activation Test Consequence',
+        'consequence_type', 'personal_restriction',
+        'action_statement', 'No social media 24h'
+      ), 'committed'
+    ) RETURNING id INTO v_m3_commit_miss_id;
+
+    SELECT public.mark_task_missed(v_m3_task_miss_id) INTO v_res;
+    IF (v_res->>'success')::boolean IS NOT TRUE THEN
+      RAISE EXCEPTION 'mark_task_missed failed in Section 9: %', v_res;
+    END IF;
+
+    SELECT commitment_status, activated_at INTO v_m3_comm_status, v_m3_activated_at
+    FROM public.task_accountability_commitments WHERE id = v_m3_commit_miss_id;
+
+    IF v_m3_comm_status <> 'activated' OR v_m3_activated_at IS NULL THEN
+      RAISE EXCEPTION 'mark_task_missed did not set status = activated and activated_at!';
+    END IF;
+
+    SELECT count(*) INTO v_m3_event_count FROM public.accountability_events
+    WHERE commitment_id = v_m3_commit_miss_id AND event_type = 'activated';
+    IF v_m3_event_count <> 1 THEN
+      RAISE EXCEPTION 'mark_task_missed did not record exactly 1 activation event!';
+    END IF;
+    INSERT INTO _rls_audit_results VALUES ('9.2 Authoritative Task Miss Atomic Activation Succeeded', 'PASS');
+
+    -- 9.3 Repeated mark_task_missed is idempotent with zero duplicate events
+    SELECT public.mark_task_missed(v_m3_task_miss_id) INTO v_res;
+    IF (v_res->>'code') <> 'ALREADY_MISSED' THEN
+      RAISE EXCEPTION 'Repeated mark_task_missed did not return ALREADY_MISSED: %', v_res;
+    END IF;
+
+    SELECT count(*) INTO v_m3_event_count FROM public.accountability_events
+    WHERE commitment_id = v_m3_commit_miss_id AND event_type = 'activated';
+    IF v_m3_event_count <> 1 THEN
+      RAISE EXCEPTION 'Repeated mark_task_missed created duplicate activation events!';
+    END IF;
+    INSERT INTO _rls_audit_results VALUES ('9.3 Repeated Task Miss Activation Idempotency & Zero Duplicates Verified', 'PASS');
+
+    -- 9.4 ATTACK: Direct UPDATE of commitment_status blocked
+    BEGIN
+      UPDATE public.task_accountability_commitments
+      SET commitment_status = 'activated'
+      WHERE id = v_m3_commit_comp_id;
+      RAISE EXCEPTION 'SECURITY VIOLATION: Direct UPDATE of commitment_status allowed!';
+    EXCEPTION WHEN OTHERS THEN
+      INSERT INTO _rls_audit_results VALUES ('9.4 Direct UPDATE of commitment_status Blocked by DB Trigger', 'PASS');
+    END;
+
+    -- 9.5 ATTACK: Direct UPDATE of activated_at timestamp blocked
+    BEGIN
+      UPDATE public.task_accountability_commitments
+      SET activated_at = now()
+      WHERE id = v_m3_commit_comp_id;
+      RAISE EXCEPTION 'SECURITY VIOLATION: Direct UPDATE of activated_at allowed!';
+    EXCEPTION WHEN OTHERS THEN
+      INSERT INTO _rls_audit_results VALUES ('9.5 Direct UPDATE of activated_at Timestamp Blocked by DB Trigger', 'PASS');
+    END;
+
+    -- 9.6 ATTACK: Direct INSERT into accountability_events blocked by RLS
+    BEGIN
+      INSERT INTO public.accountability_events (user_id, task_id, commitment_id, event_type)
+      VALUES (v_user_a, v_m3_task_comp_id, v_m3_commit_comp_id, 'activated');
+      RAISE EXCEPTION 'SECURITY VIOLATION: Direct INSERT into accountability_events allowed!';
+    EXCEPTION WHEN OTHERS THEN
+      INSERT INTO _rls_audit_results VALUES ('9.6 Direct Client INSERT into accountability_events Blocked', 'PASS');
+    END;
+
+    -- 9.7 ATTACK: Direct UPDATE or DELETE of accountability_events blocked
+    BEGIN
+      UPDATE public.accountability_events SET event_type = 'waived' WHERE commitment_id = v_m3_commit_miss_id;
+      RAISE EXCEPTION 'SECURITY VIOLATION: UPDATE of accountability_events allowed!';
+    EXCEPTION WHEN OTHERS THEN
+      INSERT INTO _rls_audit_results VALUES ('9.7 Direct UPDATE of accountability_events Blocked', 'PASS');
+    END;
+
+    BEGIN
+      DELETE FROM public.accountability_events WHERE commitment_id = v_m3_commit_miss_id;
+      RAISE EXCEPTION 'SECURITY VIOLATION: DELETE of accountability_events allowed!';
+    EXCEPTION WHEN OTHERS THEN
+      INSERT INTO _rls_audit_results VALUES ('9.8 Direct DELETE of accountability_events Blocked', 'PASS');
+    END;
+
+    -- 9.8 ATTACK: User B cannot view User A accountability_events
+    SET LOCAL "request.jwt.claim.sub" = '22222222-2222-2222-2222-222222222222';
+    SELECT count(*) INTO v_m3_event_count FROM public.accountability_events WHERE commitment_id = v_m3_commit_miss_id;
+    IF v_m3_event_count <> 0 THEN
+      RAISE EXCEPTION 'SECURITY VIOLATION: User B viewed User A accountability_events!';
+    END IF;
+    INSERT INTO _rls_audit_results VALUES ('9.9 Cross-User Accountability Events SELECT Blocked', 'PASS');
+
+    -- 9.9 Anonymous access to accountability_events blocked
+    SET LOCAL ROLE anon;
+    SET LOCAL "request.jwt.claim.sub" = '';
+    SELECT count(*) INTO v_m3_event_count FROM public.accountability_events;
+    IF v_m3_event_count <> 0 THEN
+      RAISE EXCEPTION 'SECURITY VIOLATION: Anonymous read accountability_events!';
+    END IF;
+    INSERT INTO _rls_audit_results VALUES ('9.10 Anonymous Access Blocked for accountability_events', 'PASS');
+
+    -- 9.10 Activation succeeds even after source consequence definition deletion
+    SET LOCAL ROLE authenticated;
+    SET LOCAL "request.jwt.claim.sub" = '11111111-1111-1111-1111-111111111111';
+
+    INSERT INTO public.tasks (user_id, title, status, deadline_at)
+    VALUES (v_user_a, 'Deleted Source Task', 'pending', transaction_timestamp() - interval '1 hour')
+    RETURNING id INTO v_m3_task_deleted_source_id;
+
+    INSERT INTO public.task_accountability_commitments (
+      task_id, user_id, source_consequence_id, consequence_snapshot, commitment_status
+    ) VALUES (
+      v_m3_task_deleted_source_id, v_user_a, v_m3_cons_a_id, jsonb_build_object(
+        'title', 'Deleted Source Consequence Title',
+        'consequence_type', 'reflection',
+        'action_statement', 'Reflect for 15m'
+      ), 'committed'
+    ) RETURNING id INTO v_m3_commit_deleted_source_id;
+
+    -- Delete source consequence definition
+    DELETE FROM public.consequence_definitions WHERE id = v_m3_cons_a_id;
+
+    -- Authoritative mark_task_missed still activates cleanly
+    SELECT public.mark_task_missed(v_m3_task_deleted_source_id) INTO v_res;
+    IF (v_res->>'success')::boolean IS NOT TRUE THEN
+      RAISE EXCEPTION 'mark_task_missed failed after source deletion: %', v_res;
+    END IF;
+
+    SELECT commitment_status INTO v_m3_comm_status
+    FROM public.task_accountability_commitments WHERE id = v_m3_commit_deleted_source_id;
+
+    IF v_m3_comm_status <> 'activated' THEN
+      RAISE EXCEPTION 'Commitment failed to activate after source consequence deletion!';
+    END IF;
+    INSERT INTO _rls_audit_results VALUES ('9.11 Activation Resilient to Source Consequence Definition Deletion', 'PASS');
+  END;
+
   -- Clean up test records
   RESET ROLE;
+  DELETE FROM public.accountability_events WHERE user_id IN (v_user_a, v_user_b);
   DELETE FROM public.task_accountability_commitments WHERE user_id IN (v_user_a, v_user_b);
   DELETE FROM public.user_accountability_preferences WHERE user_id IN (v_user_a, v_user_b);
   DELETE FROM public.consequence_definitions WHERE user_id IN (v_user_a, v_user_b);
@@ -523,6 +726,6 @@ BEGIN
   DELETE FROM public.projects WHERE user_id IN (v_user_a, v_user_b);
   DELETE FROM public.goals WHERE user_id IN (v_user_a, v_user_b);
 END;
-$$ LANGUAGE plpgsql SECURITY DEFINER;
+$$;
 
-SELECT * FROM public.run_pact_adversarial_audit();
+SELECT step, status FROM _rls_audit_results ORDER BY step;

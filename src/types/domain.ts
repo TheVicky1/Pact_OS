@@ -110,6 +110,8 @@ export interface UserAccountabilityPreferences {
   updated_at: string;
 }
 
+export type AccountabilityEventType = 'activated' | 'fulfilled' | 'waived' | 'resolved';
+
 export interface TaskAccountabilityCommitment {
   id: string;
   task_id: string;
@@ -117,9 +119,21 @@ export interface TaskAccountabilityCommitment {
   source_consequence_id: string | null;
   consequence_snapshot: ConsequenceSnapshot;
   commitment_status: CommitmentStatus;
+  activated_at: string | null;
   created_at: string;
   updated_at: string;
 }
+
+export interface AccountabilityEvent {
+  id: string;
+  user_id: string;
+  task_id: string;
+  commitment_id: string;
+  event_type: AccountabilityEventType;
+  metadata: Record<string, unknown> | null;
+  created_at: string;
+}
+
 
 export interface CreateConsequenceDefinitionInput {
   title: string;

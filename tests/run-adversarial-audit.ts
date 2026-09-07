@@ -35,7 +35,7 @@ async function runAdversarialAuditScript() {
       const rawOutput = execSync('npx supabase db query --linked --file tests/adversarial-rls-audit.sql', {
         encoding: 'utf8',
         cwd: process.cwd(),
-        timeout: 5000,
+        timeout: 60000,
       });
 
       const jsonMatch = rawOutput.match(/\{[\s\S]*"rows":[\s\S]*\}/);
