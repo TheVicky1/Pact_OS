@@ -79,3 +79,20 @@ Operations modifying security-sensitive state must execute atomically:
 - Account integration sync updates.
 
 Database transactions or Supabase RPC stored procedures will be used to prevent partial state corruption.
+
+---
+
+## 6. Authentication Architecture & OAuth Broker Flow [CONFIRMED]
+
+PACT employs **Supabase Auth** as the authoritative identity and session manager across all authentication channels:
+
+### Supported Authentication Methods
+1. **Email / Password**: Registration and login validated with Zod (`signUpSchema`, `signInSchema`) and authenticated via `supabase.auth.signUp()` and `supabase.auth.signInWithPassword()`.
+2. **Google OAuth 2.0**: Initiated via browser client `supabase.auth.signInWithOAuth({ provider: 'google' })`, brokered through Supabase Auth, and completed via server-side PKCE code exchange at `/auth/callback/route.ts`.
+
+### Unified Identity Model
+Regardless of authentication method (Email/Password or Google OAuth), identity converges into a single authenticated user model:
+- `auth.getUser()` verifies JWT and cookie session server-side.
+- PostgreSQL trigger `on_auth_user_created` automatically inserts a corresponding `public.profiles` row upon `auth.users` creation.
+- RLS policies filter data strictly by `auth.uid() = user_id`.
+

@@ -66,3 +66,39 @@ export interface IntegrationConnector<TData> {
 1. Token revocation request sent to provider API.
 2. Credentials purged from `integration_accounts`.
 3. Historical metrics retained or purged based on user preference ("Keep metrics" vs. "Purge all").
+
+---
+
+## 6. Google OAuth Provider Integration [CONFIRMED]
+
+### Overview
+PACT integrates Google OAuth as an authentication method using **Supabase Auth as the OAuth broker/provider**.
+
+### Provider Configuration Matrix
+- **Google Cloud Project Name**: `PACT`
+- **Google Cloud Project ID**: `pact-507905`
+- **OAuth Client Type**: Web application
+- **Local Authorized JavaScript Origin**: `http://localhost:3000`
+- **Google → Supabase Authorized Redirect URI**: `https://xptrzmftirlzhbmkdqvy.supabase.co/auth/v1/callback`
+- **Supabase → PACT Application Redirect URI**: `http://localhost:3000/auth/callback`
+
+### Architectural Sequence
+```
+PACT App Client UI (/login or /register)
+  ↓ [signInWithOAuth({ provider: 'google', redirectTo: '/auth/callback' })]
+Supabase Auth Broker (https://xptrzmftirlzhbmkdqvy.supabase.co)
+  ↓ [Google OAuth 2.0 Authorization Endpoint]
+Google Cloud Authentication & Consent Screen
+  ↓ [Authorization Code Callback]
+Supabase Auth Server (/auth/v1/callback)
+  ↓ [PKCE Exchange & Session JWT Creation]
+PACT App Callback Route (/auth/callback?code=...)
+  ↓ [exchangeCodeForSession(code) & validateSafeRedirect()]
+Authenticated PACT Session Cookie -> Redirect to /app
+```
+
+### Security Isolation Rules
+1. **Client Secret Isolation**: Google Client ID and Secret are configured exclusively inside the Supabase Dashboard. No Client Secret is present in frontend code or environment variables.
+2. **Open Redirect Protection**: `validateSafeRedirect()` validates the destination path, rejecting external or malformed URLs and enforcing relative path boundaries (`/app` or `/profile`).
+3. **Database Profile Convergence**: First-time Google OAuth sign-ins trigger `public.handle_new_user()` in PostgreSQL, populating `public.profiles` automatically without client-side privilege escalation.
+

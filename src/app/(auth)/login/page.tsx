@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useTransition, useEffect } from 'react';
+import React, { useState, useTransition } from 'react';
 import Link from 'next/link';
 import { PactLogo } from '@/components/brand/pact-logo';
 import { signInAction } from '@/features/auth/actions';
@@ -9,16 +9,16 @@ import { motion } from 'framer-motion';
 import { Lock, Mail, AlertCircle, Loader2 } from 'lucide-react';
 
 export default function LoginPage() {
-  const [error, setError] = useState<string | null>(null);
-  const [isPending, startTransition] = useTransition();
-
-  useEffect(() => {
-    // Check URL parameters for oauth error flag
-    const params = new URLSearchParams(window.location.search);
-    if (params.get('error') === 'oauth_failed') {
-      setError('Google sign-in was canceled or encountered an authentication error. Please try again.');
+  const [error, setError] = useState<string | null>(() => {
+    if (typeof window !== 'undefined') {
+      const params = new URLSearchParams(window.location.search);
+      if (params.get('error') === 'oauth_failed') {
+        return 'Google sign-in was canceled or encountered an authentication error. Please try again.';
+      }
     }
-  }, []);
+    return null;
+  });
+  const [isPending, startTransition] = useTransition();
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();

@@ -148,4 +148,15 @@ For Phase 2F, Task execution lifecycle transitions were made fully server-author
 4. **Idempotency & State Invariants**: `completed` and `missed` states are terminal. Idempotent repeated calls preserve original authoritative transaction timestamps without overwriting data.
 5. **Adversarial Real Database Verification**: Verified against real remote Supabase PostgreSQL database (`tests/adversarial-rls-audit.sql` Section 6, 29/29 checks passed).
 
+---
+
+## 9. Phase 2I Google OAuth Security & Authentication Hardening [CONFIRMED]
+
+For Phase 2I, Google OAuth was integrated into the existing server-authoritative Supabase Auth architecture:
+1. **Supabase Auth Broker Security**: Google OAuth flow uses Supabase Auth as the identity broker (`signInWithOAuth({ provider: 'google' })`). The Google Client ID and Secret reside exclusively in the Supabase Dashboard. No Client Secret is present in frontend code, environment files, or repository assets.
+2. **Server-Side PKCE Code Exchange**: The OAuth callback route (`/auth/callback/route.ts`) receives the authorization code and executes `supabase.auth.exchangeCodeForSession(code)` server-side via `@supabase/ssr`, establishing verified HTTP-only session cookies.
+3. **Open Redirect Defense**: All redirect target parameters (`next`) pass through `validateSafeRedirect()`. External protocols (`http://`, `https://`), protocol-relative URLs (`//evil.com`), and unauthorized internal routes are rejected, defaulting strictly to `/app`.
+4. **Database Identity & Profile Convergence**: Authenticated identity is derived strictly from Supabase Auth (`auth.getUser()`). First-time Google sign-ins trigger `public.handle_new_user()` in PostgreSQL, automatically initializing `public.profiles` with user metadata (`full_name`) without client privilege escalation.
+5. **Adversarial & Unit Verification**: Verified via `tests/oauth-flow-validation.test.ts` (10/10 open-redirect vectors blocked, provider contract verified).
+
 
