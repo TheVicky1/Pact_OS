@@ -104,15 +104,17 @@ PACT introduces the **Accountability & Consequence Engine** as a foundational do
 
 ### Core Architectural Principles
 1. **Low-Friction Task Creation**: Users configure default accountability preferences once. Normal task creation (`Title` + `Deadline`) automatically inherits the preferred default consequence unless explicitly overridden or disabled.
-2. **User Ownership & Storage Isolation**: All consequence definitions and accountability preferences are owned strictly by the authenticated user (`user_id = auth.uid()`). Cross-user exposure and shared consequences are prohibited.
-3. **Immutability & Locking upon Commitment**: Once attached to an active commitment, accountability settings are committed/locked to prevent post-miss tampering.
-4. **Integration with Authoritative Task Lifecycle**: The Accountability Engine acts as a reactive subscriber to task state transitions. When a task reaches a terminal state (`completed` or `missed`), the engine executes consequences only for missed tasks.
+2. **User Ownership & Storage Isolation**: All consequence definitions, user preferences, and task commitments are owned strictly by the authenticated user (`user_id = auth.uid()`). Cross-user exposure and shared consequences are prohibited.
+3. **Commitment Snapshot Immutability**: When accountability is assigned to a task, a dedicated `task_accountability_commitments` record is created containing an immutable JSONB snapshot (`consequence_snapshot`) of the consequence (`title`, `consequence_type`, `action_statement`, `description`). Subsequent edits to reusable `consequence_definitions` or task metadata updates do NOT alter the committed snapshot. Direct client UPDATE or DELETE of commitment snapshots is blocked by database trigger `protect_accountability_commitment_immutability()`.
+4. **Deterministic Multi-Default Resolution**: Users can maintain multiple enabled default consequence definitions. The system resolves defaults deterministically by ordering enabled defaults by `(priority DESC, created_at ASC, id ASC)`. Explicit preference `default_consequence_id` serves as a primary override when active.
+5. **Integration with Authoritative Task Lifecycle**: The Accountability Engine acts as a reactive subscriber to task state transitions. When a task reaches a terminal state (`completed` or `missed`), the engine executes consequences only for missed tasks.
 
 ### Absolute Backend Safety Boundaries [CONFIRMED]
 The PACT backend enforces hard safety boundaries at the architecture level:
-- **NO Arbitrary Code Execution**: Consequence definitions represent declarative instructions, never executable scripts, shell commands, or dynamic code blocks.
+- **NO Arbitrary Code Execution**: Consequence definitions and snapshots represent declarative instructions, never executable scripts, shell commands, or dynamic code blocks.
 - **NO External System Control**: PACT does not issue automated shell commands, external API destructive calls, or control un-vetted external systems.
 - **NO Automatic Financial Transfers**: Financial consequences are user-declared accountability records, NOT automated bank or payment processor transfers.
 - **NO Dangerous or Coercive Actions**: Physical harm, illegal acts, or coercive mechanics targeting third parties are strictly prohibited.
+
 
 

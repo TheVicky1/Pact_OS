@@ -64,6 +64,8 @@ export interface CreateTaskInput {
   goal_id?: string | null;
   description?: string | null;
   priority?: TaskPriority;
+  accountability_mode?: AccountabilityMode;
+  consequence_id?: string | null;
 }
 
 // Phase 3 Accountability Domain Types
@@ -75,6 +77,16 @@ export type ConsequenceType =
   | 'financial_declaration'
   | 'custom';
 
+export type AccountabilityMode = 'default' | 'explicit' | 'none';
+export type CommitmentStatus = 'committed' | 'activated' | 'fulfilled' | 'waived';
+
+export interface ConsequenceSnapshot {
+  title: string;
+  consequence_type: ConsequenceType;
+  action_statement: string;
+  description: string | null;
+}
+
 export interface ConsequenceDefinition {
   id: string;
   user_id: string;
@@ -84,6 +96,7 @@ export interface ConsequenceDefinition {
   action_statement: string;
   is_enabled: boolean;
   is_default: boolean;
+  priority: number;
   created_at: string;
   updated_at: string;
 }
@@ -97,6 +110,17 @@ export interface UserAccountabilityPreferences {
   updated_at: string;
 }
 
+export interface TaskAccountabilityCommitment {
+  id: string;
+  task_id: string;
+  user_id: string;
+  source_consequence_id: string | null;
+  consequence_snapshot: ConsequenceSnapshot;
+  commitment_status: CommitmentStatus;
+  created_at: string;
+  updated_at: string;
+}
+
 export interface CreateConsequenceDefinitionInput {
   title: string;
   consequence_type: ConsequenceType;
@@ -104,6 +128,7 @@ export interface CreateConsequenceDefinitionInput {
   description?: string | null;
   is_enabled?: boolean;
   is_default?: boolean;
+  priority?: number;
 }
 
 export interface UpdateConsequenceDefinitionInput {
@@ -113,6 +138,7 @@ export interface UpdateConsequenceDefinitionInput {
   description?: string | null;
   is_enabled?: boolean;
   is_default?: boolean;
+  priority?: number;
 }
 
 export interface UpdateUserAccountabilityPreferencesInput {
@@ -120,4 +146,5 @@ export interface UpdateUserAccountabilityPreferencesInput {
   auto_apply_default?: boolean;
   is_enabled?: boolean;
 }
+
 

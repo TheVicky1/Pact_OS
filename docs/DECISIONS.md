@@ -103,3 +103,14 @@ Every architectural item in PACT documentation is categorized into one of five e
   4. **PostgreSQL Table Grants**: Table privileges (`GRANT SELECT, INSERT, UPDATE, DELETE ON TABLE ... TO authenticated;`) are explicitly granted in migration prior to RLS evaluation.
   5. **Absolute Safety Boundaries**: Consequences are declarative instructions, never executable scripts, shell commands, external API destructive calls, or automated financial transfers.
   6. **Adversarial Verification**: Verified against real live Supabase PostgreSQL DB via 38-step security audit (`tests/adversarial-rls-audit.sql`) and 9 Zod unit tests (`tests/accountability-validation.test.ts`).
+
+### ADR-018: Phase 3 Milestone 2 — Commitment Assignment & Immutability Engine Architecture [CONFIRMED]
+- **Status**: [CONFIRMED]
+- **Decision**: Implement the backend/domain mechanism that attaches immutable accountability commitments to tasks upon creation. Key architectural choices:
+  1. **Separation of Definition vs. Commitment**: Reusable user-configured consequence definitions reside in `public.consequence_definitions`. Task accountability commitments reside in `public.task_accountability_commitments` as committed JSONB snapshots (`consequence_snapshot`).
+  2. **Snapshot Immutability**: Once an accountability commitment is created, its snapshot is locked. Subsequent edits to reusable consequence definitions or task metadata (`title`, `deadline_at`, `priority`) do NOT modify or remove the committed snapshot. Direct client UPDATE or DELETE of snapshot fields is blocked by database trigger `protect_accountability_commitment_immutability()`.
+  3. **Deterministic Multi-Default Resolution**: Normalizes default consequence resolution by evaluating enabled defaults ordered by `(priority DESC, created_at ASC, id ASC)`. Explicit preference `default_consequence_id` acts as a primary override when set.
+  4. **Low-Friction Creation Path**: `createTaskAction` automatically resolves and attaches the user's default consequence snapshot server-side when enabled. Simple task creation (`Title` + `Deadline`) remains 100% backward compatible without client payload overhead.
+  5. **Confidentiality Data-Access Boundary**: Consequence snapshot data is isolated in `task_accountability_commitments` and fetched via `getTaskAccountabilityCommitment(taskId)` rather than exposing full snapshot payloads in standard task list queries (`getTasks()`).
+  6. **Adversarial Verification**: Verified against real live Supabase PostgreSQL DB via 46-step security audit (`tests/adversarial-rls-audit.sql`) and unit test suite (`tests/commitment-engine.test.ts`).
+

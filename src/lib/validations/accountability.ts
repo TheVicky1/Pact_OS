@@ -9,6 +9,15 @@ export const consequenceTypeSchema = z.enum([
   'custom',
 ]);
 
+export const accountabilityModeSchema = z.enum(['default', 'explicit', 'none']);
+
+export const consequenceSnapshotSchema = z.object({
+  title: z.string().trim().min(1).max(255),
+  consequence_type: consequenceTypeSchema,
+  action_statement: z.string().trim().min(1).max(1000),
+  description: z.string().trim().max(2000).nullable().optional(),
+});
+
 export const createConsequenceDefinitionSchema = z.object({
   title: z
     .string()
@@ -24,6 +33,7 @@ export const createConsequenceDefinitionSchema = z.object({
   description: z.string().trim().max(2000, 'Description must not exceed 2000 characters.').nullable().optional(),
   is_enabled: z.boolean().default(true),
   is_default: z.boolean().default(false),
+  priority: z.number().int().min(0).max(10000).default(0),
 });
 
 export const updateConsequenceDefinitionSchema = createConsequenceDefinitionSchema.partial();
@@ -33,3 +43,9 @@ export const updateUserAccountabilityPreferencesSchema = z.object({
   auto_apply_default: z.boolean().optional(),
   is_enabled: z.boolean().optional(),
 });
+
+export const createTaskAccountabilitySchema = z.object({
+  accountability_mode: accountabilityModeSchema.optional().default('default'),
+  consequence_id: z.string().uuid('Invalid Consequence UUID format.').nullable().optional(),
+});
+

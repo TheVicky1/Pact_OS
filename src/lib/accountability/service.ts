@@ -2,6 +2,7 @@ import { createClient } from '@/lib/supabase/server';
 import {
   ConsequenceDefinition,
   UserAccountabilityPreferences,
+  TaskAccountabilityCommitment,
   CreateConsequenceDefinitionInput,
   UpdateConsequenceDefinitionInput,
   UpdateUserAccountabilityPreferencesInput,
@@ -238,20 +239,127 @@ export async function updateUserAccountabilityPreferences(
 }
 
 /**
- * Resolves the active default consequence definition for task creation.
- * Returns null if master engine is disabled, auto_apply_default is false, or no default is configured/enabled.
+ * Resolves the active default consequence definition for task creation using deterministic priority ordering.
+ * Order of resolution:
+ * 1. Check if user accountability preferences exist and is_enabled is true.
+ * 2. If default_consequence_id is explicitly set in preferences, verify it is enabled and owned by user.
+ * 3. Otherwise, query consequence_definitions for enabled defaults (is_enabled = true, is_default = true),
+ *    ordered deterministically by (priority DESC, created_at ASC, id ASC) limit 1.
+ * 4. Return null if no valid default consequence exists.
  */
 export async function resolveDefaultConsequence(): Promise<ConsequenceDefinition | null> {
-  const prefs = await getUserAccountabilityPreferences();
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
 
-  if (!prefs || !prefs.is_enabled || !prefs.auto_apply_default || !prefs.default_consequence_id) {
+  if (!user) {
     return null;
   }
 
-  const consequence = await getConsequenceDefinitionById(prefs.default_consequence_id);
-  if (!consequence || !consequence.is_enabled) {
-    return null; // Disabled or deleted consequence cannot become active default
+  const prefs = await getUserAccountabilityPreferences();
+  if (prefs && !prefs.is_enabled) {
+    return null; // Master engine disabled for user
   }
 
-  return consequence;
+  // 1. Try explicit default_consequence_id from preferences first
+  if (prefs && prefs.default_consequence_id) {
+    const consequence = await getConsequenceDefinitionById(prefs.default_consequence_id);
+    if (consequence && consequence.is_enabled) {
+      return consequence;
+    }
+  }
+
+  // 2. Query enabled default consequence definitions ordered by priority DESC, created_at ASC, id ASC
+  const { data, error } = await supabase
+    .from('consequence_definitions')
+    .select('*')
+    .eq('user_id', user.id)
+    .eq('is_enabled', true)
+    .eq('is_default', true)
+    .order('priority', { ascending: false })
+    .order('created_at', { ascending: true })
+    .order('id', { ascending: true })
+    .limit(1)
+    .maybeSingle();
+
+  if (error || !data) {
+    return null;
+  }
+
+  return data as ConsequenceDefinition;
 }
+
+/**
+ * Creates an immutable Task Accountability Commitment snapshot for a specific task.
+ * Freezes title, consequence_type, action_statement, and description.
+ */
+export async function createTaskAccountabilityCommitment(
+  taskId: string,
+  consequence: ConsequenceDefinition
+): Promise<TaskAccountabilityCommitment> {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) {
+    throw new Error('Authentication required.');
+  }
+
+  const snapshot = {
+    title: consequence.title,
+    consequence_type: consequence.consequence_type,
+    action_statement: consequence.action_statement,
+    description: consequence.description ?? null,
+  };
+
+  const { data, error } = await supabase
+    .from('task_accountability_commitments')
+    .insert({
+      task_id: taskId,
+      user_id: user.id,
+      source_consequence_id: consequence.id,
+      consequence_snapshot: snapshot,
+      commitment_status: 'committed',
+    })
+    .select()
+    .single();
+
+  if (error) {
+    throw new Error(`Failed to create task accountability commitment: ${error.message}`);
+  }
+
+  return data as TaskAccountabilityCommitment;
+}
+
+/**
+ * Confidential data-access boundary method to fetch a task's accountability commitment.
+ * Isolated from basic getTasks() queries to protect consequence confidentiality until needed.
+ */
+export async function getTaskAccountabilityCommitment(
+  taskId: string
+): Promise<TaskAccountabilityCommitment | null> {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) {
+    throw new Error('Authentication required.');
+  }
+
+  const { data, error } = await supabase
+    .from('task_accountability_commitments')
+    .select('*')
+    .eq('task_id', taskId)
+    .eq('user_id', user.id)
+    .maybeSingle();
+
+  if (error) {
+    throw new Error(`Failed to fetch task accountability commitment: ${error.message}`);
+  }
+
+  return data as TaskAccountabilityCommitment | null;
+}
+

@@ -65,8 +65,11 @@ export const createTaskSchema = z.object({
   goal_id: z.string().uuid('Invalid Goal UUID format.').nullable().optional(),
   description: z.string().trim().max(2000, 'Description must not exceed 2000 characters.').nullable().optional(),
   priority: taskPrioritySchema.default('medium'),
+  accountability_mode: z.enum(['default', 'explicit', 'none']).optional(),
+  consequence_id: z.string().uuid('Invalid Consequence UUID format.').nullable().optional(),
 });
 
 export const updateTaskSchema = createTaskSchema.partial().extend({
   status: taskStatusSchema.optional(),
 });
+

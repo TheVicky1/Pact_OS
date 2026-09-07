@@ -107,8 +107,11 @@ profiles (1:1 with auth.users)
 - `user_id`: `uuid` (NOT NULL, REFERENCES `profiles(id)` ON DELETE CASCADE)
 - `title`: `text` (NOT NULL)
 - `description`: `text` (NULLABLE)
-- `consequence_type`: `text` (ENUM: `'personal_restriction'`, `'extra_responsibility'`, `'self_improvement'`, `'reflection'`, `'financial'`, `'custom'`)
+- `consequence_type`: `text` (ENUM: `'personal_restriction'`, `'extra_responsibility'`, `'self_improvement'`, `'reflection'`, `'financial_declaration'`, `'custom'`)
+- `action_statement`: `text` (NOT NULL)
 - `is_enabled`: `boolean` (NOT NULL, DEFAULT `true`)
+- `is_default`: `boolean` (NOT NULL, DEFAULT `false`)
+- `priority`: `integer` (NOT NULL, DEFAULT `0`)
 - `created_at`: `timestamptz` (NOT NULL, DEFAULT `now()`)
 - `updated_at`: `timestamptz` (NOT NULL, DEFAULT `now()`)
 - **Ownership & RLS**: Owned by `user_id`; strictly isolated by RLS. Authenticated users can CRUD only their own consequence definitions.
@@ -117,12 +120,25 @@ profiles (1:1 with auth.users)
 - `id`: `uuid` (PRIMARY KEY, DEFAULT `gen_random_uuid()`)
 - `user_id`: `uuid` (NOT NULL, UNIQUE, REFERENCES `profiles(id)` ON DELETE CASCADE)
 - `default_consequence_id`: `uuid` (NULLABLE, REFERENCES `consequence_definitions(id)` ON DELETE SET NULL)
-- `accountability_enabled`: `boolean` (NOT NULL, DEFAULT `true`)
+- `auto_apply_default`: `boolean` (NOT NULL, DEFAULT `false`)
+- `is_enabled`: `boolean` (NOT NULL, DEFAULT `true`)
 - `created_at`: `timestamptz` (NOT NULL, DEFAULT `now()`)
 - `updated_at`: `timestamptz` (NOT NULL, DEFAULT `now()`)
 - **Ownership & RLS**: 1:1 per user (`user_id` UNIQUE). RLS ensures users access only their own preference record and prevents linking a foreign user's consequence definition as `default_consequence_id`.
 
+### Table: `task_accountability_commitments` [CONFIRMED / MIGRATED]
+- `id`: `uuid` (PRIMARY KEY, DEFAULT `gen_random_uuid()`)
+- `task_id`: `uuid` (NOT NULL, UNIQUE, REFERENCES `tasks(id)` ON DELETE CASCADE)
+- `user_id`: `uuid` (NOT NULL, REFERENCES `profiles(id)` ON DELETE CASCADE)
+- `source_consequence_id`: `uuid` (NULLABLE, REFERENCES `consequence_definitions(id)` ON DELETE SET NULL)
+- `consequence_snapshot`: `jsonb` (NOT NULL, contains `{ title, consequence_type, action_statement, description }`)
+- `commitment_status`: `text` (ENUM: `'committed'`, `'activated'`, `'fulfilled'`, `'waived'`, DEFAULT `'committed'`)
+- `created_at`: `timestamptz` (NOT NULL, DEFAULT `now()`)
+- `updated_at`: `timestamptz` (NOT NULL, DEFAULT `now()`)
+- **Ownership & RLS**: 1:1 with `tasks`. Protected by RLS (`auth.uid() = user_id`). Direct client `UPDATE` or `DELETE` of commitment snapshot fields is blocked by DB trigger `protect_accountability_commitment_immutability()`.
+
 ---
+
 
 ## 3. Trusted Lifecycle Fields Strategy [VERIFIED AGAINST REAL DATABASE]
 

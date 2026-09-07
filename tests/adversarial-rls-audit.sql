@@ -391,14 +391,138 @@ BEGIN
     INSERT INTO _rls_audit_results VALUES ('7.10 Anonymous Access Blocked for Accountability Tables', 'PASS');
   END;
 
+  -- ----------------------------------------------------------------
+  -- SECTION 8: PHASE 3 MILESTONE 2 COMMITMENT ASSIGNMENT & IMMUTABILITY AUDIT
+  -- ----------------------------------------------------------------
+  DECLARE
+    v_m2_cons_a_id UUID;
+    v_m2_cons_b_id UUID;
+    v_m2_task_a_id UUID;
+    v_m2_commit_a_id UUID;
+  BEGIN
+    -- 8.1 User A creates Consequence Definition A and Task A
+    SET LOCAL ROLE authenticated;
+    SET LOCAL "request.jwt.claim.sub" = '11111111-1111-1111-1111-111111111111';
+
+    INSERT INTO public.consequence_definitions (user_id, title, consequence_type, action_statement)
+    VALUES (v_user_a, 'User A Original Consequence', 'personal_restriction', 'No social media 24h')
+    RETURNING id INTO v_m2_cons_a_id;
+
+    INSERT INTO public.tasks (user_id, title, status, deadline_at)
+    VALUES (v_user_a, 'User A Commitment Task', 'pending', transaction_timestamp() + interval '1 hour')
+    RETURNING id INTO v_m2_task_a_id;
+
+    -- 8.2 User A creates Task Accountability Commitment snapshot for Task A
+    INSERT INTO public.task_accountability_commitments (
+      task_id,
+      user_id,
+      source_consequence_id,
+      consequence_snapshot,
+      commitment_status
+    )
+    VALUES (
+      v_m2_task_a_id,
+      v_user_a,
+      v_m2_cons_a_id,
+      jsonb_build_object(
+        'title', 'User A Original Consequence',
+        'consequence_type', 'personal_restriction',
+        'action_statement', 'No social media 24h',
+        'description', null
+      ),
+      'committed'
+    )
+    RETURNING id INTO v_m2_commit_a_id;
+
+    INSERT INTO _rls_audit_results VALUES ('8.1 Task Commitment A Created by User A', 'PASS');
+
+    -- 8.3 User A reads own Task Commitment A
+    SELECT count(*) INTO v_count FROM public.task_accountability_commitments WHERE id = v_m2_commit_a_id;
+    IF v_count <> 1 THEN RAISE EXCEPTION 'User A could not read own task commitment'; END IF;
+    INSERT INTO _rls_audit_results VALUES ('8.2 User A Read Own Task Commitment', 'PASS');
+
+    -- 8.4 Switch to User B context
+    SET LOCAL "request.jwt.claim.sub" = '22222222-2222-2222-2222-222222222222';
+
+    INSERT INTO public.consequence_definitions (user_id, title, consequence_type, action_statement)
+    VALUES (v_user_b, 'User B Consequence', 'reflection', 'Write 10 lines')
+    RETURNING id INTO v_m2_cons_b_id;
+
+    -- 8.5 ATTACK: User B reads User A Task Commitment A
+    SELECT count(*) INTO v_count FROM public.task_accountability_commitments WHERE id = v_m2_commit_a_id;
+    IF v_count <> 0 THEN RAISE EXCEPTION 'SECURITY VIOLATION: User B read User A Task Commitment!'; END IF;
+    INSERT INTO _rls_audit_results VALUES ('8.3 Cross-User Task Commitment SELECT Blocked', 'PASS');
+
+    -- 8.6 ATTACK: User B attempts to attach User B Consequence to User A Task A
+    BEGIN
+      INSERT INTO public.task_accountability_commitments (
+        task_id, user_id, source_consequence_id, consequence_snapshot
+      ) VALUES (
+        v_m2_task_a_id, v_user_b, v_m2_cons_b_id, '{"title":"Hacked"}'::jsonb
+      );
+      RAISE EXCEPTION 'SECURITY VIOLATION: User B attached commitment to User A task!';
+    EXCEPTION WHEN OTHERS THEN
+      INSERT INTO _rls_audit_results VALUES ('8.4 Cross-User Task Commitment INSERT Blocked', 'PASS');
+    END;
+
+    -- 8.7 ATTACK: User B attempts to use User A Consequence A for User B Task
+    DECLARE
+      v_m2_task_b_id UUID;
+    BEGIN
+      INSERT INTO public.tasks (user_id, title, status, deadline_at)
+      VALUES (v_user_b, 'User B Task', 'pending', transaction_timestamp() + interval '1 hour')
+      RETURNING id INTO v_m2_task_b_id;
+
+      BEGIN
+        INSERT INTO public.task_accountability_commitments (
+          task_id, user_id, source_consequence_id, consequence_snapshot
+        ) VALUES (
+          v_m2_task_b_id, v_user_b, v_m2_cons_a_id, '{"title":"Hijacked Consequence"}'::jsonb
+        );
+        RAISE EXCEPTION 'SECURITY VIOLATION: User B used User A consequence definition!';
+      EXCEPTION WHEN OTHERS THEN
+        INSERT INTO _rls_audit_results VALUES ('8.5 Cross-User Source Consequence Linkage Blocked', 'PASS');
+      END;
+    END;
+
+    -- 8.8 Switch back to User A
+    SET LOCAL "request.jwt.claim.sub" = '11111111-1111-1111-1111-111111111111';
+
+    -- 8.9 ATTACK: User A attempts to update committed consequence_snapshot
+    BEGIN
+      UPDATE public.task_accountability_commitments
+      SET consequence_snapshot = jsonb_build_object('title', 'Mutated Snapshot Title')
+      WHERE id = v_m2_commit_a_id;
+      RAISE EXCEPTION 'SECURITY VIOLATION: Updating committed snapshot was allowed!';
+    EXCEPTION WHEN OTHERS THEN
+      INSERT INTO _rls_audit_results VALUES ('8.6 Direct UPDATE of Commitment Snapshot Blocked by DB Trigger', 'PASS');
+    END;
+
+    -- 8.10 ATTACK: User A attempts direct DELETE of commitment without deleting parent task
+    BEGIN
+      DELETE FROM public.task_accountability_commitments WHERE id = v_m2_commit_a_id;
+      RAISE EXCEPTION 'SECURITY VIOLATION: Direct deletion of task commitment was allowed!';
+    EXCEPTION WHEN OTHERS THEN
+      INSERT INTO _rls_audit_results VALUES ('8.7 Direct DELETE of Task Commitment Blocked by DB Trigger', 'PASS');
+    END;
+
+    -- 8.11 ATTACK: Anonymous access to task_accountability_commitments blocked
+    SET LOCAL ROLE anon;
+    SET LOCAL "request.jwt.claim.sub" = '';
+    SELECT count(*) INTO v_count FROM public.task_accountability_commitments;
+    IF v_count <> 0 THEN RAISE EXCEPTION 'SECURITY VIOLATION: Anonymous read task_accountability_commitments!'; END IF;
+    INSERT INTO _rls_audit_results VALUES ('8.8 Anonymous Access Blocked for Task Commitments Table', 'PASS');
+  END;
+
   -- Clean up test records
   RESET ROLE;
+  DELETE FROM public.task_accountability_commitments WHERE user_id IN (v_user_a, v_user_b);
   DELETE FROM public.user_accountability_preferences WHERE user_id IN (v_user_a, v_user_b);
   DELETE FROM public.consequence_definitions WHERE user_id IN (v_user_a, v_user_b);
   DELETE FROM public.tasks WHERE user_id IN (v_user_a, v_user_b);
   DELETE FROM public.projects WHERE user_id IN (v_user_a, v_user_b);
   DELETE FROM public.goals WHERE user_id IN (v_user_a, v_user_b);
 END;
-$$;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
 
-SELECT step, status FROM _rls_audit_results;
+SELECT * FROM public.run_pact_adversarial_audit();

@@ -4,6 +4,11 @@ import { createClient } from '@/lib/supabase/server';
 import { createTaskSchema, updateTaskSchema } from '@/lib/validations/domain';
 import { localToUtc } from '@/lib/time';
 import { Task } from '@/types/domain';
+import {
+  resolveDefaultConsequence,
+  getConsequenceDefinitionById,
+  createTaskAccountabilityCommitment,
+} from '@/lib/accountability/service';
 import { revalidatePath } from 'next/cache';
 import { z } from 'zod';
 
@@ -16,8 +21,8 @@ export interface TaskActionResult<T = Task> {
 /**
  * Server action to create a new Task (Commitment) for the authenticated user.
  * Ownership (user_id) is derived strictly from the server-verified auth session.
- * Cross-user parent Goal and Project linkages are verified server-side prior to insertion.
- * Direct setting of trusted fields (completed_at, missed_at) is prohibited.
+ * Cross-user parent Goal, Project, and Consequence linkages are verified server-side prior to insertion.
+ * Resolves accountability defaults automatically for low-friction task creation.
  */
 export async function createTaskAction(
   payload: unknown
@@ -50,7 +55,16 @@ export async function createTaskAction(
       return { success: false, error: firstIssue?.message || 'Invalid task details provided.' };
     }
 
-    const { title, deadline_at, project_id, goal_id, description, priority } = validation.data;
+    const {
+      title,
+      deadline_at,
+      project_id,
+      goal_id,
+      description,
+      priority,
+      accountability_mode = 'default',
+      consequence_id,
+    } = validation.data;
 
     // 1. Verify parent Goal ownership if goal_id exists
     if (goal_id) {
@@ -80,6 +94,24 @@ export async function createTaskAction(
       }
     }
 
+    // 3. Resolve target consequence definition if explicit accountability mode is requested
+    let targetConsequenceDefinition = null;
+    if (accountability_mode === 'explicit') {
+      if (!consequence_id) {
+        return { success: false, error: 'Explicit accountability mode requires a valid consequence definition ID.' };
+      }
+
+      const explicitConsequence = await getConsequenceDefinitionById(consequence_id);
+      if (!explicitConsequence || explicitConsequence.user_id !== user.id || !explicitConsequence.is_enabled) {
+        return { success: false, error: 'The selected consequence definition is invalid, disabled, or not owned by you.' };
+      }
+      targetConsequenceDefinition = explicitConsequence;
+    } else if (accountability_mode === 'default') {
+      // Resolve active default consequence deterministically
+      targetConsequenceDefinition = await resolveDefaultConsequence();
+    }
+
+    // 4. Create Task record
     const { data, error } = await supabase
       .from('tasks')
       .insert({
@@ -99,6 +131,11 @@ export async function createTaskAction(
       return { success: false, error: 'Failed to create task. Please try again.' };
     }
 
+    // 5. Attach Accountability Commitment Snapshot if a consequence definition was resolved
+    if (targetConsequenceDefinition && accountability_mode !== 'none') {
+      await createTaskAccountabilityCommitment(data.id, targetConsequenceDefinition);
+    }
+
     revalidatePath('/app/tasks');
     revalidatePath('/app/projects');
     revalidatePath('/app/goals');
@@ -109,6 +146,7 @@ export async function createTaskAction(
     return { success: false, error: 'An unexpected error occurred while creating the task.' };
   }
 }
+
 
 /**
  * Server action to update an existing Task owned by the authenticated user.
