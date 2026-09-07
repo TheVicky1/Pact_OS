@@ -96,3 +96,23 @@ Regardless of authentication method (Email/Password or Google OAuth), identity c
 - PostgreSQL trigger `on_auth_user_created` automatically inserts a corresponding `public.profiles` row upon `auth.users` creation.
 - RLS policies filter data strictly by `auth.uid() = user_id`.
 
+---
+
+## 7. Accountability & Consequence Engine Architecture [CONFIRMED]
+
+PACT introduces the **Accountability & Consequence Engine** as a foundational domain capability while preserving low-friction task creation (`Title` + `Deadline`).
+
+### Core Architectural Principles
+1. **Low-Friction Task Creation**: Users configure default accountability preferences once. Normal task creation (`Title` + `Deadline`) automatically inherits the preferred default consequence unless explicitly overridden or disabled.
+2. **User Ownership & Storage Isolation**: All consequence definitions and accountability preferences are owned strictly by the authenticated user (`user_id = auth.uid()`). Cross-user exposure and shared consequences are prohibited.
+3. **Immutability & Locking upon Commitment**: Once attached to an active commitment, accountability settings are committed/locked to prevent post-miss tampering.
+4. **Integration with Authoritative Task Lifecycle**: The Accountability Engine acts as a reactive subscriber to task state transitions. When a task reaches a terminal state (`completed` or `missed`), the engine executes consequences only for missed tasks.
+
+### Absolute Backend Safety Boundaries [CONFIRMED]
+The PACT backend enforces hard safety boundaries at the architecture level:
+- **NO Arbitrary Code Execution**: Consequence definitions represent declarative instructions, never executable scripts, shell commands, or dynamic code blocks.
+- **NO External System Control**: PACT does not issue automated shell commands, external API destructive calls, or control un-vetted external systems.
+- **NO Automatic Financial Transfers**: Financial consequences are user-declared accountability records, NOT automated bank or payment processor transfers.
+- **NO Dangerous or Coercive Actions**: Physical harm, illegal acts, or coercive mechanics targeting third parties are strictly prohibited.
+
+

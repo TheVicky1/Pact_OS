@@ -314,8 +314,87 @@ BEGIN
   END IF;
   INSERT INTO _rls_audit_results VALUES ('6.12 Anonymous Lifecycle RPC Execution Blocked', 'PASS');
 
+  -- ----------------------------------------------------------------
+  -- SECTION 7: PHASE 3 ACCOUNTABILITY DOMAIN & RLS AUDIT
+  -- ----------------------------------------------------------------
+  DECLARE
+    v_cons_a_id UUID;
+    v_cons_b_id UUID;
+  BEGIN
+    -- 7.1 Switch to User A context
+    SET LOCAL ROLE authenticated;
+    SET LOCAL "request.jwt.claim.sub" = '11111111-1111-1111-1111-111111111111';
+
+    INSERT INTO public.consequence_definitions (user_id, title, consequence_type, action_statement)
+    VALUES (v_user_a, 'User A Consequence', 'personal_restriction', 'No social media for 24h')
+    RETURNING id INTO v_cons_a_id;
+    INSERT INTO _rls_audit_results VALUES ('7.1 Consequence Definition A Created by User A', 'PASS');
+
+    -- 7.2 User A reads own Consequence A
+    SELECT count(*) INTO v_count FROM public.consequence_definitions WHERE id = v_cons_a_id;
+    IF v_count <> 1 THEN RAISE EXCEPTION 'User A could not read own consequence definition'; END IF;
+    INSERT INTO _rls_audit_results VALUES ('7.2 User A Read Own Consequence Definition', 'PASS');
+
+    -- 7.3 Switch to User B context & create Consequence B
+    SET LOCAL "request.jwt.claim.sub" = '22222222-2222-2222-2222-222222222222';
+    INSERT INTO public.consequence_definitions (user_id, title, consequence_type, action_statement)
+    VALUES (v_user_b, 'User B Consequence', 'self_improvement', 'Read 30 pages')
+    RETURNING id INTO v_cons_b_id;
+
+    -- 7.4 ATTACK: User B reads User A Consequence Definition A
+    SELECT count(*) INTO v_count FROM public.consequence_definitions WHERE id = v_cons_a_id;
+    IF v_count <> 0 THEN RAISE EXCEPTION 'SECURITY VIOLATION: User B read User A Consequence Definition!'; END IF;
+    INSERT INTO _rls_audit_results VALUES ('7.4 Cross-User Consequence Definition SELECT Blocked', 'PASS');
+
+    -- 7.5 ATTACK: User B updates User A Consequence Definition A
+    UPDATE public.consequence_definitions SET title = 'Hacked Consequence' WHERE id = v_cons_a_id;
+    IF FOUND THEN RAISE EXCEPTION 'SECURITY VIOLATION: User B updated User A Consequence!'; END IF;
+    INSERT INTO _rls_audit_results VALUES ('7.5 Cross-User Consequence Definition UPDATE Blocked', 'PASS');
+
+    -- 7.6 ATTACK: User B deletes User A Consequence Definition A
+    DELETE FROM public.consequence_definitions WHERE id = v_cons_a_id;
+    IF FOUND THEN RAISE EXCEPTION 'SECURITY VIOLATION: User B deleted User A Consequence!'; END IF;
+    INSERT INTO _rls_audit_results VALUES ('7.6 Cross-User Consequence Definition DELETE Blocked', 'PASS');
+
+    -- 7.7 ATTACK: User B inserts Consequence Definition with forged user_id = User A
+    BEGIN
+      INSERT INTO public.consequence_definitions (user_id, title, consequence_type, action_statement)
+      VALUES (v_user_a, 'Forged Consequence', 'custom', 'Forged action');
+      RAISE EXCEPTION 'SECURITY VIOLATION: User B inserted consequence for User A!';
+    EXCEPTION WHEN OTHERS THEN
+      INSERT INTO _rls_audit_results VALUES ('7.7 Forged user_id Consequence INSERT Blocked', 'PASS');
+    END;
+
+    -- 7.8 User B creates Accountability Preferences pointing to own Consequence B
+    INSERT INTO public.user_accountability_preferences (user_id, default_consequence_id, auto_apply_default, is_enabled)
+    VALUES (v_user_b, v_cons_b_id, true, true);
+    INSERT INTO _rls_audit_results VALUES ('7.8 User B Created Preferences Linked to Own Consequence B', 'PASS');
+
+    -- 7.9 ATTACK: User B updates Preferences attempting to set default_consequence_id = User A's Consequence A
+    BEGIN
+      UPDATE public.user_accountability_preferences
+      SET default_consequence_id = v_cons_a_id
+      WHERE user_id = v_user_b;
+      RAISE EXCEPTION 'SECURITY VIOLATION: User B linked preference to User A Consequence!';
+    EXCEPTION WHEN OTHERS THEN
+      INSERT INTO _rls_audit_results VALUES ('7.9 Cross-User Default Consequence Linkage Blocked', 'PASS');
+    END;
+
+    -- 7.10 ATTACK: Anonymous access to consequence_definitions & user_accountability_preferences
+    SET LOCAL ROLE anon;
+    SET LOCAL "request.jwt.claim.sub" = '';
+    SELECT count(*) INTO v_count FROM public.consequence_definitions;
+    IF v_count <> 0 THEN RAISE EXCEPTION 'SECURITY VIOLATION: Anonymous read consequence_definitions!'; END IF;
+
+    SELECT count(*) INTO v_count FROM public.user_accountability_preferences;
+    IF v_count <> 0 THEN RAISE EXCEPTION 'SECURITY VIOLATION: Anonymous read user_accountability_preferences!'; END IF;
+    INSERT INTO _rls_audit_results VALUES ('7.10 Anonymous Access Blocked for Accountability Tables', 'PASS');
+  END;
+
   -- Clean up test records
   RESET ROLE;
+  DELETE FROM public.user_accountability_preferences WHERE user_id IN (v_user_a, v_user_b);
+  DELETE FROM public.consequence_definitions WHERE user_id IN (v_user_a, v_user_b);
   DELETE FROM public.tasks WHERE user_id IN (v_user_a, v_user_b);
   DELETE FROM public.projects WHERE user_id IN (v_user_a, v_user_b);
   DELETE FROM public.goals WHERE user_id IN (v_user_a, v_user_b);

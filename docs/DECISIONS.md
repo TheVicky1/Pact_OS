@@ -94,6 +94,12 @@ Every architectural item in PACT documentation is categorized into one of five e
   5. **Non-Gamified Missed Visibility**: Surface missed tasks as a calm lifecycle state without consequences, punishments, XP, coins, flames, or gamification.
   6. **Side-Effect Free Reads & Authoritative Mutations**: Overview and domain views read state purely via server data-access layers (`getGoals`, `getProjects`, `getTasks`). Task completion executes authoritatively via `completeTaskAction` server action. Verified via unit and contract test suite (`tests/ui-integration.test.ts`).
 
-
-
-
+### ADR-017: Phase 3 Milestone 1 — Accountability Domain Foundation & Safety Model [CONFIRMED]
+- **Status**: [CONFIRMED]
+- **Decision**: Implement the foundational data model, user preferences, reusable consequence definitions, safety boundaries, RLS security policies, Zod validations, and server service layer for Phase 3 Accountability. Key architectural guarantees:
+  1. **Low-Friction Default Pattern**: Users set default accountability rules once in `user_accountability_preferences`. Simple task creation (`Title` + `Deadline`) automatically inherits defaults without requiring manual configuration on every task.
+  2. **Entity Isolation & Extensibility**: `consequence_definitions` stores user-owned consequence templates across 6 extensible categories (`personal_restriction`, `extra_responsibility`, `self_improvement`, `reflection`, `financial`, `custom`).
+  3. **Multi-Tenant RLS Boundary & Cross-User Linkage Defense**: RLS policies enforce `auth.uid() = user_id` for all CRUD operations. Foreign key linkage `default_consequence_id` in `user_accountability_preferences` is protected by `WITH CHECK` subqueries preventing users from attaching another user's consequence definition as their default.
+  4. **PostgreSQL Table Grants**: Table privileges (`GRANT SELECT, INSERT, UPDATE, DELETE ON TABLE ... TO authenticated;`) are explicitly granted in migration prior to RLS evaluation.
+  5. **Absolute Safety Boundaries**: Consequences are declarative instructions, never executable scripts, shell commands, external API destructive calls, or automated financial transfers.
+  6. **Adversarial Verification**: Verified against real live Supabase PostgreSQL DB via 38-step security audit (`tests/adversarial-rls-audit.sql`) and 9 Zod unit tests (`tests/accountability-validation.test.ts`).

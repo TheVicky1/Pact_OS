@@ -65,3 +65,59 @@ export interface CreateTaskInput {
   description?: string | null;
   priority?: TaskPriority;
 }
+
+// Phase 3 Accountability Domain Types
+export type ConsequenceType =
+  | 'personal_restriction'
+  | 'extra_responsibility'
+  | 'self_improvement'
+  | 'reflection'
+  | 'financial_declaration'
+  | 'custom';
+
+export interface ConsequenceDefinition {
+  id: string;
+  user_id: string;
+  title: string;
+  description: string | null;
+  consequence_type: ConsequenceType;
+  action_statement: string;
+  is_enabled: boolean;
+  is_default: boolean;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface UserAccountabilityPreferences {
+  user_id: string;
+  default_consequence_id: string | null;
+  auto_apply_default: boolean;
+  is_enabled: boolean;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface CreateConsequenceDefinitionInput {
+  title: string;
+  consequence_type: ConsequenceType;
+  action_statement: string;
+  description?: string | null;
+  is_enabled?: boolean;
+  is_default?: boolean;
+}
+
+export interface UpdateConsequenceDefinitionInput {
+  title?: string;
+  consequence_type?: ConsequenceType;
+  action_statement?: string;
+  description?: string | null;
+  is_enabled?: boolean;
+  is_default?: boolean;
+}
+
+export interface UpdateUserAccountabilityPreferencesInput {
+  default_consequence_id?: string | null;
+  auto_apply_default?: boolean;
+  is_enabled?: boolean;
+}
+

@@ -102,6 +102,26 @@ profiles (1:1 with auth.users)
 - `created_at`: `timestamptz` (NOT NULL, DEFAULT `now()`)
 - **Ownership & RLS**: Financial data owned by `user_id`; strictly protected by RLS.
 
+### Table: `consequence_definitions` [CONFIRMED / MIGRATED]
+- `id`: `uuid` (PRIMARY KEY, DEFAULT `gen_random_uuid()`)
+- `user_id`: `uuid` (NOT NULL, REFERENCES `profiles(id)` ON DELETE CASCADE)
+- `title`: `text` (NOT NULL)
+- `description`: `text` (NULLABLE)
+- `consequence_type`: `text` (ENUM: `'personal_restriction'`, `'extra_responsibility'`, `'self_improvement'`, `'reflection'`, `'financial'`, `'custom'`)
+- `is_enabled`: `boolean` (NOT NULL, DEFAULT `true`)
+- `created_at`: `timestamptz` (NOT NULL, DEFAULT `now()`)
+- `updated_at`: `timestamptz` (NOT NULL, DEFAULT `now()`)
+- **Ownership & RLS**: Owned by `user_id`; strictly isolated by RLS. Authenticated users can CRUD only their own consequence definitions.
+
+### Table: `user_accountability_preferences` [CONFIRMED / MIGRATED]
+- `id`: `uuid` (PRIMARY KEY, DEFAULT `gen_random_uuid()`)
+- `user_id`: `uuid` (NOT NULL, UNIQUE, REFERENCES `profiles(id)` ON DELETE CASCADE)
+- `default_consequence_id`: `uuid` (NULLABLE, REFERENCES `consequence_definitions(id)` ON DELETE SET NULL)
+- `accountability_enabled`: `boolean` (NOT NULL, DEFAULT `true`)
+- `created_at`: `timestamptz` (NOT NULL, DEFAULT `now()`)
+- `updated_at`: `timestamptz` (NOT NULL, DEFAULT `now()`)
+- **Ownership & RLS**: 1:1 per user (`user_id` UNIQUE). RLS ensures users access only their own preference record and prevents linking a foreign user's consequence definition as `default_consequence_id`.
+
 ---
 
 ## 3. Trusted Lifecycle Fields Strategy [VERIFIED AGAINST REAL DATABASE]
@@ -115,7 +135,8 @@ To prevent client timestamp manipulation:
 
 ## 4. Indexing & Foreign Key Integrity [CONFIRMED / MIGRATED]
 
-- All foreign key columns (`user_id`, `project_id`, `goal_id`) are indexed to optimize join performance.
+- All foreign key columns (`user_id`, `project_id`, `goal_id`, `default_consequence_id`) are indexed to optimize join performance.
 - Composite indexes on `(user_id, status)` and `(user_id, deadline_at)` accelerate dashboard queries and deadline background evaluators.
-- Foreign keys use `ON DELETE CASCADE` for `user_id` -> `profiles(id)` and `ON DELETE SET NULL` for parent relationships (`goal_id`, `project_id`) to preserve historical commitment data when parent goals or projects are archived/deleted.
-- **Phase 2A-SECURITY Adversarial Audit**: Fully verified against the real remote Supabase PostgreSQL database. All cross-user CRUD attempts, cross-user parent reference linkages, forged user IDs, and client timestamp forgery attempts were DENIED by RLS and database triggers.
+- Foreign keys use `ON DELETE CASCADE` for `user_id` -> `profiles(id)` and `ON DELETE SET NULL` for parent/reference relationships (`goal_id`, `project_id`, `default_consequence_id`) to preserve user configurations.
+- **Phase 3 Milestone 1 Adversarial Audit**: Fully verified against the real remote Supabase PostgreSQL database. All cross-user CRUD attempts, cross-user default consequence linkages, forged user IDs, and anonymous access attempts were DENIED by RLS policies.
+
