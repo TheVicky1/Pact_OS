@@ -106,6 +106,10 @@ async function runAdversarialSecuritySuite() {
     }
   }
 
+  if (!userA || !userB) {
+    throw new Error('User authentication failed: userA or userB is null');
+  }
+
   // ----------------------------------------------------------------
   // SECTION 2: GOALS SECURITY AUDIT
   // ----------------------------------------------------------------

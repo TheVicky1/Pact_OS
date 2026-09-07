@@ -1,15 +1,24 @@
 'use client';
 
-import React, { useState, useTransition } from 'react';
+import React, { useState, useTransition, useEffect } from 'react';
 import Link from 'next/link';
 import { PactLogo } from '@/components/brand/pact-logo';
 import { signInAction } from '@/features/auth/actions';
+import { GoogleSignInButton } from '@/components/auth/google-sign-in-button';
 import { motion } from 'framer-motion';
 import { Lock, Mail, AlertCircle, Loader2 } from 'lucide-react';
 
 export default function LoginPage() {
   const [error, setError] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
+
+  useEffect(() => {
+    // Check URL parameters for oauth error flag
+    const params = new URLSearchParams(window.location.search);
+    if (params.get('error') === 'oauth_failed') {
+      setError('Google sign-in was canceled or encountered an authentication error. Please try again.');
+    }
+  }, []);
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -56,6 +65,22 @@ export default function LoginPage() {
             <span>{error}</span>
           </div>
         )}
+
+        {/* Google OAuth Action */}
+        <div className="space-y-4">
+          <GoogleSignInButton onError={(err) => setError(err || null)} />
+
+          <div className="relative my-6">
+            <div className="absolute inset-0 flex items-center">
+              <div className="w-full border-t border-zinc-800/80" />
+            </div>
+            <div className="relative flex justify-center text-[11px] uppercase tracking-wider">
+              <span className="bg-[#121217] px-3 text-zinc-400 font-medium rounded-full border border-zinc-800/50">
+                Or continue with email
+              </span>
+            </div>
+          </div>
+        </div>
 
         {/* Form */}
         <form onSubmit={handleSubmit} className="space-y-5">

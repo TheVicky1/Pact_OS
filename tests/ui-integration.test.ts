@@ -1,5 +1,6 @@
 import assert from 'node:assert';
 import { utcToLocal } from '../src/lib/time';
+import { Goal } from '../src/types/domain';
 
 function runUiIntegrationTests() {
   console.log('================================================================');

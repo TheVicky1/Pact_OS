@@ -4,6 +4,7 @@ import React, { useState, useTransition } from 'react';
 import Link from 'next/link';
 import { PactLogo } from '@/components/brand/pact-logo';
 import { signUpAction } from '@/features/auth/actions';
+import { GoogleSignInButton } from '@/components/auth/google-sign-in-button';
 import { motion } from 'framer-motion';
 import { Lock, Mail, User, Globe, AlertCircle, CheckCircle2, Loader2 } from 'lucide-react';
 
@@ -80,6 +81,22 @@ export default function RegisterPage() {
             <span>Account created successfully! Please check your email to confirm registration.</span>
           </div>
         )}
+
+        {/* Google OAuth Action */}
+        <div className="space-y-4">
+          <GoogleSignInButton label="Sign up with Google" onError={(err) => setError(err || null)} />
+
+          <div className="relative my-6">
+            <div className="absolute inset-0 flex items-center">
+              <div className="w-full border-t border-zinc-800/80" />
+            </div>
+            <div className="relative flex justify-center text-[11px] uppercase tracking-wider">
+              <span className="bg-[#121217] px-3 text-zinc-400 font-medium rounded-full border border-zinc-800/50">
+                Or register with email
+              </span>
+            </div>
+          </div>
+        </div>
 
         {/* Form */}
         <form onSubmit={handleSubmit} className="space-y-4">
