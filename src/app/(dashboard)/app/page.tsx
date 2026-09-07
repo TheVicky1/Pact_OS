@@ -20,7 +20,6 @@ export default async function ProtectedAppPage() {
     redirect('/login');
   }
 
-  const userEmail = user.email || 'Authenticated User';
   const fullName = user.user_metadata?.full_name || 'User';
   const timezone = user.user_metadata?.timezone || 'UTC';
 
@@ -37,7 +36,6 @@ export default async function ProtectedAppPage() {
         projects={projects || []}
         tasks={tasks || []}
         userName={fullName}
-        userEmail={userEmail}
         timezone={timezone}
       />
     </main>

@@ -1,7 +1,7 @@
 'use client';
 
 import { Goal, GoalStatus } from '@/types/domain';
-import { Calendar, Edit3, Trash2, Archive, CheckCircle2, Target, FolderKanban, CheckSquare } from 'lucide-react';
+import { Calendar, Edit3, Trash2, Archive, Target, FolderKanban, CheckSquare } from 'lucide-react';
 import Link from 'next/link';
 
 interface GoalCardProps {

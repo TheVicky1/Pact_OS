@@ -1,6 +1,6 @@
 'use client';
 
-import { Goal, Project, Task } from '@/types/domain';
+import { Goal } from '@/types/domain';
 import { TaskWithParents } from '@/features/tasks/data-access';
 import { ProjectWithGoal } from '@/features/projects/data-access';
 import { completeTaskAction } from '@/features/tasks/actions';
@@ -11,7 +11,6 @@ import {
   Target,
   FolderKanban,
   CheckSquare,
-  ArrowRight,
   Calendar,
   CheckCircle2,
   AlertCircle,
@@ -19,7 +18,6 @@ import {
   ChevronRight,
   Plus,
   ShieldCheck,
-  Zap,
 } from 'lucide-react';
 
 interface OverviewViewProps {
@@ -27,7 +25,6 @@ interface OverviewViewProps {
   projects: ProjectWithGoal[];
   tasks: TaskWithParents[];
   userName: string;
-  userEmail: string;
   timezone: string;
 }
 
@@ -36,7 +33,6 @@ export function OverviewView({
   projects,
   tasks: initialTasks,
   userName,
-  userEmail,
   timezone,
 }: OverviewViewProps) {
   const [tasksList, setTasksList] = useState<TaskWithParents[]>(initialTasks);

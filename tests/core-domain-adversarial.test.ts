@@ -37,8 +37,9 @@ async function runAdversarialSecuritySuite() {
 
   const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
-  const emailA = `security.usera.test@example.com`;
-  const emailB = `security.userb.test@example.com`;
+  const timestamp = Date.now();
+  const emailA = `sec_usera_${timestamp}@pact.app`;
+  const emailB = `sec_userb_${timestamp}@pact.app`;
   const password = 'SecurityTestPassword123!';
 
   console.log('1. Authenticating User A and User B...');
@@ -51,18 +52,28 @@ async function runAdversarialSecuritySuite() {
     userA = signInA.user;
     console.log(`✅ User A signed in (UUID: ${userA.id})`);
   } else {
-    await delay(1000);
-    const { data: signUpA, error: errA } = await clientA.auth.signUp({
-      email: emailA,
-      password,
-      options: { data: { full_name: 'Security User A' } },
-    });
-    if (errA || !signUpA.user) {
-      console.error('❌ User A Registration Error:', errA?.message);
-      throw errA;
+    let retries = 3;
+    while (retries > 0 && !userA) {
+      await delay(2000);
+      const { data: signUpA, error: errA } = await clientA.auth.signUp({
+        email: emailA,
+        password,
+        options: { data: { full_name: 'Security User A' } },
+      });
+      if (signUpA?.user) {
+        userA = signUpA.user;
+        console.log(`✅ User A registered & authenticated (UUID: ${userA.id})`);
+        break;
+      }
+      if (errA?.message?.includes('rate limit') || errA?.message?.includes('seconds')) {
+        console.log(`⏳ Auth rate limit hit for User A registration, waiting 25 seconds...`);
+        await delay(25000);
+        retries--;
+      } else {
+        console.error('❌ User A Registration Error:', errA?.message);
+        throw errA;
+      }
     }
-    userA = signUpA.user;
-    console.log(`✅ User A registered & authenticated (UUID: ${userA.id})`);
   }
 
   // Try sign in User B
@@ -71,18 +82,28 @@ async function runAdversarialSecuritySuite() {
     userB = signInB.user;
     console.log(`✅ User B signed in (UUID: ${userB.id})`);
   } else {
-    await delay(1000);
-    const { data: signUpB, error: errB } = await clientB.auth.signUp({
-      email: emailB,
-      password,
-      options: { data: { full_name: 'Security User B' } },
-    });
-    if (errB || !signUpB.user) {
-      console.error('❌ User B Registration Error:', errB?.message);
-      throw errB;
+    let retries = 3;
+    while (retries > 0 && !userB) {
+      await delay(2000);
+      const { data: signUpB, error: errB } = await clientB.auth.signUp({
+        email: emailB,
+        password,
+        options: { data: { full_name: 'Security User B' } },
+      });
+      if (signUpB?.user) {
+        userB = signUpB.user;
+        console.log(`✅ User B registered & authenticated (UUID: ${userB.id})\n`);
+        break;
+      }
+      if (errB?.message?.includes('rate limit') || errB?.message?.includes('seconds')) {
+        console.log(`⏳ Auth rate limit hit for User B registration, waiting 36 seconds...`);
+        await delay(36000);
+        retries--;
+      } else {
+        console.error('❌ User B Registration Error:', errB?.message);
+        throw errB;
+      }
     }
-    userB = signUpB.user;
-    console.log(`✅ User B registered & authenticated (UUID: ${userB.id})\n`);
   }
 
   // ----------------------------------------------------------------

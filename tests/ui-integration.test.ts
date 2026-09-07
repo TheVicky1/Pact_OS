@@ -1,6 +1,5 @@
 import assert from 'node:assert';
 import { utcToLocal } from '../src/lib/time';
-import { Goal, Project, Task } from '../src/types/domain';
 
 function runUiIntegrationTests() {
   console.log('================================================================');
@@ -83,8 +82,8 @@ function runUiIntegrationTests() {
   const missedTaskState = { status: 'missed', missed_at: new Date().toISOString() };
   assert.strictEqual(missedTaskState.status, 'missed', 'Missed state is visible');
   // Confirm no score, penalty, XP or gamification field exists
-  assert.strictEqual((missedTaskState as any).xp, undefined, 'No XP field present');
-  assert.strictEqual((missedTaskState as any).penalty, undefined, 'No penalty field present');
+  assert.strictEqual((missedTaskState as Record<string, unknown>).xp, undefined, 'No XP field present');
+  assert.strictEqual((missedTaskState as Record<string, unknown>).penalty, undefined, 'No penalty field present');
   console.log('✅ Missed state visibility verified (clean lifecycle, no gamification/punishment)');
 
   console.log('\n================================================================');
