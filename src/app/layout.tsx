@@ -16,8 +16,16 @@ export const metadata: Metadata = {
   title: 'PACT — A System for Keeping Promises to Yourself',
   description: 'Turn Intent Into Discipline. A personal operating system for structured commitments, time-blocking, and intentional accountability.',
   icons: {
-    icon: '/favicon.ico',
+    icon: [
+      { url: '/favicon.ico', sizes: 'any' },
+      { url: '/icon.png', type: 'image/png', sizes: '32x32' },
+      { url: '/brand/pact-logo-64.png', type: 'image/png', sizes: '64x64' },
+    ],
+    apple: [
+      { url: '/apple-touch-icon.png', sizes: '180x180', type: 'image/png' },
+    ],
   },
+  manifest: '/manifest.json',
 };
 
 export default function RootLayout({
