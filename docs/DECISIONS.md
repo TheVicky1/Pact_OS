@@ -1,0 +1,150 @@
+# PACT — Architectural Decision Records (ADR) Log
+
+## 1. Decision Status Key
+
+Every architectural item in PACT documentation is categorized into one of five explicit statuses:
+- **[CONFIRMED]**: Firmly decided rule or product requirement.
+- **[PROPOSED]**: Recommended implementation direction subject to review.
+- **[UNDECIDED]**: Recognized design choice requiring further analysis before lock-in.
+- **[ASSUMPTION]**: Explicit working hypothesis used for current design.
+- **[FUTURE]**: Scope explicitly deferred past V0 baseline.
+
+---
+
+## 2. Decision Log
+
+### ADR-001: Greenfield Rebuild Scope [CONFIRMED]
+- **Status**: [CONFIRMED]
+- **Decision**: Start completely from zero. Establish Phase 0 documentation baseline before writing any application code or database migrations.
+
+### ADR-002: Dual Tagline Approval [CONFIRMED]
+- **Status**: [CONFIRMED]
+- **Decision**: Approve both *"A System for Keeping Promises to Yourself"* and *"Turn Intent Into Discipline"*. Neither is permanently locked as sole tagline.
+
+### ADR-003: Core Brand Identity [CONFIRMED]
+- **Status**: [CONFIRMED]
+- **Decision**: Reference Image 2 (Gold P Monogram) is the sole visual brand mark. Reference Image 1 is visual north star for dark glassmorphic quality.
+
+### ADR-004: Consequence Data Confidentiality Boundary [CONFIRMED]
+- **Status**: [CONFIRMED]
+- **Decision**: Hiding consequences is enforced at the database RLS / data access boundary, NOT via frontend UI visibility toggles. Unrevealed payload data (`is_revealed = false`) is omitted from client query results.
+
+### ADR-005: Technology Stack Preferences [PROPOSED]
+- **Status**: [PROPOSED]
+- **Proposed Stack**: Next.js (App Router, TypeScript), Tailwind CSS, Framer Motion, Supabase (PostgreSQL + RLS + Auth), Zod validation, Vercel deployment.
+
+### ADR-006: Threat Model Architecture [CONFIRMED]
+- **Status**: [CONFIRMED]
+- **Decision**: Define explicit Threat Matrix (`docs/THREAT_MODEL.md`) covering 8 threat actors, attack surfaces, security boundaries, mitigations, and required future test contracts.
+
+### ADR-007: Integration Token Security Lifecycle [PROPOSED]
+- **Status**: [PROPOSED]
+- **Decision**: Integration tokens are encrypted at rest and accessible only to server-side sync handlers. Application-level token encryption and key rotation strategy are marked [PROPOSED] / [UNDECIDED] to avoid premature lock-in during V0.
+
+### ADR-008: Mandatory Security Test Mapping [CONFIRMED]
+- **Status**: [CONFIRMED]
+- **Decision**: Map all 16 security requirement scenarios to `FUTURE TEST — REQUIRED BEFORE FEATURE COMPLETION` entries in `docs/TESTING.md`.
+
+### ADR-009: Phase 2A Core Domain Schema & Cross-User RLS Defense [CONFIRMED]
+- **Status**: [CONFIRMED]
+- **Decision**: Migrate `goals`, `projects`, and `tasks` domain tables. Enforce strict database-level RLS policies requiring `auth.uid() = user_id`. Validate parent entity ownership (`goal_id`/`project_id`) via RLS subqueries to prevent cross-user resource hijacking. Protect trusted lifecycle fields (`completed_at`, `missed_at`) via PostgreSQL trigger `enforce_task_trusted_fields()`.
+
+### ADR-010: Task Trusted Field Protection Hardening & Real DB Adversarial Verification [CONFIRMED]
+- **Status**: [CONFIRMED]
+- **Decision**: Adversarial verification on the real Supabase PostgreSQL database revealed that `protect_task_trusted_fields` trigger was attached only `BEFORE UPDATE`, leaving `INSERT` vulnerable to timestamp forgery. The trigger was remediated to `BEFORE INSERT OR UPDATE ON public.tasks`, enforcing field immutability for both `INSERT` and `UPDATE` operations from non-`service_role` clients. All 18 adversarial security tests (RLS CRUD matrix, cross-user parent linkage attacks, forged user_id, client timestamp forgery, and anonymous access) passed against the real database.
+
+### ADR-011: Goal Vertical Slice Implementation Architecture [CONFIRMED]
+- **Status**: [CONFIRMED]
+- **Decision**: Implement the Goal vertical slice end-to-end (`Database -> Server Data Access -> Server Actions -> Validation -> UI Components -> Pages`). Goal CRUD mutations (`createGoalAction`, `updateGoalAction`, `archiveGoalAction`, `deleteGoalAction`) extract `user_id` strictly from the server-side Supabase auth session. Client-side input validation uses Zod (`createGoalSchema`, `updateGoalSchema`) for UX, while PostgreSQL RLS (`auth.uid() = user_id`) serves as the immutable security boundary. Verified via real database integration & unit test suites (`tests/goals-validation.test.ts`, `tests/adversarial-rls-audit.sql`).
+
+### ADR-012: Project Vertical Slice & Goal Ownership Authorization Architecture [CONFIRMED]
+- **Status**: [CONFIRMED]
+- **Decision**: Implement the Projects vertical slice (`Database -> Server Data Access -> Server Actions -> Zod Validation -> UI Components -> Route Pages`). Projects support optional association with user-owned Goals or independent status (`goal_id` optional). Server actions (`createProjectAction`, `updateProjectAction`, `archiveProjectAction`, `deleteProjectAction`) enforce double-layer authorization: 1) derive `user.id` strictly from server auth session; 2) verify that provided `goal_id` belongs to the authenticated user before executing insertion or update. Database PostgreSQL RLS policy (`WITH CHECK (goal_id IS NULL OR EXISTS (SELECT 1 FROM public.goals g WHERE g.id = goal_id AND g.user_id = auth.uid())))`) serves as the authoritative security boundary blocking cross-user parent goal linkage attacks even if UI or server validation is bypassed. Verified via real Supabase database adversarial audit and Zod unit tests (`tests/projects-validation.test.ts`, `tests/adversarial-rls-audit.sql`).
+
+### ADR-013: Task Vertical Slice & Parent Entity Authorization Architecture [CONFIRMED]
+- **Status**: [CONFIRMED]
+- **Decision**: Implement the Tasks & Commitments vertical slice (`Database -> Server Data Access -> Server Actions -> Zod Validation -> UI Components -> Route Pages`). Tasks support optional association with user-owned Goals (`goal_id`) and/or user-owned Projects (`project_id`), or independent operation. Server actions (`createTaskAction`, `updateTaskAction`, `archiveTaskAction`, `deleteTaskAction`) derive `user.id` strictly from the server auth session and independently verify that provided `goal_id` and `project_id` belong to the authenticated user. PostgreSQL RLS policies on `public.tasks` enforce parent entity ownership subquery checks for both `INSERT` and `UPDATE` operations. Direct client setting or update of trusted lifecycle fields (`completed_at`, `missed_at`) is prohibited by database trigger `enforce_task_trusted_fields()`. Verified via real Supabase database adversarial audit and Zod unit tests (`tests/tasks-validation.test.ts`, `tests/adversarial-rls-audit.sql`).
+
+### ADR-014: Deadline & Timezone Engine Architecture [CONFIRMED]
+- **Status**: [CONFIRMED]
+- **Decision**: Implement deterministic, timezone-aware temporal evaluation for PACT Tasks (`src/lib/time.ts`). Key architectural guarantees:
+  1. **UTC Storage Invariance**: Stored timestamps represent absolute UTC instants in `public.tasks.deadline_at` (`TIMESTAMPTZ`). User profile timezone changes alter local display representation only without modifying the underlying UTC instant.
+  2. **Canonical IANA Timezone Validation**: Require full IANA identifiers (e.g. `Asia/Kolkata`, `America/New_York`, `Europe/London`, `UTC`). Reject non-canonical 3-letter abbreviations (`IST`, `PST`, `EST`).
+  3. **Temporal Boundary Evaluation**: `isDeadlineReached(deadlineAt, clock)` performs exact 1-second boundary checks (`now >= deadlineAt`).
+  4. **DST Spring-Forward & Fall-Back Handling**: `localToUtc()` flags nonexistent spring-forward local wall-clock times (`isNonexistent = true`) and detects ambiguous fall-back local wall-clock times (`isAmbiguous = true`).
+  5. **Injected TestClock Abstraction**: Pure temporal methods accept an optional `Clock` dependency, enabling deterministic unit testing without system clock flakiness.
+  6. **Phase 2F Boundary Isolation**: Pure temporal engine answers temporal evaluation questions without triggering business state transitions (`completed_at`, `missed_at`), keeping execution lifecycle strictly isolated for Phase 2F. Verified via unit test suite (`tests/temporal-engine.test.ts`).
+
+### ADR-015: Authoritative Task Lifecycle State Machine & Concurrency Strategy [CONFIRMED]
+- **Status**: [CONFIRMED]
+- **Decision**: Implement server/database authoritative lifecycle execution for Tasks (`complete_task` and `mark_task_missed` RPC functions). Key architectural guarantees:
+  1. **Database-Authoritative Execution**: Task completion (`complete_task`) and missed transitions (`mark_task_missed`) execute inside PostgreSQL `SECURITY DEFINER` stored procedures. Client attempts to directly set `status = 'completed'` or `status = 'missed'` or alter `completed_at` / `missed_at` via direct REST/SQL queries are blocked by hardened trigger `enforce_task_trusted_fields()`.
+  2. **Row Locking & Race Safety**: Both RPC functions lock the target task row via `SELECT ... FOR UPDATE`, ensuring atomic evaluation and absolute race condition protection for concurrent requests.
+  3. **Temporal Integration**: Deadline expiration (`transaction_timestamp() >= deadline_at`) is evaluated inside the locked transaction using Phase 2E temporal semantics. Completion of expired tasks returns `DEADLINE_REACHED`.
+  4. **Idempotency & Terminal States**: Repeated completion calls return `ALREADY_COMPLETED` while preserving original `completed_at`. Missed tasks cannot be completed (`ALREADY_MISSED`). Completed tasks cannot be marked missed (`ALREADY_COMPLETED`).
+  5. **Pure GET Reads**: Data-access functions (`getTasks()`, `getTaskById()`) remain 100% pure reads with zero hidden side-effect writes. Verified against real remote Supabase PostgreSQL database (`tests/adversarial-rls-audit.sql`).
+
+### ADR-016: Unified Core OS UI Integration & Information Architecture [CONFIRMED]
+- **Status**: [CONFIRMED]
+- **Decision**: Unify Goals, Projects, Tasks, Deadline Engine, and Authoritative Lifecycle vertical slices into a coherent PACT Personal Operating System experience. Key architectural choices:
+  1. **Authenticated Shell & Layout**: Implement `DashboardLayout` (`src/app/(dashboard)/layout.tsx`) wrapping all authenticated `/app` routes with a consistent header, navigation drawer for mobile (`sm` breakpoint), active route indicators, user profile context, and ambient glow.
+  2. **Central Overview Entry Point**: Transform `/app` into an intentional commitment overview (`OverviewView`) prioritizing 1) Immediate commitments & nearest deadlines, 2) Active work (Goals & Projects progress), 3) Total commitments metrics (Pending, In Progress, Completed, Missed), and 4) Domain hierarchy mapping (Goal -> Project -> Task).
+  3. **Cross-Domain Relationship Links**: Embed bidirectional relationship links and parent entity badges in `GoalCard`, `ProjectCard`, and `TaskCard`.
+  4. **Timezone-Aware Temporal Display**: All UI task deadline displays use Phase 2E canonical utility `utcToLocal(task.deadline_at, timezone)`.
+  5. **Non-Gamified Missed Visibility**: Surface missed tasks as a calm lifecycle state without consequences, punishments, XP, coins, flames, or gamification.
+  6. **Side-Effect Free Reads & Authoritative Mutations**: Overview and domain views read state purely via server data-access layers (`getGoals`, `getProjects`, `getTasks`). Task completion executes authoritatively via `completeTaskAction` server action. Verified via unit and contract test suite (`tests/ui-integration.test.ts`).
+
+### ADR-017: Phase 3 Milestone 1 — Accountability Domain Foundation & Safety Model [CONFIRMED]
+- **Status**: [CONFIRMED]
+- **Decision**: Implement the foundational data model, user preferences, reusable consequence definitions, safety boundaries, RLS security policies, Zod validations, and server service layer for Phase 3 Accountability. Key architectural guarantees:
+  1. **Low-Friction Default Pattern**: Users set default accountability rules once in `user_accountability_preferences`. Simple task creation (`Title` + `Deadline`) automatically inherits defaults without requiring manual configuration on every task.
+  2. **Entity Isolation & Extensibility**: `consequence_definitions` stores user-owned consequence templates across 6 extensible categories (`personal_restriction`, `extra_responsibility`, `self_improvement`, `reflection`, `financial`, `custom`).
+  3. **Multi-Tenant RLS Boundary & Cross-User Linkage Defense**: RLS policies enforce `auth.uid() = user_id` for all CRUD operations. Foreign key linkage `default_consequence_id` in `user_accountability_preferences` is protected by `WITH CHECK` subqueries preventing users from attaching another user's consequence definition as their default.
+  4. **PostgreSQL Table Grants**: Table privileges (`GRANT SELECT, INSERT, UPDATE, DELETE ON TABLE ... TO authenticated;`) are explicitly granted in migration prior to RLS evaluation.
+  5. **Absolute Safety Boundaries**: Consequences are declarative instructions, never executable scripts, shell commands, external API destructive calls, or automated financial transfers.
+  6. **Adversarial Verification**: Verified against real live Supabase PostgreSQL DB via 38-step security audit (`tests/adversarial-rls-audit.sql`) and 9 Zod unit tests (`tests/accountability-validation.test.ts`).
+
+### ADR-018: Phase 3 Milestone 2 — Commitment Assignment & Immutability Engine Architecture [CONFIRMED]
+- **Status**: [CONFIRMED]
+- **Decision**: Implement the backend/domain mechanism that attaches immutable accountability commitments to tasks upon creation. Key architectural choices:
+  1. **Separation of Definition vs. Commitment**: Reusable user-configured consequence definitions reside in `public.consequence_definitions`. Task accountability commitments reside in `public.task_accountability_commitments` as committed JSONB snapshots (`consequence_snapshot`).
+  2. **Snapshot Immutability**: Once an accountability commitment is created, its snapshot is locked. Subsequent edits to reusable consequence definitions or task metadata (`title`, `deadline_at`, `priority`) do NOT modify or remove the committed snapshot. Direct client UPDATE or DELETE of snapshot fields is blocked by database trigger `protect_accountability_commitment_immutability()`.
+  3. **Deterministic Multi-Default Resolution**: Normalizes default consequence resolution by evaluating enabled defaults ordered by `(priority DESC, created_at ASC, id ASC)`. Explicit preference `default_consequence_id` acts as a primary override when set.
+  4. **Low-Friction Creation Path**: `createTaskAction` automatically resolves and attaches the user's default consequence snapshot server-side when enabled. Simple task creation (`Title` + `Deadline`) remains 100% backward compatible without client payload overhead.
+  5. **Confidentiality Data-Access Boundary**: Consequence snapshot data is isolated in `task_accountability_commitments` and fetched via `getTaskAccountabilityCommitment(taskId)` rather than exposing full snapshot payloads in standard task list queries (`getTasks()`).
+  6. **Adversarial Verification**: Verified against real live Supabase PostgreSQL DB via 46-step security audit (`tests/adversarial-rls-audit.sql`) and unit test suite (`tests/commitment-engine.test.ts`).
+
+### ADR-019: Phase 3 Milestone 3 — Authoritative Consequence Activation & Missed-Commitment Resolution Engine [CONFIRMED]
+- **Status**: [CONFIRMED]
+- **Decision**: Consequence activation operates strictly as an atomic subscriber to the Phase 2 authoritative task lifecycle (`public.mark_task_missed`):
+  1. **Single Authoritative Task Lifecycle**: Accountability is NOT a second task lifecycle. When a task is completed prior to deadline, accountability never activates. When a task reaches the authoritative `missed` status, the attached commitment transitions to `activated` atomically.
+  2. **Single PostgreSQL Transaction**: Status transition, `activated_at` timestamping, and append-only event logging in `public.accountability_events` execute in one transaction guarded by row locking (`FOR UPDATE`).
+  3. **Idempotency & Concurrency Safety**: Repeated calls to `mark_task_missed` return `ALREADY_MISSED` with zero duplicate events or timestamp overwrites.
+  4. **Snapshot Resilience**: Committed snapshots remain active and activatable even if the source consequence definition is modified or deleted.
+  5. **Adversarial Security Audit**: Verified against real Supabase DB via 57-step security audit (`tests/adversarial-rls-audit.sql`) and unit tests (`tests/consequence-activation.test.ts`).
+
+### ADR-020: Phase 3 Milestone 4 — Accountability Resolution & Verification Engine [CONFIRMED]
+- **Status**: [CONFIRMED]
+- **Decision**: Implement server-authoritative consequence resolution, verification sessions, evidence collection, and a timezone-aware weekly waiver engine:
+  1. **"PACT Never Assumes Fulfillment"**: An activated consequence cannot be resolved by client-provided flags or forged timestamps. Direct client updates setting `commitment_status` to `'fulfilled'` or `'waived'` are strictly rejected by database triggers.
+  2. **Extensible Verification Model**: Verification rules (`verification_type`, `verification_config`) are snapshotted into `consequence_snapshot` at commitment creation time, ensuring future definition updates cannot alter active commitments.
+  3. **Server-Authoritative Timed-Session Verification**: Timed consequences require real elapsed server time calculated via `now() - started_at >= required_duration_seconds`. Premature fulfillment attempts are rejected by the server. Active sessions support client reconnect without resetting timer progress.
+  4. **Activity Evidence Capture**: Timed sessions require supporting evidence notes (1–5000 characters) validated server-side. Once completed, session records and evidence are immutable.
+  5. **Atomic 3-Waiver Weekly Quota in User Timezone**: Users can waive activated consequences up to 3 times per calendar week (ISO week: Monday–Sunday) calculated using their configured IANA timezone (`profiles.timezone`). Quotas are enforced atomically via row locking (`profiles FOR UPDATE`).
+  6. **Intentional Confirmation Word Deferral**: The final user-facing confirmation word is intentionally deferred. The engine validates internal domain token `CONFIRM_WAIVER_V1` server-side.
+  7. **Append-Only & Immutable Audit Trail**: Both verification sessions and waivers are protected against tampering or deletion by PostgreSQL triggers.
+  8. **Adversarial Verification**: Verified against real live Supabase PostgreSQL DB via 84-step security audit (`tests/adversarial-rls-audit.sql`) and unit test suite (`tests/resolution-engine.test.ts`).
+
+### ADR-021: Phase 3 Milestone 5 — Accountability Rules, Resolution Edge Cases & Final Hardening [CONFIRMED]
+- **Status**: [CONFIRMED]
+- **Decision**: Finalize consequence resolution semantics, enforce state machine transition invariants in PostgreSQL, harden waiver quotas with table triggers, and verify edge-case defenses:
+  1. **Strict Database State Machine Invariants**: PostgreSQL trigger `trg_enforce_commitment_status_transitions` prevents illegal state transitions (`committed -> fulfilled`, `committed -> waived`, and mutations to terminal states `fulfilled` and `waived`). Status progression must follow `committed -> activated -> (fulfilled | waived)`.
+  2. **Multi-Modal Server-Authoritative Fulfillment RPCs**:
+     - `public.fulfill_written_reflection(p_commitment_id, p_reflection_text)`: Enforces non-empty, trimmed reflection text (20–5000 characters) stored in audit metadata.
+     - `public.declare_accountability_fulfillment(p_commitment_id, p_declaration_statement)`: Explicitly stamps `is_self_declaration = true` and `verified_objectively = false` with non-empty statements (1–1000 characters), ensuring clear distinction from objective verification.
+     - `public.fulfill_task_completion_commitment(p_commitment_id, p_target_task_id)`: Requires a real secondary PACT task owned by the authenticated user in terminal `completed` status. Circular self-reference (`target_task_id = commit.task_id`), incomplete tasks, and cross-user tasks are strictly rejected.
+     - `custom`: Treated as structured declarative rules; execution of arbitrary code, SQL, webhooks, or external network requests is prohibited.
+  3. **Snapshot Immutability Under Definition Lifecycle**: Deleting or updating reusable `consequence_definitions` does not alter or invalidate existing committed snapshots in `task_accountability_commitments`.
+  4. **Indefinite Consequence Persistence**: Activated consequences remain `activated` indefinitely until explicitly fulfilled or waived; they never decay, expire, or self-forgive over time.
+  5. **Defense-in-Depth Waiver Quota Trigger**: PostgreSQL trigger `trg_enforce_weekly_waiver_quota` on `accountability_waivers` enforces the 3-per-calendar-week limit in the user's IANA timezone at the table level.
+  6. **Adversarial Verification**: Verified against real live Supabase PostgreSQL DB via 103-step security audit (`tests/adversarial-rls-audit.sql`) and unit test suite (`tests/accountability-hardening.test.ts`).
