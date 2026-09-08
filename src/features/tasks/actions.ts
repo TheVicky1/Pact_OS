@@ -40,7 +40,15 @@ export async function createTaskAction(
     if (typeof payload === 'object' && payload !== null) {
       const p = payload as Record<string, unknown>;
       if (!p.deadline_at && p.local_deadline && typeof p.local_deadline === 'string') {
-        const tz = (typeof p.timezone === 'string' && p.timezone) || 'UTC';
+        let tz: string = (typeof p.timezone === 'string' && p.timezone) || '';
+        if (!tz) {
+          const { data: profile } = await supabase
+            .from('profiles')
+            .select('timezone')
+            .eq('id', user.id)
+            .maybeSingle();
+          tz = profile?.timezone || user.user_metadata?.timezone || 'UTC';
+        }
         const conv = localToUtc(p.local_deadline, tz);
         if (conv.error || !conv.utcIso) {
           return { success: false, error: conv.error || 'Invalid local deadline or timezone.' };
@@ -173,7 +181,15 @@ export async function updateTaskAction(
     if (typeof payload === 'object' && payload !== null) {
       const p = payload as Record<string, unknown>;
       if (!p.deadline_at && p.local_deadline && typeof p.local_deadline === 'string') {
-        const tz = (typeof p.timezone === 'string' && p.timezone) || 'UTC';
+        let tz: string = (typeof p.timezone === 'string' && p.timezone) || '';
+        if (!tz) {
+          const { data: profile } = await supabase
+            .from('profiles')
+            .select('timezone')
+            .eq('id', user.id)
+            .maybeSingle();
+          tz = profile?.timezone || user.user_metadata?.timezone || 'UTC';
+        }
         const conv = localToUtc(p.local_deadline, tz);
         if (conv.error || !conv.utcIso) {
           return { success: false, error: conv.error || 'Invalid local deadline or timezone.' };

@@ -1,8 +1,10 @@
 import { createClient } from '@/lib/supabase/server';
+import { redirect } from 'next/navigation';
 import { getTasks } from '@/features/tasks/data-access';
 import { getGoals } from '@/features/goals/data-access';
 import { getProjects } from '@/features/projects/data-access';
 import { TasksView } from '@/features/tasks/components/tasks-view';
+import { getUserProfileInfo } from '@/lib/auth/profile';
 
 export const metadata = {
   title: 'Tasks & Commitments | PACT OS',
@@ -12,9 +14,13 @@ export const metadata = {
 export default async function TasksPage() {
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
-  const timezone = user?.user_metadata?.timezone || 'UTC';
 
-  const [tasksRes, goalsRes, projectsRes] = await Promise.all([
+  if (!user) {
+    redirect('/login');
+  }
+
+  const [{ timezone }, tasksRes, goalsRes, projectsRes] = await Promise.all([
+    getUserProfileInfo(supabase, user.id, user.user_metadata),
     getTasks(),
     getGoals(),
     getProjects(),

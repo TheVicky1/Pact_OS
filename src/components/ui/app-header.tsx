@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { PactLogo } from '@/components/brand/pact-logo';
 import { signOutAction } from '@/features/auth/actions';
-import { LogOut, Globe, Target, FolderKanban, LayoutDashboard, CheckSquare, Menu, X } from 'lucide-react';
+import { LogOut, Target, FolderKanban, LayoutDashboard, CheckSquare, Menu, X } from 'lucide-react';
 import { useState } from 'react';
 
 interface AppHeaderProps {
@@ -12,7 +12,7 @@ interface AppHeaderProps {
   userName?: string;
 }
 
-export function AppHeader({ timezone = 'UTC', userName }: AppHeaderProps) {
+export function AppHeader({ userName }: AppHeaderProps) {
   const pathname = usePathname();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
@@ -83,11 +83,6 @@ export function AppHeader({ timezone = 'UTC', userName }: AppHeaderProps) {
 
         {/* Right side items */}
         <div className="flex items-center gap-3 sm:gap-4">
-          <div className="hidden lg:flex items-center gap-2 text-xs text-zinc-400 bg-zinc-900/80 border border-zinc-800/80 px-3 py-1.5 rounded-lg">
-            <Globe className="w-3.5 h-3.5 text-[#d4af37]" />
-            <span>{timezone}</span>
-          </div>
-
           {userName && (
             <div className="hidden md:flex items-center gap-2 text-xs text-zinc-300 bg-zinc-900/60 border border-zinc-800/60 px-2.5 py-1.5 rounded-lg">
               <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
@@ -140,13 +135,11 @@ export function AppHeader({ timezone = 'UTC', userName }: AppHeaderProps) {
               );
             })}
           </nav>
-          <div className="pt-2 border-t border-zinc-800/80 flex items-center justify-between text-xs text-zinc-400 px-1">
-            <div className="flex items-center gap-1.5">
-              <Globe className="w-3.5 h-3.5 text-[#d4af37]" />
-              <span>{timezone}</span>
+          {userName && (
+            <div className="pt-2 border-t border-zinc-800/80 flex items-center justify-end text-xs text-zinc-400 px-1">
+              <span className="text-zinc-300 font-medium">{userName}</span>
             </div>
-            {userName && <span className="text-zinc-300 font-medium">{userName}</span>}
-          </div>
+          )}
         </div>
       )}
     </header>

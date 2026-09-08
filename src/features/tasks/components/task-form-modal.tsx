@@ -3,6 +3,7 @@
 import { TaskWithParents } from '../data-access';
 import { createTaskAction, updateTaskAction } from '../actions';
 import { TaskPriority, TaskStatus } from '@/types/domain';
+import { localToUtc, utcToDatetimeLocalInput, getDefaultLocalDeadline } from '@/lib/time';
 import { X, AlertCircle, Loader2 } from 'lucide-react';
 import { useEffect, useState } from 'react';
 
@@ -13,6 +14,7 @@ interface TaskFormModalProps {
   taskToEdit?: TaskWithParents | null;
   availableGoals: Array<{ id: string; title: string }>;
   availableProjects: Array<{ id: string; title: string }>;
+  timezone?: string;
 }
 
 export function TaskFormModal({
@@ -22,6 +24,7 @@ export function TaskFormModal({
   taskToEdit,
   availableGoals,
   availableProjects,
+  timezone = 'UTC',
 }: TaskFormModalProps) {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
@@ -45,10 +48,9 @@ export function TaskFormModal({
       setStatus(taskToEdit.status);
       setGoalId(taskToEdit.goal_id || '');
       setProjectId(taskToEdit.project_id || '');
-      // Format deadline for datetime-local input
+      // Format stored UTC deadline into user's local wall-clock time for datetime-local input
       try {
-        const date = new Date(taskToEdit.deadline_at);
-        setDeadlineAt(date.toISOString().slice(0, 16));
+        setDeadlineAt(utcToDatetimeLocalInput(taskToEdit.deadline_at, timezone));
       } catch {
         setDeadlineAt('');
       }
@@ -59,11 +61,12 @@ export function TaskFormModal({
       setStatus('pending');
       setGoalId('');
       setProjectId('');
-      // Default deadline: tomorrow at 23:59
-      const tomorrow = new Date();
-      tomorrow.setDate(tomorrow.getDate() + 1);
-      tomorrow.setHours(23, 59, 0, 0);
-      setDeadlineAt(tomorrow.toISOString().slice(0, 16));
+      // Default deadline: tomorrow at 23:59 in user's configured IANA timezone
+      try {
+        setDeadlineAt(getDefaultLocalDeadline(timezone));
+      } catch {
+        setDeadlineAt('');
+      }
     }
     setErrorMessage(null);
   }
@@ -95,14 +98,13 @@ export function TaskFormModal({
       return;
     }
 
-    // Convert datetime-local input string to ISO 8601 string
-    let isoDeadline = '';
-    try {
-      isoDeadline = new Date(deadlineAt).toISOString();
-    } catch {
-      setErrorMessage('Please provide a valid deadline date and time.');
+    // Convert local wall-clock datetime-local string to UTC ISO string using user's configured timezone
+    const conv = localToUtc(deadlineAt, timezone);
+    if (conv.error || !conv.utcIso) {
+      setErrorMessage(conv.error || 'Please provide a valid deadline date and time.');
       return;
     }
+    const isoDeadline = conv.utcIso;
 
     setIsSubmitting(true);
 
@@ -112,6 +114,8 @@ export function TaskFormModal({
         description: description.trim() || null,
         priority,
         deadline_at: isoDeadline,
+        local_deadline: deadlineAt,
+        timezone,
         goal_id: goalId || null,
         project_id: projectId || null,
         ...(taskToEdit ? { status } : {}),

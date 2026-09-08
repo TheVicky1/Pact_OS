@@ -245,6 +245,7 @@ export function TasksView({ initialTasks, availableGoals, availableProjects, tim
         taskToEdit={taskToEdit}
         availableGoals={availableGoals}
         availableProjects={availableProjects}
+        timezone={timezone}
       />
 
       <DeleteTaskModal

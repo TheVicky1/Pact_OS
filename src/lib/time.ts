@@ -251,3 +251,66 @@ export function compareInstants(instantA: Date | string, instantB: Date | string
 export function getDeadlineStatus(deadlineAt: Date | string, clock: Clock = defaultClock): 'FUTURE' | 'EXPIRED' {
   return isDeadlineReached(deadlineAt, clock) ? 'EXPIRED' : 'FUTURE';
 }
+
+/**
+ * Converts a stored UTC ISO string to a wall-clock "YYYY-MM-DDTHH:mm" string
+ * formatted for <input type="datetime-local"> in a specific IANA timezone.
+ */
+export function utcToDatetimeLocalInput(utcIsoStr: string, timeZone: string): string {
+  if (!isValidIanaTimezone(timeZone)) {
+    timeZone = 'UTC';
+  }
+  const date = new Date(utcIsoStr);
+  if (isNaN(date.getTime())) return '';
+
+  const formatter = new Intl.DateTimeFormat('en-US', {
+    timeZone,
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: false,
+  });
+
+  const parts = formatter.formatToParts(date);
+  const getPart = (type: string) => parts.find((p) => p.type === type)?.value || '';
+
+  const year = getPart('year');
+  const month = getPart('month');
+  const day = getPart('day');
+  let hour = getPart('hour');
+  if (hour === '24') hour = '00';
+  const minute = getPart('minute');
+
+  return `${year}-${month}-${day}T${hour}:${minute}`;
+}
+
+/**
+ * Gets the default wall-clock deadline string ("YYYY-MM-DDTHH:mm") for tomorrow at 23:59
+ * in a specific IANA timezone.
+ */
+export function getDefaultLocalDeadline(timeZone: string, clock: Clock = defaultClock): string {
+  if (!isValidIanaTimezone(timeZone)) {
+    timeZone = 'UTC';
+  }
+  const now = clock.now();
+  const formatter = new Intl.DateTimeFormat('en-US', {
+    timeZone,
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+  });
+  const parts = formatter.formatToParts(now);
+  const getPart = (t: string) => parseInt(parts.find((p) => p.type === t)?.value || '0', 10);
+  const year = getPart('year');
+  const month = getPart('month');
+  const day = getPart('day');
+
+  // Advance by 1 calendar day
+  const tomorrow = new Date(Date.UTC(year, month - 1, day + 1));
+  const y = tomorrow.getUTCFullYear();
+  const m = String(tomorrow.getUTCMonth() + 1).padStart(2, '0');
+  const d = String(tomorrow.getUTCDate()).padStart(2, '0');
+  return `${y}-${m}-${d}T23:59`;
+}

@@ -7,6 +7,8 @@ import {
   isDeadlineReached,
   compareInstants,
   getDeadlineStatus,
+  utcToDatetimeLocalInput,
+  getDefaultLocalDeadline,
 } from '../src/lib/time';
 
 function runTemporalEngineTestSuite() {
@@ -155,6 +157,78 @@ function runTemporalEngineTestSuite() {
   assert.ok(compareInstants(dateLate, dateEarly) > 0);
   assert.strictEqual(compareInstants(dateEarly, dateEarly), 0);
   console.log('✅ Instant comparison utilities verified.\n');
+
+  // ----------------------------------------------------------------
+  // 8. SECTION 12 TEST MATRIX — USER DEADLINE & FORM CONVERSION INVARIANTS
+  // ----------------------------------------------------------------
+  console.log('8. Testing Section 12 Test Matrix Invariants...');
+
+  // CASE 1 — India (Asia/Kolkata) 22:25
+  const case1 = localToUtc('2026-09-18T22:25', 'Asia/Kolkata');
+  assert.strictEqual(case1.utcIso, '2026-09-18T16:55:00.000Z');
+  assert.strictEqual(utcToDatetimeLocalInput(case1.utcIso!, 'Asia/Kolkata'), '2026-09-18T22:25');
+  assert.strictEqual(utcToLocal(case1.utcIso!, 'Asia/Kolkata'), 'Sep 18, 2026, 10:25 PM');
+  console.log('✅ Case 1: India 22:25 -> 16:55 UTC -> 10:25 PM / 22:25 verified.');
+
+  // CASE 2 — Morning 08:30
+  const case2 = localToUtc('2026-09-18T08:30', 'Asia/Kolkata');
+  assert.strictEqual(case2.utcIso, '2026-09-18T03:00:00.000Z');
+  assert.strictEqual(utcToDatetimeLocalInput(case2.utcIso!, 'Asia/Kolkata'), '2026-09-18T08:30');
+  assert.strictEqual(utcToLocal(case2.utcIso!, 'Asia/Kolkata'), 'Sep 18, 2026, 8:30 AM');
+  console.log('✅ Case 2: Morning 08:30 -> 03:00 UTC -> 08:30 verified.');
+
+  // CASE 3 — Midnight 00:15
+  const case3 = localToUtc('2026-09-18T00:15', 'Asia/Kolkata');
+  assert.strictEqual(case3.utcIso, '2026-09-17T18:45:00.000Z');
+  assert.strictEqual(utcToDatetimeLocalInput(case3.utcIso!, 'Asia/Kolkata'), '2026-09-18T00:15');
+  assert.strictEqual(utcToLocal(case3.utcIso!, 'Asia/Kolkata'), 'Sep 18, 2026, 12:15 AM');
+  console.log('✅ Case 3: Midnight 00:15 on 2026-09-18 verified on correct local date.');
+
+  // CASE 4 — Date boundary 23:55
+  const case4 = localToUtc('2026-09-18T23:55', 'Asia/Kolkata');
+  assert.strictEqual(case4.utcIso, '2026-09-18T18:25:00.000Z');
+  assert.strictEqual(utcToDatetimeLocalInput(case4.utcIso!, 'Asia/Kolkata'), '2026-09-18T23:55');
+  assert.strictEqual(utcToLocal(case4.utcIso!, 'Asia/Kolkata'), 'Sep 18, 2026, 11:55 PM');
+  console.log('✅ Case 4: Date boundary 23:55 preserved on correct local date.');
+
+  // CASE 5 — Round trip across various wall-clock dates
+  const sampleTimes = ['2026-01-01T00:00', '2026-04-10T09:15', '2026-07-22T15:45', '2026-12-31T23:59'];
+  for (const st of sampleTimes) {
+    const u = localToUtc(st, 'Asia/Kolkata').utcIso!;
+    const b = utcToDatetimeLocalInput(u, 'Asia/Kolkata');
+    assert.strictEqual(b, st);
+  }
+  console.log('✅ Case 5: Lossless round-trip verified for all sample times.');
+
+  // CASE 6 — Different timezone (America/New_York, Asia/Tokyo, Europe/London)
+  const case6Ny = localToUtc('2026-09-18T14:00', 'America/New_York');
+  assert.strictEqual(case6Ny.utcIso, '2026-09-18T18:00:00.000Z');
+  assert.strictEqual(utcToDatetimeLocalInput(case6Ny.utcIso!, 'America/New_York'), '2026-09-18T14:00');
+
+  const case6Tokyo = localToUtc('2026-09-18T14:00', 'Asia/Tokyo');
+  assert.strictEqual(case6Tokyo.utcIso, '2026-09-18T05:00:00.000Z');
+  assert.strictEqual(utcToDatetimeLocalInput(case6Tokyo.utcIso!, 'Asia/Tokyo'), '2026-09-18T14:00');
+  console.log('✅ Case 6: Non-India timezones verified generically.');
+
+  // CASE 7 — Deadline comparison using UTC instant
+  const dlUtc = new Date('2026-09-18T16:55:00.000Z');
+  const clockBeforeCase7 = new TestClock('2026-09-18T16:54:59.000Z');
+  const clockAfterCase7 = new TestClock('2026-09-18T16:55:00.000Z');
+  assert.strictEqual(isDeadlineReached(dlUtc, clockBeforeCase7), false);
+  assert.strictEqual(isDeadlineReached(dlUtc, clockAfterCase7), true);
+  console.log('✅ Case 7: Authoritative UTC deadline comparison verified.');
+
+  // CASE 8 — Default local deadline helper
+  const fixedNow = new TestClock('2026-09-18T10:00:00.000Z'); // 15:30 IST
+  const defaultDl = getDefaultLocalDeadline('Asia/Kolkata', fixedNow);
+  assert.strictEqual(defaultDl, '2026-09-19T23:59');
+  console.log('✅ Case 8: Default local deadline generator verified (tomorrow at 23:59 in local tz).');
+
+  // CASE 9 — Existing task from database: "2026-09-18 16:55:00+00"
+  const existingDbUtc = '2026-09-18 16:55:00+00';
+  assert.strictEqual(utcToDatetimeLocalInput(existingDbUtc, 'Asia/Kolkata'), '2026-09-18T22:25');
+  assert.strictEqual(utcToLocal(existingDbUtc, 'Asia/Kolkata'), 'Sep 18, 2026, 10:25 PM');
+  console.log('✅ Case 9: Existing task stored in DB displayed as 10:25 PM and prefilled as 22:25 in Asia/Kolkata.\n');
 
   console.log('================================================================');
   console.log('🎉 ALL TEMPORAL ENGINE & TIMEZONE UNIT TESTS PASSED CLEANLY');

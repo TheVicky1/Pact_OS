@@ -4,6 +4,7 @@ import { getGoals } from '@/features/goals/data-access';
 import { getProjects } from '@/features/projects/data-access';
 import { getTasks } from '@/features/tasks/data-access';
 import { OverviewView } from '@/features/dashboard/components/overview-view';
+import { getUserProfileInfo } from '@/lib/auth/profile';
 
 export const metadata = {
   title: 'Overview | PACT OS',
@@ -20,10 +21,8 @@ export default async function ProtectedAppPage() {
     redirect('/login');
   }
 
-  const fullName = user.user_metadata?.full_name || 'User';
-  const timezone = user.user_metadata?.timezone || 'UTC';
-
-  const [{ data: goals }, { data: projects }, { data: tasks }] = await Promise.all([
+  const [{ fullName, timezone }, { data: goals }, { data: projects }, { data: tasks }] = await Promise.all([
+    getUserProfileInfo(supabase, user.id, user.user_metadata),
     getGoals(),
     getProjects(),
     getTasks(),

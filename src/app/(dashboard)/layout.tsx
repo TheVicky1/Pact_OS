@@ -1,6 +1,7 @@
 import { createClient } from '@/lib/supabase/server';
 import { redirect } from 'next/navigation';
 import { AppHeader } from '@/components/ui/app-header';
+import { getUserProfileInfo } from '@/lib/auth/profile';
 
 export default async function DashboardLayout({
   children,
@@ -16,8 +17,7 @@ export default async function DashboardLayout({
     redirect('/login');
   }
 
-  const fullName = user.user_metadata?.full_name || 'User';
-  const timezone = user.user_metadata?.timezone || 'UTC';
+  const { fullName, timezone } = await getUserProfileInfo(supabase, user.id, user.user_metadata);
 
   return (
     <div className="min-h-screen bg-[#09090b] text-zinc-100 flex flex-col selection:bg-[#d4af37]/30 selection:text-zinc-100">
