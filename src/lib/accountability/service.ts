@@ -18,7 +18,11 @@ import {
   fulfillSessionSchema,
   cancelSessionSchema,
   waiveCommitmentSchema,
+  fulfillWrittenReflectionSchema,
+  declareFulfillmentSchema,
+  fulfillTaskCompletionSchema,
 } from '@/lib/validations/accountability';
+import { AccountabilityResolutionResult } from '@/types/domain';
 
 export async function getConsequenceDefinitions(): Promise<ConsequenceDefinition[]> {
   const supabase = await createClient();
@@ -609,6 +613,84 @@ export async function getAccountabilityWaiver(
   }
 
   return data as AccountabilityWaiver | null;
+}
+
+/**
+ * Fulfills an accountability consequence requiring written reflection.
+ * Enforces min 20 chars, max 5000 chars, non-empty, and writes reflection metadata.
+ */
+export async function fulfillWrittenReflection(
+  commitmentId: string,
+  reflectionText: string
+): Promise<AccountabilityResolutionResult> {
+  const validated = fulfillWrittenReflectionSchema.parse({
+    commitment_id: commitmentId,
+    reflection_text: reflectionText,
+  });
+  const supabase = await createClient();
+
+  const { data, error } = await supabase.rpc('fulfill_written_reflection', {
+    p_commitment_id: validated.commitment_id,
+    p_reflection_text: validated.reflection_text,
+  });
+
+  if (error) {
+    throw new Error(`Failed to fulfill written reflection: ${error.message}`);
+  }
+
+  return data as AccountabilityResolutionResult;
+}
+
+/**
+ * Fulfills an accountability consequence requiring self-declaration.
+ * Explicitly records as self-reported (not objectively verified) with audit trail.
+ */
+export async function declareAccountabilityFulfillment(
+  commitmentId: string,
+  declarationStatement: string
+): Promise<AccountabilityResolutionResult> {
+  const validated = declareFulfillmentSchema.parse({
+    commitment_id: commitmentId,
+    declaration_statement: declarationStatement,
+  });
+  const supabase = await createClient();
+
+  const { data, error } = await supabase.rpc('declare_accountability_fulfillment', {
+    p_commitment_id: validated.commitment_id,
+    p_declaration_statement: validated.declaration_statement,
+  });
+
+  if (error) {
+    throw new Error(`Failed to declare fulfillment: ${error.message}`);
+  }
+
+  return data as AccountabilityResolutionResult;
+}
+
+/**
+ * Fulfills an accountability consequence requiring another PACT task to be completed.
+ * Verifies target task exists, belongs to user, is in completed status, and prevents circular reference.
+ */
+export async function fulfillTaskCompletion(
+  commitmentId: string,
+  targetTaskId: string
+): Promise<AccountabilityResolutionResult> {
+  const validated = fulfillTaskCompletionSchema.parse({
+    commitment_id: commitmentId,
+    target_task_id: targetTaskId,
+  });
+  const supabase = await createClient();
+
+  const { data, error } = await supabase.rpc('fulfill_task_completion_commitment', {
+    p_commitment_id: validated.commitment_id,
+    p_target_task_id: validated.target_task_id,
+  });
+
+  if (error) {
+    throw new Error(`Failed to fulfill task completion consequence: ${error.message}`);
+  }
+
+  return data as AccountabilityResolutionResult;
 }
 
 

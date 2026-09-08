@@ -211,5 +211,31 @@ export interface UpdateUserAccountabilityPreferencesInput {
   is_enabled?: boolean;
 }
 
+export interface FulfillWrittenReflectionInput {
+  commitment_id: string;
+  reflection_text: string;
+}
+
+export interface DeclareFulfillmentInput {
+  commitment_id: string;
+  declaration_statement: string;
+}
+
+export interface FulfillTaskCompletionInput {
+  commitment_id: string;
+  target_task_id: string;
+}
+
+export interface AccountabilityResolutionResult {
+  success: boolean;
+  code: string;
+  verification_type?: VerificationType;
+  is_self_declaration?: boolean;
+  target_task_id?: string;
+  data?: AccountabilityVerificationSession;
+  error?: string;
+}
+
+
 
 

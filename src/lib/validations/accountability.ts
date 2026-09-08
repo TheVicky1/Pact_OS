@@ -92,5 +92,29 @@ export const waiveCommitmentSchema = z.object({
   confirmation_token: z.string().trim().min(1, 'Confirmation token is required.'),
 });
 
+export const fulfillWrittenReflectionSchema = z.object({
+  commitment_id: z.string().uuid('Invalid commitment UUID format.'),
+  reflection_text: z
+    .string()
+    .trim()
+    .min(20, 'Written reflection must be at least 20 characters in length.')
+    .max(5000, 'Written reflection must not exceed 5000 characters.'),
+});
+
+export const declareFulfillmentSchema = z.object({
+  commitment_id: z.string().uuid('Invalid commitment UUID format.'),
+  declaration_statement: z
+    .string()
+    .trim()
+    .min(1, 'Declaration statement is required.')
+    .max(1000, 'Declaration statement must not exceed 1000 characters.'),
+});
+
+export const fulfillTaskCompletionSchema = z.object({
+  commitment_id: z.string().uuid('Invalid commitment UUID format.'),
+  target_task_id: z.string().uuid('Invalid target task UUID format.'),
+});
+
+
 
 

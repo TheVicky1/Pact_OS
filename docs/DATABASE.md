@@ -183,6 +183,14 @@ profiles (1:1 with auth.users)
 - `public.fulfill_accountability_session(p_session_id UUID, p_evidence_note TEXT)`: Validates real elapsed time against required duration, validates activity note, atomically marks session `completed` and commitment `fulfilled`, and records event.
 - `public.cancel_accountability_session(p_session_id UUID)`: Cancels active session; commitment remains `activated`.
 - `public.waive_accountability_commitment(p_commitment_id UUID, p_confirmation_token TEXT)`: Enforces 3-waivers/week quota calculated in user's profile timezone with row locking, records immutable waiver, and transitions commitment to `waived`.
+- `public.fulfill_written_reflection(p_commitment_id UUID, p_reflection_text TEXT)`: Enforces minimum 20 characters, maximum 5000 characters, whitespace-trimmed reflection text, transitions commitment to `fulfilled`, and logs reflection audit metadata.
+- `public.declare_accountability_fulfillment(p_commitment_id UUID, p_declaration_statement TEXT)`: Permits self-attestation only where explicitly allowed by definition, records `is_self_declaration = true` and `verified_objectively = false` in audit log, and marks commitment `fulfilled`.
+- `public.fulfill_task_completion_commitment(p_commitment_id UUID, p_target_task_id UUID)`: Verifies another real PACT task owned by the user reached authoritative `completed` status, blocks circular self-reference, marks commitment `fulfilled`, and logs objective verification metadata.
+
+### Hardened State Machine & Quota Triggers [CONFIRMED / MIGRATED]
+- `trg_enforce_commitment_status_transitions` (`BEFORE UPDATE ON public.task_accountability_commitments`): Enforces legal state machine transitions (`committed -> activated -> fulfilled | waived`). Disallows direct fulfillment/waiver of un-activated commitments and locks terminal states (`fulfilled`, `waived`).
+- `trg_enforce_weekly_waiver_quota` (`BEFORE INSERT ON public.accountability_waivers`): Table-level defense-in-depth trigger guaranteeing at most 3 waivers per user per calendar week.
+
 
 ---
 

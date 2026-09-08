@@ -23,16 +23,18 @@ Because Phase 0 establishes the specification foundation prior to implementation
 | **Forged userId Injection** | Server Action / API Test | `VERIFIED AGAINST REAL DATABASE (Phase 2A, 2C, 2D, 3M1-4)` |
 | **Forged `completed_at` Timestamp** | Server Action / API Test | `VERIFIED AGAINST REAL DATABASE (Phase 2A & 2D)` |
 | **Forged `missed_at` Timestamp** | Server Action / API Test | `VERIFIED AGAINST REAL DATABASE (Phase 2A & 2D)` |
-| **Forged Consequence State** | Server Action / API / RPC Test | `VERIFIED AGAINST REAL DATABASE (Phase 3M3-4: 84/84 Security Checks)` |
+| **Forged Consequence State** | Server Action / API / RPC Test | `VERIFIED AGAINST REAL DATABASE (Phase 3M3-5: 103/103 Security Checks)` |
 | **Deadline Boundary Logic** | Unit & Integration Test | `VERIFIED (Phase 2E, 3M3)` |
-| **Timezone Boundary Edge Cases** | Unit & Integration Test | `VERIFIED (Phase 2E, 3M4)` |
-| **Concurrent Completion Race Condition** | DB Transaction Race Test | `VERIFIED AGAINST REAL DATABASE (Phase 2F)` |
+| **Timezone Boundary Edge Cases** | Unit & Integration Test | `VERIFIED (Phase 2E, 3M4, 3M5)` |
+| **Concurrent Completion Race Condition** | DB Transaction Race Test | `VERIFIED AGAINST REAL DATABASE (Phase 2F, 3M5)` |
 | **Unauthorized API Call** | API Gateway Security Test | `FUTURE TEST — REQUIRED BEFORE FEATURE COMPLETION` |
-| **Malformed Input Payloads** | Zod Schema Validation Test | `VERIFIED (Phase 1, 2B, 2C, 2D, 3M1-4)` |
+| **Malformed Input Payloads** | Zod Schema Validation Test | `VERIFIED (Phase 1, 2B, 2C, 2D, 3M1-5)` |
 | **Session Expiry & Token Revocation** | Auth Integration Test | `VERIFIED AGAINST REAL DATABASE (Phase 1)` |
-| **Consequence Data Exposure Attempt** | Database & API Security Test| `VERIFIED AGAINST REAL DATABASE (Phase 3M1-4: RLS & Snapshot Immutability)` |
-| **Forged Timed Verification Session** | RPC & DB Immutability Test | `VERIFIED AGAINST REAL DATABASE (Phase 3M4: Anti-tamper trigger & duration checks)` |
-| **Weekly Waiver Limit Bypass Attempt** | RPC Quota & Timezone Test | `VERIFIED AGAINST REAL DATABASE (Phase 3M4: Strict 3 waivers/week limit)` |
+| **Consequence Data Exposure Attempt** | Database & API Security Test| `VERIFIED AGAINST REAL DATABASE (Phase 3M1-5: RLS & Snapshot Immutability)` |
+| **Forged Timed Verification Session** | RPC & DB Immutability Test | `VERIFIED AGAINST REAL DATABASE (Phase 3M4-5: Anti-tamper trigger & duration checks)` |
+| **Weekly Waiver Limit Bypass Attempt** | RPC Quota & Timezone Test | `VERIFIED AGAINST REAL DATABASE (Phase 3M4-5: Strict 3 waivers/week limit)` |
+| **Illegal State Machine Transition** | Database Trigger Test | `VERIFIED AGAINST REAL DATABASE (Phase 3M5: Direct shortcut & terminal edit blocks)` |
+| **Circular Task Completion Self-Reference** | RPC Validation Test | `VERIFIED AGAINST REAL DATABASE (Phase 3M5: Circular task rejection)` |
 
 ---
 
@@ -68,26 +70,34 @@ Because Phase 0 establishes the specification foundation prior to implementation
 The Accountability Resolution & Verification Engine was subjected to rigorous unit and adversarial database security testing:
 
 ### Automated Unit Test Suites
-1. `tests/resolution-engine.test.ts`: 9 comprehensive test groups verifying verification types, configuration schemas, snapshot persistence, session lifecycle schemas, server-authoritative timer math, waiver confirmation tokens, timezone-aware ISO week calculations, weekly quota resets, and state machine invariants.
-2. `tests/commitment-engine.test.ts`: Immutability of snapshotted verification configuration, commitment assignment, and tamper prevention.
-3. `tests/consequence-activation.test.ts`: Authoritative consequence activation on missed task deadlines.
+1. `tests/accountability-hardening.test.ts`: 12 test sections (29 test cases) verifying all verification schemas, multi-modal fulfillment validation, terminal state locks, definition deletion snapshot resilience, waiver calendar week boundaries, and race condition defenses.
+2. `tests/resolution-engine.test.ts`: 9 comprehensive test groups verifying verification types, configuration schemas, snapshot persistence, session lifecycle schemas, server-authoritative timer math, waiver confirmation tokens, timezone-aware ISO week calculations, weekly quota resets, and state machine invariants.
+3. `tests/commitment-engine.test.ts`: Immutability of snapshotted verification configuration, commitment assignment, and tamper prevention.
+4. `tests/consequence-activation.test.ts`: Authoritative consequence activation on missed task deadlines.
 
 ### Real Database Adversarial Attack Suite (`tests/adversarial-rls-audit.sql`)
-- **Total Checks**: 84 adversarial security checks executed directly against live Supabase PostgreSQL instance.
-- **Section 10 Additions (Checks 58–84)**:
-  - Multi-user cross-tenant session read isolation (User B cannot see User A's session).
-  - Cross-user session initiation blocked.
-  - Direct SQL INSERT/UPDATE/DELETE on `accountability_verification_sessions` blocked by immutability trigger `protect_accountability_sessions_immutability()`.
-  - Direct SQL INSERT/UPDATE/DELETE on `accountability_waivers` blocked by immutability trigger `protect_accountability_waivers_immutability()`.
-  - Attacker User B attempting to fulfill/cancel User A's session via RPC blocked with `P0001: Unauthorized: Verification session does not belong to the authenticated user`.
-  - Premature fulfillment (< required duration) rejected with `P0001: Accountability session duration not met`.
-  - Tampered client timestamps rejected (server uses authoritative `now()`).
-  - Missing or whitespace-only evidence notes rejected.
-  - Oversized evidence notes (> 5000 characters) rejected.
-  - Cross-user commitment waiver attempts blocked.
-  - Non-pending commitment waiver attempts blocked.
-  - Strict weekly waiver quota (hard limit 3 per calendar week per timezone) enforced; 4th attempt rejected with `P0001: Weekly waiver limit reached (maximum 3 waivers allowed per calendar week)`.
-  - Invalid confirmation token rejected with `P0001: Waiver confirmation token invalid`.
-  - Idempotency and anti-tamper triggers verified across all terminal states.
-- **Audit Result**: `84/84 checks passed with 0 failures`.
+- **Total Checks**: 103 adversarial security checks executed directly against live Supabase PostgreSQL instance.
+- **Section 10 Checks (58–84)**: Verification sessions, server-authoritative timer math, evidence note requirements, and weekly waiver quota.
+- **Section 11 Additions (Checks 85–103)**:
+  - State machine transition trigger `trg_enforce_commitment_status_transitions`:
+    - Direct `committed -> fulfilled` blocked (`P0001`).
+    - Direct `committed -> waived` blocked (`P0001`).
+    - Terminal `fulfilled` status cannot be altered (`P0001`).
+    - Terminal `waived` status cannot be altered (`P0001`).
+  - Definition deletion resilience: Deleting source consequence definition preserves committed snapshots without cascade.
+  - Multi-modal fulfillment RPC authorization & execution:
+    - User B cannot fulfill User A's written reflection commitment (`P0001`).
+    - Reflection length boundaries (<20 chars, >5000 chars) rejected (`P0001`).
+    - Valid written reflection successfully fulfills commitment.
+    - User B cannot declare fulfillment on User A's commitment (`P0001`).
+    - Declaration statements (<1 char, >1000 chars) rejected (`P0001`).
+    - Valid declaration sets `is_self_declaration = true` and `verified_objectively = false`.
+    - User B cannot fulfill User A's task completion commitment (`P0001`).
+    - Circular self-reference (`target_task_id = commit.task_id`) rejected (`P0001`).
+    - Incomplete target task rejected (`P0001`).
+    - Cross-user target task rejected (`P0001`).
+    - Completed target task successfully fulfills commitment.
+  - Defense-in-depth waiver quota trigger `trg_enforce_weekly_waiver_quota`: Direct bypass attempt exceeding weekly limit blocked.
+- **Audit Result**: `103/103 checks passed with 0 failures`.
+
 

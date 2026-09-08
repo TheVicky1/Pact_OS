@@ -135,4 +135,16 @@ Every architectural item in PACT documentation is categorized into one of five e
   7. **Append-Only & Immutable Audit Trail**: Both verification sessions and waivers are protected against tampering or deletion by PostgreSQL triggers.
   8. **Adversarial Verification**: Verified against real live Supabase PostgreSQL DB via 84-step security audit (`tests/adversarial-rls-audit.sql`) and unit test suite (`tests/resolution-engine.test.ts`).
 
-
+### ADR-021: Phase 3 Milestone 5 — Accountability Rules, Resolution Edge Cases & Final Hardening [CONFIRMED]
+- **Status**: [CONFIRMED]
+- **Decision**: Finalize consequence resolution semantics, enforce state machine transition invariants in PostgreSQL, harden waiver quotas with table triggers, and verify edge-case defenses:
+  1. **Strict Database State Machine Invariants**: PostgreSQL trigger `trg_enforce_commitment_status_transitions` prevents illegal state transitions (`committed -> fulfilled`, `committed -> waived`, and mutations to terminal states `fulfilled` and `waived`). Status progression must follow `committed -> activated -> (fulfilled | waived)`.
+  2. **Multi-Modal Server-Authoritative Fulfillment RPCs**:
+     - `public.fulfill_written_reflection(p_commitment_id, p_reflection_text)`: Enforces non-empty, trimmed reflection text (20–5000 characters) stored in audit metadata.
+     - `public.declare_accountability_fulfillment(p_commitment_id, p_declaration_statement)`: Explicitly stamps `is_self_declaration = true` and `verified_objectively = false` with non-empty statements (1–1000 characters), ensuring clear distinction from objective verification.
+     - `public.fulfill_task_completion_commitment(p_commitment_id, p_target_task_id)`: Requires a real secondary PACT task owned by the authenticated user in terminal `completed` status. Circular self-reference (`target_task_id = commit.task_id`), incomplete tasks, and cross-user tasks are strictly rejected.
+     - `custom`: Treated as structured declarative rules; execution of arbitrary code, SQL, webhooks, or external network requests is prohibited.
+  3. **Snapshot Immutability Under Definition Lifecycle**: Deleting or updating reusable `consequence_definitions` does not alter or invalidate existing committed snapshots in `task_accountability_commitments`.
+  4. **Indefinite Consequence Persistence**: Activated consequences remain `activated` indefinitely until explicitly fulfilled or waived; they never decay, expire, or self-forgive over time.
+  5. **Defense-in-Depth Waiver Quota Trigger**: PostgreSQL trigger `trg_enforce_weekly_waiver_quota` on `accountability_waivers` enforces the 3-per-calendar-week limit in the user's IANA timezone at the table level.
+  6. **Adversarial Verification**: Verified against real live Supabase PostgreSQL DB via 103-step security audit (`tests/adversarial-rls-audit.sql`) and unit test suite (`tests/accountability-hardening.test.ts`).

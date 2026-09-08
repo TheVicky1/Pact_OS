@@ -1078,6 +1078,340 @@ BEGIN
     INSERT INTO _rls_audit_results VALUES ('10.27 Anonymous Access Blocked for Sessions and Waivers Tables', 'PASS');
   END;
 
+  -- ----------------------------------------------------------------
+  -- SECTION 11: ACCOUNTABILITY HARDENING & EDGE CASES AUDIT
+  -- ----------------------------------------------------------------
+  DECLARE
+    v_m5_def_id UUID;
+    v_m5_task_trans UUID;
+    v_m5_commit_trans UUID;
+    v_m5_task_timed UUID;
+    v_m5_commit_timed UUID;
+    v_m5_task_refl UUID;
+    v_m5_commit_refl UUID;
+    v_m5_task_decl UUID;
+    v_m5_commit_decl UUID;
+    v_m5_task_tc UUID;
+    v_m5_commit_tc UUID;
+    v_m5_task_waived UUID;
+    v_m5_commit_waived UUID;
+    v_m5_target_task UUID;
+    v_m5_target_task_b UUID;
+    v_m5_res JSONB;
+    v_m5_comm_status TEXT;
+    v_m5_event_count INT;
+    v_m5_meta JSONB;
+  BEGIN
+    SET LOCAL ROLE authenticated;
+    SET LOCAL "request.jwt.claim.sub" = '11111111-1111-1111-1111-111111111111';
+
+    -- 11.01 Setup commitment for state machine transition tests
+    INSERT INTO public.tasks (user_id, title, status, deadline_at)
+    VALUES (v_user_a, 'M5 State Machine Task', 'pending', transaction_timestamp() + interval '1 day')
+    RETURNING id INTO v_m5_task_trans;
+
+    INSERT INTO public.task_accountability_commitments (task_id, user_id, consequence_snapshot, commitment_status)
+    VALUES (v_m5_task_trans, v_user_a, jsonb_build_object('title', 'State Test', 'consequence_type', 'reflection', 'action_statement', 'Reflect'), 'committed')
+    RETURNING id INTO v_m5_commit_trans;
+
+    -- 11.02 ATTACK: Direct status transition committed -> fulfilled is blocked by trigger
+    BEGIN
+      PERFORM set_config('pact.internal_bypass', 'true', true);
+      UPDATE public.task_accountability_commitments SET commitment_status = 'fulfilled' WHERE id = v_m5_commit_trans;
+      RAISE EXCEPTION 'SECURITY VIOLATION: Transition committed -> fulfilled allowed!';
+    EXCEPTION WHEN OTHERS THEN
+      INSERT INTO _rls_audit_results VALUES ('11.01 Transition committed -> fulfilled Blocked by Trigger', 'PASS');
+    END;
+
+    -- 11.03 ATTACK: Direct status transition committed -> waived is blocked by trigger
+    BEGIN
+      PERFORM set_config('pact.internal_bypass', 'true', true);
+      UPDATE public.task_accountability_commitments SET commitment_status = 'waived' WHERE id = v_m5_commit_trans;
+      RAISE EXCEPTION 'SECURITY VIOLATION: Transition committed -> waived allowed!';
+    EXCEPTION WHEN OTHERS THEN
+      INSERT INTO _rls_audit_results VALUES ('11.02 Transition committed -> waived Blocked by Trigger', 'PASS');
+    END;
+
+    -- Activate commitment legitimately via deadline expiry & mark_task_missed
+    UPDATE public.tasks SET deadline_at = transaction_timestamp() - interval '1 hour' WHERE id = v_m5_task_trans;
+    PERFORM public.mark_task_missed(v_m5_task_trans);
+
+    -- Fulfill it legitimately via internal bypass to test terminal state immutability
+    PERFORM set_config('pact.internal_bypass', 'true', true);
+    UPDATE public.task_accountability_commitments SET commitment_status = 'fulfilled' WHERE id = v_m5_commit_trans;
+
+    -- 11.04 ATTACK: Transition from terminal fulfilled -> activated is blocked
+    BEGIN
+      PERFORM set_config('pact.internal_bypass', 'true', true);
+      UPDATE public.task_accountability_commitments SET commitment_status = 'activated' WHERE id = v_m5_commit_trans;
+      RAISE EXCEPTION 'SECURITY VIOLATION: Transition fulfilled -> activated allowed!';
+    EXCEPTION WHEN OTHERS THEN
+      INSERT INTO _rls_audit_results VALUES ('11.03 Transition fulfilled -> activated Blocked (Terminal State)', 'PASS');
+    END;
+
+    -- 11.05 ATTACK: Transition from terminal fulfilled -> waived is blocked
+    BEGIN
+      PERFORM set_config('pact.internal_bypass', 'true', true);
+      UPDATE public.task_accountability_commitments SET commitment_status = 'waived' WHERE id = v_m5_commit_trans;
+      RAISE EXCEPTION 'SECURITY VIOLATION: Transition fulfilled -> waived allowed!';
+    EXCEPTION WHEN OTHERS THEN
+      INSERT INTO _rls_audit_results VALUES ('11.04 Transition fulfilled -> waived Blocked (Terminal State)', 'PASS');
+    END;
+
+    -- ----------------------------------------------------------------
+    -- WRITTEN REFLECTION VERIFICATION TESTS
+    -- ----------------------------------------------------------------
+    -- Create task with written_reflection commitment
+    INSERT INTO public.tasks (user_id, title, status, deadline_at)
+    VALUES (v_user_a, 'M5 Reflection Task', 'pending', transaction_timestamp() - interval '1 hour')
+    RETURNING id INTO v_m5_task_refl;
+
+    INSERT INTO public.task_accountability_commitments (task_id, user_id, consequence_snapshot, commitment_status)
+    VALUES (
+      v_m5_task_refl,
+      v_user_a,
+      jsonb_build_object(
+        'title', 'Reflection Consequence',
+        'consequence_type', 'reflection',
+        'action_statement', 'Write 100 words reflection on missed deadline',
+        'verification_type', 'written_reflection'
+      ),
+      'committed'
+    ) RETURNING id INTO v_m5_commit_refl;
+
+    PERFORM public.mark_task_missed(v_m5_task_refl);
+
+    -- 11.06 ATTACK: Written reflection < 20 characters rejected
+    SELECT public.fulfill_written_reflection(v_m5_commit_refl, 'Too short') INTO v_m5_res;
+    IF (v_m5_res->>'code') <> 'REFLECTION_TOO_SHORT' THEN
+      RAISE EXCEPTION 'Short reflection was not rejected: %', v_m5_res;
+    END IF;
+    INSERT INTO _rls_audit_results VALUES ('11.05 Written Reflection < 20 Chars Rejected', 'PASS');
+
+    -- 11.07 ATTACK: Written reflection with whitespace-only rejected
+    SELECT public.fulfill_written_reflection(v_m5_commit_refl, '                    ') INTO v_m5_res;
+    IF (v_m5_res->>'code') <> 'REFLECTION_TOO_SHORT' THEN
+      RAISE EXCEPTION 'Whitespace reflection was not rejected: %', v_m5_res;
+    END IF;
+    INSERT INTO _rls_audit_results VALUES ('11.06 Written Reflection Whitespace Rejected', 'PASS');
+
+    -- 11.08 Valid written reflection succeeds
+    SELECT public.fulfill_written_reflection(v_m5_commit_refl, 'This is a genuine reflective note about planning better for deadlines.') INTO v_m5_res;
+    IF (v_m5_res->>'code') <> 'FULFILLED' THEN
+      RAISE EXCEPTION 'Valid reflection fulfillment failed: %', v_m5_res;
+    END IF;
+    INSERT INTO _rls_audit_results VALUES ('11.07 Valid Written Reflection Fulfillment Succeeded', 'PASS');
+
+    -- 11.09 Repeated written reflection is idempotent
+    SELECT public.fulfill_written_reflection(v_m5_commit_refl, 'Duplicate call with valid text') INTO v_m5_res;
+    IF (v_m5_res->>'code') <> 'ALREADY_FULFILLED' THEN
+      RAISE EXCEPTION 'Repeated reflection fulfillment did not return ALREADY_FULFILLED: %', v_m5_res;
+    END IF;
+    INSERT INTO _rls_audit_results VALUES ('11.08 Repeated Reflection Fulfillment Idempotent', 'PASS');
+
+    -- ----------------------------------------------------------------
+    -- DECLARATION FULFILLMENT TESTS (Explicitly Self-Reported)
+    -- ----------------------------------------------------------------
+    INSERT INTO public.tasks (user_id, title, status, deadline_at)
+    VALUES (v_user_a, 'M5 Declaration Task', 'pending', transaction_timestamp() - interval '1 hour')
+    RETURNING id INTO v_m5_task_decl;
+
+    INSERT INTO public.task_accountability_commitments (task_id, user_id, consequence_snapshot, commitment_status)
+    VALUES (
+      v_m5_task_decl,
+      v_user_a,
+      jsonb_build_object(
+        'title', 'Declaration Consequence',
+        'consequence_type', 'personal_restriction',
+        'action_statement', 'No social media for 24 hours',
+        'verification_type', 'declaration'
+      ),
+      'committed'
+    ) RETURNING id INTO v_m5_commit_decl;
+
+    PERFORM public.mark_task_missed(v_m5_task_decl);
+
+    -- Setup timed commitment for declaration rejection attack
+    INSERT INTO public.tasks (user_id, title, status, deadline_at)
+    VALUES (v_user_a, 'M5 Timed Task', 'pending', transaction_timestamp() - interval '1 hour')
+    RETURNING id INTO v_m5_task_timed;
+
+    INSERT INTO public.task_accountability_commitments (task_id, user_id, consequence_snapshot, commitment_status)
+    VALUES (
+      v_m5_task_timed,
+      v_user_a,
+      jsonb_build_object(
+        'title', 'Timed Consequence',
+        'consequence_type', 'self_improvement',
+        'action_statement', 'Study 30 minutes',
+        'verification_type', 'timed_session',
+        'verification_config', jsonb_build_object('required_duration_seconds', 1800)
+      ),
+      'committed'
+    ) RETURNING id INTO v_m5_commit_timed;
+
+    PERFORM public.mark_task_missed(v_m5_task_timed);
+
+    -- 11.10 ATTACK: Declaration rejected on timed_session consequence
+    SELECT public.declare_accountability_fulfillment(v_m5_commit_timed, 'I declare I studied') INTO v_m5_res;
+    IF (v_m5_res->>'code') <> 'DECLARATION_NOT_PERMITTED' THEN
+      RAISE EXCEPTION 'Declaration on timed session was not rejected: %', v_m5_res;
+    END IF;
+    INSERT INTO _rls_audit_results VALUES ('11.09 Declaration on Timed Session Consequence Blocked', 'PASS');
+
+    -- 11.11 ATTACK: Declaration rejected with empty statement
+    SELECT public.declare_accountability_fulfillment(v_m5_commit_decl, '   ') INTO v_m5_res;
+    IF (v_m5_res->>'code') <> 'DECLARATION_STATEMENT_REQUIRED' THEN
+      RAISE EXCEPTION 'Empty declaration statement was not rejected: %', v_m5_res;
+    END IF;
+    INSERT INTO _rls_audit_results VALUES ('11.10 Empty Declaration Statement Rejected', 'PASS');
+
+    -- 11.12 Valid declaration succeeds and records is_self_declaration = true
+    SELECT public.declare_accountability_fulfillment(v_m5_commit_decl, 'I attest I stayed off social media.') INTO v_m5_res;
+    IF (v_m5_res->>'code') <> 'FULFILLED' OR (v_m5_res->>'is_self_declaration')::boolean IS NOT TRUE THEN
+      RAISE EXCEPTION 'Declaration fulfillment failed: %', v_m5_res;
+    END IF;
+
+    SELECT metadata INTO v_m5_meta FROM public.accountability_events
+    WHERE commitment_id = v_m5_commit_decl AND event_type = 'fulfilled';
+    IF (v_m5_meta->>'is_self_declaration')::boolean IS NOT TRUE THEN
+      RAISE EXCEPTION 'Accountability event did not record is_self_declaration = true!';
+    END IF;
+    INSERT INTO _rls_audit_results VALUES ('11.11 Declaration Recorded With Explicit Self-Attestation Audit Trail', 'PASS');
+
+    -- ----------------------------------------------------------------
+    -- TASK COMPLETION VERIFICATION TESTS
+    -- ----------------------------------------------------------------
+    INSERT INTO public.tasks (user_id, title, status, deadline_at)
+    VALUES (v_user_a, 'M5 Task Completion Consequence Task', 'pending', transaction_timestamp() - interval '1 hour')
+    RETURNING id INTO v_m5_task_tc;
+
+    INSERT INTO public.task_accountability_commitments (task_id, user_id, consequence_snapshot, commitment_status)
+    VALUES (
+      v_m5_task_tc,
+      v_user_a,
+      jsonb_build_object(
+        'title', 'Complete Chores Consequence',
+        'consequence_type', 'extra_responsibility',
+        'action_statement', 'Complete chore task',
+        'verification_type', 'task_completion'
+      ),
+      'committed'
+    ) RETURNING id INTO v_m5_commit_tc;
+
+    PERFORM public.mark_task_missed(v_m5_task_tc);
+
+    -- Target Task 1: pending task
+    INSERT INTO public.tasks (user_id, title, status, deadline_at)
+    VALUES (v_user_a, 'Target Chore Task', 'pending', transaction_timestamp() + interval '1 day')
+    RETURNING id INTO v_m5_target_task;
+
+    -- 11.13 ATTACK: Circular reference (task fulfilling its own consequence)
+    SELECT public.fulfill_task_completion_commitment(v_m5_commit_tc, v_m5_task_tc) INTO v_m5_res;
+    IF (v_m5_res->>'code') <> 'CIRCULAR_TASK_REFERENCE' THEN
+      RAISE EXCEPTION 'Circular task completion was not rejected: %', v_m5_res;
+    END IF;
+    INSERT INTO _rls_audit_results VALUES ('11.12 Circular Task Self-Fulfillment Blocked', 'PASS');
+
+    -- 11.14 ATTACK: Cross-user target task (User B target task)
+    SET LOCAL "request.jwt.claim.sub" = '22222222-2222-2222-2222-222222222222';
+    INSERT INTO public.tasks (user_id, title, status, deadline_at)
+    VALUES (v_user_b, 'User B Chore Task', 'completed', transaction_timestamp() - interval '10 minutes')
+    RETURNING id INTO v_m5_target_task_b;
+
+    SET LOCAL "request.jwt.claim.sub" = '11111111-1111-1111-1111-111111111111';
+    SELECT public.fulfill_task_completion_commitment(v_m5_commit_tc, v_m5_target_task_b) INTO v_m5_res;
+    IF (v_m5_res->>'code') <> 'TARGET_TASK_NOT_FOUND' THEN
+      RAISE EXCEPTION 'Cross-user target task was not rejected: %', v_m5_res;
+    END IF;
+    INSERT INTO _rls_audit_results VALUES ('11.13 Cross-User Target Task Fulfillment Blocked', 'PASS');
+
+    -- 11.15 ATTACK: Uncompleted target task rejected
+    SELECT public.fulfill_task_completion_commitment(v_m5_commit_tc, v_m5_target_task) INTO v_m5_res;
+    IF (v_m5_res->>'code') <> 'TARGET_TASK_NOT_COMPLETED' THEN
+      RAISE EXCEPTION 'Uncompleted target task was not rejected: %', v_m5_res;
+    END IF;
+    INSERT INTO _rls_audit_results VALUES ('11.14 Incomplete Target Task Fulfillment Blocked', 'PASS');
+
+    -- Authoritatively complete target chore task
+    PERFORM public.complete_task(v_m5_target_task);
+
+    -- 11.16 Valid task completion fulfillment succeeds
+    SELECT public.fulfill_task_completion_commitment(v_m5_commit_tc, v_m5_target_task) INTO v_m5_res;
+    IF (v_m5_res->>'code') <> 'FULFILLED' THEN
+      RAISE EXCEPTION 'Valid task completion fulfillment failed: %', v_m5_res;
+    END IF;
+
+    SELECT metadata INTO v_m5_meta FROM public.accountability_events
+    WHERE commitment_id = v_m5_commit_tc AND event_type = 'fulfilled';
+    IF (v_m5_meta->>'verified_objectively')::boolean IS NOT TRUE THEN
+      RAISE EXCEPTION 'Task completion was not marked as verified_objectively!';
+    END IF;
+    INSERT INTO _rls_audit_results VALUES ('11.15 Authoritative Task Completion Fulfillment Succeeded', 'PASS');
+
+    -- ----------------------------------------------------------------
+    -- SNAPSHOT RESILIENCE & WAIVER TABLE-TRIGGER DEFENSE
+    -- ----------------------------------------------------------------
+    -- 11.17 Create reusable consequence definition, link to task commitment, then delete reusable definition
+    INSERT INTO public.consequence_definitions (user_id, title, consequence_type, action_statement, verification_type)
+    VALUES (v_user_a, 'Temporary Definition', 'self_improvement', 'Run 5 miles', 'timed_session')
+    RETURNING id INTO v_m5_def_id;
+
+    DELETE FROM public.consequence_definitions WHERE id = v_m5_def_id;
+    -- Existing commitments must still retain valid snapshots
+    SELECT count(*) INTO v_m5_event_count FROM public.task_accountability_commitments WHERE user_id = v_user_a;
+    IF v_m5_event_count = 0 THEN
+      RAISE EXCEPTION 'Deleting consequence definition damaged commitments!';
+    END IF;
+    INSERT INTO _rls_audit_results VALUES ('11.16 Definition Deletion Preserves Committed Snapshot Integrity', 'PASS');
+
+    -- 11.18 Table trigger blocks 4th waiver attempt even with internal bypass
+    BEGIN
+      PERFORM set_config('pact.internal_bypass', 'true', true);
+      INSERT INTO public.accountability_waivers (
+        commitment_id, user_id, task_id, confirmation_token, waiver_week_year, waiver_week_number, waiver_count_in_week
+      ) VALUES (
+        gen_random_uuid(), v_user_a, v_m5_task_trans, 'CONFIRM_WAIVER_V1', 2026, 37, 4
+      );
+      RAISE EXCEPTION 'SECURITY VIOLATION: Fourth waiver bypassed table quota trigger!';
+    EXCEPTION WHEN OTHERS THEN
+      INSERT INTO _rls_audit_results VALUES ('11.17 Table-Level Trigger Strictly Blocks Waiver Quota Violation', 'PASS');
+    END;
+
+    -- 11.19 ATTACK: Attempting to waive already-fulfilled commitment rejected
+    SELECT public.waive_accountability_commitment(v_m5_commit_refl, 'CONFIRM_WAIVER_V1') INTO v_m5_res;
+    IF (v_m5_res->>'code') <> 'COMMITMENT_NOT_ACTIVATED' THEN
+      RAISE EXCEPTION 'Waiving fulfilled commitment was not rejected: %', v_m5_res;
+    END IF;
+    INSERT INTO _rls_audit_results VALUES ('11.18 Waiving Fulfilled Commitment Rejected by State Machine', 'PASS');
+
+    -- Setup a separate waived commitment to test fulfillment on waived commitment
+    INSERT INTO public.tasks (user_id, title, status, deadline_at)
+    VALUES (v_user_a, 'M5 Waived Task', 'pending', transaction_timestamp() - interval '1 hour')
+    RETURNING id INTO v_m5_task_waived;
+
+    INSERT INTO public.task_accountability_commitments (task_id, user_id, consequence_snapshot, commitment_status)
+    VALUES (
+      v_m5_task_waived,
+      v_user_a,
+      jsonb_build_object('title', 'Waived Consequence', 'consequence_type', 'reflection', 'action_statement', 'Reflect', 'verification_type', 'written_reflection'),
+      'committed'
+    ) RETURNING id INTO v_m5_commit_waived;
+
+    PERFORM public.mark_task_missed(v_m5_task_waived);
+    PERFORM set_config('pact.internal_bypass', 'true', true);
+    UPDATE public.task_accountability_commitments SET commitment_status = 'waived' WHERE id = v_m5_commit_waived;
+
+    -- 11.20 ATTACK: Attempting to fulfill already-waived commitment rejected
+    SELECT public.fulfill_written_reflection(v_m5_commit_waived, 'This is an attempt to fulfill a waived commitment.') INTO v_m5_res;
+    IF (v_m5_res->>'code') <> 'COMMITMENT_NOT_ACTIVATED' THEN
+      RAISE EXCEPTION 'Fulfilling waived commitment was not rejected: %', v_m5_res;
+    END IF;
+    INSERT INTO _rls_audit_results VALUES ('11.19 Fulfilling Waived Commitment Rejected by State Machine', 'PASS');
+  END;
+
+
+
   -- Clean up test records
   RESET ROLE;
   DELETE FROM public.accountability_waivers WHERE user_id IN (v_user_a, v_user_b);

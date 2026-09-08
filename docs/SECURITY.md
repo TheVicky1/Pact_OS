@@ -185,5 +185,30 @@ For Phase 3 Milestone 4, the consequence resolution and waiver mechanics were bu
 5. **Adversarial Security Verification**:
    - Verified against the live remote Supabase PostgreSQL database across 84 real adversarial tests in `tests/adversarial-rls-audit.sql` (27 new Milestone 4 checks covering fulfillment, timers, evidence, and weekly quotas).
 
+---
 
+## 11. Phase 3 Milestone 5 Accountability Rules, Resolution Edge Cases & Final Hardening [CONFIRMED]
 
+For Phase 3 Milestone 5, the accountability resolution and consequence engine was finalized with exhaustive edge-case defenses and database-level hardening:
+
+1. **Database-Level State Machine Invariant Enforcement**:
+   - PostgreSQL trigger `trg_enforce_commitment_status_transitions` on `public.task_accountability_commitments` strictly enforces the lifecycle progression: `committed -> activated -> (fulfilled | waived)`.
+   - Direct shortcuts (`committed -> fulfilled`, `committed -> waived`) are rejected with `P0001: Invalid commitment status transition: Commitment must be activated before being fulfilled or waived`.
+   - Modifications to terminal states (`fulfilled`, `waived`) are strictly blocked with `P0001: Invalid commitment status transition: Terminal commitment status cannot be modified`.
+2. **Snapshot Immutability Under Consequence Definition Lifecycle**:
+   - Committed snapshots in `task_accountability_commitments` are fully detached from `consequence_definitions`.
+   - Deleting, archiving, or modifying reusable consequence definitions has zero impact on existing committed snapshots.
+3. **Multi-Modal Server-Authoritative Verification Semantics**:
+   - `timed_session`: Duration enforced strictly server-side (`now() - started_at >= required_duration_seconds`), non-empty evidence notes required.
+   - `written_reflection`: Stored and validated via `fulfill_written_reflection()` with strict length constraints (20–5000 characters, whitespace trimmed).
+   - `declaration`: Handled via `declare_accountability_fulfillment()`, explicitly stamping `is_self_declaration = true` and `verified_objectively = false` with non-empty statements (1–1000 characters), ensuring clear distinction from objective verification.
+   - `task_completion`: Handled via `fulfill_task_completion_commitment()`, requiring a real secondary PACT task owned by the authenticated user in terminal `completed` status. Circular self-reference (`target_task_id = commit.task_id`), incomplete tasks, and cross-user tasks are strictly rejected.
+   - `custom`: Structured, validated, and bounded; execution of arbitrary code, SQL, webhooks, or external network calls is strictly prohibited.
+4. **Indefinite Consequence Persistence**:
+   - Activated consequences remain in `activated` status indefinitely until explicitly fulfilled or waived; they never silently expire, decay, or self-forgive over time.
+5. **Defense-in-Depth Waiver Quota Trigger**:
+   - PostgreSQL trigger `trg_enforce_weekly_waiver_quota` on `public.accountability_waivers` acts as a second-line defense behind `waive_accountability_commitment()`, enforcing the 3-per-calendar-week limit in the user's IANA timezone at the table level.
+6. **Concurrency & Race Condition Defenses**:
+   - Concurrent resolution operations (e.g. simultaneous fulfill and waive) serialize via `SELECT ... FOR UPDATE` locks on the target commitment and profile rows.
+7. **Adversarial Real Database Verification**:
+   - 103/103 adversarial security checks passed against the live remote Supabase PostgreSQL database (`tests/adversarial-rls-audit.sql`), including 19 new checks (85–103) covering Milestone 5 state transitions, multi-modal fulfillment RPCs, circular task references, and terminal immutability.
