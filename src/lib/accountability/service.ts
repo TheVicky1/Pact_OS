@@ -4,6 +4,8 @@ import {
   UserAccountabilityPreferences,
   TaskAccountabilityCommitment,
   AccountabilityEvent,
+  AccountabilityVerificationSession,
+  AccountabilityWaiver,
   CreateConsequenceDefinitionInput,
   UpdateConsequenceDefinitionInput,
   UpdateUserAccountabilityPreferencesInput,
@@ -12,6 +14,10 @@ import {
   createConsequenceDefinitionSchema,
   updateConsequenceDefinitionSchema,
   updateUserAccountabilityPreferencesSchema,
+  startSessionSchema,
+  fulfillSessionSchema,
+  cancelSessionSchema,
+  waiveCommitmentSchema,
 } from '@/lib/validations/accountability';
 
 export async function getConsequenceDefinitions(): Promise<ConsequenceDefinition[]> {
@@ -93,6 +99,8 @@ export async function createConsequenceDefinition(
       description: validated.description ?? null,
       is_enabled: validated.is_enabled ?? true,
       is_default: validated.is_default ?? false,
+      verification_type: validated.verification_type ?? 'declaration',
+      verification_config: validated.verification_config ?? {},
     })
     .select()
     .single();
@@ -313,6 +321,8 @@ export async function createTaskAccountabilityCommitment(
     consequence_type: consequence.consequence_type,
     action_statement: consequence.action_statement,
     description: consequence.description ?? null,
+    verification_type: consequence.verification_type ?? 'declaration',
+    verification_config: consequence.verification_config ?? {},
   };
 
   const { data, error } = await supabase
@@ -421,5 +431,185 @@ export async function getTaskAccountabilityEventHistory(
 
   return data as AccountabilityEvent[];
 }
+
+/**
+ * Starts a server-authoritative accountability verification session.
+ * If an active session already exists, resumes and returns it.
+ */
+export async function startAccountabilitySession(
+  commitmentId: string
+): Promise<{ success: boolean; code: string; data?: AccountabilityVerificationSession; error?: string }> {
+  const validated = startSessionSchema.parse({ commitment_id: commitmentId });
+  const supabase = await createClient();
+
+  const { data, error } = await supabase.rpc('start_accountability_session', {
+    p_commitment_id: validated.commitment_id,
+  });
+
+  if (error) {
+    throw new Error(`Failed to start verification session: ${error.message}`);
+  }
+
+  return data;
+}
+
+/**
+ * Fulfills an accountability verification session after server validates elapsed duration and required evidence.
+ */
+export async function fulfillAccountabilitySession(
+  sessionId: string,
+  evidenceNote?: string
+): Promise<{ success: boolean; code: string; data?: AccountabilityVerificationSession; error?: string }> {
+  const validated = fulfillSessionSchema.parse({
+    session_id: sessionId,
+    evidence_note: evidenceNote,
+  });
+  const supabase = await createClient();
+
+  const { data, error } = await supabase.rpc('fulfill_accountability_session', {
+    p_session_id: validated.session_id,
+    p_evidence_note: validated.evidence_note ?? null,
+  });
+
+  if (error) {
+    throw new Error(`Failed to fulfill verification session: ${error.message}`);
+  }
+
+  return data;
+}
+
+/**
+ * Cancels an active accountability verification session without resolving the consequence.
+ */
+export async function cancelAccountabilitySession(
+  sessionId: string
+): Promise<{ success: boolean; code: string; data?: AccountabilityVerificationSession; error?: string }> {
+  const validated = cancelSessionSchema.parse({ session_id: sessionId });
+  const supabase = await createClient();
+
+  const { data, error } = await supabase.rpc('cancel_accountability_session', {
+    p_session_id: validated.session_id,
+  });
+
+  if (error) {
+    throw new Error(`Failed to cancel verification session: ${error.message}`);
+  }
+
+  return data;
+}
+
+/**
+ * Waives an activated accountability commitment, enforcing the 3-waiver weekly limit in user timezone.
+ */
+export async function waiveAccountabilityCommitment(
+  commitmentId: string,
+  confirmationToken: string
+): Promise<{ success: boolean; code: string; waiver_count_in_week?: number; data?: AccountabilityWaiver; error?: string }> {
+  const validated = waiveCommitmentSchema.parse({
+    commitment_id: commitmentId,
+    confirmation_token: confirmationToken,
+  });
+  const supabase = await createClient();
+
+  const { data, error } = await supabase.rpc('waive_accountability_commitment', {
+    p_commitment_id: validated.commitment_id,
+    p_confirmation_token: validated.confirmation_token,
+  });
+
+  if (error) {
+    throw new Error(`Failed to waive commitment: ${error.message}`);
+  }
+
+  return data;
+}
+
+/**
+ * Gets the current active ('started') verification session for a commitment, if any.
+ */
+export async function getActiveVerificationSession(
+  commitmentId: string
+): Promise<AccountabilityVerificationSession | null> {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) {
+    throw new Error('Authentication required.');
+  }
+
+  const { data, error } = await supabase
+    .from('accountability_verification_sessions')
+    .select('*')
+    .eq('commitment_id', commitmentId)
+    .eq('user_id', user.id)
+    .eq('status', 'started')
+    .maybeSingle();
+
+  if (error) {
+    throw new Error(`Failed to fetch active verification session: ${error.message}`);
+  }
+
+  return data as AccountabilityVerificationSession | null;
+}
+
+/**
+ * Gets all verification sessions for a commitment.
+ */
+export async function getVerificationSessions(
+  commitmentId: string
+): Promise<AccountabilityVerificationSession[]> {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) {
+    throw new Error('Authentication required.');
+  }
+
+  const { data, error } = await supabase
+    .from('accountability_verification_sessions')
+    .select('*')
+    .eq('commitment_id', commitmentId)
+    .eq('user_id', user.id)
+    .order('started_at', { ascending: false });
+
+  if (error) {
+    throw new Error(`Failed to fetch verification sessions: ${error.message}`);
+  }
+
+  return data as AccountabilityVerificationSession[];
+}
+
+/**
+ * Gets the waiver audit record for a commitment, if waived.
+ */
+export async function getAccountabilityWaiver(
+  commitmentId: string
+): Promise<AccountabilityWaiver | null> {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) {
+    throw new Error('Authentication required.');
+  }
+
+  const { data, error } = await supabase
+    .from('accountability_waivers')
+    .select('*')
+    .eq('commitment_id', commitmentId)
+    .eq('user_id', user.id)
+    .maybeSingle();
+
+  if (error) {
+    throw new Error(`Failed to fetch accountability waiver: ${error.message}`);
+  }
+
+  return data as AccountabilityWaiver | null;
+}
+
 
 

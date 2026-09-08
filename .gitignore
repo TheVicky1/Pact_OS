@@ -37,3 +37,4 @@ coverage/
 # Supabase CLI temp files
 supabase/.temp/
 .temp/
+scratch/

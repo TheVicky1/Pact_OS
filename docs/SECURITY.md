@@ -159,4 +159,31 @@ For Phase 2I, Google OAuth was integrated into the existing server-authoritative
 4. **Database Identity & Profile Convergence**: Authenticated identity is derived strictly from Supabase Auth (`auth.getUser()`). First-time Google sign-ins trigger `public.handle_new_user()` in PostgreSQL, automatically initializing `public.profiles` with user metadata (`full_name`) without client privilege escalation.
 5. **Adversarial & Unit Verification**: Verified via `tests/oauth-flow-validation.test.ts` (10/10 open-redirect vectors blocked, provider contract verified).
 
+---
+
+## 10. Phase 3 Milestone 4 Accountability Resolution, Verification & Waiver Security [CONFIRMED]
+
+For Phase 3 Milestone 4, the consequence resolution and waiver mechanics were built under the core principle: **"PACT never assumes an accountability consequence was fulfilled."**
+
+1. **Anti-Forgery & State Integrity**:
+   - `commitment_status` transitions to `'fulfilled'` or `'waived'` are strictly prohibited via direct client `UPDATE`. The DB trigger `protect_accountability_commitment_immutability()` blocks direct status manipulation.
+   - Status changes occur exclusively through PostgreSQL `SECURITY DEFINER` RPCs using `pact.internal_bypass = 'true'`.
+2. **Server-Authoritative Timed Sessions**:
+   - `start_accountability_session(p_commitment_id)` snapshots required duration and stamps server-authoritative `started_at = transaction_timestamp()`.
+   - Direct `INSERT`, `UPDATE`, or `DELETE` on `accountability_verification_sessions` is blocked by DB trigger `protect_accountability_sessions_immutability()`.
+   - `fulfill_accountability_session(p_session_id, p_evidence_note)` computes elapsed time strictly server-side (`EXTRACT(EPOCH FROM now() - started_at)`). Premature completion requests return `DURATION_NOT_MET`.
+   - Supporting activity evidence notes are required for timed sessions (max 5000 chars). Completed session evidence and timestamps are immutable.
+3. **Atomic Weekly Waiver Quota**:
+   - Users may waive an activated commitment up to a hard limit of 3 waivers per calendar week.
+   - Weekly quota is enforced atomically in `waive_accountability_commitment(p_commitment_id, p_confirmation_token)` by acquiring a row-level lock (`SELECT ... FROM public.profiles WHERE id = auth.uid() FOR UPDATE`), preventing concurrent race conditions.
+   - Week boundaries are calculated deterministically using the user's configured IANA timezone (`profiles.timezone`).
+   - The user-facing confirmation phrase is intentionally deferred; the server enforces validation of internal token `CONFIRM_WAIVER_V1`.
+   - Direct client `INSERT`, `UPDATE`, or `DELETE` on `accountability_waivers` is strictly blocked by trigger `protect_accountability_waivers_immutability()`.
+4. **Append-Only Auditable History**:
+   - Every fulfillment and waiver generates an append-only, immutable record in `public.accountability_events`.
+   - Cross-user SELECT, INSERT, UPDATE, and DELETE are blocked by RLS policies. Anonymous access is completely denied.
+5. **Adversarial Security Verification**:
+   - Verified against the live remote Supabase PostgreSQL database across 84 real adversarial tests in `tests/adversarial-rls-audit.sql` (27 new Milestone 4 checks covering fulfillment, timers, evidence, and weekly quotas).
+
+
 

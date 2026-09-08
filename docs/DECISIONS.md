@@ -114,3 +114,25 @@ Every architectural item in PACT documentation is categorized into one of five e
   5. **Confidentiality Data-Access Boundary**: Consequence snapshot data is isolated in `task_accountability_commitments` and fetched via `getTaskAccountabilityCommitment(taskId)` rather than exposing full snapshot payloads in standard task list queries (`getTasks()`).
   6. **Adversarial Verification**: Verified against real live Supabase PostgreSQL DB via 46-step security audit (`tests/adversarial-rls-audit.sql`) and unit test suite (`tests/commitment-engine.test.ts`).
 
+### ADR-019: Phase 3 Milestone 3 — Authoritative Consequence Activation & Missed-Commitment Resolution Engine [CONFIRMED]
+- **Status**: [CONFIRMED]
+- **Decision**: Consequence activation operates strictly as an atomic subscriber to the Phase 2 authoritative task lifecycle (`public.mark_task_missed`):
+  1. **Single Authoritative Task Lifecycle**: Accountability is NOT a second task lifecycle. When a task is completed prior to deadline, accountability never activates. When a task reaches the authoritative `missed` status, the attached commitment transitions to `activated` atomically.
+  2. **Single PostgreSQL Transaction**: Status transition, `activated_at` timestamping, and append-only event logging in `public.accountability_events` execute in one transaction guarded by row locking (`FOR UPDATE`).
+  3. **Idempotency & Concurrency Safety**: Repeated calls to `mark_task_missed` return `ALREADY_MISSED` with zero duplicate events or timestamp overwrites.
+  4. **Snapshot Resilience**: Committed snapshots remain active and activatable even if the source consequence definition is modified or deleted.
+  5. **Adversarial Security Audit**: Verified against real Supabase DB via 57-step security audit (`tests/adversarial-rls-audit.sql`) and unit tests (`tests/consequence-activation.test.ts`).
+
+### ADR-020: Phase 3 Milestone 4 — Accountability Resolution & Verification Engine [CONFIRMED]
+- **Status**: [CONFIRMED]
+- **Decision**: Implement server-authoritative consequence resolution, verification sessions, evidence collection, and a timezone-aware weekly waiver engine:
+  1. **"PACT Never Assumes Fulfillment"**: An activated consequence cannot be resolved by client-provided flags or forged timestamps. Direct client updates setting `commitment_status` to `'fulfilled'` or `'waived'` are strictly rejected by database triggers.
+  2. **Extensible Verification Model**: Verification rules (`verification_type`, `verification_config`) are snapshotted into `consequence_snapshot` at commitment creation time, ensuring future definition updates cannot alter active commitments.
+  3. **Server-Authoritative Timed-Session Verification**: Timed consequences require real elapsed server time calculated via `now() - started_at >= required_duration_seconds`. Premature fulfillment attempts are rejected by the server. Active sessions support client reconnect without resetting timer progress.
+  4. **Activity Evidence Capture**: Timed sessions require supporting evidence notes (1–5000 characters) validated server-side. Once completed, session records and evidence are immutable.
+  5. **Atomic 3-Waiver Weekly Quota in User Timezone**: Users can waive activated consequences up to 3 times per calendar week (ISO week: Monday–Sunday) calculated using their configured IANA timezone (`profiles.timezone`). Quotas are enforced atomically via row locking (`profiles FOR UPDATE`).
+  6. **Intentional Confirmation Word Deferral**: The final user-facing confirmation word is intentionally deferred. The engine validates internal domain token `CONFIRM_WAIVER_V1` server-side.
+  7. **Append-Only & Immutable Audit Trail**: Both verification sessions and waivers are protected against tampering or deletion by PostgreSQL triggers.
+  8. **Adversarial Verification**: Verified against real live Supabase PostgreSQL DB via 84-step security audit (`tests/adversarial-rls-audit.sql`) and unit test suite (`tests/resolution-engine.test.ts`).
+
+

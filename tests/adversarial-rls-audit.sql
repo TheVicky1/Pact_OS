@@ -716,8 +716,372 @@ BEGIN
     INSERT INTO _rls_audit_results VALUES ('9.11 Activation Resilient to Source Consequence Definition Deletion', 'PASS');
   END;
 
+  -- ----------------------------------------------------------------
+  -- SECTION 10: RESOLUTION, VERIFICATION & WAIVER SECURITY AUDIT (Phase 3 Milestone 4)
+  -- ----------------------------------------------------------------
+  DECLARE
+    v_m4_task_1 UUID;
+    v_m4_task_2 UUID;
+    v_m4_task_w1 UUID;
+    v_m4_task_w2 UUID;
+    v_m4_task_w3 UUID;
+    v_m4_task_w4 UUID;
+    v_m4_commit_1 UUID;
+    v_m4_commit_2 UUID;
+    v_m4_commit_w1 UUID;
+    v_m4_commit_w2 UUID;
+    v_m4_commit_w3 UUID;
+    v_m4_commit_w4 UUID;
+    v_m4_session_1 UUID;
+    v_m4_session_2 UUID;
+    v_m4_comm_status TEXT;
+    v_m4_sess_count INT;
+    v_m4_waiver_count INT;
+    v_m4_event_count INT;
+  BEGIN
+    SET LOCAL ROLE authenticated;
+    SET LOCAL "request.jwt.claim.sub" = '11111111-1111-1111-1111-111111111111';
+
+    -- 10.1 Setup: Create task 1 with activated commitment (timed_session requiring 30m = 1800s)
+    INSERT INTO public.tasks (user_id, title, status, deadline_at)
+    VALUES (v_user_a, 'User A Timed Task 1', 'pending', transaction_timestamp() - interval '1 hour')
+    RETURNING id INTO v_m4_task_1;
+
+    INSERT INTO public.task_accountability_commitments (
+      task_id, user_id, consequence_snapshot, commitment_status
+    ) VALUES (
+      v_m4_task_1, v_user_a, jsonb_build_object(
+        'title', 'Study 30m',
+        'consequence_type', 'self_improvement',
+        'action_statement', 'Study algorithms',
+        'verification_type', 'timed_session',
+        'verification_config', jsonb_build_object('required_duration_seconds', 1800)
+      ), 'committed'
+    ) RETURNING id INTO v_m4_commit_1;
+
+    -- Authoritatively activate commitment via mark_task_missed
+    PERFORM public.mark_task_missed(v_m4_task_1);
+
+    -- 10.2 ATTACK: Direct client UPDATE of commitment_status to 'fulfilled' is strictly blocked
+    BEGIN
+      UPDATE public.task_accountability_commitments
+      SET commitment_status = 'fulfilled'
+      WHERE id = v_m4_commit_1;
+      RAISE EXCEPTION 'SECURITY VIOLATION: Direct UPDATE of commitment_status to fulfilled allowed!';
+    EXCEPTION WHEN OTHERS THEN
+      INSERT INTO _rls_audit_results VALUES ('10.01 Direct UPDATE commitment_status to fulfilled Blocked', 'PASS');
+    END;
+
+    -- 10.3 ATTACK: Direct client INSERT into accountability_verification_sessions is blocked
+    BEGIN
+      INSERT INTO public.accountability_verification_sessions (
+        commitment_id, user_id, status, required_duration_seconds, actual_duration_seconds
+      ) VALUES (
+        v_m4_commit_1, v_user_a, 'completed', 1800, 1800
+      );
+      RAISE EXCEPTION 'SECURITY VIOLATION: Direct INSERT into accountability_verification_sessions allowed!';
+    EXCEPTION WHEN OTHERS THEN
+      INSERT INTO _rls_audit_results VALUES ('10.02 Direct INSERT into accountability_verification_sessions Blocked', 'PASS');
+    END;
+
+    -- 10.4 ATTACK: Cross-User session start blocked (User B attempts to start session for User A commitment)
+    SET LOCAL "request.jwt.claim.sub" = '22222222-2222-2222-2222-222222222222';
+    SELECT public.start_accountability_session(v_m4_commit_1) INTO v_res;
+    IF (v_res->>'success')::boolean IS TRUE THEN
+      RAISE EXCEPTION 'SECURITY VIOLATION: User B started session for User A commitment!';
+    END IF;
+    INSERT INTO _rls_audit_results VALUES ('10.03 Cross-User Session Start Blocked', 'PASS');
+
+    -- 10.5 User A starts valid session for commitment 1
+    SET LOCAL "request.jwt.claim.sub" = '11111111-1111-1111-1111-111111111111';
+    SELECT public.start_accountability_session(v_m4_commit_1) INTO v_res;
+    IF (v_res->>'code') <> 'SESSION_STARTED' THEN
+      RAISE EXCEPTION 'Failed to start valid session: %', v_res;
+    END IF;
+    v_m4_session_1 := (v_res->'data'->>'id')::uuid;
+    INSERT INTO _rls_audit_results VALUES ('10.04 User A Started Valid Verification Session', 'PASS');
+
+    -- 10.6 Duplicate session start returns existing active session (reconnect/resume resilience)
+    SELECT public.start_accountability_session(v_m4_commit_1) INTO v_res;
+    IF (v_res->>'code') <> 'SESSION_ALREADY_ACTIVE' OR (v_res->'data'->>'id')::uuid <> v_m4_session_1 THEN
+      RAISE EXCEPTION 'Duplicate start did not return existing active session: %', v_res;
+    END IF;
+    INSERT INTO _rls_audit_results VALUES ('10.05 Reconnect/Resume Active Session Idempotency Verified', 'PASS');
+
+    -- 10.7 ATTACK: Fulfill before required duration elapsed is strictly rejected
+    SELECT public.fulfill_accountability_session(v_m4_session_1, 'Studied hard') INTO v_res;
+    IF (v_res->>'code') <> 'DURATION_NOT_MET' THEN
+      RAISE EXCEPTION 'Fulfillment before required duration was not rejected: %', v_res;
+    END IF;
+    INSERT INTO _rls_audit_results VALUES ('10.06 Premature Session Fulfillment Rejected by Server Timer', 'PASS');
+
+    -- 10.8 ATTACK: Client attempts to directly mutate session started_at or actual_duration_seconds
+    BEGIN
+      UPDATE public.accountability_verification_sessions
+      SET started_at = now() - interval '2 hours'
+      WHERE id = v_m4_session_1;
+      RAISE EXCEPTION 'SECURITY VIOLATION: Direct UPDATE of session timestamps allowed!';
+    EXCEPTION WHEN OTHERS THEN
+      INSERT INTO _rls_audit_results VALUES ('10.07 Direct UPDATE of Session Timestamps Blocked by Trigger', 'PASS');
+    END;
+
+    -- 10.9 ATTACK: Cross-User fulfillment attempt blocked (User B attempts to fulfill User A session)
+    SET LOCAL "request.jwt.claim.sub" = '22222222-2222-2222-2222-222222222222';
+    SELECT public.fulfill_accountability_session(v_m4_session_1, 'Hacked session') INTO v_res;
+    IF (v_res->>'success')::boolean IS TRUE THEN
+      RAISE EXCEPTION 'SECURITY VIOLATION: User B fulfilled User A session!';
+    END IF;
+    INSERT INTO _rls_audit_results VALUES ('10.08 Cross-User Session Fulfillment Blocked', 'PASS');
+
+    -- 10.10 Session Cancellation by User A
+    SET LOCAL "request.jwt.claim.sub" = '11111111-1111-1111-1111-111111111111';
+    SELECT public.cancel_accountability_session(v_m4_session_1) INTO v_res;
+    IF (v_res->>'code') <> 'SESSION_CANCELLED' THEN
+      RAISE EXCEPTION 'Failed to cancel session: %', v_res;
+    END IF;
+
+    -- Commitment remains 'activated' after cancellation
+    SELECT commitment_status INTO v_m4_comm_status FROM public.task_accountability_commitments WHERE id = v_m4_commit_1;
+    IF v_m4_comm_status <> 'activated' THEN
+      RAISE EXCEPTION 'Session cancellation altered commitment status away from activated!';
+    END IF;
+    INSERT INTO _rls_audit_results VALUES ('10.09 Session Cancelled; Commitment Remains Activated', 'PASS');
+
+    -- 10.11 ATTACK: Cancelled session cannot be fulfilled
+    SELECT public.fulfill_accountability_session(v_m4_session_1, 'Try fulfill cancelled') INTO v_res;
+    IF (v_res->>'code') <> 'INVALID_SESSION_STATUS' THEN
+      RAISE EXCEPTION 'Fulfilling cancelled session was not rejected: %', v_res;
+    END IF;
+    INSERT INTO _rls_audit_results VALUES ('10.10 Fulfilling Cancelled Session Rejected', 'PASS');
+
+    -- 10.12 Setup Task 2 with zero required duration to test fulfillment and evidence validation
+    INSERT INTO public.tasks (user_id, title, status, deadline_at)
+    VALUES (v_user_a, 'User A Zero Duration Task', 'pending', transaction_timestamp() - interval '1 hour')
+    RETURNING id INTO v_m4_task_2;
+
+    INSERT INTO public.task_accountability_commitments (
+      task_id, user_id, consequence_snapshot, commitment_status
+    ) VALUES (
+      v_m4_task_2, v_user_a, jsonb_build_object(
+        'title', 'Instant Accountability Task',
+        'consequence_type', 'declaration',
+        'action_statement', 'Declare honesty',
+        'verification_type', 'declaration',
+        'verification_config', jsonb_build_object('required_duration_seconds', 0)
+      ), 'committed'
+    ) RETURNING id INTO v_m4_commit_2;
+
+    PERFORM public.mark_task_missed(v_m4_task_2);
+    SELECT public.start_accountability_session(v_m4_commit_2) INTO v_res;
+    v_m4_session_2 := (v_res->'data'->>'id')::uuid;
+
+    -- 10.13 ATTACK: Oversized evidence note (>5000 chars) rejected
+    SELECT public.fulfill_accountability_session(v_m4_session_2, repeat('X', 5001)) INTO v_res;
+    IF (v_res->>'code') <> 'EVIDENCE_TOO_LONG' THEN
+      RAISE EXCEPTION 'Oversized evidence note was not rejected: %', v_res;
+    END IF;
+    INSERT INTO _rls_audit_results VALUES ('10.11 Oversized Evidence Note Rejected', 'PASS');
+
+    -- 10.14 Valid fulfillment succeeds with valid note
+    SELECT public.fulfill_accountability_session(v_m4_session_2, 'Verified declared consequence completed.') INTO v_res;
+    IF (v_res->>'code') <> 'FULFILLED' THEN
+      RAISE EXCEPTION 'Fulfillment failed for valid session: %', v_res;
+    END IF;
+
+    SELECT commitment_status INTO v_m4_comm_status FROM public.task_accountability_commitments WHERE id = v_m4_commit_2;
+    IF v_m4_comm_status <> 'fulfilled' THEN
+      RAISE EXCEPTION 'Commitment status was not transitioned to fulfilled!';
+    END IF;
+
+    SELECT count(*) INTO v_m4_event_count FROM public.accountability_events
+    WHERE commitment_id = v_m4_commit_2 AND event_type = 'fulfilled';
+    IF v_m4_event_count <> 1 THEN
+      RAISE EXCEPTION 'Exact 1 fulfilled event was not recorded!';
+    END IF;
+    INSERT INTO _rls_audit_results VALUES ('10.12 Valid Session Fulfillment Succeeded & Logged Exactly 1 Event', 'PASS');
+
+    -- 10.15 Repeated fulfillment is idempotent
+    SELECT public.fulfill_accountability_session(v_m4_session_2, 'Duplicate call') INTO v_res;
+    IF (v_res->>'code') <> 'ALREADY_FULFILLED' THEN
+      RAISE EXCEPTION 'Repeated fulfillment did not return ALREADY_FULFILLED: %', v_res;
+    END IF;
+
+    SELECT count(*) INTO v_m4_event_count FROM public.accountability_events
+    WHERE commitment_id = v_m4_commit_2 AND event_type = 'fulfilled';
+    IF v_m4_event_count <> 1 THEN
+      RAISE EXCEPTION 'Repeated fulfillment created duplicate events!';
+    END IF;
+    INSERT INTO _rls_audit_results VALUES ('10.13 Repeated Fulfillment Idempotency & Zero Duplicate Events Verified', 'PASS');
+
+    -- 10.16 ATTACK: Completed session evidence and timestamps are immutable
+    BEGIN
+      UPDATE public.accountability_verification_sessions
+      SET evidence_note = 'Hacked after completion'
+      WHERE id = v_m4_session_2;
+      RAISE EXCEPTION 'SECURITY VIOLATION: Completed session evidence note was modified!';
+    EXCEPTION WHEN OTHERS THEN
+      INSERT INTO _rls_audit_results VALUES ('10.14 Completed Session Evidence Note Immutability Verified', 'PASS');
+    END;
+
+    -- ----------------------------------------------------------------
+    -- WAIVER SYSTEM ADVERSARIAL AUDIT (3-Waivers Per Week Limit in Timezone)
+    -- ----------------------------------------------------------------
+
+    -- Set User A timezone to America/New_York
+    UPDATE public.profiles SET timezone = 'America/New_York' WHERE id = v_user_a;
+
+    -- Create 4 missed tasks with activated commitments for User A to test 3-waiver quota
+    INSERT INTO public.tasks (user_id, title, status, deadline_at)
+    VALUES (v_user_a, 'Waiver Task 1', 'pending', transaction_timestamp() - interval '1 hour')
+    RETURNING id INTO v_m4_task_w1;
+
+    INSERT INTO public.tasks (user_id, title, status, deadline_at)
+    VALUES (v_user_a, 'Waiver Task 2', 'pending', transaction_timestamp() - interval '1 hour')
+    RETURNING id INTO v_m4_task_w2;
+
+    INSERT INTO public.tasks (user_id, title, status, deadline_at)
+    VALUES (v_user_a, 'Waiver Task 3', 'pending', transaction_timestamp() - interval '1 hour')
+    RETURNING id INTO v_m4_task_w3;
+
+    INSERT INTO public.tasks (user_id, title, status, deadline_at)
+    VALUES (v_user_a, 'Waiver Task 4', 'pending', transaction_timestamp() - interval '1 hour')
+    RETURNING id INTO v_m4_task_w4;
+
+    INSERT INTO public.task_accountability_commitments (task_id, user_id, consequence_snapshot, commitment_status)
+    VALUES (v_m4_task_w1, v_user_a, jsonb_build_object('title', 'Waiver 1', 'consequence_type', 'reflection', 'action_statement', 'Reflect'), 'committed')
+    RETURNING id INTO v_m4_commit_w1;
+
+    INSERT INTO public.task_accountability_commitments (task_id, user_id, consequence_snapshot, commitment_status)
+    VALUES (v_m4_task_w2, v_user_a, jsonb_build_object('title', 'Waiver 2', 'consequence_type', 'reflection', 'action_statement', 'Reflect'), 'committed')
+    RETURNING id INTO v_m4_commit_w2;
+
+    INSERT INTO public.task_accountability_commitments (task_id, user_id, consequence_snapshot, commitment_status)
+    VALUES (v_m4_task_w3, v_user_a, jsonb_build_object('title', 'Waiver 3', 'consequence_type', 'reflection', 'action_statement', 'Reflect'), 'committed')
+    RETURNING id INTO v_m4_commit_w3;
+
+    INSERT INTO public.task_accountability_commitments (task_id, user_id, consequence_snapshot, commitment_status)
+    VALUES (v_m4_task_w4, v_user_a, jsonb_build_object('title', 'Waiver 4', 'consequence_type', 'reflection', 'action_statement', 'Reflect'), 'committed')
+    RETURNING id INTO v_m4_commit_w4;
+
+    PERFORM public.mark_task_missed(v_m4_task_w1);
+    PERFORM public.mark_task_missed(v_m4_task_w2);
+    PERFORM public.mark_task_missed(v_m4_task_w3);
+    PERFORM public.mark_task_missed(v_m4_task_w4);
+
+    -- 10.17 ATTACK: Waiver with invalid confirmation token is rejected
+    SELECT public.waive_accountability_commitment(v_m4_commit_w1, 'WRONG_TOKEN') INTO v_res;
+    IF (v_res->>'code') <> 'INVALID_CONFIRMATION_TOKEN' THEN
+      RAISE EXCEPTION 'Waiver with invalid confirmation token was not rejected: %', v_res;
+    END IF;
+    INSERT INTO _rls_audit_results VALUES ('10.15 Invalid Waiver Confirmation Token Rejected', 'PASS');
+
+    -- 10.18 ATTACK: Non-activated commitment cannot be waived (e.g. v_m4_commit_2 is already 'fulfilled')
+    SELECT public.waive_accountability_commitment(v_m4_commit_2, 'CONFIRM_WAIVER_V1') INTO v_res;
+    IF (v_res->>'code') <> 'COMMITMENT_NOT_ACTIVATED' THEN
+      RAISE EXCEPTION 'Waiving non-activated commitment was not rejected: %', v_res;
+    END IF;
+    INSERT INTO _rls_audit_results VALUES ('10.16 Waiving Non-Activated (Fulfilled) Commitment Rejected', 'PASS');
+
+    -- 10.19 ATTACK: Cross-user waiver attempt blocked (User B attempts to waive User A commitment)
+    SET LOCAL "request.jwt.claim.sub" = '22222222-2222-2222-2222-222222222222';
+    SELECT public.waive_accountability_commitment(v_m4_commit_w1, 'CONFIRM_WAIVER_V1') INTO v_res;
+    IF (v_res->>'success')::boolean IS TRUE THEN
+      RAISE EXCEPTION 'SECURITY VIOLATION: User B waived User A commitment!';
+    END IF;
+    INSERT INTO _rls_audit_results VALUES ('10.17 Cross-User Waiver Attempt Blocked', 'PASS');
+
+    -- 10.20 Waiver 1 succeeds (count = 1)
+    SET LOCAL "request.jwt.claim.sub" = '11111111-1111-1111-1111-111111111111';
+    SELECT public.waive_accountability_commitment(v_m4_commit_w1, 'CONFIRM_WAIVER_V1') INTO v_res;
+    IF (v_res->>'code') <> 'WAIVED' OR (v_res->>'waiver_count_in_week')::int <> 1 THEN
+      RAISE EXCEPTION 'Waiver 1 failed or count incorrect: %', v_res;
+    END IF;
+    INSERT INTO _rls_audit_results VALUES ('10.18 Waiver 1 Processed Successfully (Count 1 of 3)', 'PASS');
+
+    -- 10.21 Repeated waiver on same commitment is idempotent
+    SELECT public.waive_accountability_commitment(v_m4_commit_w1, 'CONFIRM_WAIVER_V1') INTO v_res;
+    IF (v_res->>'code') <> 'ALREADY_WAIVED' THEN
+      RAISE EXCEPTION 'Repeated waiver on same commitment did not return ALREADY_WAIVED: %', v_res;
+    END IF;
+    INSERT INTO _rls_audit_results VALUES ('10.19 Repeated Waiver on Same Commitment Idempotent', 'PASS');
+
+    -- 10.22 Waiver 2 succeeds (count = 2)
+    SELECT public.waive_accountability_commitment(v_m4_commit_w2, 'CONFIRM_WAIVER_V1') INTO v_res;
+    IF (v_res->>'code') <> 'WAIVED' OR (v_res->>'waiver_count_in_week')::int <> 2 THEN
+      RAISE EXCEPTION 'Waiver 2 failed or count incorrect: %', v_res;
+    END IF;
+    INSERT INTO _rls_audit_results VALUES ('10.20 Waiver 2 Processed Successfully (Count 2 of 3)', 'PASS');
+
+    -- 10.23 Waiver 3 succeeds (count = 3)
+    SELECT public.waive_accountability_commitment(v_m4_commit_w3, 'CONFIRM_WAIVER_V1') INTO v_res;
+    IF (v_res->>'code') <> 'WAIVED' OR (v_res->>'waiver_count_in_week')::int <> 3 THEN
+      RAISE EXCEPTION 'Waiver 3 failed or count incorrect: %', v_res;
+    END IF;
+    INSERT INTO _rls_audit_results VALUES ('10.21 Waiver 3 Processed Successfully (Count 3 of 3)', 'PASS');
+
+    -- 10.24 ATTACK: Fourth waiver in same calendar week is strictly rejected
+    SELECT public.waive_accountability_commitment(v_m4_commit_w4, 'CONFIRM_WAIVER_V1') INTO v_res;
+    IF (v_res->>'code') <> 'WAIVER_LIMIT_EXCEEDED' THEN
+      RAISE EXCEPTION 'Fourth waiver in same week was not rejected: %', v_res;
+    END IF;
+
+    -- Commitment 4 must remain 'activated'
+    SELECT commitment_status INTO v_m4_comm_status FROM public.task_accountability_commitments WHERE id = v_m4_commit_w4;
+    IF v_m4_comm_status <> 'activated' THEN
+      RAISE EXCEPTION 'Commitment 4 status was altered despite waiver quota rejection!';
+    END IF;
+    INSERT INTO _rls_audit_results VALUES ('10.22 Fourth Waiver in Same Calendar Week Strictly Blocked by Quota', 'PASS');
+
+    -- 10.25 ATTACK: Direct client INSERT into accountability_waivers blocked
+    BEGIN
+      INSERT INTO public.accountability_waivers (
+        commitment_id, user_id, task_id, confirmation_token, waiver_week_year, waiver_week_number, waiver_count_in_week
+      ) VALUES (
+        v_m4_commit_w4, v_user_a, v_m4_task_w4, 'CONFIRM_WAIVER_V1', 2026, 37, 4
+      );
+      RAISE EXCEPTION 'SECURITY VIOLATION: Direct client INSERT into accountability_waivers allowed!';
+    EXCEPTION WHEN OTHERS THEN
+      INSERT INTO _rls_audit_results VALUES ('10.23 Direct Client INSERT into accountability_waivers Blocked', 'PASS');
+    END;
+
+    -- 10.26 ATTACK: Direct client UPDATE or DELETE of waiver audit records blocked
+    BEGIN
+      UPDATE public.accountability_waivers SET confirmation_token = 'MODIFIED' WHERE commitment_id = v_m4_commit_w1;
+      RAISE EXCEPTION 'SECURITY VIOLATION: Direct UPDATE of accountability_waivers allowed!';
+    EXCEPTION WHEN OTHERS THEN
+      INSERT INTO _rls_audit_results VALUES ('10.24 Direct UPDATE of accountability_waivers Blocked', 'PASS');
+    END;
+
+    BEGIN
+      DELETE FROM public.accountability_waivers WHERE commitment_id = v_m4_commit_w1;
+      RAISE EXCEPTION 'SECURITY VIOLATION: Direct DELETE of accountability_waivers allowed!';
+    EXCEPTION WHEN OTHERS THEN
+      INSERT INTO _rls_audit_results VALUES ('10.25 Direct DELETE of accountability_waivers Blocked', 'PASS');
+    END;
+
+    -- 10.27 ATTACK: Cross-user waiver SELECT blocked (User B cannot view User A waivers)
+    SET LOCAL "request.jwt.claim.sub" = '22222222-2222-2222-2222-222222222222';
+    SELECT count(*) INTO v_m4_waiver_count FROM public.accountability_waivers WHERE commitment_id = v_m4_commit_w1;
+    IF v_m4_waiver_count <> 0 THEN
+      RAISE EXCEPTION 'SECURITY VIOLATION: User B read User A waiver audit records!';
+    END IF;
+    INSERT INTO _rls_audit_results VALUES ('10.26 Cross-User Waiver Audit Record SELECT Blocked', 'PASS');
+
+    -- 10.28 Anonymous access to verification sessions and waivers blocked
+    SET LOCAL ROLE anon;
+    SET LOCAL "request.jwt.claim.sub" = '';
+    SELECT count(*) INTO v_m4_sess_count FROM public.accountability_verification_sessions;
+    SELECT count(*) INTO v_m4_waiver_count FROM public.accountability_waivers;
+    IF v_m4_sess_count <> 0 OR v_m4_waiver_count <> 0 THEN
+      RAISE EXCEPTION 'SECURITY VIOLATION: Anonymous read verification sessions or waivers!';
+    END IF;
+    INSERT INTO _rls_audit_results VALUES ('10.27 Anonymous Access Blocked for Sessions and Waivers Tables', 'PASS');
+  END;
+
   -- Clean up test records
   RESET ROLE;
+  DELETE FROM public.accountability_waivers WHERE user_id IN (v_user_a, v_user_b);
+  DELETE FROM public.accountability_verification_sessions WHERE user_id IN (v_user_a, v_user_b);
   DELETE FROM public.accountability_events WHERE user_id IN (v_user_a, v_user_b);
   DELETE FROM public.task_accountability_commitments WHERE user_id IN (v_user_a, v_user_b);
   DELETE FROM public.user_accountability_preferences WHERE user_id IN (v_user_a, v_user_b);

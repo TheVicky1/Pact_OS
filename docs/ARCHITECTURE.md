@@ -108,6 +108,9 @@ PACT introduces the **Accountability & Consequence Engine** as a foundational do
 3. **Commitment Snapshot Immutability**: When accountability is assigned to a task, a dedicated `task_accountability_commitments` record is created containing an immutable JSONB snapshot (`consequence_snapshot`) of the consequence (`title`, `consequence_type`, `action_statement`, `description`). Subsequent edits to reusable `consequence_definitions` or task metadata updates do NOT alter the committed snapshot. Direct client UPDATE or DELETE of commitment snapshots is blocked by database trigger `protect_accountability_commitment_immutability()`.
 4. **Deterministic Multi-Default Resolution**: Users can maintain multiple enabled default consequence definitions. The system resolves defaults deterministically by ordering enabled defaults by `(priority DESC, created_at ASC, id ASC)`. Explicit preference `default_consequence_id` serves as a primary override when active.
 5. **Integration with Authoritative Task Lifecycle**: The Accountability Engine acts as a reactive subscriber to task state transitions. When a task reaches a terminal state (`completed` or `missed`), the engine executes consequences only for missed tasks.
+6. **"PACT Never Assumes Fulfillment"**: An activated consequence cannot be resolved by client-side status flags or forged timestamps. An activated consequence remains activated until authoritatively fulfilled through a server-verified session or an authorized waiver. Direct client updates to `fulfilled` or `waived` are blocked by database triggers.
+7. **Server-Authoritative Timed-Session Verification**: Timed consequences require real elapsed server time (`now() - started_at >= required_duration_seconds`). Browser disconnect/reconnect maintains session state idempotently without resetting progress. Supporting evidence (e.g. activity note) is required and validated server-side.
+8. **Timezone-Aware Waiver System with Weekly Quotas**: Users may deliberately waive an activated consequence up to 3 times per calendar week (ISO week: Monday–Sunday) calculated using their configured IANA timezone (`profiles.timezone`). Quotas are enforced atomically via row locks. The final user-facing confirmation word is intentionally deferred; the server validates internal token `CONFIRM_WAIVER_V1`.
 
 ### Absolute Backend Safety Boundaries [CONFIRMED]
 The PACT backend enforces hard safety boundaries at the architecture level:
@@ -115,6 +118,8 @@ The PACT backend enforces hard safety boundaries at the architecture level:
 - **NO External System Control**: PACT does not issue automated shell commands, external API destructive calls, or control un-vetted external systems.
 - **NO Automatic Financial Transfers**: Financial consequences are user-declared accountability records, NOT automated bank or payment processor transfers.
 - **NO Dangerous or Coercive Actions**: Physical harm, illegal acts, or coercive mechanics targeting third parties are strictly prohibited.
+- **NO Invasive Surveillance**: Verification validates process completion and server-authoritative elapsed time without device surveillance, camera monitoring, or invasive tracking.
+
 
 
 

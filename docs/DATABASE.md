@@ -131,11 +131,58 @@ profiles (1:1 with auth.users)
 - `task_id`: `uuid` (NOT NULL, UNIQUE, REFERENCES `tasks(id)` ON DELETE CASCADE)
 - `user_id`: `uuid` (NOT NULL, REFERENCES `profiles(id)` ON DELETE CASCADE)
 - `source_consequence_id`: `uuid` (NULLABLE, REFERENCES `consequence_definitions(id)` ON DELETE SET NULL)
-- `consequence_snapshot`: `jsonb` (NOT NULL, contains `{ title, consequence_type, action_statement, description }`)
+- `consequence_snapshot`: `jsonb` (NOT NULL, contains `{ title, consequence_type, action_statement, description, verification_type, verification_config }`)
 - `commitment_status`: `text` (ENUM: `'committed'`, `'activated'`, `'fulfilled'`, `'waived'`, DEFAULT `'committed'`)
+- `activated_at`: `timestamptz` (NULLABLE)
 - `created_at`: `timestamptz` (NOT NULL, DEFAULT `now()`)
 - `updated_at`: `timestamptz` (NOT NULL, DEFAULT `now()`)
 - **Ownership & RLS**: 1:1 with `tasks`. Protected by RLS (`auth.uid() = user_id`). Direct client `UPDATE` or `DELETE` of commitment snapshot fields is blocked by DB trigger `protect_accountability_commitment_immutability()`.
+
+### Table: `accountability_events` [CONFIRMED / MIGRATED]
+- `id`: `uuid` (PRIMARY KEY, DEFAULT `gen_random_uuid()`)
+- `user_id`: `uuid` (NOT NULL, REFERENCES `profiles(id)` ON DELETE CASCADE)
+- `task_id`: `uuid` (NOT NULL, REFERENCES `tasks(id)` ON DELETE CASCADE)
+- `commitment_id`: `uuid` (NOT NULL, REFERENCES `task_accountability_commitments(id)` ON DELETE CASCADE)
+- `event_type`: `text` (ENUM: `'activated'`, `'fulfilled'`, `'waived'`, `'resolved'`)
+- `metadata`: `jsonb` (NULLABLE)
+- `created_at`: `timestamptz` (NOT NULL, DEFAULT `now()`)
+- **Ownership & Immutability**: Append-only log. RLS allows `SELECT` for owner. Direct client `INSERT`, `UPDATE`, and `DELETE` blocked by trigger `protect_accountability_events_immutability()`.
+
+### Table: `accountability_verification_sessions` [CONFIRMED / MIGRATED]
+- `id`: `uuid` (PRIMARY KEY, DEFAULT `gen_random_uuid()`)
+- `commitment_id`: `uuid` (NOT NULL, REFERENCES `task_accountability_commitments(id)` ON DELETE CASCADE)
+- `user_id`: `uuid` (NOT NULL, REFERENCES `profiles(id)` ON DELETE CASCADE)
+- `started_at`: `timestamptz` (NOT NULL, DEFAULT `now()`)
+- `ended_at`: `timestamptz` (NULLABLE)
+- `required_duration_seconds`: `integer` (NOT NULL, DEFAULT `0`)
+- `actual_duration_seconds`: `integer` (NULLABLE)
+- `status`: `text` (ENUM: `'started'`, `'completed'`, `'cancelled'`, `'expired'`, DEFAULT `'started'`)
+- `evidence_note`: `text` (NULLABLE, max 5000 characters)
+- `verification_metadata`: `jsonb` (NULLABLE)
+- `created_at`: `timestamptz` (NOT NULL, DEFAULT `now()`)
+- `updated_at`: `timestamptz` (NOT NULL, DEFAULT `now()`)
+- **Indexes & Constraints**: Partial unique index `uq_active_session_per_commitment` enforces at most one `started` session per commitment.
+- **Ownership & Immutability**: RLS allows `SELECT` for owner. Direct client `INSERT`, `UPDATE`, and `DELETE` blocked by trigger `protect_accountability_sessions_immutability()`. Once completed, verification evidence and duration are immutable.
+
+### Table: `accountability_waivers` [CONFIRMED / MIGRATED]
+- `id`: `uuid` (PRIMARY KEY, DEFAULT `gen_random_uuid()`)
+- `commitment_id`: `uuid` (NOT NULL, UNIQUE, REFERENCES `task_accountability_commitments(id)` ON DELETE CASCADE)
+- `user_id`: `uuid` (NOT NULL, REFERENCES `profiles(id)` ON DELETE CASCADE)
+- `task_id`: `uuid` (NOT NULL, REFERENCES `tasks(id)` ON DELETE CASCADE)
+- `waived_at`: `timestamptz` (NOT NULL, DEFAULT `now()`)
+- `confirmation_token`: `text` (NOT NULL, validated server-side as `CONFIRM_WAIVER_V1`)
+- `waiver_week_year`: `integer` (NOT NULL, ISO week year in user's timezone)
+- `waiver_week_number`: `integer` (NOT NULL, ISO week number 1-53 in user's timezone)
+- `waiver_count_in_week`: `integer` (NOT NULL, CHECK `1 <= waiver_count_in_week <= 3`)
+- `metadata`: `jsonb` (NULLABLE)
+- `created_at`: `timestamptz` (NOT NULL, DEFAULT `now()`)
+- **Ownership & Immutability**: Append-only audit record. RLS allows `SELECT` for owner. Direct client mutation or deletion strictly prohibited by trigger `protect_accountability_waivers_immutability()`.
+
+### Authoritative Resolution RPCs [CONFIRMED / MIGRATED]
+- `public.start_accountability_session(p_commitment_id UUID)`: Creates session with snapshotted duration or resumes existing active session.
+- `public.fulfill_accountability_session(p_session_id UUID, p_evidence_note TEXT)`: Validates real elapsed time against required duration, validates activity note, atomically marks session `completed` and commitment `fulfilled`, and records event.
+- `public.cancel_accountability_session(p_session_id UUID)`: Cancels active session; commitment remains `activated`.
+- `public.waive_accountability_commitment(p_commitment_id UUID, p_confirmation_token TEXT)`: Enforces 3-waivers/week quota calculated in user's profile timezone with row locking, records immutable waiver, and transitions commitment to `waived`.
 
 ---
 

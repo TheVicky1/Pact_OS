@@ -77,14 +77,30 @@ export type ConsequenceType =
   | 'financial_declaration'
   | 'custom';
 
+export type VerificationType =
+  | 'timed_session'
+  | 'task_completion'
+  | 'written_reflection'
+  | 'declaration'
+  | 'custom';
+
+export interface VerificationConfig {
+  required_duration_seconds?: number;
+  activity_prompt?: string;
+  [key: string]: unknown;
+}
+
 export type AccountabilityMode = 'default' | 'explicit' | 'none';
 export type CommitmentStatus = 'committed' | 'activated' | 'fulfilled' | 'waived';
+export type AccountabilitySessionStatus = 'started' | 'completed' | 'cancelled' | 'expired';
 
 export interface ConsequenceSnapshot {
   title: string;
   consequence_type: ConsequenceType;
   action_statement: string;
   description: string | null;
+  verification_type?: VerificationType;
+  verification_config?: VerificationConfig;
 }
 
 export interface ConsequenceDefinition {
@@ -97,6 +113,8 @@ export interface ConsequenceDefinition {
   is_enabled: boolean;
   is_default: boolean;
   priority: number;
+  verification_type: VerificationType;
+  verification_config: VerificationConfig;
   created_at: string;
   updated_at: string;
 }
@@ -134,6 +152,34 @@ export interface AccountabilityEvent {
   created_at: string;
 }
 
+export interface AccountabilityVerificationSession {
+  id: string;
+  commitment_id: string;
+  user_id: string;
+  started_at: string;
+  ended_at: string | null;
+  required_duration_seconds: number;
+  actual_duration_seconds: number | null;
+  status: AccountabilitySessionStatus;
+  evidence_note: string | null;
+  verification_metadata: Record<string, unknown> | null;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface AccountabilityWaiver {
+  id: string;
+  commitment_id: string;
+  user_id: string;
+  task_id: string;
+  waived_at: string;
+  confirmation_token: string;
+  waiver_week_year: number;
+  waiver_week_number: number;
+  waiver_count_in_week: number;
+  metadata: Record<string, unknown> | null;
+  created_at: string;
+}
 
 export interface CreateConsequenceDefinitionInput {
   title: string;
@@ -143,6 +189,8 @@ export interface CreateConsequenceDefinitionInput {
   is_enabled?: boolean;
   is_default?: boolean;
   priority?: number;
+  verification_type?: VerificationType;
+  verification_config?: VerificationConfig;
 }
 
 export interface UpdateConsequenceDefinitionInput {
@@ -153,6 +201,8 @@ export interface UpdateConsequenceDefinitionInput {
   is_enabled?: boolean;
   is_default?: boolean;
   priority?: number;
+  verification_type?: VerificationType;
+  verification_config?: VerificationConfig;
 }
 
 export interface UpdateUserAccountabilityPreferencesInput {
@@ -160,5 +210,6 @@ export interface UpdateUserAccountabilityPreferencesInput {
   auto_apply_default?: boolean;
   is_enabled?: boolean;
 }
+
 
 
