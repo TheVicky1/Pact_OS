@@ -37,9 +37,8 @@ async function runAdversarialSecuritySuite() {
 
   const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
-  const timestamp = Date.now();
-  const emailA = `sec_usera_${timestamp}@pact.app`;
-  const emailB = `sec_userb_${timestamp}@pact.app`;
+  const emailA = 'sec_usera_audit_fixed@pact.local';
+  const emailB = 'sec_userb_audit_fixed@pact.local';
   const password = 'SecurityTestPassword123!';
 
   console.log('1. Authenticating User A and User B...');

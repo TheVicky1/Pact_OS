@@ -85,14 +85,6 @@ export async function createConsequenceDefinition(
     throw new Error('Authentication required.');
   }
 
-  // If this definition is marked default, unset existing default flags for this user
-  if (validated.is_default) {
-    await supabase
-      .from('consequence_definitions')
-      .update({ is_default: false })
-      .eq('user_id', user.id);
-  }
-
   const { data, error } = await supabase
     .from('consequence_definitions')
     .insert({
@@ -103,6 +95,7 @@ export async function createConsequenceDefinition(
       description: validated.description ?? null,
       is_enabled: validated.is_enabled ?? true,
       is_default: validated.is_default ?? false,
+      priority: validated.priority ?? 0,
       verification_type: validated.verification_type ?? 'declaration',
       verification_config: validated.verification_config ?? {},
     })
@@ -111,17 +104,6 @@ export async function createConsequenceDefinition(
 
   if (error) {
     throw new Error(`Failed to create consequence definition: ${error.message}`);
-  }
-
-  // If marked default, also update default_consequence_id in user_accountability_preferences
-  if (validated.is_default) {
-    await supabase
-      .from('user_accountability_preferences')
-      .upsert({
-        user_id: user.id,
-        default_consequence_id: data.id,
-        updated_at: new Date().toISOString(),
-      });
   }
 
   return data as ConsequenceDefinition;
@@ -141,13 +123,6 @@ export async function updateConsequenceDefinition(
     throw new Error('Authentication required.');
   }
 
-  if (validated.is_default) {
-    await supabase
-      .from('consequence_definitions')
-      .update({ is_default: false })
-      .eq('user_id', user.id);
-  }
-
   const { data, error } = await supabase
     .from('consequence_definitions')
     .update({
@@ -161,16 +136,6 @@ export async function updateConsequenceDefinition(
 
   if (error) {
     throw new Error(`Failed to update consequence definition: ${error.message}`);
-  }
-
-  if (validated.is_default) {
-    await supabase
-      .from('user_accountability_preferences')
-      .upsert({
-        user_id: user.id,
-        default_consequence_id: data.id,
-        updated_at: new Date().toISOString(),
-      });
   }
 
   return data as ConsequenceDefinition;

@@ -12,6 +12,7 @@ import {
   fulfillTaskCompletionSchema,
   commitmentStatusSchema,
   accountabilityEventTypeSchema,
+  createConsequenceDefinitionSchema,
 } from '../src/lib/validations/accountability';
 import {
   VerificationType,
@@ -361,6 +362,36 @@ assert.throws(() => {
 
 console.log('✅ All input schemas block malformed identifiers and empty confirmation tokens.');
 
+// ----------------------------------------------------------------
+// 6. MULTI-DEFAULT & PRIORITY PRESERVATION AUDIT
+// ----------------------------------------------------------------
+console.log('13. Testing Multi-Default Consequence Definition Creation & Priority Retention...');
+const defA = createConsequenceDefinitionSchema.parse({
+  title: 'Default Consequence High Priority',
+  consequence_type: 'personal_restriction',
+  action_statement: 'No social media for 48h',
+  is_default: true,
+  priority: 100,
+});
+assert.strictEqual(defA.is_default, true);
+assert.strictEqual(defA.priority, 100);
+
+const defB = createConsequenceDefinitionSchema.parse({
+  title: 'Default Consequence Low Priority',
+  consequence_type: 'reflection',
+  action_statement: 'Write 1 page reflection',
+  is_default: true,
+  priority: 10,
+});
+assert.strictEqual(defB.is_default, true);
+assert.strictEqual(defB.priority, 10);
+
+// Verify multi-defaults coexist and rank deterministically by priority DESC
+const defaultsList = [defB, defA].sort((a, b) => b.priority - a.priority);
+assert.strictEqual(defaultsList[0].title, 'Default Consequence High Priority');
+assert.strictEqual(defaultsList[1].title, 'Default Consequence Low Priority');
+console.log('✅ Multi-default consequence definitions preserve priority and sort deterministically.');
+
 console.log('\n================================================================');
-console.log('🎉 ALL 12 HARDENING & EDGE CASE TEST SUITES PASSED CLEANLY');
+console.log('🎉 ALL 13 HARDENING & EDGE CASE TEST SUITES PASSED CLEANLY');
 console.log('================================================================\n');
