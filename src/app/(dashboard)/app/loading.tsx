@@ -27,6 +27,19 @@ export default function DashboardLoading() {
         ))}
       </div>
 
+      {/* Featured 3-Card Command Center Skeleton */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6">
+        {[1, 2, 3].map((i) => (
+          <div
+            key={i}
+            className="rounded-3xl border border-white/[0.07] bg-[rgba(18,18,23,0.72)] p-5 sm:p-6 space-y-4 h-48"
+          />
+        ))}
+      </div>
+
+      {/* Timeline Widget Skeleton */}
+      <div className="rounded-3xl border border-white/[0.07] bg-[rgba(18,18,23,0.72)] p-6 sm:p-8 space-y-4 h-64" />
+
       {/* Upcoming Commitments Skeleton */}
       <div className="space-y-4">
         <div className="w-48 h-6 rounded bg-zinc-800" />
