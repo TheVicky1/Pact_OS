@@ -16,6 +16,7 @@ import {
   X,
   User,
   ShieldAlert,
+  Calendar as CalendarIcon,
 } from 'lucide-react';
 
 export interface AppHeaderProps {
@@ -44,6 +45,7 @@ export function AppHeader({ userName }: AppHeaderProps) {
   const isProjectsActive = pathname === '/app/projects' || pathname.startsWith('/app/projects/');
   const isTasksActive = pathname === '/app/tasks' || pathname.startsWith('/app/tasks/');
   const isAccountabilityActive = pathname === '/app/accountability' || pathname.startsWith('/app/accountability/');
+  const isCalendarActive = pathname === '/app/calendar' || pathname.startsWith('/app/calendar/');
 
   const navItems: NavItem[] = [
     {
@@ -51,6 +53,12 @@ export function AppHeader({ userName }: AppHeaderProps) {
       label: 'Overview',
       icon: LayoutDashboard,
       isActive: isDashboardActive,
+    },
+    {
+      href: '/app/calendar',
+      label: 'Calendar',
+      icon: CalendarIcon,
+      isActive: isCalendarActive,
     },
     {
       href: '/app/goals',

@@ -236,6 +236,52 @@ export interface AccountabilityResolutionResult {
   error?: string;
 }
 
+// Phase 4E Calendar Event Domain Types
+export type CalendarColorTag = 'gold' | 'blue' | 'purple' | 'emerald' | 'amber' | 'rose';
+
+export interface CalendarEvent {
+  id: string;
+  user_id: string;
+  title: string;
+  description: string | null;
+  start_time: string;
+  end_time: string;
+  color_tag: CalendarColorTag;
+  goal_id: string | null;
+  project_id: string | null;
+  task_id: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface CalendarEventWithRelations extends CalendarEvent {
+  projects?: { id: string; title: string } | null;
+  goals?: { id: string; title: string } | null;
+  tasks?: { id: string; title: string } | null;
+}
+
+export interface CreateCalendarEventInput {
+  title: string;
+  start_time: string;
+  end_time: string;
+  description?: string | null;
+  color_tag?: CalendarColorTag;
+  goal_id?: string | null;
+  project_id?: string | null;
+  task_id?: string | null;
+}
+
+export interface UpdateCalendarEventInput {
+  title?: string;
+  start_time?: string;
+  end_time?: string;
+  description?: string | null;
+  color_tag?: CalendarColorTag;
+  goal_id?: string | null;
+  project_id?: string | null;
+  task_id?: string | null;
+}
+
 
 
 

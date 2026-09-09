@@ -19,7 +19,7 @@ import { DailyFocusHero } from './daily-focus-hero';
 import { ActiveFocusCard } from './active-focus-card';
 import { FollowThroughWidget } from './follow-through-widget';
 import { DailyCadenceWidget } from './daily-cadence-widget';
-import { DailyTimelineWidget } from './daily-timeline-widget';
+import { DailyCalendarWidget } from '@/features/calendar';
 import { UpcomingCommitmentsWidget } from './upcoming-commitments-widget';
 import { DomainSummaryWidgets } from './domain-summary-widgets';
 
@@ -284,12 +284,12 @@ export function OverviewView({
         />
       </div>
 
-      {/* 4. Daily Timeline Widget (Interactive Chronological Horizon) */}
-      <DailyTimelineWidget
-        tasks={tasksList}
+      {/* 4. Daily Calendar Widget (Day Planner & Schedule Horizon) */}
+      <DailyCalendarWidget
         timezone={timezone}
-        onComplete={handleCompleteTask}
-        completingTaskId={completingTaskId}
+        projects={projects}
+        goals={goals}
+        tasks={tasksList}
       />
 
       {/* 5. Upcoming Commitments Section */}

@@ -345,3 +345,116 @@ export function getIsoWeekAndYear(date: Date, timeZone: string): { weekYear: num
   const weekYear = new Date(firstThursday).getUTCFullYear();
   return { weekYear, weekNumber };
 }
+
+/**
+ * Returns a "YYYY-MM-DD" date string for a given Date in a specific IANA timezone.
+ */
+export function getLocalDateString(date: Date, timeZone: string): string {
+  const safeTz = isValidIanaTimezone(timeZone) ? timeZone : 'UTC';
+  const formatter = new Intl.DateTimeFormat('en-US', {
+    timeZone: safeTz,
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+  });
+  const parts = formatter.formatToParts(date);
+  const getPart = (t: string) => parts.find((p) => p.type === t)?.value || '00';
+  return `${getPart('year')}-${getPart('month')}-${getPart('day')}`;
+}
+
+/**
+ * Computes the authoritative start (00:00:00) and end (23:59:59.999) UTC timestamps
+ * for a local calendar day "YYYY-MM-DD" in a specific IANA timezone.
+ */
+export function getDayBoundariesUtc(
+  dateStr: string,
+  timeZone: string
+): { startUtc: string; endUtc: string } {
+  const safeTz = isValidIanaTimezone(timeZone) ? timeZone : 'UTC';
+  const startConv = localToUtc(`${dateStr}T00:00:00`, safeTz);
+  const endConv = localToUtc(`${dateStr}T23:59:59`, safeTz);
+
+  const startUtc = startConv.utcIso || new Date(`${dateStr}T00:00:00.000Z`).toISOString();
+  let endUtc = endConv.utcIso || new Date(`${dateStr}T23:59:59.999Z`).toISOString();
+
+  // If end timestamp needs to cover the remainder of the 59th second
+  if (endUtc.endsWith('Z') && !endUtc.includes('.')) {
+    endUtc = endUtc.replace('Z', '.999Z');
+  }
+
+  return { startUtc, endUtc };
+}
+
+/**
+ * Formats a "YYYY-MM-DD" date string in a specific timezone for the calendar header.
+ */
+export function formatCalendarDateHeader(
+  dateStr: string,
+  timeZone: string
+): { formatted: string; dayOfWeek: string; fullDate: string } {
+  const safeTz = isValidIanaTimezone(timeZone) ? timeZone : 'UTC';
+  const [year, month, day] = dateStr.split('-').map((v) => parseInt(v, 10));
+  const approxDate = new Date(Date.UTC(year, month - 1, day, 12, 0, 0));
+
+  const dayOfWeek = new Intl.DateTimeFormat('en-US', {
+    timeZone: safeTz,
+    weekday: 'long',
+  }).format(approxDate);
+
+  const fullDate = new Intl.DateTimeFormat('en-US', {
+    timeZone: safeTz,
+    month: 'long',
+    day: 'numeric',
+    year: 'numeric',
+  }).format(approxDate);
+
+  const formatted = `${dayOfWeek}, ${fullDate}`;
+
+  return { formatted, dayOfWeek, fullDate };
+}
+
+/**
+ * Extracts the local hour (0..23) and minute (0..59) from a UTC ISO timestamp
+ * in a specific IANA timezone.
+ */
+export function getLocalHourAndMinute(
+  utcIso: string,
+  timeZone: string
+): { hour: number; minute: number } {
+  const safeTz = isValidIanaTimezone(timeZone) ? timeZone : 'UTC';
+  const date = new Date(utcIso);
+  if (isNaN(date.getTime())) {
+    return { hour: 0, minute: 0 };
+  }
+
+  const formatter = new Intl.DateTimeFormat('en-US', {
+    timeZone: safeTz,
+    hour: 'numeric',
+    minute: 'numeric',
+    hour12: false,
+  });
+
+  const parts = formatter.formatToParts(date);
+  const getPart = (t: string) => {
+    const val = parts.find((p) => p.type === t)?.value;
+    return val ? parseInt(val, 10) : 0;
+  };
+
+  let hour = getPart('hour');
+  if (hour === 24) hour = 0;
+  const minute = getPart('minute');
+
+  return { hour, minute };
+}
+
+/**
+ * Adds or subtracts calendar days from a "YYYY-MM-DD" string.
+ */
+export function addDaysToDateString(dateStr: string, days: number): string {
+  const [year, month, day] = dateStr.split('-').map((v) => parseInt(v, 10));
+  const date = new Date(Date.UTC(year, month - 1, day + days));
+  const y = date.getUTCFullYear();
+  const m = String(date.getUTCMonth() + 1).padStart(2, '0');
+  const d = String(date.getUTCDate()).padStart(2, '0');
+  return `${y}-${m}-${d}`;
+}
