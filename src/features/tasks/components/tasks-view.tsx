@@ -18,7 +18,10 @@ import {
   CheckCircle2,
   AlertCircle,
   Target,
+  ShieldAlert,
+  ArrowRight,
 } from 'lucide-react';
+import Link from 'next/link';
 
 export interface TasksViewProps {
   initialTasks: TaskWithParents[];
@@ -71,6 +74,16 @@ export function TasksView({
       missed: tasks.filter((t) => t.status === 'missed').length,
       archived: tasks.filter((t) => t.status === 'archived').length,
     };
+  }, [tasks]);
+
+  const activatedAccountabilityCount = useMemo(() => {
+    return tasks.filter((t) => {
+      if (t.status !== 'missed') return false;
+      const cStatus = Array.isArray(t.task_accountability_commitments)
+        ? t.task_accountability_commitments[0]?.commitment_status
+        : t.task_accountability_commitments?.commitment_status;
+      return cStatus === 'activated';
+    }).length;
   }, [tasks]);
 
   // Filter tasks based on status, priority, and search query
@@ -193,6 +206,36 @@ export function TasksView({
         >
           {actionError}
         </Alert>
+      )}
+
+      {/* Accountability Intervention Notice */}
+      {activatedAccountabilityCount > 0 && (
+        <div
+          role="alert"
+          className="relative overflow-hidden rounded-2xl border border-amber-500/30 bg-gradient-to-r from-amber-950/40 via-[#16141a]/80 to-[#121217]/90 p-4 shadow-xl backdrop-blur-xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3"
+        >
+          <div className="flex items-center gap-3">
+            <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-amber-500/15 border border-amber-500/30 text-[#d4af37]">
+              <ShieldAlert className="h-4 w-4" />
+            </div>
+            <div>
+              <p className="text-xs font-semibold text-zinc-100">
+                {activatedAccountabilityCount === 1
+                  ? '1 commitment has reached its deadline with active accountability.'
+                  : `${activatedAccountabilityCount} commitments have reached their deadlines with active accountability.`}
+              </p>
+              <p className="text-[11px] text-zinc-400">
+                Resolve through verified execution or disciplined weekly waiver.
+              </p>
+            </div>
+          </div>
+          <Link href="/app/accountability">
+            <Button variant="primary" size="sm" className="whitespace-nowrap shadow-md shadow-[#d4af37]/10">
+              <span>Go to Accountability</span>
+              <ArrowRight className="h-3.5 w-3.5 ml-1.5" />
+            </Button>
+          </Link>
+        </div>
       )}
 
       {/* 2. Overview Stats Quick Bar */}

@@ -15,6 +15,7 @@ import {
   Menu,
   X,
   User,
+  ShieldAlert,
 } from 'lucide-react';
 
 export interface AppHeaderProps {
@@ -42,6 +43,7 @@ export function AppHeader({ userName }: AppHeaderProps) {
   const isGoalsActive = pathname === '/app/goals' || pathname.startsWith('/app/goals/');
   const isProjectsActive = pathname === '/app/projects' || pathname.startsWith('/app/projects/');
   const isTasksActive = pathname === '/app/tasks' || pathname.startsWith('/app/tasks/');
+  const isAccountabilityActive = pathname === '/app/accountability' || pathname.startsWith('/app/accountability/');
 
   const navItems: NavItem[] = [
     {
@@ -67,6 +69,12 @@ export function AppHeader({ userName }: AppHeaderProps) {
       label: 'Tasks',
       icon: CheckSquare,
       isActive: isTasksActive,
+    },
+    {
+      href: '/app/accountability',
+      label: 'Accountability',
+      icon: ShieldAlert,
+      isActive: isAccountabilityActive,
     },
   ];
 

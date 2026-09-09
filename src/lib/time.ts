@@ -314,3 +314,34 @@ export function getDefaultLocalDeadline(timeZone: string, clock: Clock = default
   const d = String(tomorrow.getUTCDate()).padStart(2, '0');
   return `${y}-${m}-${d}T23:59`;
 }
+
+/**
+ * Computes the ISO-8601 week number and ISO week year for a date in a given IANA timezone.
+ * Matches PostgreSQL's EXTRACT(isoyear FROM ...) and EXTRACT(week FROM ...).
+ */
+export function getIsoWeekAndYear(date: Date, timeZone: string): { weekYear: number; weekNumber: number } {
+  const safeTz = isValidIanaTimezone(timeZone) ? timeZone : 'UTC';
+  const formatter = new Intl.DateTimeFormat('en-US', {
+    timeZone: safeTz,
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+  });
+  const parts = formatter.formatToParts(date);
+  const getPart = (t: string) => parseInt(parts.find((p) => p.type === t)?.value || '0', 10);
+  const year = getPart('year');
+  const month = getPart('month') - 1;
+  const day = getPart('day');
+
+  const target = new Date(Date.UTC(year, month, day));
+  const dayNr = (target.getUTCDay() + 6) % 7; // Monday = 0, Sunday = 6
+  target.setUTCDate(target.getUTCDate() - dayNr + 3);
+  const firstThursday = target.getTime();
+  target.setUTCMonth(0, 1);
+  if (target.getUTCDay() !== 4) {
+    target.setUTCMonth(0, 1 + ((4 - target.getUTCDay() + 7) % 7));
+  }
+  const weekNumber = 1 + Math.ceil((firstThursday - target.getTime()) / 604800000);
+  const weekYear = new Date(firstThursday).getUTCFullYear();
+  return { weekYear, weekNumber };
+}

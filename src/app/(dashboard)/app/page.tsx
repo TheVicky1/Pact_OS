@@ -30,6 +30,12 @@ export default async function ProtectedAppPage() {
     getTasks(),
   ]);
 
+  const { getActivatedCommitments, getWeeklyWaiverUsage } = await import('@/features/accountability/data-access');
+  const [activatedCommitments, waiverUsage] = await Promise.all([
+    getActivatedCommitments(),
+    getWeeklyWaiverUsage(timezone),
+  ]);
+
   return (
     <PageContainer as="main">
       <OverviewView
@@ -38,6 +44,8 @@ export default async function ProtectedAppPage() {
         tasks={tasks || []}
         userName={fullName}
         timezone={timezone}
+        activatedCommitments={activatedCommitments}
+        waiverUsage={waiverUsage}
       />
     </PageContainer>
   );

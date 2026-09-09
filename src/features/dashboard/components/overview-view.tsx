@@ -23,12 +23,19 @@ import { DailyTimelineWidget } from './daily-timeline-widget';
 import { UpcomingCommitmentsWidget } from './upcoming-commitments-widget';
 import { DomainSummaryWidgets } from './domain-summary-widgets';
 
+import { useRouter } from 'next/navigation';
+import { InterventionBanner } from '@/features/accountability/components/intervention-banner';
+import { InterventionModal } from '@/features/accountability/components/intervention-modal';
+import type { ActivatedCommitmentDetails, WeeklyWaiverUsage } from '@/features/accountability/data-access';
+
 interface OverviewViewProps {
   goals: Goal[];
   projects: ProjectWithGoal[];
   tasks: TaskWithParents[];
   userName: string;
   timezone: string;
+  activatedCommitments?: ActivatedCommitmentDetails[];
+  waiverUsage?: WeeklyWaiverUsage;
 }
 
 export function OverviewView({
@@ -37,10 +44,14 @@ export function OverviewView({
   tasks: initialTasks,
   userName,
   timezone,
+  activatedCommitments = [],
+  waiverUsage,
 }: OverviewViewProps) {
+  const router = useRouter();
   const [tasksList, setTasksList] = useState<TaskWithParents[]>(initialTasks);
   const [completingTaskId, setCompletingTaskId] = useState<string | null>(null);
   const [actionError, setActionError] = useState<string | null>(null);
+  const [selectedIntervention, setSelectedIntervention] = useState<ActivatedCommitmentDetails | null>(null);
 
   // Sync state if initialTasks updates from server revalidation
   const [prevTasks, setPrevTasks] = useState(initialTasks);
@@ -126,6 +137,14 @@ export function OverviewView({
 
   return (
     <div className="space-y-8 pb-12">
+      {/* 0. Accountability Active Intervention Banner */}
+      {activatedCommitments.length > 0 && (
+        <InterventionBanner
+          activatedCount={activatedCommitments.length}
+          onReview={() => setSelectedIntervention(activatedCommitments[0])}
+        />
+      )}
+
       {/* 1. Daily Focus Hero & Date Ribbon */}
       <DailyFocusHero
         userName={userName}
@@ -287,6 +306,21 @@ export function OverviewView({
         projects={projects}
         tasks={tasksList}
       />
+
+      {/* Accountability Intervention Modal */}
+      {selectedIntervention && waiverUsage && (
+        <InterventionModal
+          isOpen={Boolean(selectedIntervention)}
+          onClose={() => setSelectedIntervention(null)}
+          commitment={selectedIntervention}
+          waiverUsage={waiverUsage}
+          timezone={timezone}
+          onResolved={() => {
+            setSelectedIntervention(null);
+            router.refresh();
+          }}
+        />
+      )}
     </div>
   );
 }

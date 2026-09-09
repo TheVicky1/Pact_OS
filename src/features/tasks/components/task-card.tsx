@@ -16,6 +16,7 @@ import {
   Play,
   RotateCcw,
   Loader2,
+  ShieldAlert,
 } from 'lucide-react';
 import { utcToLocal } from '@/lib/time';
 import Link from 'next/link';
@@ -51,12 +52,18 @@ export function TaskCard({
   const isArchived = task.status === 'archived';
 
   // Check if an accountability commitment snapshot is attached
+  const commitmentStatus = Array.isArray(task.task_accountability_commitments)
+    ? task.task_accountability_commitments[0]?.commitment_status
+    : task.task_accountability_commitments?.commitment_status;
+
   const hasCommitment = Boolean(
     task.task_accountability_commitments &&
       (Array.isArray(task.task_accountability_commitments)
         ? task.task_accountability_commitments.length > 0
         : Boolean(task.task_accountability_commitments))
   );
+
+  const isAccountabilityActive = isMissed && commitmentStatus === 'activated';
 
   // Compute deadline urgency and relative label
   const [nowMs] = useState(() => Date.now());
@@ -226,33 +233,44 @@ export function TaskCard({
 
               {/* Accountability Lock Indicator */}
               {hasCommitment && (
-                <div
-                  className="relative inline-flex items-center"
-                  onMouseEnter={() => setIsHoveredLock(true)}
-                  onMouseLeave={() => setIsHoveredLock(false)}
-                >
-                  <span
-                    role="img"
-                    aria-label="Accountability active"
-                    className="inline-flex items-center gap-1 rounded-md bg-[#d4af37]/10 border border-[#d4af37]/30 px-1.5 py-0.5 text-[10px] font-semibold text-[#d4af37] select-none cursor-help"
+                isAccountabilityActive ? (
+                  <Link
+                    href="/app/accountability"
+                    className="inline-flex items-center gap-1 rounded-md bg-amber-500/15 border border-amber-500/40 px-2 py-0.5 text-[10px] font-semibold text-amber-300 hover:bg-amber-500/25 transition-colors cursor-pointer"
+                    aria-label="Accountability Active - Resolve at Accountability Cockpit"
                   >
-                    <Lock className="w-2.5 h-2.5" />
-                    <span>PACT</span>
-                  </span>
+                    <ShieldAlert className="w-2.5 h-2.5 text-amber-400" />
+                    <span>Resolve PACT</span>
+                  </Link>
+                ) : (
+                  <div
+                    className="relative inline-flex items-center"
+                    onMouseEnter={() => setIsHoveredLock(true)}
+                    onMouseLeave={() => setIsHoveredLock(false)}
+                  >
+                    <span
+                      role="img"
+                      aria-label="Accountability active"
+                      className="inline-flex items-center gap-1 rounded-md bg-[#d4af37]/10 border border-[#d4af37]/30 px-1.5 py-0.5 text-[10px] font-semibold text-[#d4af37] select-none cursor-help"
+                    >
+                      <Lock className="w-2.5 h-2.5" />
+                      <span>PACT</span>
+                    </span>
 
-                  {/* Confidentiality-Safe Tooltip */}
-                  {isHoveredLock && (
-                    <div className="absolute left-0 bottom-full mb-1.5 z-30 w-56 p-2 rounded-xl bg-zinc-950/95 border border-white/[0.12] shadow-2xl backdrop-blur-md text-[11px] text-zinc-300 leading-tight">
-                      <p className="font-semibold text-[#d4af37] mb-0.5 flex items-center gap-1">
-                        <Lock className="w-3 h-3" />
-                        Accountability Active
-                      </p>
-                      <span>
-                        An immutable consequence is sealed to this commitment until deadline resolution.
-                      </span>
-                    </div>
-                  )}
-                </div>
+                    {/* Confidentiality-Safe Tooltip */}
+                    {isHoveredLock && (
+                      <div className="absolute left-0 bottom-full mb-1.5 z-30 w-56 p-2 rounded-xl bg-zinc-950/95 border border-white/[0.12] shadow-2xl backdrop-blur-md text-[11px] text-zinc-300 leading-tight">
+                        <p className="font-semibold text-[#d4af37] mb-0.5 flex items-center gap-1">
+                          <Lock className="w-3 h-3" />
+                          Accountability Active
+                        </p>
+                        <span>
+                          An immutable consequence is sealed to this commitment until deadline resolution.
+                        </span>
+                      </div>
+                    )}
+                  </div>
+                )
               )}
             </div>
 
