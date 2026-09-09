@@ -6,6 +6,8 @@ import { getTasks } from '@/features/tasks/data-access';
 import { OverviewView } from '@/features/dashboard/components/overview-view';
 import { getUserProfileInfo } from '@/lib/auth/profile';
 
+import { PageContainer } from '@/components/ui';
+
 export const metadata = {
   title: 'Overview | PACT OS',
   description: 'Personal productivity, commitments, and progress operating system.',
@@ -29,7 +31,7 @@ export default async function ProtectedAppPage() {
   ]);
 
   return (
-    <main className="max-w-6xl w-full mx-auto p-4 sm:p-8">
+    <PageContainer as="main">
       <OverviewView
         goals={goals || []}
         projects={projects || []}
@@ -37,7 +39,7 @@ export default async function ProtectedAppPage() {
         userName={fullName}
         timezone={timezone}
       />
-    </main>
+    </PageContainer>
   );
 }
 

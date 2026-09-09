@@ -1,7 +1,8 @@
 'use client';
 
-import { useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { AlertTriangle, RefreshCw } from 'lucide-react';
+import { PageContainer, GlassCard, Button } from '@/components/ui';
 
 export default function DashboardError({
   error,
@@ -16,9 +17,13 @@ export default function DashboardError({
   }, [error]);
 
   return (
-    <main className="max-w-xl w-full mx-auto p-6 sm:p-12 my-12">
-      <div className="rounded-3xl border border-rose-900/40 bg-zinc-950/90 p-8 text-center backdrop-blur-xl space-y-6 shadow-2xl">
-        <div className="w-14 h-14 rounded-2xl bg-rose-950/60 border border-rose-800/60 flex items-center justify-center mx-auto text-rose-400">
+    <PageContainer as="main" className="flex items-center justify-center min-h-[60vh]">
+      <GlassCard
+        variant="elevated"
+        padding="lg"
+        className="max-w-md w-full text-center space-y-6"
+      >
+        <div className="w-14 h-14 rounded-2xl bg-red-950/40 border border-red-800/40 flex items-center justify-center mx-auto text-red-400">
           <AlertTriangle className="w-7 h-7" />
         </div>
 
@@ -31,14 +36,17 @@ export default function DashboardError({
           </p>
         </div>
 
-        <button
-          onClick={() => reset()}
-          className="inline-flex items-center gap-2 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-zinc-100 px-4 py-2.5 text-xs font-semibold border border-zinc-700 transition-colors cursor-pointer"
-        >
-          <RefreshCw className="w-3.5 h-3.5" />
-          <span>Try Again</span>
-        </button>
-      </div>
-    </main>
+        <div>
+          <Button
+            variant="secondary"
+            size="md"
+            onClick={() => reset()}
+            icon={<RefreshCw className="w-4 h-4" />}
+          >
+            Try Again
+          </Button>
+        </div>
+      </GlassCard>
+    </PageContainer>
   );
 }

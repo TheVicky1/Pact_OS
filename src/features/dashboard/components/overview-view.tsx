@@ -13,12 +13,12 @@ import {
   CheckSquare,
   Calendar,
   CheckCircle2,
-  AlertCircle,
   Clock,
   ChevronRight,
   Plus,
   ShieldCheck,
 } from 'lucide-react';
+import { GlassCard, Button, Badge, Alert, GoldSpotlight } from '@/components/ui';
 
 interface OverviewViewProps {
   goals: Goal[];
@@ -46,7 +46,7 @@ export function OverviewView({
     setTasksList(initialTasks);
   }
 
-  // Derive Time of Day Greeting
+  // Derive Time of Day Greeting in profile timezone
   const getGreeting = () => {
     try {
       const hour = parseInt(
@@ -65,7 +65,7 @@ export function OverviewView({
     }
   };
 
-  // Metrics
+  // Authoritative Metrics (Strictly derived from real data)
   const activeGoals = goals.filter((g) => g.status === 'active');
   const activeProjects = projects.filter((p) => p.status === 'active');
   const pendingTasks = tasksList.filter((t) => t.status === 'pending' || t.status === 'in_progress');
@@ -98,105 +98,162 @@ export function OverviewView({
 
   return (
     <div className="space-y-8 pb-12">
-      {/* Hero Welcome Banner */}
-      <div className="relative overflow-hidden rounded-3xl border border-zinc-800/80 bg-gradient-to-br from-[#121217] via-[#0d0d12] to-[#09090b] p-6 sm:p-8 backdrop-blur-xl shadow-xl">
-        <div className="absolute top-0 right-0 -mr-16 -mt-16 w-64 h-64 rounded-full bg-[#d4af37]/5 blur-3xl pointer-events-none" />
-        
+      {/* Hero / Daily Focus Area */}
+      <GlassCard variant="spotlight" padding="lg" className="relative overflow-hidden">
+        <GoldSpotlight position="top-right" />
+
         <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
-          <div className="space-y-2">
-            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#d4af37]/10 border border-[#d4af37]/30 text-xs font-medium text-[#d4af37]">
-              <ShieldCheck className="w-3.5 h-3.5" />
-              <span>PACT Personal Operating System</span>
+          <div className="space-y-3">
+            <div className="flex items-center gap-2">
+              <Badge variant="gold" size="sm" icon={<ShieldCheck className="w-3.5 h-3.5" />}>
+                PACT Personal Operating System
+              </Badge>
             </div>
-            <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-zinc-100">
-              {getGreeting()}, <span className="text-[#d4af37]">{userName}</span>
+
+            <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold tracking-tight text-zinc-100">
+              {getGreeting()},{' '}
+              <span className="text-gradient-gold">{userName || 'Committed User'}</span>
             </h1>
+
             <p className="text-sm text-zinc-400 max-w-xl leading-relaxed">
-              Focus on intentional commitments, take daily disciplined action, and track authoritative progress.
+              {pendingTasks.length > 0
+                ? `You have ${pendingTasks.length} ${
+                    pendingTasks.length === 1 ? 'commitment' : 'commitments'
+                  } scheduled. Take deliberate, disciplined action.`
+                : 'All commitments are in order. Set an intentional target or review your active goals.'}
             </p>
           </div>
 
           <div className="flex items-center gap-3 shrink-0">
-            <Link
-              href="/app/tasks"
-              className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-[#d4af37] to-[#b89528] px-4 py-2.5 text-xs font-semibold text-zinc-950 hover:from-[#e5be48] hover:to-[#c9a432] shadow-md shadow-[#d4af37]/10 transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-[#d4af37] cursor-pointer"
-            >
-              <Plus className="w-4 h-4" />
-              <span>New Commitment</span>
+            <Link href="/app/tasks">
+              <Button variant="primary" icon={<Plus className="w-4 h-4" />}>
+                New Commitment
+              </Button>
             </Link>
           </div>
         </div>
-      </div>
+      </GlassCard>
 
+      {/* Action Error Callout */}
       {actionError && (
-        <div className="flex items-center gap-2 rounded-xl border border-red-500/30 bg-red-500/10 p-4 text-xs text-red-400">
-          <AlertCircle className="h-4 w-4 shrink-0" />
-          <span>{actionError}</span>
-        </div>
+        <Alert
+          variant="danger"
+          title="Action Failed"
+          onDismiss={() => setActionError(null)}
+        >
+          {actionError}
+        </Alert>
       )}
 
-      {/* Metrics Summary Strip */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+      {/* Metrics Grid (Real PACT Data Only) */}
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+        {/* Pending Commitments */}
+        <Link href="/app/tasks" className="block focus-visible:outline-none">
+          <GlassCard
+            variant="interactive"
+            padding="md"
+            className="h-full flex flex-col justify-between"
+          >
+            <div className="flex items-center justify-between text-zinc-400 mb-3">
+              <span className="text-xs font-medium uppercase tracking-wider text-zinc-400">
+                Pending Commitments
+              </span>
+              <CheckSquare className="w-4 h-4 text-[#d4af37]" />
+            </div>
+            <div>
+              <div className="text-3xl sm:text-4xl font-bold text-zinc-100 font-mono tracking-tight">
+                {pendingTasks.length}
+              </div>
+              <p className="text-[11px] text-zinc-500 mt-1.5">
+                {completedTasks.length} completed
+              </p>
+            </div>
+          </GlassCard>
+        </Link>
+
         {/* Active Goals */}
-        <Link
-          href="/app/goals"
-          className="group rounded-2xl border border-zinc-800/80 bg-zinc-900/50 p-4 backdrop-blur-sm transition-all hover:border-[#d4af37]/40 hover:bg-zinc-900/80"
-        >
-          <div className="flex items-center justify-between text-zinc-400 mb-2">
-            <span className="text-xs font-medium">Active Goals</span>
-            <Target className="w-4 h-4 text-[#d4af37] group-hover:scale-110 transition-transform" />
-          </div>
-          <div className="text-2xl font-bold text-zinc-100">{activeGoals.length}</div>
-          <p className="text-[11px] text-zinc-500 mt-1">Out of {goals.length} total</p>
+        <Link href="/app/goals" className="block focus-visible:outline-none">
+          <GlassCard
+            variant="interactive"
+            padding="md"
+            className="h-full flex flex-col justify-between"
+          >
+            <div className="flex items-center justify-between text-zinc-400 mb-3">
+              <span className="text-xs font-medium uppercase tracking-wider text-zinc-400">
+                Active Goals
+              </span>
+              <Target className="w-4 h-4 text-[#d4af37]" />
+            </div>
+            <div>
+              <div className="text-3xl sm:text-4xl font-bold text-zinc-100 font-mono tracking-tight">
+                {activeGoals.length}
+              </div>
+              <p className="text-[11px] text-zinc-500 mt-1.5">
+                Out of {goals.length} total
+              </p>
+            </div>
+          </GlassCard>
         </Link>
 
         {/* Active Projects */}
-        <Link
-          href="/app/projects"
-          className="group rounded-2xl border border-zinc-800/80 bg-zinc-900/50 p-4 backdrop-blur-sm transition-all hover:border-[#d4af37]/40 hover:bg-zinc-900/80"
-        >
-          <div className="flex items-center justify-between text-zinc-400 mb-2">
-            <span className="text-xs font-medium">Active Projects</span>
-            <FolderKanban className="w-4 h-4 text-[#d4af37] group-hover:scale-110 transition-transform" />
-          </div>
-          <div className="text-2xl font-bold text-zinc-100">{activeProjects.length}</div>
-          <p className="text-[11px] text-zinc-500 mt-1">Out of {projects.length} total</p>
+        <Link href="/app/projects" className="block focus-visible:outline-none">
+          <GlassCard
+            variant="interactive"
+            padding="md"
+            className="h-full flex flex-col justify-between"
+          >
+            <div className="flex items-center justify-between text-zinc-400 mb-3">
+              <span className="text-xs font-medium uppercase tracking-wider text-zinc-400">
+                Active Projects
+              </span>
+              <FolderKanban className="w-4 h-4 text-[#d4af37]" />
+            </div>
+            <div>
+              <div className="text-3xl sm:text-4xl font-bold text-zinc-100 font-mono tracking-tight">
+                {activeProjects.length}
+              </div>
+              <p className="text-[11px] text-zinc-500 mt-1.5">
+                Out of {projects.length} total
+              </p>
+            </div>
+          </GlassCard>
         </Link>
 
-        {/* Pending Tasks */}
-        <Link
-          href="/app/tasks"
-          className="group rounded-2xl border border-zinc-800/80 bg-zinc-900/50 p-4 backdrop-blur-sm transition-all hover:border-[#d4af37]/40 hover:bg-zinc-900/80"
+        {/* Missed Commitments */}
+        <GlassCard
+          variant="default"
+          padding="md"
+          className="h-full flex flex-col justify-between"
         >
-          <div className="flex items-center justify-between text-zinc-400 mb-2">
-            <span className="text-xs font-medium">Pending Tasks</span>
-            <CheckSquare className="w-4 h-4 text-[#d4af37] group-hover:scale-110 transition-transform" />
-          </div>
-          <div className="text-2xl font-bold text-zinc-100">{pendingTasks.length}</div>
-          <p className="text-[11px] text-zinc-500 mt-1">{completedTasks.length} completed</p>
-        </Link>
-
-        {/* Missed Tasks Status */}
-        <div className="rounded-2xl border border-zinc-800/80 bg-zinc-900/30 p-4 backdrop-blur-sm">
-          <div className="flex items-center justify-between text-zinc-400 mb-2">
-            <span className="text-xs font-medium">Missed Tasks</span>
+          <div className="flex items-center justify-between text-zinc-400 mb-3">
+            <span className="text-xs font-medium uppercase tracking-wider text-zinc-400">
+              Missed Commitments
+            </span>
             <Clock className="w-4 h-4 text-zinc-500" />
           </div>
-          <div className="text-2xl font-bold text-zinc-300">{missedTasks.length}</div>
-          <p className="text-[11px] text-zinc-500 mt-1">Lifecycle state visible</p>
-        </div>
+          <div>
+            <div className="text-3xl sm:text-4xl font-bold text-zinc-300 font-mono tracking-tight">
+              {missedTasks.length}
+            </div>
+            <p className="text-[11px] text-zinc-500 mt-1.5">
+              Authoritative lifecycle
+            </p>
+          </div>
+        </GlassCard>
       </div>
 
-      {/* TODAY & UPCOMING COMMITMENTS */}
+      {/* UPCOMING COMMITMENTS SECTION */}
       <div className="space-y-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <Clock className="w-5 h-5 text-[#d4af37]" />
-            <h2 className="text-lg font-bold tracking-tight text-zinc-100">Upcoming Commitments</h2>
+            <Clock className="w-4 h-4 text-[#d4af37]" />
+            <h2 className="text-base sm:text-lg font-bold tracking-tight text-zinc-100">
+              Upcoming Commitments
+            </h2>
           </div>
           <Link
             href="/app/tasks"
-            className="text-xs font-medium text-[#d4af37] hover:underline inline-flex items-center gap-1"
+            className="text-xs font-medium text-[#d4af37] hover:text-[#e5c158] transition-colors inline-flex items-center gap-1"
           >
             <span>View All Tasks</span>
             <ChevronRight className="w-3.5 h-3.5" />
@@ -204,99 +261,119 @@ export function OverviewView({
         </div>
 
         {upcomingTasks.length > 0 ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {upcomingTasks.map((task) => (
-              <div
-                key={task.id}
-                className="group relative rounded-2xl border border-zinc-800/80 bg-zinc-900/60 p-5 backdrop-blur-sm transition-all hover:border-[#d4af37]/30 hover:bg-zinc-900/90 flex flex-col justify-between space-y-4"
-              >
-                <div className="space-y-2">
-                  <div className="flex items-center justify-between gap-2">
-                    <span
-                      className={`inline-flex items-center rounded-full border px-2.5 py-0.5 text-[10px] font-semibold uppercase tracking-wider ${
-                        task.priority === 'urgent'
-                          ? 'border-red-500/40 bg-red-500/10 text-red-400'
-                          : task.priority === 'high'
-                          ? 'border-amber-500/40 bg-amber-500/10 text-amber-400'
-                          : 'border-zinc-700 bg-zinc-800/60 text-zinc-400'
-                      }`}
-                    >
-                      {task.priority}
-                    </span>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+            {upcomingTasks.map((task) => {
+              const priorityVariant =
+                task.priority === 'urgent'
+                  ? 'danger'
+                  : task.priority === 'high'
+                  ? 'warning'
+                  : 'neutral';
 
-                    <button
-                      onClick={() => handleCompleteTask(task.id)}
-                      disabled={completingTaskId === task.id}
-                      className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg border border-emerald-800/60 bg-emerald-950/40 hover:bg-emerald-900/60 text-emerald-400 text-xs font-medium transition-colors disabled:opacity-50 cursor-pointer"
-                    >
-                      <CheckCircle2 className="w-3.5 h-3.5" />
-                      <span>{completingTaskId === task.id ? 'Completing...' : 'Mark Done'}</span>
-                    </button>
-                  </div>
+              return (
+                <GlassCard
+                  key={task.id}
+                  variant="default"
+                  padding="md"
+                  className="flex flex-col justify-between space-y-4 hover:border-white/[0.14] transition-all"
+                >
+                  <div className="space-y-2.5">
+                    <div className="flex items-center justify-between gap-2">
+                      <Badge variant={priorityVariant} size="sm">
+                        {task.priority.toUpperCase()}
+                      </Badge>
 
-                  <h3 className="font-semibold text-zinc-100 text-base group-hover:text-[#d4af37] transition-colors">
-                    {task.title}
-                  </h3>
+                      <Button
+                        variant="secondary"
+                        size="sm"
+                        disabled={completingTaskId === task.id}
+                        onClick={() => handleCompleteTask(task.id)}
+                        icon={<CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />}
+                      >
+                        {completingTaskId === task.id ? 'Completing...' : 'Mark Done'}
+                      </Button>
+                    </div>
 
-                  {task.description && (
-                    <p className="text-xs text-zinc-400 line-clamp-2 leading-relaxed">
-                      {task.description}
-                    </p>
-                  )}
-                </div>
+                    <h3 className="font-semibold text-zinc-100 text-base leading-snug">
+                      {task.title}
+                    </h3>
 
-                <div className="pt-3 border-t border-zinc-800/60 flex items-center justify-between text-xs text-zinc-400">
-                  <div className="flex items-center gap-2">
-                    {task.projects && (
-                      <span className="inline-flex items-center gap-1 text-[11px] text-zinc-300 bg-zinc-800/80 px-2 py-0.5 rounded border border-zinc-700/50">
-                        <FolderKanban className="w-3 h-3 text-[#d4af37]" />
-                        <span className="truncate max-w-[100px]">{task.projects.title}</span>
-                      </span>
-                    )}
-                    {task.goals && (
-                      <span className="inline-flex items-center gap-1 text-[11px] text-zinc-300 bg-zinc-800/80 px-2 py-0.5 rounded border border-zinc-700/50">
-                        <Target className="w-3 h-3 text-[#d4af37]" />
-                        <span className="truncate max-w-[100px]">{task.goals.title}</span>
-                      </span>
+                    {task.description && (
+                      <p className="text-xs text-zinc-400 line-clamp-2 leading-relaxed">
+                        {task.description}
+                      </p>
                     )}
                   </div>
 
-                  <div className="flex items-center gap-1 font-mono text-[11px] text-zinc-400">
-                    <Calendar className="w-3.5 h-3.5 text-[#d4af37]" />
-                    <span>{utcToLocal(task.deadline_at, timezone)}</span>
+                  <div className="pt-3 border-t border-white/[0.06] flex items-center justify-between text-xs text-zinc-400 gap-2">
+                    <div className="flex items-center gap-1.5 flex-wrap">
+                      {task.projects && (
+                        <Badge
+                          variant="neutral"
+                          size="sm"
+                          icon={<FolderKanban className="w-3 h-3 text-[#d4af37]" />}
+                        >
+                          <span className="truncate max-w-[120px]">{task.projects.title}</span>
+                        </Badge>
+                      )}
+                      {task.goals && (
+                        <Badge
+                          variant="neutral"
+                          size="sm"
+                          icon={<Target className="w-3 h-3 text-[#d4af37]" />}
+                        >
+                          <span className="truncate max-w-[120px]">{task.goals.title}</span>
+                        </Badge>
+                      )}
+                    </div>
+
+                    <div className="flex items-center gap-1.5 font-mono text-[11px] text-zinc-400 shrink-0">
+                      <Calendar className="w-3.5 h-3.5 text-[#d4af37]" />
+                      <span>{utcToLocal(task.deadline_at, timezone)}</span>
+                    </div>
                   </div>
-                </div>
-              </div>
-            ))}
+                </GlassCard>
+              );
+            })}
           </div>
         ) : (
-          <div className="rounded-2xl border border-dashed border-zinc-800/80 bg-zinc-900/30 p-8 text-center backdrop-blur-sm">
-            <CheckSquare className="w-8 h-8 text-[#d4af37] mx-auto mb-2 opacity-80" />
-            <h3 className="text-sm font-semibold text-zinc-200">Make your next commitment.</h3>
-            <p className="text-xs text-zinc-500 mt-1">You have no pending task commitments due. Create a task to start execution.</p>
-            <Link
-              href="/app/tasks"
-              className="mt-4 inline-flex items-center gap-2 rounded-xl bg-zinc-900 hover:bg-zinc-800 text-zinc-200 border border-zinc-800 px-3 py-1.5 text-xs font-medium transition-colors"
-            >
-              <Plus className="w-3.5 h-3.5 text-[#d4af37]" />
-              <span>Create Task</span>
-            </Link>
-          </div>
+          <GlassCard variant="default" padding="lg" className="text-center py-10">
+            <CheckSquare className="w-8 h-8 text-[#d4af37]/70 mx-auto mb-3" />
+            <h3 className="text-sm font-semibold text-zinc-200">
+              Make your next commitment
+            </h3>
+            <p className="text-xs text-zinc-500 mt-1 max-w-sm mx-auto">
+              You have no pending commitments due. Take disciplined action and schedule a new task.
+            </p>
+            <div className="mt-4">
+              <Link href="/app/tasks">
+                <Button
+                  variant="secondary"
+                  size="sm"
+                  icon={<Plus className="w-3.5 h-3.5 text-[#d4af37]" />}
+                >
+                  Create Task
+                </Button>
+              </Link>
+            </div>
+          </GlassCard>
         )}
       </div>
 
-      {/* ACTIVE WORK & DOMAIN HIERARCHY */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {/* Active Goals Section */}
+      {/* DOMAIN HIERARCHY: ACTIVE GOALS & ACTIVE PROJECTS */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {/* Active Goals Column */}
         <div className="space-y-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <Target className="w-5 h-5 text-[#d4af37]" />
-              <h2 className="text-lg font-bold tracking-tight text-zinc-100">Active Goals</h2>
+              <Target className="w-4 h-4 text-[#d4af37]" />
+              <h2 className="text-base sm:text-lg font-bold tracking-tight text-zinc-100">
+                Active Goals
+              </h2>
             </div>
             <Link
               href="/app/goals"
-              className="text-xs font-medium text-[#d4af37] hover:underline inline-flex items-center gap-1"
+              className="text-xs font-medium text-[#d4af37] hover:text-[#e5c158] transition-colors inline-flex items-center gap-1"
             >
               <span>Manage Goals</span>
               <ChevronRight className="w-3.5 h-3.5" />
@@ -309,66 +386,77 @@ export function OverviewView({
                 const linkedProjects = projects.filter((p) => p.goal_id === goal.id);
                 const linkedTasks = tasksList.filter((t) => t.goal_id === goal.id);
                 const completedLinkedTasks = linkedTasks.filter((t) => t.status === 'completed');
-                const progressPct = linkedTasks.length > 0 ? Math.round((completedLinkedTasks.length / linkedTasks.length) * 100) : 0;
+                const progressPct =
+                  linkedTasks.length > 0
+                    ? Math.round((completedLinkedTasks.length / linkedTasks.length) * 100)
+                    : 0;
 
                 return (
-                  <div
-                    key={goal.id}
-                    className="rounded-2xl border border-zinc-800/80 bg-zinc-900/60 p-4 backdrop-blur-sm space-y-3"
-                  >
-                    <div className="flex items-center justify-between">
+                  <GlassCard key={goal.id} variant="default" padding="sm" className="space-y-3">
+                    <div className="flex items-center justify-between gap-2">
                       <h3 className="font-semibold text-zinc-100 text-sm">{goal.title}</h3>
-                      <span className="text-[11px] font-mono text-zinc-400 bg-zinc-800/80 px-2 py-0.5 rounded border border-zinc-700/50">
-                        {linkedProjects.length} {linkedProjects.length === 1 ? 'project' : 'projects'}
-                      </span>
+                      <Badge variant="neutral" size="sm">
+                        {linkedProjects.length}{' '}
+                        {linkedProjects.length === 1 ? 'project' : 'projects'}
+                      </Badge>
                     </div>
 
                     {goal.description && (
                       <p className="text-xs text-zinc-400 line-clamp-1">{goal.description}</p>
                     )}
 
-                    <div className="space-y-1">
-                      <div className="flex items-center justify-between text-[11px] text-zinc-400">
-                        <span>Progress</span>
-                        <span>{progressPct}% ({completedLinkedTasks.length}/{linkedTasks.length} tasks)</span>
+                    <div className="space-y-1.5">
+                      <div className="flex items-center justify-between text-[11px] text-zinc-400 font-mono">
+                        <span className="font-sans text-zinc-500">Progress</span>
+                        <span>
+                          {progressPct}% ({completedLinkedTasks.length}/{linkedTasks.length} tasks)
+                        </span>
                       </div>
-                      <div className="w-full h-1.5 rounded-full bg-zinc-800 overflow-hidden">
+                      <div className="w-full h-1.5 rounded-full bg-zinc-800/80 overflow-hidden">
                         <div
                           className="h-full bg-gradient-to-r from-[#d4af37] to-amber-300 transition-all duration-300"
                           style={{ width: `${progressPct}%` }}
                         />
                       </div>
                     </div>
-                  </div>
+                  </GlassCard>
                 );
               })}
             </div>
           ) : (
-            <div className="rounded-2xl border border-dashed border-zinc-800/80 bg-zinc-900/30 p-8 text-center backdrop-blur-sm">
-              <Target className="w-8 h-8 text-[#d4af37] mx-auto mb-2 opacity-80" />
-              <h3 className="text-sm font-semibold text-zinc-200">Start with what matters most.</h3>
-              <p className="text-xs text-zinc-500 mt-1">Define long-term objectives to ground your work.</p>
-              <Link
-                href="/app/goals"
-                className="mt-4 inline-flex items-center gap-2 rounded-xl bg-zinc-900 hover:bg-zinc-800 text-zinc-200 border border-zinc-800 px-3 py-1.5 text-xs font-medium transition-colors"
-              >
-                <Plus className="w-3.5 h-3.5 text-[#d4af37]" />
-                <span>Create Goal</span>
-              </Link>
-            </div>
+            <GlassCard variant="default" padding="lg" className="text-center py-8">
+              <Target className="w-7 h-7 text-[#d4af37]/70 mx-auto mb-2" />
+              <h3 className="text-sm font-semibold text-zinc-200">Start with what matters</h3>
+              <p className="text-xs text-zinc-500 mt-1">
+                Define long-term objectives to ground your daily commitments.
+              </p>
+              <div className="mt-4">
+                <Link href="/app/goals">
+                  <Button
+                    variant="secondary"
+                    size="sm"
+                    icon={<Plus className="w-3.5 h-3.5 text-[#d4af37]" />}
+                  >
+                    Create Goal
+                  </Button>
+                </Link>
+              </div>
+            </GlassCard>
           )}
         </div>
 
-        {/* Active Projects Section */}
+        {/* Active Projects Column */}
         <div className="space-y-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <FolderKanban className="w-5 h-5 text-[#d4af37]" />
-              <h2 className="text-lg font-bold tracking-tight text-zinc-100">Active Projects</h2>
+              <FolderKanban className="w-4 h-4 text-[#d4af37]" />
+              <h2 className="text-base sm:text-lg font-bold tracking-tight text-zinc-100">
+                Active Projects
+              </h2>
             </div>
             <Link
               href="/app/projects"
-              className="text-xs font-medium text-[#d4af37] hover:underline inline-flex items-center gap-1"
+              className="text-xs font-medium text-[#d4af37] hover:text-[#e5c158] transition-colors inline-flex items-center gap-1"
             >
               <span>Manage Projects</span>
               <ChevronRight className="w-3.5 h-3.5" />
@@ -380,14 +468,14 @@ export function OverviewView({
               {activeProjects.slice(0, 3).map((project) => {
                 const linkedTasks = tasksList.filter((t) => t.project_id === project.id);
                 const completedTasksCount = linkedTasks.filter((t) => t.status === 'completed').length;
-                const progressPct = linkedTasks.length > 0 ? Math.round((completedTasksCount / linkedTasks.length) * 100) : 0;
+                const progressPct =
+                  linkedTasks.length > 0
+                    ? Math.round((completedTasksCount / linkedTasks.length) * 100)
+                    : 0;
 
                 return (
-                  <div
-                    key={project.id}
-                    className="rounded-2xl border border-zinc-800/80 bg-zinc-900/60 p-4 backdrop-blur-sm space-y-3"
-                  >
-                    <div className="flex items-center justify-between">
+                  <GlassCard key={project.id} variant="default" padding="sm" className="space-y-3">
+                    <div className="flex items-center justify-between gap-2">
                       <div className="flex items-center gap-2">
                         {project.color_accent && (
                           <span
@@ -399,9 +487,9 @@ export function OverviewView({
                       </div>
 
                       {project.goals && (
-                        <span className="text-[10px] text-zinc-400 bg-zinc-800/80 px-2 py-0.5 rounded border border-zinc-700/50 truncate max-w-[120px]">
-                          {project.goals.title}
-                        </span>
+                        <Badge variant="neutral" size="sm">
+                          <span className="truncate max-w-[120px]">{project.goals.title}</span>
+                        </Badge>
                       )}
                     </div>
 
@@ -409,37 +497,53 @@ export function OverviewView({
                       <p className="text-xs text-zinc-400 line-clamp-1">{project.description}</p>
                     )}
 
-                    <div className="space-y-1">
-                      <div className="flex items-center justify-between text-[11px] text-zinc-400">
-                        <span>Project Execution</span>
-                        <span>{completedTasksCount}/{linkedTasks.length} tasks completed</span>
+                    <div className="space-y-1.5">
+                      <div className="flex items-center justify-between text-[11px] text-zinc-400 font-mono">
+                        <span className="font-sans text-zinc-500">Execution</span>
+                        <span>
+                          {progressPct}% ({completedTasksCount}/{linkedTasks.length} tasks)
+                        </span>
                       </div>
-                      <div className="w-full h-1.5 rounded-full bg-zinc-800 overflow-hidden">
+                      <div className="w-full h-1.5 rounded-full bg-zinc-800/80 overflow-hidden">
                         <div
                           className="h-full bg-gradient-to-r from-[#d4af37] to-amber-300 transition-all duration-300"
                           style={{ width: `${progressPct}%` }}
                         />
                       </div>
                     </div>
-                  </div>
+                  </GlassCard>
                 );
               })}
             </div>
           ) : (
-            <div className="rounded-2xl border border-dashed border-zinc-800/80 bg-zinc-900/30 p-8 text-center backdrop-blur-sm">
-              <FolderKanban className="w-8 h-8 text-[#d4af37] mx-auto mb-2 opacity-80" />
-              <h3 className="text-sm font-semibold text-zinc-200">Turn a goal into a body of work.</h3>
-              <p className="text-xs text-zinc-500 mt-1">Break down objectives into structured project streams.</p>
-              <Link
-                href="/app/projects"
-                className="mt-4 inline-flex items-center gap-2 rounded-xl bg-zinc-900 hover:bg-zinc-800 text-zinc-200 border border-zinc-800 px-3 py-1.5 text-xs font-medium transition-colors"
-              >
-                <Plus className="w-3.5 h-3.5 text-[#d4af37]" />
-                <span>Create Project</span>
-              </Link>
-            </div>
+            <GlassCard variant="default" padding="lg" className="text-center py-8">
+              <FolderKanban className="w-7 h-7 text-[#d4af37]/70 mx-auto mb-2" />
+              <h3 className="text-sm font-semibold text-zinc-200">
+                Turn a goal into a body of work
+              </h3>
+              <p className="text-xs text-zinc-500 mt-1">
+                Break down objectives into structured project streams.
+              </p>
+              <div className="mt-4">
+                <Link href="/app/projects">
+                  <Button
+                    variant="secondary"
+                    size="sm"
+                    icon={<Plus className="w-3.5 h-3.5 text-[#d4af37]" />}
+                  >
+                    Create Project
+                  </Button>
+                </Link>
+              </div>
+            </GlassCard>
           )}
         </div>
+      </div>
+
+      {/* Phase 4E Horizon Boundary */}
+      <div className="pt-4 border-t border-white/[0.06] flex items-center justify-between text-xs text-zinc-500">
+        <span className="font-medium text-zinc-400">Timeline Horizon</span>
+        <span className="text-[11px] text-zinc-600">Reserved for Phase 4E Timeline & Visualization</span>
       </div>
     </div>
   );
