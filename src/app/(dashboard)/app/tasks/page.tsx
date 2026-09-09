@@ -6,6 +6,8 @@ import { getProjects } from '@/features/projects/data-access';
 import { TasksView } from '@/features/tasks/components/tasks-view';
 import { getUserProfileInfo } from '@/lib/auth/profile';
 
+import { PageContainer } from '@/components/ui';
+
 export const metadata = {
   title: 'Tasks & Commitments | PACT OS',
   description: 'Manage your tasks and commitments tied to your goals and projects.',
@@ -31,14 +33,14 @@ export default async function TasksPage() {
   const projects = (projectsRes.data || []).map((p) => ({ id: p.id, title: p.title }));
 
   return (
-    <main className="max-w-6xl w-full mx-auto p-4 sm:p-8">
+    <PageContainer as="main">
       <TasksView
         initialTasks={tasks}
         availableGoals={goals}
         availableProjects={projects}
         timezone={timezone}
       />
-    </main>
+    </PageContainer>
   );
 }
 
