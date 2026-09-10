@@ -1,24 +1,34 @@
 # PACT — Personal Operating System
 
-> **Tagline Options**:
-> - *"A System for Keeping Promises to Yourself."*
-> - *"Turn Intent Into Discipline"*
+> **Tagline**: *"A System for Keeping Promises to Yourself."* / *"Turn Intent Into Discipline"*
 
 ---
 
 ## 📌 Overview
 
-**PACT** is a personal operating system designed to turn intentions into consistent action. PACT helps individuals define commitments, plan time, organize projects, track goals, analyze follow-through, manage personal finances, and maintain meaningful accountability.
+**PACT** is a production-hardened personal operating system designed to turn intentions into consistent action. PACT helps individuals define commitments, plan time, organize hierarchical projects, track high-level goals, analyze temporal follow-through, manage personal finances with budget discipline, synchronize with Google Calendar, objectively verify proof-of-work via external platforms (GitHub, LeetCode, Codeforces), and maintain unyielding personal accountability.
 
 ---
 
-## 🚀 Getting Started (Phase 1 Application Foundation)
+## 🚀 Getting Started
+
+### Prerequisites
+- Node.js 20+ (or Node 22+)
+- PostgreSQL 15+ / Supabase database instance
+
+### Installation & Local Setup
 
 ```bash
-# Install dependencies
+# 1. Install dependencies
 npm install
 
-# Run the development server
+# 2. Copy and configure environment variables
+cp .env.example .env.local
+
+# 3. Run database migrations (via Supabase CLI or SQL editor)
+# Apply migrations from supabase/migrations/
+
+# 4. Start development server
 npm run dev
 ```
 
@@ -26,9 +36,88 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to view th
 
 ---
 
-## 📁 V0 Foundation Documentation Baseline
+## 🧪 Testing & Verification
 
-This repository is built on the authoritative Phase 0 specification baseline within the [`docs/`](./docs/) directory:
+PACT features a comprehensive 28-suite test matrix covering domain logic, lifecycle state machines, RLS boundaries, integration resilience, financial math, and cron automation.
+
+```bash
+# Run full test runner (28 suites)
+node scratch/run-tests.mjs
+
+# Run TypeScript typecheck
+npx tsc --noEmit
+
+# Run ESLint
+npm run lint
+
+# Production build test
+npm run build
+
+# Zero-secret scan
+node scratch/secret-scan.mjs
+```
+
+---
+
+## 🏛️ Core Product Architecture
+
+```
+src/
+├── app/                              # Next.js 16 App Router pages & API handlers
+│   ├── (auth)/                       # Login, Register, Auth Callbacks
+│   ├── app/                          # Authenticated Core OS routes
+│   │   ├── accountability/           # Consequence & Commitment management
+│   │   ├── analytics/                # Completion rates, streaks, velocity
+│   │   ├── calendar/                 # Bi-directional Google Calendar sync & schedule
+│   │   ├── finance/                  # Integer-cents transactions, recurring, budgets
+│   │   ├── goals/                    # Strategic high-level objectives
+│   │   ├── onboarding/               # Multi-step personalized user onboarding
+│   │   ├── planner/                  # Day/Week/Month time-blocking planner
+│   │   ├── projects/                 # Scoped initiatives & deliverables
+│   │   ├── settings/                 # Profile, notification channels, data export
+│   │   └── tasks/                    # Task management & deadline tracking
+│   └── api/
+│       ├── cron/sweep-deadlines/     # Production cron sweeper (timing-safe Bearer auth)
+│       └── user/export/              # RFC 4180 ZIP/JSON/CSV account data export
+├── components/                       # Shared glassmorphic UI components
+├── features/                         # Feature-specific components and UI logic
+├── lib/                              # Core domain business logic and engines
+│   ├── accountability/               # State machines, resolution, penalty enforcement
+│   ├── analytics/                    # Pure deterministic metrics & scoring
+│   ├── finance/                      # Integer-cents arithmetic, recurrence, budgets
+│   ├── integrations/                 # Google Calendar, GitHub, LeetCode, Codeforces
+│   ├── notifications/                # Multi-channel alerts (In-App, Email, Webhook)
+│   ├── onboarding/                   # Onboarding state machine & profiles
+│   ├── export/                       # Data portability & secret sanitization
+│   └── supabase/                     # Server, client, and admin Supabase instances
+└── types/                            # Domain TypeScript contracts
+```
+
+---
+
+## ⚙️ Background Automation & Cron Scheduling
+
+PACT runs an autonomous, idempotent deadline sweeping engine that expires overdue tasks, transitions commitments, and activates confidential consequences.
+
+### Production Scheduling Methods:
+1. **Vercel Cron** (`vercel.json`): Configured to trigger `/api/cron/sweep-deadlines` every minute with timing-safe `CRON_SECRET` authorization.
+2. **Supabase `pg_cron`** (`20260911060000_production_hardening_and_cron_schedule.sql`): Runs automated task sweeping and background maintenance directly inside the database cluster.
+
+---
+
+## 🔒 Security Architecture
+
+1. **Strict Server-Side Boundaries**: User identities are derived strictly from verified JWT claims via `supabase.auth.getUser()`. Client-provided `user_id` fields in mutations are rejected.
+2. **Consequence Confidentiality**: Hidden consequence data is enforced at the database RLS boundary and scrubbed from client payloads before commitment resolution.
+3. **Data Portability & Secret Sanitization**: Data exports (`/api/user/export`) strip all OAuth tokens, refresh tokens, webhook signing secrets, and password hashes before archiving.
+4. **Integer-Cents Precision**: Financial balances, limits, and transactions are stored in integer cents (`amount_cents`, `limit_cents`) to prevent IEEE 754 floating-point errors.
+5. **Fail-Safe Integration Proofs**: External provider downtime or rate limits (GitHub, LeetCode, Codeforces, Google Calendar) never mark user commitments as failed.
+
+---
+
+## 📄 Documentation Baseline
+
+Comprehensive architectural specifications and phase completion reports are maintained in the [`docs/`](./docs/) directory:
 
 | Document | Purpose |
 |---|---|
@@ -43,16 +132,7 @@ This repository is built on the authoritative Phase 0 specification baseline wit
 | 🔌 [**Integrations**](./docs/INTEGRATIONS.md) | GitHub, Codeforces, and LeetCode connectors & token lifecycle |
 | 🧪 [**Testing Strategy**](./docs/TESTING.md) | Unit, integration, E2E, and mandatory security test contracts |
 | 🌿 [**Git Workflow**](./docs/GIT_WORKFLOW.md) | Conventional commits, secret prevention rules, gitignore standards |
-| 📝 [**Decision Record (ADR)**](./docs/DECISIONS.md) | Architectural decision log tracking status across all specs |
-
----
-
-## 🔒 Security Principles
-
-1. **Security-First Vertical Slices**: Schema -> RLS -> API -> Validation -> Tests -> UI.
-2. **Server-Side Authorization**: Never trust client-provided user IDs, timestamps, or status claims.
-3. **Consequence Confidentiality**: Hidden consequence data is protected at the database RLS boundary, not merely hidden in UI code.
-4. **Timezone Safety**: UTC storage with explicit user-timezone conversion on trusted server boundaries.
+| 📊 [**Phase 5G Report**](./docs/PHASE_5G_PRODUCTION_HARDENING_REPORT.md) | Production Hardening, Integration Reliability & Product Completion Report |
 
 ---
 
