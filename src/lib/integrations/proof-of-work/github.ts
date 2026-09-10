@@ -22,6 +22,45 @@ export interface GitHubPullRequestItem {
   repository?: string;
 }
 
+export interface GitHubDailyContribution {
+  date: string; // YYYY-MM-DD
+  count: number;
+  commitCount: number;
+  prCount: number;
+  level: 0 | 1 | 2 | 3 | 4; // 0 = 0, 1 = 1-2, 2 = 3-5, 3 = 6-9, 4 = 10+
+}
+
+export interface GitHubRecentActivity {
+  id: string;
+  type: 'commit' | 'pull_request';
+  title: string;
+  repository: string;
+  timestamp: string; // ISO 8601 UTC
+  url?: string;
+}
+
+export interface GitHubRepoContribution {
+  name: string;
+  commitCount: number;
+  prCount: number;
+  totalCount: number;
+}
+
+export interface GitHubActivitySummary {
+  username: string;
+  totalContributions: number;
+  last7DaysCount: number;
+  last30DaysCount: number;
+  currentStreak: number;
+  longestStreak: number;
+  totalCommits: number;
+  totalPRs: number;
+  dailyContributions: GitHubDailyContribution[];
+  topRepositories: GitHubRepoContribution[];
+  recentActivities: GitHubRecentActivity[];
+  syncedAt: string;
+}
+
 export interface GitHubAdapterResult<T> {
   success: boolean;
   data?: T;
@@ -278,6 +317,231 @@ export async function fetchGitHubPullRequests(
     return {
       success: false,
       error: err instanceof Error ? err.message : 'Failed to search GitHub pull requests.',
+    };
+  }
+}
+
+/**
+ * Fetches and aggregates complete GitHub activity summary for the specified user.
+ * Generates daily contribution counts, heatmap levels, streaks, repository breakdown, and recent activity.
+ */
+export async function fetchGitHubActivitySummary(
+  username: string,
+  token?: string | null,
+  daysBack: number = 365,
+  fetcherOverrides?: {
+    commits?: (user: string, token?: string | null) => Promise<GitHubAdapterResult<GitHubCommitItem[]>>;
+    pullRequests?: (user: string, sinceIso: string, token?: string | null) => Promise<GitHubAdapterResult<GitHubPullRequestItem[]>>;
+  }
+): Promise<GitHubAdapterResult<GitHubActivitySummary>> {
+  try {
+    const cleanUser = username.trim().replace(/^@/, '');
+    if (!cleanUser) {
+      return { success: false, error: 'GitHub username is required.' };
+    }
+
+    const now = new Date();
+    const startDate = new Date(now);
+    startDate.setUTCDate(startDate.getUTCDate() - daysBack);
+    const sinceIso = startDate.toISOString();
+
+    // 1. Fetch public/authenticated commits and PRs in parallel
+    const [commitsRes, prsRes] = await Promise.all([
+      fetcherOverrides?.commits
+        ? fetcherOverrides.commits(cleanUser, token)
+        : fetchGitHubPublicUserCommits(cleanUser, token),
+      fetcherOverrides?.pullRequests
+        ? fetcherOverrides.pullRequests(cleanUser, sinceIso, token)
+        : fetchGitHubPullRequests(cleanUser, sinceIso, undefined, undefined, token),
+    ]);
+
+    // If both failed with rate limits or unauth, return error
+    if (!commitsRes.success && commitsRes.isRateLimited) {
+      return {
+        success: false,
+        isRateLimited: true,
+        error: 'GitHub API rate limit exceeded. Activity will refresh shortly.',
+      };
+    }
+    if (!commitsRes.success && commitsRes.isNotFound) {
+      return {
+        success: false,
+        isNotFound: true,
+        error: `GitHub user @${cleanUser} was not found.`,
+      };
+    }
+
+    const commits = commitsRes.data || [];
+    const prs = prsRes.data || [];
+
+    // 2. Build complete daily calendar array from startDate to today
+    const dailyMap = new Map<string, { count: number; commitCount: number; prCount: number }>();
+    const d = new Date(startDate);
+    while (d <= now) {
+      const dateStr = d.toISOString().split('T')[0];
+      dailyMap.set(dateStr, { count: 0, commitCount: 0, prCount: 0 });
+      d.setUTCDate(d.getUTCDate() + 1);
+    }
+
+    // Ensure today's date is in the map
+    const todayStr = now.toISOString().split('T')[0];
+    if (!dailyMap.has(todayStr)) {
+      dailyMap.set(todayStr, { count: 0, commitCount: 0, prCount: 0 });
+    }
+
+    const repoMap = new Map<string, { commitCount: number; prCount: number; totalCount: number }>();
+    const recentActivities: GitHubRecentActivity[] = [];
+
+    // 3. Aggregate commits
+    for (const c of commits) {
+      const dateStr = c.authorDate.split('T')[0];
+      const entry = dailyMap.get(dateStr);
+      if (entry) {
+        entry.count += 1;
+        entry.commitCount += 1;
+      }
+
+      const repo = c.repository || 'Uncategorized';
+      const repoEntry = repoMap.get(repo) || { commitCount: 0, prCount: 0, totalCount: 0 };
+      repoEntry.commitCount += 1;
+      repoEntry.totalCount += 1;
+      repoMap.set(repo, repoEntry);
+
+      recentActivities.push({
+        id: `commit_${c.sha}`,
+        type: 'commit',
+        title: c.message,
+        repository: repo,
+        timestamp: c.authorDate,
+        url: `https://github.com/${repo}/commit/${c.sha}`,
+      });
+    }
+
+    // 4. Aggregate pull requests
+    for (const pr of prs) {
+      const dateStr = pr.createdAt.split('T')[0];
+      const entry = dailyMap.get(dateStr);
+      if (entry) {
+        entry.count += 1;
+        entry.prCount += 1;
+      }
+
+      const repo = pr.repository || 'Uncategorized';
+      const repoEntry = repoMap.get(repo) || { commitCount: 0, prCount: 0, totalCount: 0 };
+      repoEntry.prCount += 1;
+      repoEntry.totalCount += 1;
+      repoMap.set(repo, repoEntry);
+
+      recentActivities.push({
+        id: `pr_${pr.id || pr.number}`,
+        type: 'pull_request',
+        title: `#${pr.number}: ${pr.title}`,
+        repository: repo,
+        timestamp: pr.createdAt,
+        url: pr.htmlUrl,
+      });
+    }
+
+    // 5. Convert daily map to sorted contributions list and calculate levels
+    const dailyContributions: GitHubDailyContribution[] = Array.from(dailyMap.entries())
+      .sort((a, b) => a[0].localeCompare(b[0]))
+      .map(([date, stats]) => {
+        let level: 0 | 1 | 2 | 3 | 4 = 0;
+        if (stats.count >= 10) level = 4;
+        else if (stats.count >= 6) level = 3;
+        else if (stats.count >= 3) level = 2;
+        else if (stats.count >= 1) level = 1;
+
+        return {
+          date,
+          count: stats.count,
+          commitCount: stats.commitCount,
+          prCount: stats.prCount,
+          level,
+        };
+      });
+
+    // 6. Calculate 7-day, 30-day, total, and streak metrics
+    let totalContributions = 0;
+    let last7DaysCount = 0;
+    let last30DaysCount = 0;
+    const sevenDaysAgoStr = new Date(now.getTime() - 7 * 86400000).toISOString().split('T')[0];
+    const thirtyDaysAgoStr = new Date(now.getTime() - 30 * 86400000).toISOString().split('T')[0];
+
+    for (const day of dailyContributions) {
+      totalContributions += day.count;
+      if (day.date >= sevenDaysAgoStr) {
+        last7DaysCount += day.count;
+      }
+      if (day.date >= thirtyDaysAgoStr) {
+        last30DaysCount += day.count;
+      }
+    }
+
+    // Calculate streaks
+    let longestStreak = 0;
+    let runningStreak = 0;
+    for (const day of dailyContributions) {
+      if (day.count > 0) {
+        runningStreak += 1;
+        if (runningStreak > longestStreak) {
+          longestStreak = runningStreak;
+        }
+      } else {
+        runningStreak = 0;
+      }
+    }
+
+    // Current streak (evaluating from latest date backward)
+    let currentStreak = 0;
+    const reversedDays = [...dailyContributions].reverse();
+    // If today has activity, start from today; if today is 0 but yesterday had activity, start from yesterday
+    let startIndex = 0;
+    if (reversedDays.length > 0 && reversedDays[0].count === 0 && reversedDays.length > 1 && reversedDays[1].count > 0) {
+      startIndex = 1;
+    }
+
+    for (let i = startIndex; i < reversedDays.length; i++) {
+      if (reversedDays[i].count > 0) {
+        currentStreak += 1;
+      } else {
+        break;
+      }
+    }
+
+    // 7. Sort recent activities and top repositories
+    recentActivities.sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
+    const topRepositories: GitHubRepoContribution[] = Array.from(repoMap.entries())
+      .map(([name, stats]) => ({
+        name,
+        commitCount: stats.commitCount,
+        prCount: stats.prCount,
+        totalCount: stats.totalCount,
+      }))
+      .sort((a, b) => b.totalCount - a.totalCount)
+      .slice(0, 8);
+
+    return {
+      success: true,
+      data: {
+        username: cleanUser,
+        totalContributions,
+        last7DaysCount,
+        last30DaysCount,
+        currentStreak,
+        longestStreak,
+        totalCommits: commits.length,
+        totalPRs: prs.length,
+        dailyContributions,
+        topRepositories,
+        recentActivities: recentActivities.slice(0, 15),
+        syncedAt: now.toISOString(),
+      },
+    };
+  } catch (err: unknown) {
+    return {
+      success: false,
+      error: err instanceof Error ? err.message : 'Failed to compile GitHub activity summary.',
     };
   }
 }

@@ -4,6 +4,7 @@ import { getUserProfileInfo } from '@/lib/auth/profile';
 import { getLocalDateString } from '@/lib/time';
 import { getAnalyticsOverview } from '@/features/analytics/data-access';
 import { AnalyticsWorkspace } from '@/features/analytics';
+import { getGitHubActivitySummaryAction } from '@/features/integrations';
 import { PageContainer } from '@/components/ui';
 
 export const metadata = {
@@ -24,7 +25,12 @@ export default async function AnalyticsPage() {
   const { timezone } = await getUserProfileInfo(supabase, user.id, user.user_metadata);
   const todayStr = getLocalDateString(new Date(), timezone);
 
-  const { data: initialOverview } = await getAnalyticsOverview('week', todayStr, timezone);
+  const [overviewRes, gitHubRes] = await Promise.all([
+    getAnalyticsOverview('week', todayStr, timezone),
+    getGitHubActivitySummaryAction(false),
+  ]);
+
+  const initialOverview = overviewRes.data;
 
   const fallbackData = {
     timeRange: 'week' as const,
@@ -61,6 +67,7 @@ export default async function AnalyticsPage() {
       <AnalyticsWorkspace
         initialData={initialOverview || fallbackData}
         userTimeZone={timezone}
+        initialGitHubActivity={gitHubRes}
       />
     </PageContainer>
   );

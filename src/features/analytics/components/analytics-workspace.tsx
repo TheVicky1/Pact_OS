@@ -13,15 +13,21 @@ import { GoalProgressCard } from './goal-progress-card';
 import { ProjectProgressCard } from './project-progress-card';
 import { AccountabilityOutcomesCard } from './accountability-outcomes-card';
 import { FactualInsightsCard } from './factual-insights-card';
+import {
+  GitHubProofOfWorkCard,
+  GitHubActivityActionResult,
+} from '@/features/integrations';
 
 interface AnalyticsWorkspaceProps {
   initialData: AnalyticsOverviewData;
   userTimeZone: string;
+  initialGitHubActivity?: GitHubActivityActionResult | null;
 }
 
 export function AnalyticsWorkspace({
   initialData,
   userTimeZone,
+  initialGitHubActivity,
 }: AnalyticsWorkspaceProps) {
   const [data, setData] = useState<AnalyticsOverviewData>(initialData);
   const [isPending, startTransition] = useTransition();
@@ -116,7 +122,15 @@ export function AnalyticsWorkspace({
         <ProjectProgressCard projects={data.projectsProgress} />
       </div>
 
-      {/* 5. Bottom Section: Accountability Resolutions & Factual Observations */}
+      {/* 5. External Proof of Work: GitHub Activity & Contribution Heatmap */}
+      <GitHubProofOfWorkCard
+        initialSummary={initialGitHubActivity?.data}
+        isConnected={initialGitHubActivity?.isConnected ?? false}
+        username={initialGitHubActivity?.username}
+        verifiedProofsCount={initialGitHubActivity?.verifiedProofsCount ?? 0}
+      />
+
+      {/* 6. Bottom Section: Accountability Resolutions & Factual Observations */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <AccountabilityOutcomesCard aggregates={data.accountabilityAggregates} />
         <FactualInsightsCard observations={data.factualObservations} />
