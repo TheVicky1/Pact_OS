@@ -4,8 +4,8 @@
  */
 
 import { SupabaseClient } from '@supabase/supabase-js';
-import { Clock, defaultClock, isDeadlineReached } from '@/lib/time';
-import { TaskStatus, CommitmentStatus } from '@/types/domain';
+import { Clock, defaultClock, isDeadlineReached } from '../time';
+import { TaskStatus, CommitmentStatus } from '../../types/domain';
 
 export interface SweeperCandidateTask {
   id: string;
