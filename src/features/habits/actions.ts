@@ -405,7 +405,7 @@ export async function completeHabitOccurrenceAction(
               type: 'system',
               title: `🔥 Streak Milestone: ${streak.currentStreak} Days!`,
               body: `Incredible discipline! You achieved a ${streak.currentStreak}-day streak on "${template.name}".`,
-              actionUrl: '/app/habits',
+              actionUrl: '/app',
               idempotencyKey: `habit_streak_${template.id}_${streak.currentStreak}`,
             });
           }

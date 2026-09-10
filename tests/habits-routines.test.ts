@@ -374,22 +374,17 @@ describe('PACT Phase 6C: Habits & Daily Routines Engine Suite', () => {
   });
 
   // =========================================================================
-  // 5. COMMAND CENTER REGISTRY INTEGRATION
+  // 5. COMMAND CENTER REGISTRY INTEGRATION (REMOVAL AUDIT)
   // =========================================================================
   describe('5. Command Center Registry Integration', () => {
-    it('5.1 Command center contains habit quick action with shortcut C H', () => {
+    it('5.1 Command center does not expose removed habits quick action', () => {
       const action = STATIC_QUICK_ACTIONS.find((c) => c.id === 'action-create-habit');
-      assert.ok(action);
-      assert.equal(action.shortcut, 'C H');
-      assert.equal(action.href, '/app/habits');
-      assert.equal(action.iconName, 'Repeat');
+      assert.equal(action, undefined);
     });
 
-    it('5.2 Command center contains navigation command for habits and routines', () => {
+    it('5.2 Command center does not expose removed habits navigation command', () => {
       const nav = STATIC_NAVIGATION_COMMANDS.find((c) => c.id === 'nav-habits');
-      assert.ok(nav);
-      assert.equal(nav.href, '/app/habits');
-      assert.equal(nav.iconName, 'Repeat');
+      assert.equal(nav, undefined);
     });
   });
 
