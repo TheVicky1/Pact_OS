@@ -23,12 +23,16 @@ export default async function ProtectedAppPage() {
     redirect('/login');
   }
 
-  const [{ fullName, timezone }, { data: goals }, { data: projects }, { data: tasks }] = await Promise.all([
+  const [{ fullName, timezone, onboardingStatus }, { data: goals }, { data: projects }, { data: tasks }] = await Promise.all([
     getUserProfileInfo(supabase, user.id, user.user_metadata),
     getGoals(),
     getProjects(),
     getTasks(),
   ]);
+
+  if (onboardingStatus && onboardingStatus !== 'completed') {
+    redirect('/app/onboarding');
+  }
 
   const { getActivatedCommitments, getWeeklyWaiverUsage } = await import('@/features/accountability/data-access');
   const [activatedCommitments, waiverUsage] = await Promise.all([
