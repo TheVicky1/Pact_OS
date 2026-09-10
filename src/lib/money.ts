@@ -89,6 +89,11 @@ export function parseAmountToCents(input: string | number): {
     return { cents: null, error: 'Amount is required.' };
   }
 
+  // Reject negative input strings
+  if (input.includes('-')) {
+    return { cents: null, error: 'Amount must be a positive number.' };
+  }
+
   // Strip currency symbols and whitespace
   const sanitized = input.replace(/[^0-9.,]/g, '').trim();
   if (!sanitized) {
