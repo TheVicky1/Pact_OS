@@ -8,9 +8,7 @@ import {
   Flame,
   Trophy,
   RefreshCw,
-  ExternalLink,
   ShieldCheck,
-  FolderGit2,
   Calendar,
   AlertCircle,
 } from 'lucide-react';
@@ -125,8 +123,6 @@ export function GitHubProofOfWorkCard({
     );
   }
 
-  const maxRepoCount = summary?.topRepositories?.[0]?.totalCount || 1;
-
   return (
     <div className="rounded-xl border border-zinc-800 bg-[#121217]/80 backdrop-blur-md p-6 shadow-lg shadow-black/40 space-y-6">
       {/* 1. Header with Account Details and Live Refresh */}
@@ -162,7 +158,7 @@ export function GitHubProofOfWorkCard({
             type="button"
             onClick={handleRefresh}
             disabled={isPending}
-            className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-lg bg-zinc-900 border border-zinc-800 text-zinc-300 hover:text-white hover:border-zinc-700 disabled:opacity-50 transition-colors"
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-lg bg-zinc-900 border border-zinc-800 text-zinc-300 hover:text-white hover:border-zinc-700 disabled:opacity-50 transition-colors cursor-pointer"
             title="Refresh GitHub activity"
           >
             <RefreshCw className={`w-3.5 h-3.5 ${isPending ? 'animate-spin text-amber-400' : ''}`} />
@@ -270,139 +266,7 @@ export function GitHubProofOfWorkCard({
         <GitHubContributionHeatmap
           dailyContributions={summary?.dailyContributions || []}
           username={username || summary?.username}
-          totalContributions={summary?.totalContributions}
         />
-      </div>
-
-      {/* 4. Lower Two-Column Section: Top Repositories & Recent Activity */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 pt-2">
-        {/* Top Repositories */}
-        <div className="space-y-3">
-          <div className="flex items-center justify-between">
-            <h4 className="text-xs font-semibold text-zinc-200 uppercase tracking-wider flex items-center gap-1.5">
-              <FolderGit2 className="w-3.5 h-3.5 text-amber-400" />
-              Active Repositories
-            </h4>
-            <span className="text-[11px] text-zinc-500">
-              {summary?.topRepositories?.length || 0} active
-            </span>
-          </div>
-
-          <div className="space-y-2">
-            {!summary || summary.topRepositories.length === 0 ? (
-              <div className="p-4 rounded-lg bg-zinc-900/40 border border-zinc-800 text-center text-xs text-zinc-500">
-                No recent repository activity found.
-              </div>
-            ) : (
-              summary.topRepositories.map((repo) => {
-                const percentage = Math.round((repo.totalCount / maxRepoCount) * 100);
-                return (
-                  <div
-                    key={repo.name}
-                    className="p-3 rounded-lg bg-zinc-900/60 border border-zinc-800/80 hover:border-zinc-700/80 transition-colors space-y-2"
-                  >
-                    <div className="flex items-center justify-between text-xs">
-                      <a
-                        href={`https://github.com/${repo.name}`}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="font-mono text-zinc-200 hover:text-amber-400 transition-colors flex items-center gap-1 truncate max-w-[260px]"
-                      >
-                        <span className="truncate">{repo.name}</span>
-                        <ExternalLink className="w-3 h-3 shrink-0 text-zinc-500" />
-                      </a>
-                      <span className="text-zinc-400 font-medium shrink-0">
-                        {repo.totalCount} {repo.totalCount === 1 ? 'event' : 'events'}
-                      </span>
-                    </div>
-
-                    {/* Proportional Activity Bar */}
-                    <div className="w-full h-1.5 rounded-full bg-zinc-800 overflow-hidden">
-                      <div
-                        className="h-full rounded-full bg-gradient-to-r from-amber-600 to-amber-400 transition-all duration-300"
-                        style={{ width: `${Math.max(percentage, 8)}%` }}
-                      />
-                    </div>
-
-                    <div className="flex items-center justify-between text-[10px] text-zinc-500">
-                      <span>{repo.commitCount} commits</span>
-                      <span>{repo.prCount} PRs</span>
-                    </div>
-                  </div>
-                );
-              })
-            )}
-          </div>
-        </div>
-
-        {/* Recent Activity Feed */}
-        <div className="space-y-3">
-          <div className="flex items-center justify-between">
-            <h4 className="text-xs font-semibold text-zinc-200 uppercase tracking-wider flex items-center gap-1.5">
-              <GitCommit className="w-3.5 h-3.5 text-amber-400" />
-              Recent Verified Activity
-            </h4>
-            <span className="text-[11px] text-zinc-500">
-              Latest {summary?.recentActivities?.length || 0} events
-            </span>
-          </div>
-
-          <div className="space-y-2 max-h-[380px] overflow-y-auto pr-1 scrollbar-thin scrollbar-thumb-zinc-800">
-            {!summary || summary.recentActivities.length === 0 ? (
-              <div className="p-4 rounded-lg bg-zinc-900/40 border border-zinc-800 text-center text-xs text-zinc-500">
-                No recent commits or pull requests found.
-              </div>
-            ) : (
-              summary.recentActivities.map((act) => {
-                const isCommit = act.type === 'commit';
-                return (
-                  <div
-                    key={act.id}
-                    className="p-3 rounded-lg bg-zinc-900/60 border border-zinc-800/80 hover:border-zinc-700/80 transition-colors flex items-start justify-between gap-3"
-                  >
-                    <div className="flex items-start gap-2.5 min-w-0">
-                      <div
-                        className={`p-1.5 rounded mt-0.5 shrink-0 ${
-                          isCommit
-                            ? 'bg-amber-500/10 text-amber-400 border border-amber-500/20'
-                            : 'bg-indigo-500/10 text-indigo-400 border border-indigo-500/20'
-                        }`}
-                      >
-                        {isCommit ? (
-                          <GitCommit className="w-3.5 h-3.5" />
-                        ) : (
-                          <GitPullRequest className="w-3.5 h-3.5" />
-                        )}
-                      </div>
-                      <div className="min-w-0 space-y-0.5">
-                        <div className="text-xs font-medium text-zinc-200 line-clamp-1">
-                          {act.title}
-                        </div>
-                        <div className="text-[11px] text-zinc-400 flex items-center gap-2 truncate">
-                          <span className="font-mono text-zinc-400 truncate">{act.repository}</span>
-                          <span className="text-zinc-600">•</span>
-                          <span className="text-zinc-500 shrink-0">{formatRelativeTime(act.timestamp)}</span>
-                        </div>
-                      </div>
-                    </div>
-
-                    {act.url && (
-                      <a
-                        href={act.url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="p-1 text-zinc-500 hover:text-amber-400 transition-colors shrink-0"
-                        title="View on GitHub"
-                      >
-                        <ExternalLink className="w-3.5 h-3.5" />
-                      </a>
-                    )}
-                  </div>
-                );
-              })
-            )}
-          </div>
-        </div>
       </div>
     </div>
   );

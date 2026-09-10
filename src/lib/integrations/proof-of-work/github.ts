@@ -252,6 +252,68 @@ export async function fetchGitHubPublicUserCommits(
 }
 
 /**
+ * Searches commits authored by a user within a time window across repositories.
+ */
+export async function fetchGitHubSearchCommits(
+  author: string,
+  sinceIso?: string,
+  untilIso?: string,
+  token?: string | null
+): Promise<GitHubAdapterResult<GitHubCommitItem[]>> {
+  try {
+    const cleanAuthor = author.trim().replace(/^@/, '');
+    let query = `author:${cleanAuthor}`;
+    if (sinceIso && untilIso) {
+      query += ` author-date:${sinceIso.split('T')[0]}..${untilIso.split('T')[0]}`;
+    } else if (sinceIso) {
+      query += ` author-date:>=${sinceIso.split('T')[0]}`;
+    }
+
+    const url = `${GITHUB_API_BASE}/search/commits?q=${encodeURIComponent(query)}&sort=author-date&order=desc&per_page=100`;
+    const res = await fetch(url, {
+      headers: {
+        ...buildHeaders(token),
+        Accept: 'application/vnd.github.cloak-preview+json, application/vnd.github.v3+json',
+      },
+    });
+
+    if (res.status === 403 || res.status === 429) {
+      return { success: false, isRateLimited: true, error: 'GitHub rate limit exceeded.' };
+    }
+    if (!res.ok) {
+      return { success: false, error: `GitHub Search error: HTTP ${res.status}` };
+    }
+
+    const data = (await res.json()) as {
+      items?: Array<{
+        sha: string;
+        commit: {
+          author: { name: string; date: string };
+          message: string;
+        };
+        author?: { login: string } | null;
+        repository?: { full_name: string };
+      }>;
+    };
+
+    const items: GitHubCommitItem[] = (data.items || []).map((c) => ({
+      sha: c.sha,
+      authorLogin: c.author?.login || cleanAuthor,
+      authorDate: c.commit.author.date,
+      message: c.commit.message?.split('\n')[0] || '(No message)',
+      repository: c.repository?.full_name,
+    }));
+
+    return { success: true, data: items };
+  } catch (err: unknown) {
+    return {
+      success: false,
+      error: err instanceof Error ? err.message : 'Failed to search GitHub commits.',
+    };
+  }
+}
+
+/**
  * Fetches pull requests created by author.
  */
 export async function fetchGitHubPullRequests(
@@ -346,33 +408,38 @@ export async function fetchGitHubActivitySummary(
     const sinceIso = startDate.toISOString();
 
     // 1. Fetch public/authenticated commits and PRs in parallel
-    const [commitsRes, prsRes] = await Promise.all([
-      fetcherOverrides?.commits
-        ? fetcherOverrides.commits(cleanUser, token)
-        : fetchGitHubPublicUserCommits(cleanUser, token),
-      fetcherOverrides?.pullRequests
-        ? fetcherOverrides.pullRequests(cleanUser, sinceIso, token)
-        : fetchGitHubPullRequests(cleanUser, sinceIso, undefined, undefined, token),
-    ]);
+    let rawCommits: GitHubCommitItem[] = [];
+    let prs: GitHubPullRequestItem[] = [];
 
-    // If both failed with rate limits or unauth, return error
-    if (!commitsRes.success && commitsRes.isRateLimited) {
-      return {
-        success: false,
-        isRateLimited: true,
-        error: 'GitHub API rate limit exceeded. Activity will refresh shortly.',
-      };
-    }
-    if (!commitsRes.success && commitsRes.isNotFound) {
-      return {
-        success: false,
-        isNotFound: true,
-        error: `GitHub user @${cleanUser} was not found.`,
-      };
+    if (fetcherOverrides?.commits) {
+      const cRes = await fetcherOverrides.commits(cleanUser, token);
+      if (cRes.success && cRes.data) rawCommits = cRes.data;
+    } else {
+      const [eventsRes, searchRes] = await Promise.all([
+        fetchGitHubPublicUserCommits(cleanUser, token),
+        fetchGitHubSearchCommits(cleanUser, sinceIso, undefined, token),
+      ]);
+      const eventCommits = eventsRes.success && eventsRes.data ? eventsRes.data : [];
+      const searchCommits = searchRes.success && searchRes.data ? searchRes.data : [];
+
+      const commitMap = new Map<string, GitHubCommitItem>();
+      for (const c of [...eventCommits, ...searchCommits]) {
+        if (c.sha && !commitMap.has(c.sha)) {
+          commitMap.set(c.sha, c);
+        }
+      }
+      rawCommits = Array.from(commitMap.values());
     }
 
-    const commits = commitsRes.data || [];
-    const prs = prsRes.data || [];
+    if (fetcherOverrides?.pullRequests) {
+      const pRes = await fetcherOverrides.pullRequests(cleanUser, sinceIso, token);
+      if (pRes.success && pRes.data) prs = pRes.data;
+    } else {
+      const pRes = await fetchGitHubPullRequests(cleanUser, sinceIso, undefined, undefined, token);
+      if (pRes.success && pRes.data) prs = pRes.data;
+    }
+
+    const commits = rawCommits;
 
     // 2. Build complete daily calendar array from startDate to today
     const dailyMap = new Map<string, { count: number; commitCount: number; prCount: number }>();
