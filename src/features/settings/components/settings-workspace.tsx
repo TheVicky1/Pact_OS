@@ -8,6 +8,7 @@ import { AccountabilitySettingsCard } from './accountability-settings-card';
 import { SecuritySettingsCard } from './security-settings-card';
 import { IntegrationsSettingsCard } from './integrations-settings-card';
 import { NotificationSettingsCard } from './notification-settings-card';
+import { DataPrivacySettingsCard } from './data-privacy-settings-card';
 import { Settings } from 'lucide-react';
 
 export interface SettingsWorkspaceProps {
@@ -31,7 +32,7 @@ export function SettingsWorkspace({ initialData }: SettingsWorkspaceProps) {
                 Settings & Preferences
               </h1>
               <p className="text-xs sm:text-sm text-zinc-400 mt-0.5">
-                Manage your profile, authoritative IANA timezone, accountability rules, and integrations.
+                Manage your profile, authoritative IANA timezone, accountability rules, integrations, and data portability.
               </p>
             </div>
           </div>
@@ -79,8 +80,13 @@ export function SettingsWorkspace({ initialData }: SettingsWorkspaceProps) {
               notifications={initialData.notifications}
             />
           )}
+
+          {activeTab === 'data' && (
+            <DataPrivacySettingsCard />
+          )}
         </div>
       </div>
     </div>
   );
 }
+
