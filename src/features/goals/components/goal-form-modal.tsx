@@ -29,16 +29,20 @@ function isoToDateInput(iso: string | null | undefined): string {
 export function GoalFormModal({ isOpen, onClose, goalToEdit }: GoalFormModalProps) {
   const isEditing = Boolean(goalToEdit);
 
-  const [title, setTitle] = useState('');
-  const [description, setDescription] = useState('');
-  const [targetDate, setTargetDate] = useState('');
-  const [status, setStatus] = useState<GoalStatus>('active');
+  const [title, setTitle] = useState(goalToEdit?.title ?? '');
+  const [description, setDescription] = useState(goalToEdit?.description ?? '');
+  const [targetDate, setTargetDate] = useState(isoToDateInput(goalToEdit?.target_date));
+  const [status, setStatus] = useState<GoalStatus>(goalToEdit?.status ?? 'active');
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
   const [isPending, startTransition] = useTransition();
 
-  // Reset all fields whenever the modal opens (or switches between create/edit)
-  useEffect(() => {
+  // Reset fields on open or when switching between create/edit without remounting.
+  // Uses render-phase guard to avoid setState-in-effect lint violation.
+  const [prevOpenKey, setPrevOpenKey] = useState<string>(`${isOpen}:${goalToEdit?.id ?? ''}`);
+  const currentOpenKey = `${isOpen}:${goalToEdit?.id ?? ''}`;
+  if (currentOpenKey !== prevOpenKey) {
+    setPrevOpenKey(currentOpenKey);
     if (isOpen) {
       setTitle(goalToEdit?.title ?? '');
       setDescription(goalToEdit?.description ?? '');
@@ -46,7 +50,7 @@ export function GoalFormModal({ isOpen, onClose, goalToEdit }: GoalFormModalProp
       setStatus(goalToEdit?.status ?? 'active');
       setErrorMsg(null);
     }
-  }, [isOpen, goalToEdit]);
+  }
 
   // Close on ESC
   useEffect(() => {
