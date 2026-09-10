@@ -38,10 +38,10 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to view th
 
 ## 🧪 Testing & Verification
 
-PACT features a comprehensive 28-suite test matrix covering domain logic, lifecycle state machines, RLS boundaries, integration resilience, financial math, and cron automation.
+PACT features a comprehensive 30-suite test matrix covering domain logic, focus timer engine, command center search, lifecycle state machines, RLS boundaries, integration resilience, financial math, and cron automation.
 
 ```bash
-# Run full test runner (28 suites)
+# Run full test runner (30 suites)
 node scratch/run-tests.mjs
 
 # Run TypeScript typecheck
@@ -70,6 +70,7 @@ src/
 │   │   ├── analytics/                # Completion rates, streaks, velocity
 │   │   ├── calendar/                 # Bi-directional Google Calendar sync & schedule
 │   │   ├── finance/                  # Integer-cents transactions, recurring, budgets
+│   │   ├── focus/                    # Deep work sessions, timer engine, focus stats
 │   │   ├── goals/                    # Strategic high-level objectives
 │   │   ├── onboarding/               # Multi-step personalized user onboarding
 │   │   ├── planner/                  # Day/Week/Month time-blocking planner
@@ -81,10 +82,14 @@ src/
 │       └── user/export/              # RFC 4180 ZIP/JSON/CSV account data export
 ├── components/                       # Shared glassmorphic UI components
 ├── features/                         # Feature-specific components and UI logic
+│   ├── command-center/               # Global Cmd+K palette & universal search
+│   ├── focus/                        # Focus timer display, setup & history
 ├── lib/                              # Core domain business logic and engines
 │   ├── accountability/               # State machines, resolution, penalty enforcement
 │   ├── analytics/                    # Pure deterministic metrics & scoring
+│   ├── command-center/               # Registry, fuzzy ranking & entity search
 │   ├── finance/                      # Integer-cents arithmetic, recurrence, budgets
+│   ├── focus/                        # Timestamp arithmetic, sound synthesis, metrics
 │   ├── integrations/                 # Google Calendar, GitHub, LeetCode, Codeforces
 │   ├── notifications/                # Multi-channel alerts (In-App, Email, Webhook)
 │   ├── onboarding/                   # Onboarding state machine & profiles
@@ -133,6 +138,8 @@ Comprehensive architectural specifications and phase completion reports are main
 | 🧪 [**Testing Strategy**](./docs/TESTING.md) | Unit, integration, E2E, and mandatory security test contracts |
 | 🌿 [**Git Workflow**](./docs/GIT_WORKFLOW.md) | Conventional commits, secret prevention rules, gitignore standards |
 | 📊 [**Phase 5G Report**](./docs/PHASE_5G_PRODUCTION_HARDENING_REPORT.md) | Production Hardening, Integration Reliability & Product Completion Report |
+| ⚡ [**Phase 6A Report**](./docs/PHASE_6A_COMMAND_CENTER_REPORT.md) | Global Command Center (Cmd+K) & Universal Quick Capture Verification Report |
+| ⏱️ [**Phase 6B Report**](./docs/PHASE_6B_FOCUS_TIMER_REPORT.md) | Focus Timer & Deep Work Session Engine Verification Report |
 
 ---
 
