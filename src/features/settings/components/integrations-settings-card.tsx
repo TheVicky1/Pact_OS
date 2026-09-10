@@ -17,7 +17,6 @@ import {
   RefreshCw,
   AlertCircle,
   Unlink,
-  Loader2,
 } from 'lucide-react';
 import {
   getGoogleCalendarStatusAction,
@@ -62,8 +61,22 @@ export function IntegrationsSettingsCard({
   }, []);
 
   useEffect(() => {
-    fetchGoogleStatus();
-  }, [fetchGoogleStatus]);
+    let isMounted = true;
+    void (async () => {
+      try {
+        const res = await getGoogleCalendarStatusAction();
+        if (isMounted && res.success && res.data) {
+          setGoogleCalStatus(res.data);
+        }
+      } catch {
+        // Ignored
+      }
+    })();
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
 
   const handleConnectGoogleCalendar = async () => {
     try {
