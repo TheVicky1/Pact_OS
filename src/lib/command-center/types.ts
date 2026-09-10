@@ -27,6 +27,7 @@ export interface CommandItem {
     | 'create_project'
     | 'log_expense'
     | 'log_income'
+    | 'start_focus'
     | 'navigate';
   metadata?: Record<string, unknown>;
 }

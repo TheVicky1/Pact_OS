@@ -19,6 +19,7 @@ import {
   User,
   ShieldAlert,
   Calendar as CalendarIcon,
+  Timer as TimerIcon,
   Wallet,
   TrendingUp,
   Settings as SettingsIcon,
@@ -50,6 +51,7 @@ export function AppHeader({ userName }: AppHeaderProps) {
   const [unreadCount, setUnreadCount] = useState<number>(0);
 
   const isDashboardActive = pathname === '/app';
+  const isFocusActive = pathname === '/app/focus' || pathname.startsWith('/app/focus/');
   const isGoalsActive = pathname === '/app/goals' || pathname.startsWith('/app/goals/');
   const isProjectsActive = pathname === '/app/projects' || pathname.startsWith('/app/projects/');
   const isTasksActive = pathname === '/app/tasks' || pathname.startsWith('/app/tasks/');
@@ -68,6 +70,12 @@ export function AppHeader({ userName }: AppHeaderProps) {
       label: 'Overview',
       icon: LayoutDashboard,
       isActive: isDashboardActive,
+    },
+    {
+      href: '/app/focus',
+      label: 'Focus',
+      icon: TimerIcon,
+      isActive: isFocusActive,
     },
     {
       href: '/app/planner',
