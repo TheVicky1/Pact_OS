@@ -181,7 +181,7 @@ Execute this manual smoke test immediately after deployment:
 | **8** | Accountability Commitment | Assign consequence definition to task; remains confidential | Snapshot leaked before activation |
 | **9** | Notification Drawer | Notification bell indicates unread count; drawer opens | Drawer empty or count desynced |
 | **10** | Global Command Center | `Cmd+K` opens palette, search queries results, `Esc` closes | Palette unresponsive, cross-tenant results |
-| **11** | Day/Week Planner | Calendar time-blocks render correctly in `/app/planner` | Overlapping blocks, wrong date bounds |
+| **11** | Daily Calendar Planning | Calendar time-blocks render & create directly in Daily Calendar on `/app` | Overlapping blocks, modal failure |
 | **12** | Finance Transaction | Integer-cents transaction recorded in `/app/finance` | Floating-point rounding error, decimal drift |
 | **13** | Recurring Transaction | Recurring rule saved, next occurrence calculated | Next occurrence missing or invalid date |
 | **14** | Budget Tracking | Category budget progress bar displays accurate % | Division by zero error on 0 target |

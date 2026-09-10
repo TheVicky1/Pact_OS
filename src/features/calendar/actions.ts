@@ -148,8 +148,6 @@ export async function createCalendarEventAction(
     }
 
     revalidatePath('/app');
-    revalidatePath('/app/calendar');
-    revalidatePath('/app/planner');
     return { success: true, data: newEvent as CalendarEvent };
   } catch (err: unknown) {
     const msg = err instanceof Error ? err.message : 'Unexpected error.';
@@ -238,8 +236,6 @@ export async function updateCalendarEventAction(
     }
 
     revalidatePath('/app');
-    revalidatePath('/app/calendar');
-    revalidatePath('/app/planner');
     return { success: true, data: updatedEvent as CalendarEvent };
   } catch (err: unknown) {
     const msg = err instanceof Error ? err.message : 'Unexpected error.';
@@ -310,8 +306,6 @@ export async function deleteCalendarEventAction(
     }
 
     revalidatePath('/app');
-    revalidatePath('/app/calendar');
-    revalidatePath('/app/planner');
     return { success: true, data: null };
   } catch (err: unknown) {
     const msg = err instanceof Error ? err.message : 'Unexpected error.';

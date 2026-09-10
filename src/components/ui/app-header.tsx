@@ -18,7 +18,6 @@ import {
   X,
   User,
   ShieldAlert,
-  Calendar as CalendarIcon,
   Timer as TimerIcon,
   Wallet,
   TrendingUp,
@@ -60,11 +59,6 @@ export function AppHeader({ userName }: AppHeaderProps) {
   const isAccountabilityActive = pathname === '/app/accountability' || pathname.startsWith('/app/accountability/');
   const isFinanceActive = pathname === '/app/finance' || pathname.startsWith('/app/finance/');
   const isAnalyticsActive = pathname === '/app/analytics' || pathname.startsWith('/app/analytics/');
-  const isCalendarActive =
-    pathname === '/app/calendar' ||
-    pathname.startsWith('/app/calendar/') ||
-    pathname === '/app/planner' ||
-    pathname.startsWith('/app/planner/');
 
   const navItems: NavItem[] = [
     {
@@ -84,12 +78,6 @@ export function AppHeader({ userName }: AppHeaderProps) {
       label: 'Focus',
       icon: TimerIcon,
       isActive: isFocusActive,
-    },
-    {
-      href: '/app/planner',
-      label: 'Planner',
-      icon: CalendarIcon,
-      isActive: isCalendarActive,
     },
     {
       href: '/app/goals',

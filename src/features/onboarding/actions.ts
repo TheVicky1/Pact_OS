@@ -223,7 +223,6 @@ export async function completeOnboardingAction(
   revalidatePath('/app');
   revalidatePath('/app/onboarding');
   revalidatePath('/app/settings');
-  revalidatePath('/app/planner');
   revalidatePath('/app/tasks');
 
   return {

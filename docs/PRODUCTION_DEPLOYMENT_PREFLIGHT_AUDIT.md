@@ -166,12 +166,12 @@ All migrations in `supabase/migrations/` are non-destructive, strictly additive,
 | 3 | Onboarding | Complete 3-step onboarding wizard | Profile preferences saved; advances to dashboard | Pending | Check browser console & `profiles` table update |
 | 4 | Goals | Create goal with target date | Goal card appears in `/app/goals` | Pending | Check RLS policy on `goals` table |
 | 5 | Projects | Create project linked to goal | Project appears with 0% progress | Pending | Verify `goal_id` foreign key relation |
-| 6 | Tasks | Create task with deadline | Task appears in `/app/tasks` and Planner | Pending | Check `tasks` table insert |
+| 6 | Tasks | Create task with deadline | Task appears in `/app/tasks` and Overview | Pending | Check `tasks` table insert |
 | 7 | Tasks | Toggle task to `completed` | Progress bar updates; task marked completed | Pending | Check task state transition action |
 | 8 | Accountability | Link emergency contact / partner | Contact linked to accountability commitment | Pending | Check RLS on `accountability_commitments` |
 | 9 | Notifications | Trigger in-app notification | Bell badge updates with unread count | Pending | Check `notifications` table query |
 | 10 | Command Center | Press `Cmd+K` / `Ctrl+K` | Command palette opens; fuzzy search works | Pending | Check global event listener in layout |
-| 11 | Planner | Drag task in Eisenhower matrix | Task priority / schedule updates | Pending | Check drag-and-drop state patch |
+| 11 | Daily Calendar | Click open slot in Daily Calendar | Time-block created directly on Overview | Pending | Check `calendar_events` table insert |
 | 12 | Finance | Log income and expense transactions | Account balance updates accurately | Pending | Check `finance_transactions` calculations |
 | 13 | Finance | Create monthly recurring transaction | Rule saved in recurring ledger | Pending | Check `finance_recurring_transactions` table |
 | 14 | Finance | Set category monthly budget | Budget utilization bar updates | Pending | Check budget calculation query |

@@ -77,8 +77,6 @@ export async function updateProfileAction(
   // 3. Revalidate all temporal and profile-aware surfaces
   revalidatePath('/app/settings');
   revalidatePath('/app');
-  revalidatePath('/app/planner');
-  revalidatePath('/app/calendar');
   revalidatePath('/app/tasks');
   revalidatePath('/app/finance');
   revalidatePath('/app/analytics');

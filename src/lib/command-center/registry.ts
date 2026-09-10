@@ -112,16 +112,6 @@ export const STATIC_NAVIGATION_COMMANDS: CommandItem[] = [
     actionKey: 'navigate',
   },
   {
-    id: 'nav-planner',
-    title: 'Go to Planner',
-    subtitle: 'Day, week, and time-block schedule planner',
-    category: 'navigation',
-    keywords: ['planner', 'schedule', 'timeblock', 'agenda', 'calendar'],
-    iconName: 'Calendar',
-    href: '/app/planner',
-    actionKey: 'navigate',
-  },
-  {
     id: 'nav-tasks',
     title: 'Go to Tasks',
     subtitle: 'Manage task commitments, filters, and statuses',
