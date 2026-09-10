@@ -228,6 +228,122 @@ export function horizontalOffsetToTime(
   return { hour, minute, timeStr };
 }
 
+export const WEEK_HOUR_HEIGHT_PX = 56;
+
+export interface VerticalPositionedEvent<T extends CalendarEvent = CalendarEvent> {
+  event: T;
+  startMinutes: number;
+  endMinutes: number;
+  durationMinutes: number;
+  topPx: number;
+  heightPx: number;
+  columnIndex: number;
+  totalColumns: number;
+}
+
+/**
+ * Calculates vertical positions (topPx, heightPx, sub-column layout)
+ * for events within a single day column in Week view.
+ */
+export function layoutVerticalEvents<T extends CalendarEvent = CalendarEvent>(
+  events: T[],
+  timeZone: string,
+  range: TimelineRange,
+  hourHeightPx: number = WEEK_HOUR_HEIGHT_PX
+): VerticalPositionedEvent<T>[] {
+  if (!events || events.length === 0) {
+    return [];
+  }
+
+  // 1. Calculate local start and end minutes
+  const parsed = events.map((event) => {
+    const { hour: sH, minute: sM } = getLocalHourAndMinute(event.start_time, timeZone);
+    const { hour: eH, minute: eM } = getLocalHourAndMinute(event.end_time, timeZone);
+
+    const startMinutes = sH * 60 + sM;
+    let endMinutes = eH * 60 + eM;
+    if (endMinutes <= startMinutes) {
+      endMinutes = 24 * 60;
+    }
+    const actualDuration = endMinutes - startMinutes;
+    const displayDuration = Math.max(25, actualDuration);
+
+    return {
+      event,
+      startMinutes,
+      endMinutes,
+      displayDuration,
+    };
+  });
+
+  // 2. Sort chronologically
+  parsed.sort((a, b) => {
+    if (a.startMinutes !== b.startMinutes) {
+      return a.startMinutes - b.startMinutes;
+    }
+    return b.displayDuration - a.displayDuration;
+  });
+
+  // 3. Greedy sub-column assignment for overlapping events
+  const colEnds: number[] = [];
+  const assigned = parsed.map((item) => {
+    let col = -1;
+    for (let c = 0; c < colEnds.length; c++) {
+      if (colEnds[c] <= item.startMinutes) {
+        col = c;
+        colEnds[c] = item.endMinutes;
+        break;
+      }
+    }
+    if (col === -1) {
+      col = colEnds.length;
+      colEnds.push(item.endMinutes);
+    }
+    return { ...item, columnIndex: col };
+  });
+
+  // 4. Group into overlapping clusters to determine totalColumns
+  const positioned: VerticalPositionedEvent<T>[] = [];
+  let cluster: typeof assigned = [];
+  let clusterMaxEnd = 0;
+
+  const flushCluster = (c: typeof assigned) => {
+    if (c.length === 0) return;
+    const maxCols = Math.max(...c.map((x) => x.columnIndex)) + 1;
+    for (const item of c) {
+      const clampedStart = Math.max(range.startMinutes, item.startMinutes);
+      const topPx = ((clampedStart - range.startMinutes) / 60) * hourHeightPx;
+      const heightPx = Math.max(26, (item.displayDuration / 60) * hourHeightPx);
+
+      positioned.push({
+        event: item.event,
+        startMinutes: item.startMinutes,
+        endMinutes: item.endMinutes,
+        durationMinutes: item.displayDuration,
+        topPx,
+        heightPx,
+        columnIndex: item.columnIndex,
+        totalColumns: maxCols,
+      });
+    }
+  };
+
+  for (const item of assigned) {
+    if (cluster.length === 0 || item.startMinutes < clusterMaxEnd) {
+      cluster.push(item);
+      clusterMaxEnd = Math.max(clusterMaxEnd, item.endMinutes);
+    } else {
+      flushCluster(cluster);
+      cluster = [item];
+      clusterMaxEnd = item.endMinutes;
+    }
+  }
+  flushCluster(cluster);
+
+  return positioned;
+}
+
 // Backwards-compatible aliases if referenced
 export const layoutCalendarEvents = layoutHorizontalEvents;
 export const gridOffsetToTime = horizontalOffsetToTime;
+

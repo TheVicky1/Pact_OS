@@ -149,6 +149,7 @@ export async function createCalendarEventAction(
 
     revalidatePath('/app');
     revalidatePath('/app/calendar');
+    revalidatePath('/app/planner');
     return { success: true, data: newEvent as CalendarEvent };
   } catch (err: unknown) {
     const msg = err instanceof Error ? err.message : 'Unexpected error.';
@@ -238,6 +239,7 @@ export async function updateCalendarEventAction(
 
     revalidatePath('/app');
     revalidatePath('/app/calendar');
+    revalidatePath('/app/planner');
     return { success: true, data: updatedEvent as CalendarEvent };
   } catch (err: unknown) {
     const msg = err instanceof Error ? err.message : 'Unexpected error.';
@@ -274,6 +276,7 @@ export async function deleteCalendarEventAction(
 
     revalidatePath('/app');
     revalidatePath('/app/calendar');
+    revalidatePath('/app/planner');
     return { success: true, data: null };
   } catch (err: unknown) {
     const msg = err instanceof Error ? err.message : 'Unexpected error.';
@@ -291,3 +294,28 @@ export async function getCalendarEventsForDayAction(
   const result = await getCalendarEventsForDay(dateStr, timeZone);
   return result.data || [];
 }
+
+/**
+ * Client-callable Server Action to fetch events for a chosen week dynamically.
+ */
+export async function getCalendarEventsForWeekAction(
+  dateStr: string,
+  timeZone: string
+): Promise<CalendarEventWithRelations[]> {
+  const { getCalendarEventsForWeek } = await import('./data-access');
+  const result = await getCalendarEventsForWeek(dateStr, timeZone);
+  return result.data || [];
+}
+
+/**
+ * Client-callable Server Action to fetch events for a chosen month dynamically.
+ */
+export async function getCalendarEventsForMonthAction(
+  dateStr: string,
+  timeZone: string
+): Promise<CalendarEventWithRelations[]> {
+  const { getCalendarEventsForMonth } = await import('./data-access');
+  const result = await getCalendarEventsForMonth(dateStr, timeZone);
+  return result.data || [];
+}
+

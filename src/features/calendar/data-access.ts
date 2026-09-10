@@ -53,6 +53,72 @@ export async function getCalendarEventsForDay(
 }
 
 /**
+ * Retrieves all calendar events within a specific UTC range.
+ * Server-authoritative query with RLS filtering for auth.uid() = user_id.
+ */
+export async function getCalendarEventsForRange(
+  startUtc: string,
+  endUtc: string
+): Promise<DataAccessResult<CalendarEventWithRelations[]>> {
+  try {
+    const supabase = await createClient();
+    const {
+      data: { user },
+      error: authError,
+    } = await supabase.auth.getUser();
+
+    if (authError || !user) {
+      return { data: null, error: 'Authentication required to view calendar events.' };
+    }
+
+    const { data, error } = await supabase
+      .from('calendar_events')
+      .select('*, projects(id, title), goals(id, title), tasks(id, title)')
+      .gte('end_time', startUtc)
+      .lte('start_time', endUtc)
+      .order('start_time', { ascending: true });
+
+    if (error) {
+      console.warn('Calendar events range query warning:', error.message);
+      return { data: [], error: null };
+    }
+
+    return { data: (data as CalendarEventWithRelations[]) || [], error: null };
+  } catch (err: unknown) {
+    const msg = err instanceof Error ? err.message : 'Unknown error';
+    console.warn('getCalendarEventsForRange failed:', msg);
+    return { data: [], error: null };
+  }
+}
+
+/**
+ * Retrieves all calendar events for the ISO week containing dateStr.
+ */
+export async function getCalendarEventsForWeek(
+  dateStr: string,
+  timeZone: string
+): Promise<DataAccessResult<CalendarEventWithRelations[]>> {
+  const safeTz = isValidIanaTimezone(timeZone) ? timeZone : 'UTC';
+  // Compute boundaries for the full Monday to Sunday week
+  const { getWeekBoundariesUtc } = await import('@/lib/time');
+  const weekBoundaries = getWeekBoundariesUtc(dateStr, safeTz);
+  return getCalendarEventsForRange(weekBoundaries.startUtc, weekBoundaries.endUtc);
+}
+
+/**
+ * Retrieves all calendar events for the monthly grid containing dateStr.
+ */
+export async function getCalendarEventsForMonth(
+  dateStr: string,
+  timeZone: string
+): Promise<DataAccessResult<CalendarEventWithRelations[]>> {
+  const safeTz = isValidIanaTimezone(timeZone) ? timeZone : 'UTC';
+  const { getMonthGridForDate } = await import('@/lib/time');
+  const monthData = getMonthGridForDate(dateStr, safeTz);
+  return getCalendarEventsForRange(monthData.startUtc, monthData.endUtc);
+}
+
+/**
  * Retrieves a single calendar event by ID.
  */
 export async function getCalendarEventById(
@@ -84,3 +150,4 @@ export async function getCalendarEventById(
     return { data: null, error: 'Failed to retrieve event.' };
   }
 }
+

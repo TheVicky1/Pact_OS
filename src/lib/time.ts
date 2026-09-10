@@ -458,3 +458,182 @@ export function addDaysToDateString(dateStr: string, days: number): string {
   const d = String(date.getUTCDate()).padStart(2, '0');
   return `${y}-${m}-${d}`;
 }
+
+export interface WeekDayInfo {
+  dateStr: string;
+  dayOfWeek: string;
+  dayOfWeekFull: string;
+  dayNumber: number;
+  isToday: boolean;
+}
+
+/**
+ * Computes the 7 days of the ISO week (Monday to Sunday) containing a given date in profile timezone.
+ */
+export function getWeekDaysForDate(
+  dateStr: string,
+  timeZone: string
+): { mondayStr: string; sundayStr: string; days: WeekDayInfo[] } {
+  const safeTz = isValidIanaTimezone(timeZone) ? timeZone : 'UTC';
+  const todayStr = getLocalDateString(new Date(), safeTz);
+
+  const [year, month, day] = dateStr.split('-').map((v) => parseInt(v, 10));
+  const approxDate = new Date(Date.UTC(year, month - 1, day, 12, 0, 0));
+  const dayOfWeek = approxDate.getUTCDay(); // 0 = Sun, 1 = Mon ...
+  const isoOffset = (dayOfWeek + 6) % 7; // Mon = 0, Sun = 6
+
+  const mondayStr = addDaysToDateString(dateStr, -isoOffset);
+  const sundayStr = addDaysToDateString(mondayStr, 6);
+
+  const days: WeekDayInfo[] = [];
+  for (let i = 0; i < 7; i++) {
+    const currentStr = addDaysToDateString(mondayStr, i);
+    const [cy, cm, cd] = currentStr.split('-').map((v) => parseInt(v, 10));
+    const cDate = new Date(Date.UTC(cy, cm - 1, cd, 12, 0, 0));
+
+    const dayOfWeekShort = new Intl.DateTimeFormat('en-US', {
+      timeZone: safeTz,
+      weekday: 'short',
+    }).format(cDate);
+
+    const dayOfWeekFull = new Intl.DateTimeFormat('en-US', {
+      timeZone: safeTz,
+      weekday: 'long',
+    }).format(cDate);
+
+    days.push({
+      dateStr: currentStr,
+      dayOfWeek: dayOfWeekShort,
+      dayOfWeekFull,
+      dayNumber: cd,
+      isToday: currentStr === todayStr,
+    });
+  }
+
+  return { mondayStr, sundayStr, days };
+}
+
+/**
+ * Computes authoritative UTC start and end boundaries for the full ISO week containing dateStr.
+ */
+export function getWeekBoundariesUtc(
+  dateStr: string,
+  timeZone: string
+): { startUtc: string; endUtc: string; mondayStr: string; sundayStr: string } {
+  const safeTz = isValidIanaTimezone(timeZone) ? timeZone : 'UTC';
+  const { mondayStr, sundayStr } = getWeekDaysForDate(dateStr, safeTz);
+  const { startUtc } = getDayBoundariesUtc(mondayStr, safeTz);
+  const { endUtc } = getDayBoundariesUtc(sundayStr, safeTz);
+  return { startUtc, endUtc, mondayStr, sundayStr };
+}
+
+/**
+ * Formats a week header title, e.g. "Sep 14 – Sep 20, 2026" or "Sep 28 – Oct 4, 2026".
+ */
+export function formatWeekRangeHeader(dateStr: string, timeZone: string): string {
+  const safeTz = isValidIanaTimezone(timeZone) ? timeZone : 'UTC';
+  const { mondayStr, sundayStr } = getWeekDaysForDate(dateStr, safeTz);
+
+  const [my, mm, md] = mondayStr.split('-').map((v) => parseInt(v, 10));
+  const [sy, sm, sd] = sundayStr.split('-').map((v) => parseInt(v, 10));
+
+  const monDate = new Date(Date.UTC(my, mm - 1, md, 12, 0, 0));
+  const sunDate = new Date(Date.UTC(sy, sm - 1, sd, 12, 0, 0));
+
+  const monMonth = new Intl.DateTimeFormat('en-US', { timeZone: safeTz, month: 'short' }).format(monDate);
+  const sunMonth = new Intl.DateTimeFormat('en-US', { timeZone: safeTz, month: 'short' }).format(sunDate);
+
+  if (my !== sy) {
+    return `${monMonth} ${md}, ${my} – ${sunMonth} ${sd}, ${sy}`;
+  }
+  if (mm !== sm) {
+    return `${monMonth} ${md} – ${sunMonth} ${sd}, ${my}`;
+  }
+  return `${monMonth} ${md} – ${sd}, ${my}`;
+}
+
+/**
+ * Formats month and year header, e.g. "September 2026".
+ */
+export function formatMonthYearHeader(dateStr: string, timeZone: string): string {
+  const safeTz = isValidIanaTimezone(timeZone) ? timeZone : 'UTC';
+  const [year, month, day] = dateStr.split('-').map((v) => parseInt(v, 10));
+  const date = new Date(Date.UTC(year, month - 1, day, 12, 0, 0));
+
+  return new Intl.DateTimeFormat('en-US', {
+    timeZone: safeTz,
+    month: 'long',
+    year: 'numeric',
+  }).format(date);
+}
+
+export interface MonthGridCell {
+  dateStr: string;
+  dayNumber: number;
+  isCurrentMonth: boolean;
+  isToday: boolean;
+}
+
+/**
+ * Computes full monthly grid (weeks of Mon..Sun) for the month containing dateStr.
+ */
+export function getMonthGridForDate(
+  dateStr: string,
+  timeZone: string
+): {
+  year: number;
+  month: number;
+  monthName: string;
+  grid: MonthGridCell[];
+  startUtc: string;
+  endUtc: string;
+} {
+  const safeTz = isValidIanaTimezone(timeZone) ? timeZone : 'UTC';
+  const todayStr = getLocalDateString(new Date(), safeTz);
+
+  const [year, month] = dateStr.split('-').map((v) => parseInt(v, 10));
+  const firstDayStr = `${year}-${String(month).padStart(2, '0')}-01`;
+
+  const totalDaysInMonth = new Date(Date.UTC(year, month, 0)).getUTCDate();
+
+  const firstDateObj = new Date(Date.UTC(year, month - 1, 1, 12, 0, 0));
+  const firstDayOfWeek = firstDateObj.getUTCDay();
+  const leadingPadding = (firstDayOfWeek + 6) % 7; // Monday = 0
+
+  const gridStartDateStr = addDaysToDateString(firstDayStr, -leadingPadding);
+
+  // Determine number of cells needed (multiples of 7 to end on Sunday)
+  const totalDaysSoFar = leadingPadding + totalDaysInMonth;
+  const trailingPadding = (7 - (totalDaysSoFar % 7)) % 7;
+  const totalCells = totalDaysSoFar + trailingPadding;
+
+  const grid: MonthGridCell[] = [];
+  for (let i = 0; i < totalCells; i++) {
+    const cStr = addDaysToDateString(gridStartDateStr, i);
+    const [cy, cm, cd] = cStr.split('-').map((v) => parseInt(v, 10));
+    const isCurrentMonth = cy === year && cm === month;
+
+    grid.push({
+      dateStr: cStr,
+      dayNumber: cd,
+      isCurrentMonth,
+      isToday: cStr === todayStr,
+    });
+  }
+
+  const gridEndDateStr = grid[grid.length - 1].dateStr;
+  const { startUtc } = getDayBoundariesUtc(gridStartDateStr, safeTz);
+  const { endUtc } = getDayBoundariesUtc(gridEndDateStr, safeTz);
+
+  const monthName = formatMonthYearHeader(firstDayStr, safeTz);
+
+  return {
+    year,
+    month,
+    monthName,
+    grid,
+    startUtc,
+    endUtc,
+  };
+}
+
