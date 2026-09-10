@@ -30,6 +30,7 @@ export interface FinanceTransaction {
 }
 
 export interface FinanceSummary {
+  balanceCents: number;
   totalIncomeCents: number;
   totalExpensesCents: number;
   netSavingsCents: number;
@@ -52,6 +53,20 @@ export interface MonthlyTrendItem {
   incomeCents: number;
   expenseCents: number;
   netSavingsCents: number;
+}
+
+/**
+ * Formats a "YYYY-MM" string to "Month YYYY" (e.g. "September 2026").
+ */
+export function formatMonthLabel(yearMonth: string): string {
+  const [year, month] = yearMonth.split('-').map(Number);
+  if (!year || !month) return yearMonth;
+  const date = new Date(Date.UTC(year, month - 1, 15));
+  return new Intl.DateTimeFormat('en-US', {
+    timeZone: 'UTC',
+    month: 'long',
+    year: 'numeric',
+  }).format(date);
 }
 
 /**
@@ -150,6 +165,7 @@ export function calculateFinanceSummary(
       : 0;
 
   return {
+    balanceCents: netSavingsCents,
     totalIncomeCents,
     totalExpensesCents,
     netSavingsCents,
