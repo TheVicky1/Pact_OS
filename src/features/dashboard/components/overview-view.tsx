@@ -20,8 +20,6 @@ import { ActiveFocusCard } from './active-focus-card';
 import { FollowThroughWidget } from './follow-through-widget';
 import { DailyCadenceWidget } from './daily-cadence-widget';
 import { DailyCalendarWidget } from '@/features/calendar';
-import { UpcomingCommitmentsWidget } from './upcoming-commitments-widget';
-import { DomainSummaryWidgets } from './domain-summary-widgets';
 
 import { useRouter } from 'next/navigation';
 import { InterventionBanner } from '@/features/accountability/components/intervention-banner';
@@ -109,13 +107,6 @@ export function OverviewView({
       (a, b) => new Date(a.deadline_at).getTime() - new Date(b.deadline_at).getTime()
     );
     return sorted[0] || null;
-  }, [pendingTasks]);
-
-  // Top 4 upcoming commitments for Upcoming Commitments section
-  const upcomingTasks = useMemo(() => {
-    return [...pendingTasks]
-      .sort((a, b) => new Date(a.deadline_at).getTime() - new Date(b.deadline_at).getTime())
-      .slice(0, 4);
   }, [pendingTasks]);
 
   // Authoritative Task Completion Action (preserving optimistic update & rollback)
@@ -313,20 +304,6 @@ export function OverviewView({
         tasks={tasksList}
       />
 
-      {/* 5. Upcoming Commitments Section */}
-      <UpcomingCommitmentsWidget
-        tasks={upcomingTasks}
-        timezone={timezone}
-        onComplete={handleCompleteTask}
-        completingTaskId={completingTaskId}
-      />
-
-      {/* 6. Active Goals & Active Projects Split Grid */}
-      <DomainSummaryWidgets
-        goals={goals}
-        projects={projects}
-        tasks={tasksList}
-      />
 
       {/* Accountability Intervention Modal */}
       {selectedIntervention && waiverUsage && (
