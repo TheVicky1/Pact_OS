@@ -1,16 +1,36 @@
 import { NextRequest, NextResponse } from 'next/server';
+import crypto from 'node:crypto';
 import { createClient as createSupabaseClient } from '@supabase/supabase-js';
-import { createClient } from '@/lib/supabase/server';
-import { executeDeadlineSweep, executeRecurringTransactionsSweep } from '@/lib/accountability/sweeper';
+import { executeDeadlineSweep, executeRecurringTransactionsSweep } from '../../../../lib/accountability/sweeper';
+
 
 export const dynamic = 'force-dynamic';
 
+
 /**
- * Autonomous Cron / Webhook Endpoint for Background Deadline Sweeping.
- * Invoked periodically (e.g. every minute) by Vercel Cron, pg_net, or external scheduler.
+ * Constant-time comparison between provided Authorization header and expected Bearer token.
+ * Prevents timing side-channel attacks on CRON_SECRET.
+ */
+export function isTimingSafeBearerMatch(providedHeader: string | null, secret: string): boolean {
+  if (!providedHeader || !secret) return false;
+  const expectedAuth = `Bearer ${secret}`;
+
+  const providedBuf = Buffer.from(providedHeader, 'utf8');
+  const expectedBuf = Buffer.from(expectedAuth, 'utf8');
+
+  if (providedBuf.length !== expectedBuf.length) {
+    return false;
+  }
+
+  return crypto.timingSafeEqual(providedBuf, expectedBuf);
+}
+
+/**
+ * Autonomous Cron / Webhook Endpoint for Background Deadline Sweeping & Recurring Transactions.
+ * Invoked periodically (e.g. every minute) by Vercel Cron, Supabase pg_cron, or external scheduler.
  *
  * Security:
- * - Protected by Bearer token matching CRON_SECRET environment variable.
+ * - Protected by Bearer token matching CRON_SECRET environment variable via timing-safe comparison.
  * - If CRON_SECRET is configured, unauthenticated requests are strictly rejected (HTTP 401).
  * - Output contains ONLY operational metrics (processed_count, activated_count, duration_ms)
  *   and NEVER reveals sensitive consequence definitions, penalty notes, or user IDs.
@@ -27,10 +47,9 @@ async function handleSweep(request: NextRequest) {
   const cronSecret = process.env.CRON_SECRET;
   const authHeader = request.headers.get('authorization');
 
-  // Verify Bearer token if CRON_SECRET is configured
+  // Verify Bearer token with constant-time comparison if CRON_SECRET is configured
   if (cronSecret) {
-    const expectedAuth = `Bearer ${cronSecret}`;
-    if (!authHeader || authHeader !== expectedAuth) {
+    if (!isTimingSafeBearerMatch(authHeader, cronSecret)) {
       return NextResponse.json(
         { success: false, error: 'Unauthorized cron invocation.' },
         { status: 401 }
@@ -42,12 +61,15 @@ async function handleSweep(request: NextRequest) {
     const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://placeholder.supabase.co';
     const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
-    // Use service_role client if configured, otherwise fallback to server client
-    const supabase = serviceRoleKey
-      ? createSupabaseClient(supabaseUrl, serviceRoleKey, {
-          auth: { persistSession: false },
-        })
-      : await createClient();
+    const supabaseKey =
+      serviceRoleKey ||
+      process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY ||
+      'placeholder-key';
+
+    const supabase = createSupabaseClient(supabaseUrl, supabaseKey, {
+      auth: { persistSession: false },
+    });
+
 
     const batchSize = Math.min(
       parseInt(request.nextUrl.searchParams.get('batch_size') || '100', 10),
