@@ -12,6 +12,11 @@ import {
   updateBudgetSchema,
 } from '@/lib/validations/finance';
 import {
+  bulkCategorizeTransactionsSchema,
+  bulkDeleteTransactionsSchema,
+  BulkOperationResult,
+} from '@/lib/validations/bulk';
+import {
   FinanceTransaction,
   FinanceCategory,
   FinanceRecurringTransaction,
@@ -843,3 +848,206 @@ export async function getFinanceMonthlyOverviewAction(
   const result = await getFinanceMonthlyOverview(yearMonthStr, timeZone);
   return result.data;
 }
+
+/**
+ * Phase 6E: Authoritative bulk transaction categorization.
+ */
+export async function bulkCategorizeTransactionsAction(
+  payload: unknown
+): Promise<BulkOperationResult> {
+  try {
+    const supabase = await createClient();
+    const { data: { user }, error: authError } = await supabase.auth.getUser();
+
+    if (authError || !user) {
+      return {
+        success: false,
+        total: 0,
+        succeeded: [],
+        failed: [],
+        skipped: [],
+        error: 'Authentication required for bulk operations.',
+      };
+    }
+
+    const validation = bulkCategorizeTransactionsSchema.safeParse(payload);
+    if (!validation.success) {
+      return {
+        success: false,
+        total: 0,
+        succeeded: [],
+        failed: [],
+        skipped: [],
+        error: validation.error.issues[0]?.message || 'Invalid bulk categorization request.',
+      };
+    }
+
+    const { transactionIds, categoryId } = validation.data;
+
+    // Verify category ownership if categoryId is provided
+    let targetCatId: string | null = null;
+    if (categoryId) {
+      const { data: cat } = await supabase
+        .from('finance_categories')
+        .select('id')
+        .eq('id', categoryId)
+        .eq('user_id', user.id)
+        .maybeSingle();
+
+      if (!cat) {
+        return {
+          success: false,
+          total: transactionIds.length,
+          succeeded: [],
+          failed: transactionIds.map((id) => ({ id, reason: 'Target category not found or access denied.' })),
+          skipped: [],
+          error: 'Target category does not exist or access denied.',
+        };
+      }
+      targetCatId = cat.id;
+    }
+
+    const { data: updatedRows, error: updateError } = await supabase
+      .from('finance_transactions')
+      .update({
+        category_id: targetCatId,
+        updated_at: new Date().toISOString(),
+      })
+      .in('id', transactionIds)
+      .eq('user_id', user.id)
+      .select('id');
+
+    if (updateError) {
+      return {
+        success: false,
+        total: transactionIds.length,
+        succeeded: [],
+        failed: transactionIds.map((id) => ({ id, reason: updateError.message })),
+        skipped: [],
+        error: 'Bulk categorization database update failed.',
+      };
+    }
+
+    const updatedIds = (updatedRows || []).map((r) => r.id);
+    const updatedSet = new Set(updatedIds);
+    const failed: Array<{ id: string; reason: string }> = [];
+
+    for (const txId of transactionIds) {
+      if (!updatedSet.has(txId)) {
+        failed.push({ id: txId, reason: 'Transaction not found or access denied' });
+      }
+    }
+
+    if (updatedIds.length > 0) {
+      revalidatePath('/app/finance');
+      revalidatePath('/app');
+    }
+
+    return {
+      success: updatedIds.length > 0,
+      total: transactionIds.length,
+      succeeded: updatedIds,
+      failed,
+      skipped: [],
+    };
+  } catch (err: unknown) {
+    const msg = err instanceof Error ? err.message : 'Unexpected bulk categorization error.';
+    return {
+      success: false,
+      total: 0,
+      succeeded: [],
+      failed: [],
+      skipped: [],
+      error: msg,
+    };
+  }
+}
+
+/**
+ * Phase 6E: Authoritative bulk transaction deletion.
+ */
+export async function bulkDeleteTransactionsAction(
+  payload: unknown
+): Promise<BulkOperationResult> {
+  try {
+    const supabase = await createClient();
+    const { data: { user }, error: authError } = await supabase.auth.getUser();
+
+    if (authError || !user) {
+      return {
+        success: false,
+        total: 0,
+        succeeded: [],
+        failed: [],
+        skipped: [],
+        error: 'Authentication required for bulk operations.',
+      };
+    }
+
+    const validation = bulkDeleteTransactionsSchema.safeParse(payload);
+    if (!validation.success) {
+      return {
+        success: false,
+        total: 0,
+        succeeded: [],
+        failed: [],
+        skipped: [],
+        error: validation.error.issues[0]?.message || 'Invalid bulk delete request.',
+      };
+    }
+
+    const { transactionIds } = validation.data;
+
+    const { data: deletedRows, error: deleteError } = await supabase
+      .from('finance_transactions')
+      .delete()
+      .in('id', transactionIds)
+      .eq('user_id', user.id)
+      .select('id');
+
+    if (deleteError) {
+      return {
+        success: false,
+        total: transactionIds.length,
+        succeeded: [],
+        failed: transactionIds.map((id) => ({ id, reason: deleteError.message })),
+        skipped: [],
+        error: 'Bulk delete execution failed.',
+      };
+    }
+
+    const deletedIds = (deletedRows || []).map((r) => r.id);
+    const deletedSet = new Set(deletedIds);
+    const failed: Array<{ id: string; reason: string }> = [];
+
+    for (const txId of transactionIds) {
+      if (!deletedSet.has(txId)) {
+        failed.push({ id: txId, reason: 'Transaction not found or access denied' });
+      }
+    }
+
+    if (deletedIds.length > 0) {
+      revalidatePath('/app/finance');
+      revalidatePath('/app');
+    }
+
+    return {
+      success: deletedIds.length > 0,
+      total: transactionIds.length,
+      succeeded: deletedIds,
+      failed,
+      skipped: [],
+    };
+  } catch (err: unknown) {
+    const msg = err instanceof Error ? err.message : 'Unexpected bulk delete error.';
+    return {
+      success: false,
+      total: 0,
+      succeeded: [],
+      failed: [],
+      skipped: [],
+      error: msg,
+    };
+  }
+}
+

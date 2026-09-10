@@ -28,6 +28,8 @@ export interface TaskCardProps {
   onDelete: (task: TaskWithParents) => void;
   onStatusChange?: (taskId: string, newStatus: TaskStatus) => void;
   timezone?: string;
+  isSelected?: boolean;
+  onToggleSelect?: (taskId: string) => void;
 }
 
 /**
@@ -42,6 +44,8 @@ export function TaskCard({
   onDelete,
   onStatusChange,
   timezone = 'UTC',
+  isSelected = false,
+  onToggleSelect,
 }: TaskCardProps) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isHoveredLock, setIsHoveredLock] = useState(false);
@@ -174,7 +178,9 @@ export function TaskCard({
       variant="interactive"
       padding="sm"
       className={`group relative transition-all duration-200 ${
-        isCompleted
+        isSelected
+          ? 'border-amber-400/60 bg-amber-500/[0.08] shadow-[0_0_20px_rgba(212,175,55,0.12)]'
+          : isCompleted
           ? 'opacity-65 hover:opacity-90 bg-[rgba(18,18,23,0.4)]'
           : isMissed
           ? 'border-red-500/30 bg-red-950/10'
@@ -184,6 +190,25 @@ export function TaskCard({
       }`}
     >
       <div className="flex items-start gap-3">
+        {/* Multi-Select Checkbox */}
+        {onToggleSelect && (
+          <button
+            type="button"
+            onClick={(e) => {
+              e.stopPropagation();
+              onToggleSelect(task.id);
+            }}
+            aria-label={isSelected ? `Deselect task ${task.title}` : `Select task ${task.title}`}
+            className={`mt-1 shrink-0 w-4 h-4 rounded border flex items-center justify-center transition-all duration-150 cursor-pointer focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-amber-400 ${
+              isSelected
+                ? 'bg-amber-400 border-amber-400 text-zinc-950'
+                : 'border-white/20 bg-zinc-900/80 hover:border-amber-400/60 opacity-60 group-hover:opacity-100'
+            }`}
+          >
+            {isSelected && <Check className="w-3 h-3 stroke-[3]" />}
+          </button>
+        )}
+
         {/* Custom Circular Ring Checkbox */}
         <button
           type="button"

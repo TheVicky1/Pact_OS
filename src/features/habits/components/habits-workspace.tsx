@@ -19,17 +19,29 @@ import {
   Archive,
   RotateCcw,
 } from 'lucide-react';
+import { useUrlState } from '@/hooks/use-url-state';
+import {
+  HabitsUrlState,
+  DEFAULT_HABITS_URL_STATE,
+  parseHabitsUrlState,
+  serializeHabitsUrlState,
+} from '@/lib/url-state';
 
 interface HabitsWorkspaceProps {
   initialData: HabitsBootstrapData;
 }
 
-type TabMode = 'today' | 'all' | 'routines' | 'archived';
-
 export function HabitsWorkspace({ initialData }: HabitsWorkspaceProps) {
   const router = useRouter();
-  const [activeTab, setActiveTab] = useState<TabMode>('today');
-  const [selectedCategory, setSelectedCategory] = useState<string>('all');
+  const [urlState, setUrlState] = useUrlState<HabitsUrlState>({
+    parse: parseHabitsUrlState,
+    serialize: serializeHabitsUrlState,
+    defaultValue: DEFAULT_HABITS_URL_STATE,
+    debounceMs: 250,
+  });
+
+  const activeTab = urlState.tab;
+  const selectedCategory = urlState.category;
 
   // Modal states
   const [isHabitModalOpen, setIsHabitModalOpen] = useState(false);
@@ -142,8 +154,8 @@ export function HabitsWorkspace({ initialData }: HabitsWorkspaceProps) {
         <div className="flex items-center gap-1.5 overflow-x-auto">
           <button
             type="button"
-            onClick={() => setActiveTab('today')}
-            className={`px-3.5 py-1.5 rounded-xl text-xs font-semibold transition-all flex items-center gap-2 ${
+            onClick={() => setUrlState((prev) => ({ ...prev, tab: 'today' }))}
+            className={`px-3.5 py-1.5 rounded-xl text-xs font-semibold transition-all flex items-center gap-2 cursor-pointer ${
               activeTab === 'today'
                 ? 'bg-[#d4af37]/20 text-[#f3e198] border border-[#d4af37]/50'
                 : 'text-zinc-400 hover:text-zinc-200 hover:bg-white/[0.04]'
@@ -155,8 +167,8 @@ export function HabitsWorkspace({ initialData }: HabitsWorkspaceProps) {
 
           <button
             type="button"
-            onClick={() => setActiveTab('all')}
-            className={`px-3.5 py-1.5 rounded-xl text-xs font-semibold transition-all flex items-center gap-2 ${
+            onClick={() => setUrlState((prev) => ({ ...prev, tab: 'all' }))}
+            className={`px-3.5 py-1.5 rounded-xl text-xs font-semibold transition-all flex items-center gap-2 cursor-pointer ${
               activeTab === 'all'
                 ? 'bg-[#d4af37]/20 text-[#f3e198] border border-[#d4af37]/50'
                 : 'text-zinc-400 hover:text-zinc-200 hover:bg-white/[0.04]'
@@ -168,8 +180,8 @@ export function HabitsWorkspace({ initialData }: HabitsWorkspaceProps) {
 
           <button
             type="button"
-            onClick={() => setActiveTab('routines')}
-            className={`px-3.5 py-1.5 rounded-xl text-xs font-semibold transition-all flex items-center gap-2 ${
+            onClick={() => setUrlState((prev) => ({ ...prev, tab: 'routines' }))}
+            className={`px-3.5 py-1.5 rounded-xl text-xs font-semibold transition-all flex items-center gap-2 cursor-pointer ${
               activeTab === 'routines'
                 ? 'bg-[#d4af37]/20 text-[#f3e198] border border-[#d4af37]/50'
                 : 'text-zinc-400 hover:text-zinc-200 hover:bg-white/[0.04]'
@@ -182,8 +194,8 @@ export function HabitsWorkspace({ initialData }: HabitsWorkspaceProps) {
           {initialData.archivedHabits.length > 0 && (
             <button
               type="button"
-              onClick={() => setActiveTab('archived')}
-              className={`px-3.5 py-1.5 rounded-xl text-xs font-semibold transition-all flex items-center gap-2 ${
+              onClick={() => setUrlState((prev) => ({ ...prev, tab: 'archived' }))}
+              className={`px-3.5 py-1.5 rounded-xl text-xs font-semibold transition-all flex items-center gap-2 cursor-pointer ${
                 activeTab === 'archived'
                   ? 'bg-[#d4af37]/20 text-[#f3e198] border border-[#d4af37]/50'
                   : 'text-zinc-400 hover:text-zinc-200 hover:bg-white/[0.04]'
@@ -200,8 +212,8 @@ export function HabitsWorkspace({ initialData }: HabitsWorkspaceProps) {
           <div className="flex items-center gap-1.5 overflow-x-auto text-xs">
             <button
               type="button"
-              onClick={() => setSelectedCategory('all')}
-              className={`px-2.5 py-1 rounded-lg transition-all ${
+              onClick={() => setUrlState((prev) => ({ ...prev, category: 'all' }))}
+              className={`px-2.5 py-1 rounded-lg transition-all cursor-pointer ${
                 selectedCategory === 'all'
                   ? 'bg-zinc-800 text-zinc-100 border border-zinc-700 font-medium'
                   : 'text-zinc-500 hover:text-zinc-300'
@@ -213,8 +225,8 @@ export function HabitsWorkspace({ initialData }: HabitsWorkspaceProps) {
               <button
                 key={cat}
                 type="button"
-                onClick={() => setSelectedCategory(cat)}
-                className={`px-2.5 py-1 rounded-lg transition-all capitalize ${
+                onClick={() => setUrlState((prev) => ({ ...prev, category: cat }))}
+                className={`px-2.5 py-1 rounded-lg transition-all capitalize cursor-pointer ${
                   selectedCategory === cat
                     ? 'bg-zinc-800 text-zinc-100 border border-zinc-700 font-medium'
                     : 'text-zinc-500 hover:text-zinc-300'

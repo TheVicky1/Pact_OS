@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React from 'react';
 import type { AccountabilityHistoryItem } from '../data-access';
 import { Badge } from '@/components/ui/badge';
 import { utcToLocal } from '@/lib/time';
@@ -13,13 +13,18 @@ import {
   ChevronUp,
   Filter,
 } from 'lucide-react';
+import { useUrlState } from '@/hooks/use-url-state';
+import {
+  type AccountabilityUrlState,
+  DEFAULT_ACCOUNTABILITY_URL_STATE,
+  parseAccountabilityUrlState,
+  serializeAccountabilityUrlState,
+} from '@/lib/url-state';
 
 export interface AccountabilityHistoryViewProps {
   events: AccountabilityHistoryItem[];
   timezone: string;
 }
-
-type FilterTab = 'all' | 'fulfilled' | 'waived' | 'activated';
 
 /**
  * PACT Accountability History View
@@ -27,8 +32,15 @@ type FilterTab = 'all' | 'fulfilled' | 'waived' | 'activated';
  * rule-checked, self-declared, and waived outcomes.
  */
 export function AccountabilityHistoryView({ events, timezone }: AccountabilityHistoryViewProps) {
-  const [activeFilter, setActiveFilter] = useState<FilterTab>('all');
-  const [expandedEventId, setExpandedEventId] = useState<string | null>(null);
+  const [urlState, setUrlState] = useUrlState<AccountabilityUrlState>({
+    parse: parseAccountabilityUrlState,
+    serialize: serializeAccountabilityUrlState,
+    defaultValue: DEFAULT_ACCOUNTABILITY_URL_STATE,
+    debounceMs: 250,
+  });
+
+  const activeFilter = urlState.filter;
+  const expandedEventId = urlState.event || null;
 
   const filteredEvents = events.filter((e) => {
     if (activeFilter === 'all') return true;
@@ -99,7 +111,10 @@ export function AccountabilityHistoryView({ events, timezone }: AccountabilityHi
   };
 
   const toggleExpand = (id: string) => {
-    setExpandedEventId((prev) => (prev === id ? null : id));
+    setUrlState((prev) => ({
+      ...prev,
+      event: prev.event === id ? undefined : id,
+    }));
   };
 
   return (
@@ -124,7 +139,7 @@ export function AccountabilityHistoryView({ events, timezone }: AccountabilityHi
               <button
                 key={tab.id}
                 type="button"
-                onClick={() => setActiveFilter(tab.id)}
+                onClick={() => setUrlState((prev) => ({ ...prev, filter: tab.id }))}
                 className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-medium transition-all cursor-pointer ${
                   isActive
                     ? 'bg-[#d4af37]/15 text-[#d4af37] border border-[#d4af37]/30 shadow-sm'
