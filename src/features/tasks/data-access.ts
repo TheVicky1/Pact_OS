@@ -10,6 +10,13 @@ export interface TaskWithParents extends Task {
     id: string;
     title: string;
   } | null;
+  task_accountability_commitments?: Array<{
+    id: string;
+    commitment_status: string;
+  }> | {
+    id: string;
+    commitment_status: string;
+  } | null;
 }
 
 export interface DataAccessResult<T> {
@@ -19,7 +26,7 @@ export interface DataAccessResult<T> {
 
 /**
  * Retrieves all tasks owned by the currently authenticated user.
- * Joins parent project title and goal title if linked.
+ * Joins parent project title, goal title, and commitment status if linked.
  * Database RLS enforces that only rows matching auth.uid() = user_id are returned.
  */
 export async function getTasks(): Promise<DataAccessResult<TaskWithParents[]>> {
@@ -33,7 +40,7 @@ export async function getTasks(): Promise<DataAccessResult<TaskWithParents[]>> {
 
     const { data, error } = await supabase
       .from('tasks')
-      .select('*, projects(id, title), goals(id, title)')
+      .select('*, projects(id, title), goals(id, title), task_accountability_commitments(id, commitment_status)')
       .order('deadline_at', { ascending: true });
 
     if (error) {
@@ -61,7 +68,7 @@ export async function getTaskById(id: string): Promise<DataAccessResult<TaskWith
 
     const { data, error } = await supabase
       .from('tasks')
-      .select('*, projects(id, title), goals(id, title)')
+      .select('*, projects(id, title), goals(id, title), task_accountability_commitments(id, commitment_status)')
       .eq('id', id)
       .maybeSingle();
 

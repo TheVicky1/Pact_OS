@@ -6,6 +6,8 @@ import { getTasks } from '@/features/tasks/data-access';
 import { OverviewView } from '@/features/dashboard/components/overview-view';
 import { getUserProfileInfo } from '@/lib/auth/profile';
 
+import { PageContainer } from '@/components/ui';
+
 export const metadata = {
   title: 'Overview | PACT OS',
   description: 'Personal productivity, commitments, and progress operating system.',
@@ -28,16 +30,24 @@ export default async function ProtectedAppPage() {
     getTasks(),
   ]);
 
+  const { getActivatedCommitments, getWeeklyWaiverUsage } = await import('@/features/accountability/data-access');
+  const [activatedCommitments, waiverUsage] = await Promise.all([
+    getActivatedCommitments(),
+    getWeeklyWaiverUsage(timezone),
+  ]);
+
   return (
-    <main className="max-w-6xl w-full mx-auto p-4 sm:p-8">
+    <PageContainer as="main">
       <OverviewView
         goals={goals || []}
         projects={projects || []}
         tasks={tasks || []}
         userName={fullName}
         timezone={timezone}
+        activatedCommitments={activatedCommitments}
+        waiverUsage={waiverUsage}
       />
-    </main>
+    </PageContainer>
   );
 }
 

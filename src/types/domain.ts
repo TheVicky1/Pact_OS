@@ -236,6 +236,122 @@ export interface AccountabilityResolutionResult {
   error?: string;
 }
 
+// Phase 4E Calendar Event Domain Types
+export type CalendarColorTag = 'gold' | 'blue' | 'purple' | 'emerald' | 'amber' | 'rose';
 
+export interface CalendarEvent {
+  id: string;
+  user_id: string;
+  title: string;
+  description: string | null;
+  start_time: string;
+  end_time: string;
+  color_tag: CalendarColorTag;
+  goal_id: string | null;
+  project_id: string | null;
+  task_id: string | null;
+  created_at: string;
+  updated_at: string;
+}
 
+export interface CalendarEventWithRelations extends CalendarEvent {
+  projects?: { id: string; title: string } | null;
+  goals?: { id: string; title: string } | null;
+  tasks?: { id: string; title: string } | null;
+}
+
+export interface CreateCalendarEventInput {
+  title: string;
+  start_time: string;
+  end_time: string;
+  description?: string | null;
+  color_tag?: CalendarColorTag;
+  goal_id?: string | null;
+  project_id?: string | null;
+  task_id?: string | null;
+}
+
+export interface UpdateCalendarEventInput {
+  title?: string;
+  start_time?: string;
+  end_time?: string;
+  description?: string | null;
+  color_tag?: CalendarColorTag;
+  goal_id?: string | null;
+  project_id?: string | null;
+  task_id?: string | null;
+}
+
+// Phase 4I-2 Finance Domain Types
+export type {
+  TransactionType,
+  FinanceColorTag,
+  FinanceCategory,
+  FinanceTransaction,
+  FinanceSummary,
+  CategoryBreakdownItem,
+  MonthlyTrendItem,
+} from '@/lib/money';
+export type {
+  CreateCategoryInput,
+  UpdateCategoryInput,
+  CreateTransactionInput,
+  UpdateTransactionInput,
+} from '@/lib/validations/finance';
+
+// Phase 4I-3 Analytics Domain Types
+export type {
+  AnalyticsTimeRange,
+  CompletionMetrics,
+  ActivityTrendPoint,
+  GoalProgressItem,
+  ProjectProgressItem,
+  RecordedSessionMetrics,
+  AccountabilityAggregates,
+  AnalyticsOverviewData,
+} from '@/lib/analytics';
+
+// Phase 4I-4 Settings Domain Types
+export interface UserProfileSettings {
+  id: string;
+  fullName: string;
+  timezone: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface UserAccountInfo {
+  email: string | null;
+  provider: 'email' | 'google' | 'other';
+  createdAt: string | null;
+  lastSignInAt: string | null;
+}
+
+export type IntegrationProviderId = 'github' | 'codeforces' | 'leetcode';
+
+export interface IntegrationStatus {
+  id: IntegrationProviderId;
+  name: string;
+  description: string;
+  category: 'code' | 'competitive_programming';
+  isConnected: boolean;
+  accountHandle: string | null;
+  lastSyncedAt: string | null;
+}
+
+export interface NotificationPreferences {
+  dailyPlanReminder: boolean;
+  deadlineAlerts: boolean;
+  consequenceAlerts: boolean;
+  weeklyReviewNotice: boolean;
+}
+
+export interface SettingsOverviewData {
+  profile: UserProfileSettings;
+  account: UserAccountInfo;
+  accountabilityPreferences: UserAccountabilityPreferences | null;
+  consequenceDefinitions: ConsequenceDefinition[];
+  integrations: IntegrationStatus[];
+  notifications: NotificationPreferences;
+}
 

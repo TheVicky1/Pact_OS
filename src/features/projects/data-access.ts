@@ -8,6 +8,20 @@ export interface ProjectWithGoal extends Project {
   } | null;
 }
 
+/**
+ * Minimal task shape returned for project-scoped display.
+ * Deliberately excludes accountability fields (task_accountability_commitments,
+ * consequence_snapshot, etc.) to preserve accountability confidentiality.
+ */
+export interface ProjectTask {
+  id: string;
+  title: string;
+  status: string;
+  priority: string;
+  deadline_at: string;
+  completed_at: string | null;
+}
+
 export interface DataAccessResult<T> {
   data: T | null;
   error: string | null;
@@ -72,5 +86,48 @@ export async function getProjectById(id: string): Promise<DataAccessResult<Proje
     return { data: data as ProjectWithGoal, error: null };
   } catch {
     return { data: null, error: 'An unexpected error occurred while fetching the project.' };
+  }
+}
+
+/**
+ * Retrieves tasks belonging to a specific project owned by the authenticated user.
+ *
+ * Progress calculation:
+ *   completed tasks / total tasks  (where completed = status === 'completed')
+ *
+ * Security: Only selects display-safe fields. Does NOT join task_accountability_commitments,
+ * consequence_snapshot, or any accountability enforcement data.
+ * RLS on the tasks table ensures cross-user access is impossible at the database layer.
+ */
+export async function getProjectTasks(
+  projectId: string
+): Promise<DataAccessResult<ProjectTask[]>> {
+  try {
+    const supabase = await createClient();
+    const {
+      data: { user },
+      error: authError,
+    } = await supabase.auth.getUser();
+
+    if (authError || !user) {
+      return { data: null, error: 'Authentication required.' };
+    }
+
+    const { data, error } = await supabase
+      .from('tasks')
+      .select('id, title, status, priority, deadline_at, completed_at')
+      .eq('project_id', projectId)
+      .order('deadline_at', { ascending: true });
+
+    if (error) {
+      return { data: null, error: 'Failed to retrieve project tasks.' };
+    }
+
+    return { data: data as ProjectTask[], error: null };
+  } catch {
+    return {
+      data: null,
+      error: 'An unexpected error occurred while fetching project tasks.',
+    };
   }
 }
