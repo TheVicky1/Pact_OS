@@ -6,6 +6,7 @@ import { usePathname } from 'next/navigation';
 import { PactLogo } from '@/components/brand/pact-logo';
 import { signOutAction } from '@/features/auth/actions';
 import { NotificationPopover } from '@/components/ui/notification-popover';
+import { useCommandCenter } from '@/features/command-center';
 import {
   LayoutDashboard,
   Target,
@@ -21,6 +22,7 @@ import {
   Wallet,
   TrendingUp,
   Settings as SettingsIcon,
+  Search,
 } from 'lucide-react';
 
 export interface AppHeaderProps {
@@ -37,11 +39,12 @@ interface NavItem {
 
 /**
  * PACT Application Header
- * Redesigned in Phase 4C with cinematic glass styling, subtle active underline indicator,
- * user identity pill, and accessible responsive drawer navigation.
+ * Redesigned in Phase 4C & Phase 6A with cinematic glass styling, subtle active underline indicator,
+ * global Command Center trigger, user identity pill, and accessible responsive drawer navigation.
  */
 export function AppHeader({ userName }: AppHeaderProps) {
   const pathname = usePathname();
+  const { openCommandCenter } = useCommandCenter();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isNotificationOpen, setIsNotificationOpen] = useState(false);
   const [unreadCount, setUnreadCount] = useState<number>(0);
@@ -131,7 +134,7 @@ export function AppHeader({ userName }: AppHeaderProps) {
     <header className="sticky top-0 z-40 w-full border-b border-white/[0.06] bg-[#09090b]/85 backdrop-blur-xl transition-all">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
         {/* Left Section: Official Logo & Desktop Navigation */}
-        <div className="flex items-center gap-8 lg:gap-12">
+        <div className="flex items-center gap-8 lg:gap-10">
           <Link
             href="/app"
             className="focus-visible:outline-none rounded-xl transition-opacity hover:opacity-90 flex-shrink-0"
@@ -141,7 +144,7 @@ export function AppHeader({ userName }: AppHeaderProps) {
           </Link>
 
           {/* Desktop Navigation */}
-          <nav aria-label="Main Navigation" className="hidden md:flex items-center gap-7 lg:gap-8">
+          <nav aria-label="Main Navigation" className="hidden md:flex items-center gap-6 lg:gap-7">
             {navItems.map((item) => (
               <Link
                 key={item.href}
@@ -172,8 +175,32 @@ export function AppHeader({ userName }: AppHeaderProps) {
           </nav>
         </div>
 
-        {/* Right Section: Utilities & User Identity */}
-        <div className="flex items-center gap-3 sm:gap-4">
+        {/* Right Section: Command Center, Utilities & User Identity */}
+        <div className="flex items-center gap-2.5 sm:gap-3">
+          {/* Desktop Command Center Search Trigger */}
+          <button
+            type="button"
+            onClick={openCommandCenter}
+            aria-label="Open Command Center (Cmd+K / Ctrl+K)"
+            className="hidden lg:flex items-center gap-3 px-3 py-1.5 rounded-xl bg-zinc-900/60 hover:bg-zinc-800/80 border border-white/[0.08] hover:border-white/[0.15] text-xs text-zinc-400 hover:text-zinc-200 transition-all cursor-pointer shadow-sm group focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[#d4af37]/50"
+          >
+            <Search className="w-3.5 h-3.5 text-zinc-400 group-hover:text-[#d4af37] transition-colors" />
+            <span className="font-normal text-zinc-400">Search or jump to...</span>
+            <kbd className="inline-flex items-center gap-0.5 px-1.5 py-0.5 text-[10px] font-medium text-zinc-400 bg-white/[0.06] border border-white/[0.08] rounded">
+              ⌘K
+            </kbd>
+          </button>
+
+          {/* Mobile / Tablet Quick Search Icon Button */}
+          <button
+            type="button"
+            onClick={openCommandCenter}
+            aria-label="Open Command Center"
+            className="lg:hidden p-2 text-zinc-400 hover:text-zinc-100 hover:bg-white/[0.06] rounded-xl focus-visible:outline-none cursor-pointer transition-colors"
+          >
+            <Search className="w-4 h-4" />
+          </button>
+
           {/* Notification Bell with Popover Center */}
           <div className="relative">
             <button
@@ -206,7 +233,7 @@ export function AppHeader({ userName }: AppHeaderProps) {
           </div>
 
           {/* User Profile Area */}
-          <div className="flex items-center gap-2.5 pl-2 border-l border-white/[0.06]">
+          <div className="flex items-center gap-2 pl-2 border-l border-white/[0.06]">
             {userName && (
               <div className="hidden sm:flex items-center gap-2.5 bg-zinc-900/60 border border-white/[0.06] pl-1.5 pr-3 py-1 rounded-full text-xs text-zinc-200 shadow-sm">
                 {/* User Avatar Circle */}
@@ -259,6 +286,24 @@ export function AppHeader({ userName }: AppHeaderProps) {
       {/* Mobile Navigation Drawer */}
       {isMobileMenuOpen && (
         <div className="md:hidden border-t border-white/[0.08] bg-[#09090b]/95 backdrop-blur-2xl px-4 py-4 space-y-3 animate-in slide-in-from-top-2 duration-150">
+          {/* Mobile Command Palette Trigger */}
+          <button
+            type="button"
+            onClick={() => {
+              setIsMobileMenuOpen(false);
+              openCommandCenter();
+            }}
+            className="w-full flex items-center justify-between px-4 py-3 rounded-xl text-sm font-medium bg-zinc-900/80 border border-white/[0.08] text-zinc-200 hover:bg-white/[0.06] transition-all min-h-[44px] cursor-pointer"
+          >
+            <div className="flex items-center gap-3">
+              <Search className="w-4 h-4 text-[#d4af37]" />
+              <span>Command Palette</span>
+            </div>
+            <kbd className="px-2 py-0.5 text-[10px] font-medium text-zinc-400 bg-white/[0.06] border border-white/[0.08] rounded">
+              ⌘K
+            </kbd>
+          </button>
+
           <nav aria-label="Mobile Navigation" className="flex flex-col space-y-1">
             {navItems.map((item) => (
               <Link
