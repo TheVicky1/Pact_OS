@@ -27,6 +27,9 @@ import { useRouter } from 'next/navigation';
 import { InterventionBanner } from '@/features/accountability/components/intervention-banner';
 import { InterventionModal } from '@/features/accountability/components/intervention-modal';
 import type { ActivatedCommitmentDetails, WeeklyWaiverUsage } from '@/features/accountability/data-access';
+import { SundayRitualBanner } from '@/features/weekly-review/components';
+import { isSundayRitualDay } from '@/lib/weekly-review/week';
+import { getLocalDateString } from '@/lib/time';
 
 interface OverviewViewProps {
   goals: Goal[];
@@ -135,6 +138,15 @@ export function OverviewView({
     }
   };
 
+  const isSunday = useMemo(() => {
+    try {
+      const localDate = getLocalDateString(new Date(), timezone);
+      return isSundayRitualDay(localDate, timezone);
+    } catch {
+      return false;
+    }
+  }, [timezone]);
+
   return (
     <div className="space-y-8 pb-12">
       {/* 0. Accountability Active Intervention Banner */}
@@ -142,6 +154,15 @@ export function OverviewView({
         <InterventionBanner
           activatedCount={activatedCommitments.length}
           onReview={() => setSelectedIntervention(activatedCommitments[0])}
+        />
+      )}
+
+      {/* 0.1 Sunday Weekly Review Ritual Banner */}
+      {isSunday && (
+        <SundayRitualBanner
+          isSunday={true}
+          isCompleted={false}
+          weekLabel="This Week"
         />
       )}
 

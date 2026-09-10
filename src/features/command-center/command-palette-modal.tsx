@@ -24,6 +24,7 @@ import {
   CornerDownLeft,
   Command as CommandIcon,
   Loader2,
+  BookOpen,
   Repeat,
 } from 'lucide-react';
 
@@ -40,6 +41,7 @@ const ICON_MAP: Record<string, React.ElementType> = {
   Settings: SettingsIcon,
   ArrowDownRight,
   ArrowUpRight,
+  BookOpen,
   Repeat,
 };
 

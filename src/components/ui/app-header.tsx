@@ -24,6 +24,7 @@ import {
   TrendingUp,
   Settings as SettingsIcon,
   Search,
+  BookOpen,
   Repeat,
 } from 'lucide-react';
 
@@ -52,6 +53,7 @@ export function AppHeader({ userName }: AppHeaderProps) {
   const [unreadCount, setUnreadCount] = useState<number>(0);
 
   const isDashboardActive = pathname === '/app';
+  const isReviewActive = pathname === '/app/review' || pathname.startsWith('/app/review/');
   const isFocusActive = pathname === '/app/focus' || pathname.startsWith('/app/focus/');
   const isHabitsActive = pathname === '/app/habits' || pathname.startsWith('/app/habits/');
   const isGoalsActive = pathname === '/app/goals' || pathname.startsWith('/app/goals/');
@@ -72,6 +74,12 @@ export function AppHeader({ userName }: AppHeaderProps) {
       label: 'Overview',
       icon: LayoutDashboard,
       isActive: isDashboardActive,
+    },
+    {
+      href: '/app/review',
+      label: 'Review',
+      icon: BookOpen,
+      isActive: isReviewActive,
     },
     {
       href: '/app/habits',
