@@ -10,6 +10,9 @@ export type NotificationType =
   | 'verification_completed'
   | 'waiver_reset'
   | 'weekly_review'
+  | 'budget_approaching_limit'
+  | 'budget_exceeded'
+  | 'recurring_transaction_generated'
   | 'system';
 
 export interface PersistentNotification {
