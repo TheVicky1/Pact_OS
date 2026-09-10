@@ -19,6 +19,7 @@ import {
   Calendar as CalendarIcon,
   Wallet,
   TrendingUp,
+  Settings as SettingsIcon,
 } from 'lucide-react';
 
 export interface AppHeaderProps {
@@ -192,6 +193,19 @@ export function AppHeader({ userName }: AppHeaderProps) {
               </div>
             )}
 
+            {/* Settings Link */}
+            <Link
+              href="/app/settings"
+              aria-label="Settings and Preferences"
+              className={`p-2 rounded-xl border border-white/[0.06] transition-all focus-visible:outline-none cursor-pointer ${
+                pathname.startsWith('/app/settings')
+                  ? 'bg-[#121217] text-[#e2c056] border-[#d4af37]/40 shadow-sm'
+                  : 'bg-zinc-900/40 hover:bg-zinc-800/80 text-zinc-400 hover:text-zinc-100'
+              }`}
+            >
+              <SettingsIcon className="w-4 h-4" />
+            </Link>
+
             {/* Sign Out Action */}
             <form action={signOutAction} className="inline-flex">
               <button
@@ -243,6 +257,23 @@ export function AppHeader({ userName }: AppHeaderProps) {
                 )}
               </Link>
             ))}
+
+            {/* Mobile Settings Link */}
+            <Link
+              href="/app/settings"
+              aria-current={pathname.startsWith('/app/settings') ? 'page' : undefined}
+              onClick={() => setIsMobileMenuOpen(false)}
+              className={`flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all min-h-[44px] ${
+                pathname.startsWith('/app/settings')
+                  ? 'bg-[#121217] text-zinc-100 border border-[#d4af37]/40 shadow-sm font-semibold'
+                  : 'text-zinc-400 hover:text-zinc-200 hover:bg-white/[0.04]'
+              }`}
+            >
+              <SettingsIcon
+                className={`w-4 h-4 ${pathname.startsWith('/app/settings') ? 'text-[#d4af37]' : 'text-zinc-400'}`}
+              />
+              <span>Settings & Preferences</span>
+            </Link>
           </nav>
 
           {userName && (

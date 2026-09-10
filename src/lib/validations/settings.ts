@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { isValidIanaTimezone } from '@/lib/time';
+import { isValidIanaTimezone } from '../time';
 
 /**
  * Validation schema for updating user profile (Name & IANA Timezone)
