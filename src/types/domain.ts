@@ -355,3 +355,7 @@ export interface SettingsOverviewData {
   notifications: NotificationPreferences;
 }
 
+// Phase 5B Notification Domain Types
+export * from './notifications';
+
+
