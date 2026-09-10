@@ -298,3 +298,15 @@ export type {
   CreateTransactionInput,
   UpdateTransactionInput,
 } from '@/lib/validations/finance';
+
+// Phase 4I-3 Analytics Domain Types
+export type {
+  AnalyticsTimeRange,
+  CompletionMetrics,
+  ActivityTrendPoint,
+  GoalProgressItem,
+  ProjectProgressItem,
+  RecordedSessionMetrics,
+  AccountabilityAggregates,
+  AnalyticsOverviewData,
+} from '@/lib/analytics';
