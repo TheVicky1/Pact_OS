@@ -264,6 +264,14 @@ export async function deleteCalendarEventAction(
       return { success: false, error: 'Authentication required.' };
     }
 
+    // Check if event has a Google Calendar event ID
+    const { data: eventToDelete } = await supabase
+      .from('calendar_events')
+      .select('google_event_id, google_calendar_id')
+      .eq('id', id)
+      .eq('user_id', user.id)
+      .maybeSingle();
+
     const { error: deleteError } = await supabase
       .from('calendar_events')
       .delete()
@@ -272,6 +280,33 @@ export async function deleteCalendarEventAction(
 
     if (deleteError) {
       return { success: false, error: 'Failed to delete calendar event.' };
+    }
+
+    // Best-effort remote deletion in Google Calendar
+    if (eventToDelete?.google_event_id) {
+      try {
+        const { data: intRec } = await supabase
+          .from('google_calendar_integrations')
+          .select('access_token, refresh_token')
+          .eq('user_id', user.id)
+          .maybeSingle();
+
+        if (intRec?.access_token) {
+          const { GoogleCalendarClient } = await import(
+            '@/lib/integrations/google-calendar/client'
+          );
+          const client = new GoogleCalendarClient({
+            accessToken: intRec.access_token,
+            refreshToken: intRec.refresh_token || undefined,
+          });
+          void client.deleteEvent(
+            eventToDelete.google_event_id,
+            eventToDelete.google_calendar_id || 'primary'
+          );
+        }
+      } catch {
+        // Non-blocking best-effort cleanup
+      }
     }
 
     revalidatePath('/app');
