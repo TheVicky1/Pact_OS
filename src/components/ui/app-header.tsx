@@ -44,6 +44,7 @@ export function AppHeader({ userName }: AppHeaderProps) {
   const pathname = usePathname();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isNotificationOpen, setIsNotificationOpen] = useState(false);
+  const [unreadCount, setUnreadCount] = useState<number>(0);
 
   const isDashboardActive = pathname === '/app';
   const isGoalsActive = pathname === '/app/goals' || pathname.startsWith('/app/goals/');
@@ -178,7 +179,7 @@ export function AppHeader({ userName }: AppHeaderProps) {
             <button
               type="button"
               onClick={() => setIsNotificationOpen(!isNotificationOpen)}
-              aria-label="Notifications"
+              aria-label={`Notifications${unreadCount > 0 ? ` (${unreadCount} unread)` : ''}`}
               aria-haspopup="dialog"
               aria-expanded={isNotificationOpen}
               className={`relative p-2 rounded-full transition-colors focus-visible:outline-none cursor-pointer ${
@@ -188,13 +189,19 @@ export function AppHeader({ userName }: AppHeaderProps) {
               }`}
             >
               <Bell className="w-4 h-4" />
-              <span className="absolute top-1.5 right-1.5 w-1.5 h-1.5 rounded-full bg-[#d4af37]" />
+              {unreadCount > 0 && (
+                <span
+                  data-testid="notification-unread-dot"
+                  className="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-[#d4af37] ring-2 ring-[#09090b] animate-pulse"
+                />
+              )}
             </button>
 
             {/* Interactive Popover */}
             <NotificationPopover
               isOpen={isNotificationOpen}
               onClose={() => setIsNotificationOpen(false)}
+              onUnreadCountChange={setUnreadCount}
             />
           </div>
 
