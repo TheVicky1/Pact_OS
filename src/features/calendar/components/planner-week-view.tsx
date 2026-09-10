@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useMemo } from 'react';
-import { Sparkles, FolderKanban, Target, CheckSquare } from 'lucide-react';
+import { Sparkles, FolderKanban, Target, CheckSquare, Calendar as CalendarIcon } from 'lucide-react';
 import type { CalendarEventWithRelations } from '@/types/domain';
 import {
   computeTimelineRange,
@@ -268,11 +268,16 @@ export function PlannerWeekView({
                         }}
                         className={`absolute z-10 rounded-lg p-1.5 border backdrop-blur-md transition-all cursor-pointer shadow-sm overflow-hidden flex flex-col justify-start group ${colors.bg} ${colors.border} ${colors.glow}`}
                       >
-                        <div className="flex items-center gap-1 min-w-0">
-                          <div className={`w-1.5 h-1.5 rounded-full shrink-0 ${colors.dot}`} />
-                          <h4 className={`text-[11px] font-semibold truncate leading-tight ${colors.text}`}>
-                            {pe.event.title}
-                          </h4>
+                        <div className="flex items-center gap-1 min-w-0 justify-between">
+                          <div className="flex items-center gap-1 min-w-0 flex-1">
+                            <div className={`w-1.5 h-1.5 rounded-full shrink-0 ${colors.dot}`} />
+                            <h4 className={`text-[11px] font-semibold truncate leading-tight ${colors.text}`}>
+                              {pe.event.title}
+                            </h4>
+                          </div>
+                          {(pe.event.is_external || pe.event.google_event_id) && (
+                            <CalendarIcon className="w-2.5 h-2.5 text-blue-400 shrink-0" />
+                          )}
                         </div>
 
                         {pe.heightPx >= 44 && (
