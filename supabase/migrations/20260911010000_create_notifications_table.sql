@@ -44,11 +44,10 @@ CREATE INDEX IF NOT EXISTS idx_notifications_idempotency
   ON public.notifications(user_id, idempotency_key) 
   WHERE idempotency_key IS NOT NULL;
 
--- 3. Enable Row-Level Security (RLS) & Grant Permissions
+-- 3. Enable Row-Level Security (RLS) & Grant-- Permissions: Allow authenticated client access under RLS
 ALTER TABLE public.notifications ENABLE ROW LEVEL SECURITY;
 
-GRANT SELECT, UPDATE, DELETE ON TABLE public.notifications TO authenticated;
-GRANT ALL ON TABLE public.notifications TO service_role;
+GRANT SELECT, INSERT, UPDATE, DELETE ON TABLE public.notifications TO authenticated;
 GRANT ALL ON TABLE public.notifications TO postgres;
 
 -- 4. RLS Policies (User Isolation)
@@ -120,7 +119,6 @@ END;
 $$;
 
 GRANT EXECUTE ON FUNCTION public.create_notification(UUID, TEXT, TEXT, TEXT, TEXT, TEXT, JSONB) TO authenticated;
-GRANT EXECUTE ON FUNCTION public.create_notification(UUID, TEXT, TEXT, TEXT, TEXT, TEXT, JSONB) TO service_role;
 GRANT EXECUTE ON FUNCTION public.create_notification(UUID, TEXT, TEXT, TEXT, TEXT, TEXT, JSONB) TO postgres;
 
 -- 6. Update Autonomous Sweeper RPC to emit persistent notifications atomically
