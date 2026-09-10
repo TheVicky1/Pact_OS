@@ -282,6 +282,19 @@ export interface UpdateCalendarEventInput {
   task_id?: string | null;
 }
 
-
-
-
+// Phase 4I-2 Finance Domain Types
+export type {
+  TransactionType,
+  FinanceColorTag,
+  FinanceCategory,
+  FinanceTransaction,
+  FinanceSummary,
+  CategoryBreakdownItem,
+  MonthlyTrendItem,
+} from '@/lib/money';
+export type {
+  CreateCategoryInput,
+  UpdateCategoryInput,
+  CreateTransactionInput,
+  UpdateTransactionInput,
+} from '@/lib/validations/finance';
