@@ -12,6 +12,7 @@ import { DeclarationModal } from './declaration-modal';
 import { TaskCompletionModal } from './task-completion-modal';
 import { CustomVerificationModal } from './custom-verification-modal';
 import { WaiverDialog } from './waiver-dialog';
+import { ExternalProofModal } from './external-proof-modal';
 import {
   ShieldAlert,
   Clock,
@@ -21,6 +22,9 @@ import {
   HelpCircle,
   ArrowRight,
   Shield,
+  GitBranch,
+  Code2,
+  Terminal,
 } from 'lucide-react';
 
 export interface InterventionModalProps {
@@ -58,8 +62,55 @@ export function InterventionModal({
   const verificationType = commitment.consequence_snapshot.verification_type || 'declaration';
   const verificationConfig = commitment.consequence_snapshot.verification_config || {};
 
+  const isExternalProof =
+    verificationType === 'github_commits' ||
+    verificationType === 'github_pr' ||
+    verificationType === 'leetcode_solve' ||
+    verificationType === 'codeforces_solve' ||
+    verificationType === 'external_proof';
+
   const getVerificationMetadata = () => {
     switch (verificationType) {
+      case 'github_commits': {
+        const count = typeof verificationConfig.min_commits === 'number' ? verificationConfig.min_commits : 1;
+        return {
+          label: `GitHub Commits (${count})`,
+          icon: GitBranch,
+          summary: `Verify at least ${count} code commit(s) pushed to GitHub within the commitment window.`,
+        };
+      }
+      case 'github_pr': {
+        const count = typeof verificationConfig.min_prs === 'number' ? verificationConfig.min_prs : 1;
+        return {
+          label: `GitHub PRs (${count})`,
+          icon: GitBranch,
+          summary: `Verify at least ${count} pull request(s) created on GitHub within the commitment window.`,
+        };
+      }
+      case 'leetcode_solve': {
+        const count = typeof verificationConfig.min_problems === 'number' ? verificationConfig.min_problems : 1;
+        return {
+          label: `LeetCode Solves (${count})`,
+          icon: Code2,
+          summary: `Verify at least ${count} accepted LeetCode problem submission(s) within the commitment window.`,
+        };
+      }
+      case 'codeforces_solve': {
+        const count = typeof verificationConfig.min_problems === 'number' ? verificationConfig.min_problems : 1;
+        return {
+          label: `Codeforces Solves (${count})`,
+          icon: Terminal,
+          summary: `Verify at least ${count} accepted Codeforces problem(s) within the commitment window.`,
+        };
+      }
+      case 'external_proof': {
+        const p = (verificationConfig.provider as string) || 'developer';
+        return {
+          label: `${p.toUpperCase()} Proof`,
+          icon: GitBranch,
+          summary: 'Verify developer activity from linked external service.',
+        };
+      }
       case 'timed_session': {
         const sec = typeof verificationConfig.required_duration_seconds === 'number'
           ? verificationConfig.required_duration_seconds
@@ -262,6 +313,16 @@ export function InterventionModal({
           actionStatement={commitment.consequence_snapshot.action_statement}
           timezone={timezone}
           onSuccess={handleSubFlowSuccess}
+        />
+      )}
+
+      {/* Sub-Modal: External Proof of Work */}
+      {isExternalProof && (
+        <ExternalProofModal
+          isOpen={activeSubFlow === 'verification'}
+          onClose={() => setActiveSubFlow(null)}
+          commitment={commitment}
+          onResolved={handleSubFlowSuccess}
         />
       )}
 
