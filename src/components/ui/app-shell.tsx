@@ -5,6 +5,7 @@ import { CommandCenterWrapper } from '@/features/command-center';
 
 export interface AppShellProps {
   userName?: string;
+  userEmail?: string;
   timezone?: string;
   children: React.ReactNode;
 }
@@ -16,6 +17,7 @@ export interface AppShellProps {
  */
 export function AppShell({
   userName,
+  userEmail,
   timezone,
   children,
 }: AppShellProps) {
@@ -26,7 +28,7 @@ export function AppShell({
         <CanvasAmbientLight />
 
         {/* Global Application Header */}
-        <AppHeader userName={userName} timezone={timezone} />
+        <AppHeader userName={userName} userEmail={userEmail} timezone={timezone} />
 
         {/* Main Content Area */}
         <div className="flex-1 w-full relative z-10 flex flex-col">

@@ -6,6 +6,7 @@ import { usePathname } from 'next/navigation';
 import { PactLogo } from '@/components/brand/pact-logo';
 import { signOutAction } from '@/features/auth/actions';
 import { NotificationPopover } from '@/components/ui/notification-popover';
+import { UserProfileDropdown } from '@/components/ui/user-profile-dropdown';
 import {
   LayoutDashboard,
   Target,
@@ -15,7 +16,6 @@ import {
   Bell,
   Menu,
   X,
-  User,
   ShieldAlert,
   Timer as TimerIcon,
   Wallet,
@@ -26,6 +26,7 @@ import {
 export interface AppHeaderProps {
   timezone?: string;
   userName?: string;
+  userEmail?: string;
 }
 
 interface NavItem {
@@ -38,10 +39,10 @@ interface NavItem {
 /**
  * PACT Application Global Header & Navigation System
  * Clean three-zone horizontal layout:
- * [Logo] -> [Primary Navigation: 8 Core Modules] -> [Flexible Space] -> [Notifications, Profile, Settings, Sign Out]
+ * [Logo] -> [Primary Navigation: 8 Core Modules] -> [Flexible Space] -> [Notifications, User Profile Dropdown]
  * Full responsiveness across desktop, laptop, tablet, and mobile with zero visual collision.
  */
-export function AppHeader({ userName }: AppHeaderProps) {
+export function AppHeader({ userName, userEmail, timezone }: AppHeaderProps) {
   const pathname = usePathname();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isNotificationOpen, setIsNotificationOpen] = useState(false);
@@ -123,7 +124,7 @@ export function AppHeader({ userName }: AppHeaderProps) {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [handleKeyDown]);
 
-  const userInitial = userName?.trim().charAt(0).toUpperCase() || null;
+  const userInitial = userName?.trim().charAt(0).toUpperCase() || 'U';
 
   return (
     <header className="sticky top-0 z-40 w-full border-b border-white/[0.06] bg-[#09090b]/85 backdrop-blur-xl transition-all">
@@ -170,8 +171,8 @@ export function AppHeader({ userName }: AppHeaderProps) {
           </nav>
         </div>
 
-        {/* Right Section: Notification Bell, User Identity, Settings, Sign Out */}
-        <div className="flex items-center gap-2 sm:gap-2.5 shrink-0">
+        {/* Right Section: Notification Bell, User Account Profile Dropdown, Mobile Menu */}
+        <div className="flex items-center gap-2 sm:gap-3 shrink-0">
           {/* Notification Bell with Popover Center */}
           <div className="relative">
             <button
@@ -203,42 +204,12 @@ export function AppHeader({ userName }: AppHeaderProps) {
             />
           </div>
 
-          {/* User Profile Pill */}
-          {userName && (
-            <div className="hidden sm:flex items-center gap-2 h-9 bg-zinc-900/40 border border-white/[0.06] pl-1.5 pr-3 rounded-xl text-xs text-zinc-200 shadow-sm">
-              <div className="w-6 h-6 rounded-full bg-gradient-to-br from-[#1e1e28] to-[#121217] border border-[#d4af37]/40 flex items-center justify-center font-semibold text-[11px] text-[#e2c056] shadow-sm shrink-0">
-                {userInitial ? userInitial : <User className="w-3 h-3 text-[#d4af37]" />}
-              </div>
-              <span className="font-medium truncate max-w-[100px] 2xl:max-w-[140px] select-none">
-                {userName}
-              </span>
-            </div>
-          )}
-
-          {/* Settings Link Button */}
-          <Link
-            href="/app/settings"
-            aria-label="Settings and Preferences"
-            className={`h-9 w-9 flex items-center justify-center rounded-xl border transition-all focus-visible:outline-none cursor-pointer ${
-              pathname.startsWith('/app/settings')
-                ? 'bg-[#121217] text-[#e2c056] border-[#d4af37]/40 shadow-sm'
-                : 'bg-zinc-900/40 hover:bg-zinc-800/80 text-zinc-400 hover:text-zinc-100 border-white/[0.06]'
-            }`}
-          >
-            <SettingsIcon className="w-4 h-4" />
-          </Link>
-
-          {/* Sign Out Action */}
-          <form action={signOutAction} className="inline-flex">
-            <button
-              type="submit"
-              aria-label="Sign out"
-              className="h-9 inline-flex items-center gap-2 text-xs font-medium text-zinc-400 hover:text-zinc-100 bg-zinc-900/40 hover:bg-zinc-800/80 border border-white/[0.06] px-3 rounded-xl transition-all cursor-pointer focus-visible:outline-none"
-            >
-              <LogOut className="w-3.5 h-3.5 text-zinc-400" />
-              <span className="hidden lg:inline">Sign Out</span>
-            </button>
-          </form>
+          {/* Authoritative User Account Profile Dropdown */}
+          <UserProfileDropdown
+            userName={userName}
+            userEmail={userEmail}
+            timezone={timezone}
+          />
 
           {/* Mobile / Tablet Menu Toggle Button */}
           <button
@@ -299,16 +270,28 @@ export function AppHeader({ userName }: AppHeaderProps) {
             </Link>
           </nav>
 
-          {userName && (
-            <div className="pt-3 border-t border-white/[0.08] flex items-center justify-between px-2 text-xs text-zinc-400">
-              <div className="flex items-center gap-2">
-                <div className="w-5 h-5 rounded-full bg-zinc-800 border border-[#d4af37]/30 flex items-center justify-center font-medium text-[10px] text-[#e2c056]">
-                  {userInitial || 'U'}
-                </div>
-                <span className="text-zinc-300 font-medium truncate max-w-[180px]">{userName}</span>
+          {/* User Info & Mobile Sign Out in Drawer */}
+          <div className="pt-3 border-t border-white/[0.08] flex items-center justify-between px-2 text-xs text-zinc-400">
+            <div className="flex items-center gap-2 min-w-0">
+              <div className="w-6 h-6 rounded-full bg-zinc-800 border border-[#d4af37]/30 flex items-center justify-center font-medium text-[11px] text-[#e2c056] shrink-0">
+                {userInitial}
+              </div>
+              <div className="min-w-0">
+                <p className="text-zinc-200 font-medium truncate max-w-[150px]">{userName || 'User'}</p>
+                {userEmail && <p className="text-[10px] text-zinc-400 truncate max-w-[150px]">{userEmail}</p>}
               </div>
             </div>
-          )}
+
+            <form action={signOutAction} className="inline-flex">
+              <button
+                type="submit"
+                className="inline-flex items-center gap-1.5 text-xs text-rose-400 hover:text-rose-300 transition-colors p-1.5 rounded-lg hover:bg-rose-500/10 cursor-pointer"
+              >
+                <LogOut className="w-3.5 h-3.5" />
+                <span>Sign Out</span>
+              </button>
+            </form>
+          </div>
         </div>
       )}
     </header>
