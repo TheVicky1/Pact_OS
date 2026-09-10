@@ -22,7 +22,7 @@ import {
   declareFulfillmentSchema,
   fulfillTaskCompletionSchema,
 } from '@/lib/validations/accountability';
-import { AccountabilityResolutionResult } from '@/types/domain';
+import { AccountabilityResolutionResult, ExternalProofRuleResult } from '@/types/domain';
 
 export async function getConsequenceDefinitions(): Promise<ConsequenceDefinition[]> {
   const supabase = await createClient();
@@ -664,12 +664,12 @@ export async function fulfillTaskCompletion(
  */
 export async function verifyAndFulfillExternalProofCommitment(
   commitmentId: string,
-  fetcherOverrides?: any
+  fetcherOverrides?: Record<string, unknown>
 ): Promise<{
   success: boolean;
   code: string;
-  ruleResult?: any;
-  data?: any;
+  ruleResult?: ExternalProofRuleResult;
+  data?: Record<string, unknown>;
   error?: string;
 }> {
   const supabase = await createClient();
@@ -710,7 +710,7 @@ export async function verifyAndFulfillExternalProofCommitment(
   } else if (verifType === 'codeforces_solve') {
     provider = 'codeforces';
   } else if (verifType === 'external_proof') {
-    provider = (verifConfig.provider as any) || 'github';
+    provider = (verifConfig.provider as 'github' | 'leetcode' | 'codeforces') || 'github';
   } else {
     return {
       success: false,

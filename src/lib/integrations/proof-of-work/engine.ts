@@ -12,9 +12,16 @@ import {
   VerificationConfig,
   VerificationType,
 } from '@/types/domain';
-import { fetchGitHubRepoCommits, fetchGitHubPublicUserCommits, fetchGitHubPullRequests } from './github';
-import { fetchLeetCodeRecentAc } from './leetcode';
-import { fetchCodeforcesSubmissions } from './codeforces';
+import {
+  fetchGitHubRepoCommits,
+  fetchGitHubPublicUserCommits,
+  fetchGitHubPullRequests,
+  GitHubCommitItem,
+  GitHubPullRequestItem,
+  GitHubAdapterResult,
+} from './github';
+import { fetchLeetCodeRecentAc, LeetCodeSubmissionItem, LeetCodeAdapterResult } from './leetcode';
+import { fetchCodeforcesSubmissions, CodeforcesSubmissionItem, CodeforcesAdapterResult } from './codeforces';
 
 export interface EvaluationOptions {
   provider: ExternalProofProvider;
@@ -25,10 +32,10 @@ export interface EvaluationOptions {
   accountHandle: string;
   token?: string | null;
   fetcherOverrides?: {
-    githubCommits?: (user: string, token?: string | null) => Promise<any>;
-    githubPRs?: (user: string, since?: string, until?: string, repo?: string, token?: string | null) => Promise<any>;
-    leetcodeAc?: (user: string, limit?: number) => Promise<any>;
-    codeforcesSubmissions?: (handle: string, count?: number) => Promise<any>;
+    githubCommits?: (user: string, token?: string | null) => Promise<GitHubAdapterResult<GitHubCommitItem[]>>;
+    githubPRs?: (user: string, since?: string, until?: string, repo?: string, token?: string | null) => Promise<GitHubAdapterResult<GitHubPullRequestItem[]>>;
+    leetcodeAc?: (user: string, limit?: number) => Promise<LeetCodeAdapterResult<LeetCodeSubmissionItem[]>>;
+    codeforcesSubmissions?: (handle: string, count?: number) => Promise<CodeforcesAdapterResult<CodeforcesSubmissionItem[]>>;
   };
 }
 
@@ -44,7 +51,7 @@ export function isTimestampInWindow(
   const startTime = new Date(windowStartIso).getTime();
   const endTime = new Date(windowEndIso).getTime();
 
-  if (isNaN(eventTime) || isNaN(startTime) || isNaN(endTime)) {
+  if (Number.isNaN(eventTime) || Number.isNaN(startTime) || Number.isNaN(endTime)) {
     return false;
   }
 
@@ -52,7 +59,7 @@ export function isTimestampInWindow(
 }
 
 /**
- * Deterministically evaluates an external proof-of-work rule against provider data.
+ * Evaluates proof-of-work criteria deterministically against external activity feeds.
  */
 export async function evaluateProofOfWorkRule(
   options: EvaluationOptions
@@ -68,31 +75,33 @@ export async function evaluateProofOfWorkRule(
     fetcherOverrides,
   } = options;
 
-  const cleanHandle = accountHandle?.trim().replace(/^@/, '');
+  const cleanHandle = accountHandle.replace(/^@/, '').trim();
   if (!cleanHandle) {
     return {
       verified: false,
       code: 'NO_LINKED_ACCOUNT',
-      summary: 'No linked external account handle found for verification.',
+      summary: `No linked account handle configured for provider "${provider}".`,
       provider,
       evidence: [],
       checked_count: 0,
       required_count: 1,
       window_start: windowStart,
       window_end: windowEnd,
-      error: 'Account handle is missing or empty.',
     };
   }
 
-  // 1. GitHub Commits / PR Evaluation
+  // 1. GitHub Evaluation
   if (provider === 'github') {
-    const isPrRule = ruleType === 'github_pr';
-    const requiredCount = isPrRule
-      ? typeof config.min_prs === 'number' && config.min_prs > 0 ? config.min_prs : 1
-      : typeof config.min_commits === 'number' && config.min_commits > 0 ? config.min_commits : 1;
-    const targetRepo = typeof config.repository === 'string' && config.repository.trim() ? config.repository.trim() : undefined;
+    const targetRepo = typeof config.repo === 'string' && config.repo.trim() ? config.repo.trim() : undefined;
+    const requiredCount = typeof config.min_count === 'number' && config.min_count > 0 ? config.min_count : 1;
 
-    if (isPrRule) {
+    if (ruleType === 'github_pr') {
+      const requiredCount =
+        typeof config.min_prs === 'number' && config.min_prs > 0
+          ? config.min_prs
+          : typeof config.min_count === 'number' && config.min_count > 0
+          ? config.min_count
+          : 1;
       const prFetcher = fetcherOverrides?.githubPRs || fetchGitHubPullRequests;
       const res = await prFetcher(cleanHandle, windowStart, windowEnd, targetRepo, token);
 
@@ -101,7 +110,21 @@ export async function evaluateProofOfWorkRule(
           return {
             verified: false,
             code: 'RATE_LIMITED',
-            summary: 'GitHub API rate limit reached. Verification will retry.',
+            summary: 'GitHub API rate limit exceeded. Verification will retry.',
+            provider,
+            evidence: [],
+            checked_count: 0,
+            required_count: requiredCount,
+            window_start: windowStart,
+            window_end: windowEnd,
+            error: res.error,
+          };
+        }
+        if (res.isUnauthorized) {
+          return {
+            verified: false,
+            code: 'UNAUTHORIZED',
+            summary: 'GitHub authentication expired or token revoked.',
             provider,
             evidence: [],
             checked_count: 0,
@@ -114,7 +137,7 @@ export async function evaluateProofOfWorkRule(
         return {
           verified: false,
           code: 'PROVIDER_UNAVAILABLE',
-          summary: 'Unable to reach GitHub to verify pull requests.',
+          summary: 'Unable to connect to GitHub API.',
           provider,
           evidence: [],
           checked_count: 0,
@@ -125,11 +148,11 @@ export async function evaluateProofOfWorkRule(
         };
       }
 
-      const validPrs = (res.data || []).filter((pr: any) =>
+      const validPrs = (res.data || []).filter((pr: GitHubPullRequestItem) =>
         isTimestampInWindow(pr.createdAt, windowStart, windowEnd)
       );
 
-      const evidenceItems: ExternalProofEvidenceItem[] = validPrs.map((pr: any) => ({
+      const evidenceItems: ExternalProofEvidenceItem[] = validPrs.map((pr: GitHubPullRequestItem) => ({
         external_event_id: `pr_${pr.id || pr.number}`,
         event_timestamp: pr.createdAt,
         evidence_type: 'pr',
@@ -147,8 +170,8 @@ export async function evaluateProofOfWorkRule(
         verified,
         code: verified ? 'VERIFIED' : 'RULE_NOT_SATISFIED',
         summary: verified
-          ? `Verified ${evidenceItems.length} GitHub pull request(s) within commitment window (required: ${requiredCount}).`
-          : `Found ${evidenceItems.length} of ${requiredCount} required GitHub pull request(s) within commitment window.`,
+          ? `Verified ${evidenceItems.length} GitHub pull request(s) created in commitment window (required: ${requiredCount}).`
+          : `Found ${evidenceItems.length} of ${requiredCount} required GitHub pull requests within commitment window.`,
         provider: 'github',
         evidence: evidenceItems,
         checked_count: evidenceItems.length,
@@ -156,12 +179,21 @@ export async function evaluateProofOfWorkRule(
         window_start: windowStart,
         window_end: windowEnd,
       };
-    } else {
-      // Commits evaluation
-      let res;
+    }
+
+    // Default: github_commits
+    if (ruleType === 'github_commits' || ruleType === 'external_proof') {
+      const requiredCount =
+        typeof config.min_commits === 'number' && config.min_commits > 0
+          ? config.min_commits
+          : typeof config.min_count === 'number' && config.min_count > 0
+          ? config.min_count
+          : 1;
+      let res: GitHubAdapterResult<GitHubCommitItem[]>;
+
       if (targetRepo && targetRepo.includes('/')) {
-        const [owner, repo] = targetRepo.split('/');
-        res = await fetchGitHubRepoCommits(owner, repo, cleanHandle, windowStart, windowEnd, token);
+        const [owner, repoName] = targetRepo.split('/');
+        res = await fetchGitHubRepoCommits(owner, repoName, cleanHandle, windowStart, windowEnd, token);
       } else {
         const commitFetcher = fetcherOverrides?.githubCommits || fetchGitHubPublicUserCommits;
         res = await commitFetcher(cleanHandle, token);
@@ -172,7 +204,21 @@ export async function evaluateProofOfWorkRule(
           return {
             verified: false,
             code: 'RATE_LIMITED',
-            summary: 'GitHub API rate limit reached. Verification will retry.',
+            summary: 'GitHub API rate limit exceeded. Verification will retry.',
+            provider,
+            evidence: [],
+            checked_count: 0,
+            required_count: requiredCount,
+            window_start: windowStart,
+            window_end: windowEnd,
+            error: res.error,
+          };
+        }
+        if (res.isUnauthorized) {
+          return {
+            verified: false,
+            code: 'UNAUTHORIZED',
+            summary: 'GitHub access token invalid or expired.',
             provider,
             evidence: [],
             checked_count: 0,
@@ -185,7 +231,7 @@ export async function evaluateProofOfWorkRule(
         return {
           verified: false,
           code: 'PROVIDER_UNAVAILABLE',
-          summary: 'Unable to reach GitHub to verify commit activity.',
+          summary: 'Unable to reach GitHub commit logs.',
           provider,
           evidence: [],
           checked_count: 0,
@@ -196,7 +242,7 @@ export async function evaluateProofOfWorkRule(
         };
       }
 
-      const validCommits = (res.data || []).filter((c: any) => {
+      const validCommits = (res.data || []).filter((c: GitHubCommitItem) => {
         const matchesWindow = isTimestampInWindow(c.authorDate, windowStart, windowEnd);
         const matchesRepo = !targetRepo || (c.repository && c.repository.toLowerCase() === targetRepo.toLowerCase());
         return matchesWindow && matchesRepo;
@@ -276,7 +322,7 @@ export async function evaluateProofOfWorkRule(
       };
     }
 
-    const validSubmissions = (res.data || []).filter((sub: any) => {
+    const validSubmissions = (res.data || []).filter((sub: LeetCodeSubmissionItem) => {
       const inWindow = isTimestampInWindow(sub.timestamp, windowStart, windowEnd);
       const matchesSlug = !specificSlug || sub.titleSlug.toLowerCase() === specificSlug;
       return inWindow && matchesSlug;
@@ -289,11 +335,12 @@ export async function evaluateProofOfWorkRule(
       if (!uniqueSlugs.has(sub.titleSlug)) {
         uniqueSlugs.add(sub.titleSlug);
         evidenceItems.push({
-          external_event_id: sub.id || `lc_${sub.titleSlug}_${new Date(sub.timestamp).getTime()}`,
+          external_event_id: `lc_ac_${sub.id}`,
           event_timestamp: sub.timestamp,
           evidence_type: 'accepted_submission',
-          summary: `LeetCode Accepted: ${sub.title}`,
+          summary: `LeetCode Solved: ${sub.title}`,
           metadata: {
+            submissionId: sub.id,
             title: sub.title,
             titleSlug: sub.titleSlug,
           },
@@ -306,8 +353,8 @@ export async function evaluateProofOfWorkRule(
       verified,
       code: verified ? 'VERIFIED' : 'RULE_NOT_SATISFIED',
       summary: verified
-        ? `Verified ${evidenceItems.length} accepted LeetCode problem solve(s) within commitment window (required: ${requiredCount}).`
-        : `Found ${evidenceItems.length} of ${requiredCount} required LeetCode problem solve(s) within commitment window.`,
+        ? `Verified ${evidenceItems.length} LeetCode accepted solve(s) in commitment window (required: ${requiredCount}).`
+        : `Found ${evidenceItems.length} of ${requiredCount} required LeetCode problem solves in commitment window.`,
       provider: 'leetcode',
       evidence: evidenceItems,
       checked_count: evidenceItems.length,
@@ -354,7 +401,7 @@ export async function evaluateProofOfWorkRule(
       };
     }
 
-    const validSubmissions = (res.data || []).filter((sub: any) => {
+    const validSubmissions = (res.data || []).filter((sub: CodeforcesSubmissionItem) => {
       const inWindow = isTimestampInWindow(sub.creationTimeIso, windowStart, windowEnd);
       const isAccepted = sub.verdict === 'OK';
       const meetsRating = !minRating || (typeof sub.rating === 'number' && sub.rating >= minRating);
@@ -389,8 +436,8 @@ export async function evaluateProofOfWorkRule(
       verified,
       code: verified ? 'VERIFIED' : 'RULE_NOT_SATISFIED',
       summary: verified
-        ? `Verified ${evidenceItems.length} accepted Codeforces problem solve(s) within commitment window (required: ${requiredCount}).`
-        : `Found ${evidenceItems.length} of ${requiredCount} required Codeforces solve(s) within commitment window.`,
+        ? `Verified ${evidenceItems.length} Codeforces accepted submission(s) in commitment window (required: ${requiredCount}).`
+        : `Found ${evidenceItems.length} of ${requiredCount} required Codeforces accepted submission(s) in commitment window.`,
       provider: 'codeforces',
       evidence: evidenceItems,
       checked_count: evidenceItems.length,
@@ -402,8 +449,8 @@ export async function evaluateProofOfWorkRule(
 
   return {
     verified: false,
-    code: 'RULE_NOT_SATISFIED',
-    summary: `Unsupported external proof provider: ${provider}`,
+    code: 'UNKNOWN_PROVIDER',
+    summary: `Unsupported external proof provider: "${provider}".`,
     provider,
     evidence: [],
     checked_count: 0,

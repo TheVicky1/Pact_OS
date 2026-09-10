@@ -337,7 +337,7 @@ export interface GoogleCalendarSyncSummary {
   timestamp: string;
 }
 
-// Phase 4I-2 Finance Domain Types
+// Phase 4I-2 & 5E Finance Domain Types
 export type {
   TransactionType,
   FinanceColorTag,
@@ -346,12 +346,22 @@ export type {
   FinanceSummary,
   CategoryBreakdownItem,
   MonthlyTrendItem,
+  RecurrenceFrequency,
+  RecurrenceStatus,
+  FinanceRecurringTransaction,
+  FinanceBudget,
+  CategoryBudgetStatus,
+  MonthlyBudgetOverview,
 } from '@/lib/money';
 export type {
   CreateCategoryInput,
   UpdateCategoryInput,
   CreateTransactionInput,
   UpdateTransactionInput,
+  CreateRecurringTransactionInput,
+  UpdateRecurringTransactionInput,
+  CreateBudgetInput,
+  UpdateBudgetInput,
 } from '@/lib/validations/finance';
 
 // Phase 4I-3 Analytics Domain Types
@@ -455,7 +465,15 @@ export interface ExternalProofEvidenceItem {
 
 export interface ExternalProofRuleResult {
   verified: boolean;
-  code: 'VERIFIED' | 'RULE_NOT_SATISFIED' | 'NO_LINKED_ACCOUNT' | 'PROVIDER_UNAVAILABLE' | 'RATE_LIMITED' | 'WINDOW_EXPIRED';
+  code:
+    | 'VERIFIED'
+    | 'RULE_NOT_SATISFIED'
+    | 'NO_LINKED_ACCOUNT'
+    | 'PROVIDER_UNAVAILABLE'
+    | 'RATE_LIMITED'
+    | 'WINDOW_EXPIRED'
+    | 'UNAUTHORIZED'
+    | 'UNKNOWN_PROVIDER';
   summary: string;
   provider: ExternalProofProvider;
   evidence: ExternalProofEvidenceItem[];

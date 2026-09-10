@@ -15,9 +15,7 @@ import {
   CheckCircle2,
   ExternalLink,
   ShieldCheck,
-  Lock,
   Layers,
-  Sparkles,
   Calendar,
   RefreshCw,
   AlertCircle,
@@ -145,7 +143,7 @@ export function IntegrationsSettingsCard({
     setModalFeedback(null);
     try {
       const res = await linkExternalProviderAction(
-        selectedProvider as any,
+        selectedProvider as 'github' | 'leetcode' | 'codeforces',
         inputHandle.trim(),
         inputToken.trim() || undefined
       );
@@ -179,7 +177,9 @@ export function IntegrationsSettingsCard({
     setIsUnlinking(true);
     setModalFeedback(null);
     try {
-      const res = await disconnectExternalProviderAction(selectedProvider as any);
+      const res = await disconnectExternalProviderAction(
+        selectedProvider as 'github' | 'leetcode' | 'codeforces'
+      );
       if (res.success) {
         setModalFeedback({ message: 'Disconnected successfully.', type: 'success' });
         await fetchStatuses();

@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient as createSupabaseClient } from '@supabase/supabase-js';
 import { createClient } from '@/lib/supabase/server';
-import { executeDeadlineSweep } from '@/lib/accountability/sweeper';
+import { executeDeadlineSweep, executeRecurringTransactionsSweep } from '@/lib/accountability/sweeper';
 
 export const dynamic = 'force-dynamic';
 
@@ -54,7 +54,10 @@ async function handleSweep(request: NextRequest) {
       500
     );
 
-    const result = await executeDeadlineSweep(supabase, batchSize);
+    const [result, recurringResult] = await Promise.all([
+      executeDeadlineSweep(supabase, batchSize),
+      executeRecurringTransactionsSweep(supabase),
+    ]);
 
     return NextResponse.json(
       {
@@ -62,6 +65,7 @@ async function handleSweep(request: NextRequest) {
         code: result.code,
         processed_count: result.processed_count,
         activated_count: result.activated_count,
+        recurring_generated_count: recurringResult.generated_count,
         duration_ms: result.duration_ms,
         executed_at: result.executed_at,
       },

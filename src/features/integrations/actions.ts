@@ -85,7 +85,7 @@ export async function linkExternalProviderAction(
     // 1. Live provider handle validation
     let normalizedHandle = validated.account_handle.replace(/^@/, '');
     let providerUserId: string | null = null;
-    let extraMeta: Record<string, unknown> = {};
+    const extraMeta: Record<string, unknown> = {};
 
     if (provider === 'github') {
       const verifyRes = await verifyGitHubUser(normalizedHandle, validated.access_token);

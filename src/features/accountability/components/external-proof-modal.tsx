@@ -91,24 +91,26 @@ export function ExternalProofModal({
     setIsVerifying(true);
     setResult(null);
     try {
-      const res = await verifyExternalProofAction(commitment.id);
-      if (res.success) {
+      const res = await verifyExternalProofAction(commitment.commitment_id);
+      if (res.success && res.data) {
+        const data = res.data as { summary?: string; evidence?: Array<{ external_event_id: string; summary: string; evidence_type: string }> };
         setResult({
           success: true,
           code: res.code,
-          summary: (res.data as any)?.summary || 'Proof-of-work objectively verified.',
-          evidence: (res.data as any)?.evidence || [],
+          summary: data.summary || 'Proof-of-work objectively verified.',
+          evidence: data.evidence || [],
         });
         setTimeout(() => {
           onResolved();
           onClose();
         }, 1200);
       } else {
+        const errResult = res as { code?: string; error?: string; result?: { summary?: string } };
         setResult({
           success: false,
           code: res.code,
           error: res.error || 'Verification criteria not met.',
-          summary: (res as any).result?.summary,
+          summary: errResult.result?.summary,
         });
       }
     } catch {
@@ -244,9 +246,9 @@ export function ExternalProofModal({
           Cancel
         </Button>
         <Button
-          variant="gold"
+          variant="primary"
           onClick={handleVerify}
-          isLoading={isVerifying}
+          loading={isVerifying}
           disabled={isVerifying || result?.success}
         >
           <RefreshCw className={`w-3.5 h-3.5 mr-1.5 ${isVerifying ? 'animate-spin' : ''}`} />

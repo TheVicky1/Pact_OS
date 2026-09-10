@@ -145,3 +145,33 @@ export async function executeUserDeadlineSweep(
     };
   }
 }
+
+/**
+ * Executes authoritative global recurring transactions sweep via Supabase RPC (service_role only).
+ */
+export async function executeRecurringTransactionsSweep(
+  supabase: SupabaseClient
+): Promise<{ success: boolean; generated_count: number; error?: string }> {
+  try {
+    const { data, error } = await supabase.rpc('generate_due_recurring_transactions');
+
+    if (error) {
+      return {
+        success: false,
+        generated_count: 0,
+        error: error.message,
+      };
+    }
+
+    return {
+      success: true,
+      generated_count: typeof data === 'number' ? data : 0,
+    };
+  } catch (err: unknown) {
+    return {
+      success: false,
+      generated_count: 0,
+      error: err instanceof Error ? err.message : 'Unexpected recurring sweep error.',
+    };
+  }
+}
