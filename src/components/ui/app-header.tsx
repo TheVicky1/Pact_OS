@@ -18,6 +18,7 @@ import {
   ShieldAlert,
   Calendar as CalendarIcon,
   Wallet,
+  TrendingUp,
 } from 'lucide-react';
 
 export interface AppHeaderProps {
@@ -47,6 +48,7 @@ export function AppHeader({ userName }: AppHeaderProps) {
   const isTasksActive = pathname === '/app/tasks' || pathname.startsWith('/app/tasks/');
   const isAccountabilityActive = pathname === '/app/accountability' || pathname.startsWith('/app/accountability/');
   const isFinanceActive = pathname === '/app/finance' || pathname.startsWith('/app/finance/');
+  const isAnalyticsActive = pathname === '/app/analytics' || pathname.startsWith('/app/analytics/');
   const isCalendarActive =
     pathname === '/app/calendar' ||
     pathname.startsWith('/app/calendar/') ||
@@ -89,6 +91,12 @@ export function AppHeader({ userName }: AppHeaderProps) {
       label: 'Finance',
       icon: Wallet,
       isActive: isFinanceActive,
+    },
+    {
+      href: '/app/analytics',
+      label: 'Analytics',
+      icon: TrendingUp,
+      isActive: isAnalyticsActive,
     },
     {
       href: '/app/accountability',
