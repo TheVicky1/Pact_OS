@@ -31,6 +31,27 @@ export interface NotificationPopoverProps {
   onUnreadCountChange?: (count: number) => void;
 }
 
+function formatRelativeTime(isoString: string): string {
+  try {
+    const diffMs = new Date().getTime() - new Date(isoString).getTime();
+    const diffSec = Math.floor(diffMs / 1000);
+    const diffMin = Math.floor(diffSec / 60);
+    const diffHr = Math.floor(diffMin / 60);
+    const diffDay = Math.floor(diffHr / 24);
+
+    if (diffSec < 60) return 'Just now';
+    if (diffMin < 60) return `${diffMin}m ago`;
+    if (diffHr < 24) return `${diffHr}h ago`;
+    if (diffDay === 1) return 'Yesterday';
+    if (diffDay < 7) return `${diffDay}d ago`;
+    return new Intl.DateTimeFormat('en-US', { month: 'short', day: 'numeric' }).format(
+      new Date(isoString)
+    );
+  } catch {
+    return 'Recently';
+  }
+}
+
 export function NotificationPopover({
   isOpen,
   onClose,
@@ -65,8 +86,32 @@ export function NotificationPopover({
   }, [onUnreadCountChange]);
 
   useEffect(() => {
-    loadNotifications();
-  }, [loadNotifications]);
+    let isMounted = true;
+    void (async () => {
+      try {
+        const res = await fetchNotificationsAction(25);
+        if (isMounted) {
+          if (res.success && res.data) {
+            setNotifications(res.data.notifications);
+            setUnreadCount(res.data.unreadCount);
+            onUnreadCountChange?.(res.data.unreadCount);
+          } else if (res.error) {
+            setErrorMessage(res.error);
+          }
+          setIsLoading(false);
+        }
+      } catch {
+        if (isMounted) {
+          setErrorMessage('Failed to load notifications.');
+          setIsLoading(false);
+        }
+      }
+    })();
+
+    return () => {
+      isMounted = false;
+    };
+  }, [onUnreadCountChange]);
 
   // Set up Supabase Realtime subscription for live incoming notifications
   useEffect(() => {
@@ -210,27 +255,6 @@ export function NotificationPopover({
         return <Calendar className="w-4 h-4 text-[#d4af37]" />;
       default:
         return <Info className="w-4 h-4 text-zinc-400" />;
-    }
-  };
-
-  const formatRelativeTime = (isoString: string) => {
-    try {
-      const diffMs = Date.now() - new Date(isoString).getTime();
-      const diffSec = Math.floor(diffMs / 1000);
-      const diffMin = Math.floor(diffSec / 60);
-      const diffHr = Math.floor(diffMin / 60);
-      const diffDay = Math.floor(diffHr / 24);
-
-      if (diffSec < 60) return 'Just now';
-      if (diffMin < 60) return `${diffMin}m ago`;
-      if (diffHr < 24) return `${diffHr}h ago`;
-      if (diffDay === 1) return 'Yesterday';
-      if (diffDay < 7) return `${diffDay}d ago`;
-      return new Intl.DateTimeFormat('en-US', { month: 'short', day: 'numeric' }).format(
-        new Date(isoString)
-      );
-    } catch {
-      return 'Recently';
     }
   };
 

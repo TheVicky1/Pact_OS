@@ -65,11 +65,12 @@ describe('PACT Phase 5B: Persistent Notification Infrastructure & Delivery', () 
   it('validates notification domain types and field definitions', () => {
     const validTypes: NotificationType[] = [
       'task_missed',
-      'consequence_activated',
-      'deadline_warning',
+      'accountability_activated',
+      'task_deadline_approaching',
       'verification_required',
-      'verification_approved',
-      'verification_rejected',
+      'verification_completed',
+      'waiver_reset',
+      'weekly_review',
       'system',
     ];
 
@@ -87,10 +88,10 @@ describe('PACT Phase 5B: Persistent Notification Infrastructure & Delivery', () 
   it('enforces deterministic idempotency keys for task sweeps and activations', () => {
     const taskId = 'task-critical-deadline';
     const missedKey = `task_missed:${taskId}`;
-    const consequenceKey = `consequence_activated:${taskId}`;
+    const consequenceKey = `accountability_activated:${taskId}`;
 
     assert.equal(missedKey, 'task_missed:task-critical-deadline');
-    assert.equal(consequenceKey, 'consequence_activated:task-critical-deadline');
+    assert.equal(consequenceKey, 'accountability_activated:task-critical-deadline');
     assert.notEqual(missedKey, consequenceKey);
   });
 
@@ -266,7 +267,7 @@ describe('PACT Phase 5B: Persistent Notification Infrastructure & Delivery', () 
     const consequenceNotification: PersistentNotification = {
       id: 'notif-consequence-001',
       user_id: 'user-alpha-001',
-      type: 'consequence_activated',
+      type: 'accountability_activated',
       title: 'Accountability Action Activated',
       body: 'Commitment deadline for "Production Deployment" was missed. Accountability resolution is now required.',
       action_url: '/app/accountability',
@@ -274,7 +275,7 @@ describe('PACT Phase 5B: Persistent Notification Infrastructure & Delivery', () 
       read_at: null,
       is_dismissed: false,
       dismissed_at: null,
-      idempotency_key: 'consequence_activated:task-deploy-prod',
+      idempotency_key: 'accountability_activated:task-deploy-prod',
       metadata: {
         taskId: 'task-deploy-prod',
         taskTitle: 'Production Deployment',

@@ -5,7 +5,7 @@
  */
 
 import { SupabaseClient } from '@supabase/supabase-js';
-import { NotificationType, PersistentNotification } from '../../types/notifications';
+import { NotificationType } from '../../types/notifications';
 
 export interface NotificationPayload {
   userId: string;
@@ -138,6 +138,9 @@ export async function deliverWebhook(
       actionUrl: payload.actionUrl,
       timestamp: new Date().toISOString(),
     };
+
+    // Serialize payload to ensure payload validity
+    JSON.stringify(sanitizedPayload);
 
     return {
       channel: 'webhook',
