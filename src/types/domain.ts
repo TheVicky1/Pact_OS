@@ -250,6 +250,11 @@ export interface CalendarEvent {
   goal_id: string | null;
   project_id: string | null;
   task_id: string | null;
+  google_event_id?: string | null;
+  google_etag?: string | null;
+  google_calendar_id?: string | null;
+  is_external?: boolean;
+  last_synced_at?: string | null;
   created_at: string;
   updated_at: string;
 }
@@ -269,6 +274,10 @@ export interface CreateCalendarEventInput {
   goal_id?: string | null;
   project_id?: string | null;
   task_id?: string | null;
+  google_event_id?: string | null;
+  google_etag?: string | null;
+  google_calendar_id?: string | null;
+  is_external?: boolean;
 }
 
 export interface UpdateCalendarEventInput {
@@ -280,6 +289,41 @@ export interface UpdateCalendarEventInput {
   goal_id?: string | null;
   project_id?: string | null;
   task_id?: string | null;
+  google_event_id?: string | null;
+  google_etag?: string | null;
+  google_calendar_id?: string | null;
+  is_external?: boolean;
+}
+
+// Phase 5C Google Calendar Sync Domain Types
+export type GoogleCalendarSyncStatus =
+  | 'connected'
+  | 'syncing'
+  | 'synced'
+  | 'error'
+  | 'revoked'
+  | 'disconnected';
+
+export interface GoogleCalendarIntegrationStatus {
+  connected: boolean;
+  sync_status: GoogleCalendarSyncStatus;
+  calendar_id: string | null;
+  last_synced_at: string | null;
+  last_error: string | null;
+  has_refresh_token: boolean;
+  is_token_valid: boolean;
+}
+
+export interface GoogleCalendarSyncSummary {
+  success: boolean;
+  importedCount: number;
+  updatedCount: number;
+  deletedCount: number;
+  exportedCount: number;
+  pushedCount: number;
+  errors: string[];
+  syncToken?: string | null;
+  timestamp: string;
 }
 
 // Phase 4I-2 Finance Domain Types
