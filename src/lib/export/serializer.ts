@@ -130,6 +130,12 @@ export interface RawUserDataArchive {
   notificationChannels: Record<string, unknown>[];
   externalProviders: Record<string, unknown>[];
   externalProofEvidence: Record<string, unknown>[];
+  focusSessions?: Record<string, unknown>[];
+  habits?: Record<string, unknown>[];
+  habitOccurrences?: Record<string, unknown>[];
+  routineTemplates?: Record<string, unknown>[];
+  routineItems?: Record<string, unknown>[];
+  weeklyReviews?: Record<string, unknown>[];
 }
 
 /**
@@ -181,6 +187,14 @@ export function serializeUserAccountJson(data: RawUserDataArchive): string {
       external_providers: safeExternalProviders,
     },
     external_proof_evidence: data.externalProofEvidence || [],
+    focus_sessions: data.focusSessions || [],
+    habits: {
+      habits: data.habits || [],
+      occurrences: data.habitOccurrences || [],
+      routine_templates: data.routineTemplates || [],
+      routine_items: data.routineItems || [],
+    },
+    weekly_reviews: data.weeklyReviews || [],
   };
 
   return JSON.stringify(archive, null, 2);
@@ -412,6 +426,81 @@ export function buildDomainCsvFiles(data: RawUserDataArchive): { filename: strin
         'sync_status',
         'last_verified_at',
         'last_error',
+        'created_at',
+      ]),
+    },
+    {
+      filename: 'focus_sessions.csv',
+      content: arrayToCsv(data.focusSessions || [], [
+        'id',
+        'task_id',
+        'session_type',
+        'duration_minutes',
+        'actual_duration_seconds',
+        'status',
+        'started_at',
+        'ended_at',
+        'created_at',
+      ]),
+    },
+    {
+      filename: 'habits.csv',
+      content: arrayToCsv(data.habits || [], [
+        'id',
+        'title',
+        'description',
+        'category',
+        'target_frequency',
+        'target_count',
+        'is_archived',
+        'created_at',
+      ]),
+    },
+    {
+      filename: 'habit_occurrences.csv',
+      content: arrayToCsv(data.habitOccurrences || [], [
+        'id',
+        'habit_id',
+        'occurrence_date',
+        'status',
+        'completed_at',
+        'created_at',
+      ]),
+    },
+    {
+      filename: 'routine_templates.csv',
+      content: arrayToCsv(data.routineTemplates || [], [
+        'id',
+        'name',
+        'description',
+        'time_of_day',
+        'is_active',
+        'created_at',
+      ]),
+    },
+    {
+      filename: 'routine_items.csv',
+      content: arrayToCsv(data.routineItems || [], [
+        'id',
+        'template_id',
+        'habit_id',
+        'title',
+        'order_index',
+        'estimated_minutes',
+        'created_at',
+      ]),
+    },
+    {
+      filename: 'weekly_reviews.csv',
+      content: arrayToCsv(data.weeklyReviews || [], [
+        'id',
+        'week_start_date',
+        'week_end_date',
+        'status',
+        'reflections',
+        'metrics_snapshot',
+        'next_week_plan',
+        'committed_at',
         'created_at',
       ]),
     },

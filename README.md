@@ -38,10 +38,10 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to view th
 
 ## 🧪 Testing & Verification
 
-PACT features a comprehensive 30-suite test matrix covering domain logic, focus timer engine, command center search, lifecycle state machines, RLS boundaries, integration resilience, financial math, and cron automation.
+PACT features a comprehensive 34-suite test matrix covering domain logic, focus timer engine, command center search, lifecycle state machines, RLS boundaries, integration resilience, financial math, habits/routines, weekly reviews, URL state synchronization, and cron automation.
 
 ```bash
-# Run full test runner (30 suites)
+# Run full test runner (34 suites)
 node scratch/run-tests.mjs
 
 # Run TypeScript typecheck
@@ -72,9 +72,11 @@ src/
 │   │   ├── finance/                  # Integer-cents transactions, recurring, budgets
 │   │   ├── focus/                    # Deep work sessions, timer engine, focus stats
 │   │   ├── goals/                    # Strategic high-level objectives
+│   │   ├── habits/                   # Recurring habits & daily routine templates
 │   │   ├── onboarding/               # Multi-step personalized user onboarding
 │   │   ├── planner/                  # Day/Week/Month time-blocking planner
 │   │   ├── projects/                 # Scoped initiatives & deliverables
+│   │   ├── review/                   # Structured Weekly Review & Sunday Planning Ritual
 │   │   ├── settings/                 # Profile, notification channels, data export
 │   │   └── tasks/                    # Task management & deadline tracking
 │   └── api/
@@ -84,17 +86,24 @@ src/
 ├── features/                         # Feature-specific components and UI logic
 │   ├── command-center/               # Global Cmd+K palette & universal search
 │   ├── focus/                        # Focus timer display, setup & history
+│   ├── habits/                       # Habit trackers, routines, streak calculations
+│   ├── weekly-review/                # 5-step interactive review wizard & metrics
+├── hooks/                            # Reusable React hooks (useUrlState, useSelection)
 ├── lib/                              # Core domain business logic and engines
 │   ├── accountability/               # State machines, resolution, penalty enforcement
 │   ├── analytics/                    # Pure deterministic metrics & scoring
 │   ├── command-center/               # Registry, fuzzy ranking & entity search
+│   ├── export/                       # Data portability & secret sanitization
 │   ├── finance/                      # Integer-cents arithmetic, recurrence, budgets
 │   ├── focus/                        # Timestamp arithmetic, sound synthesis, metrics
+│   ├── habits/                       # Habits, routines, and streak engines
 │   ├── integrations/                 # Google Calendar, GitHub, LeetCode, Codeforces
 │   ├── notifications/                # Multi-channel alerts (In-App, Email, Webhook)
 │   ├── onboarding/                   # Onboarding state machine & profiles
-│   ├── export/                       # Data portability & secret sanitization
-│   └── supabase/                     # Server, client, and admin Supabase instances
+│   ├── supabase/                     # Server, client, and admin Supabase instances
+│   ├── url-state/                    # Deterministic URL parsers & serializers
+│   ├── validations/                  # Strict Zod domain validation schemas
+│   └── weekly-review/                # Week boundaries, metric aggregator, draft state
 └── types/                            # Domain TypeScript contracts
 ```
 
@@ -140,6 +149,10 @@ Comprehensive architectural specifications and phase completion reports are main
 | 📊 [**Phase 5G Report**](./docs/PHASE_5G_PRODUCTION_HARDENING_REPORT.md) | Production Hardening, Integration Reliability & Product Completion Report |
 | ⚡ [**Phase 6A Report**](./docs/PHASE_6A_COMMAND_CENTER_REPORT.md) | Global Command Center (Cmd+K) & Universal Quick Capture Verification Report |
 | ⏱️ [**Phase 6B Report**](./docs/PHASE_6B_FOCUS_TIMER_REPORT.md) | Focus Timer & Deep Work Session Engine Verification Report |
+| 🔄 [**Phase 6C Report**](./docs/PHASE_6C_HABITS_AND_ROUTINES_REPORT.md) | Recurring Habits & Daily Routine Template Engine Report |
+| 📅 [**Phase 6D Report**](./docs/PHASE_6D_WEEKLY_REVIEW_REPORT.md) | Structured Weekly Review & Sunday Planning Ritual Report |
+| 🔗 [**Phase 6E Report**](./docs/PHASE_6E_DEEP_LINK_BULK_OPERATIONS_REPORT.md) | Deep-Link URL State & Bulk Data Operations Report |
+| 🏆 [**Phase 6F Report**](./docs/PHASE_6F_MASTER_SYSTEM_CERTIFICATION_REPORT.md) | Master System Certification, Final Polish & Release Readiness Report |
 
 ---
 

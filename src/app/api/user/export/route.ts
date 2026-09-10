@@ -64,6 +64,12 @@ export async function GET(request: NextRequest) {
       notifChannelsRes,
       externalProvidersRes,
       evidenceRes,
+      focusSessionsRes,
+      habitsRes,
+      habitOccurrencesRes,
+      routineTemplatesRes,
+      routineItemsRes,
+      weeklyReviewsRes,
     ] = await Promise.all([
       supabase.from('profiles').select('*').eq('id', user.id).maybeSingle(),
       supabase.from('goals').select('*').eq('user_id', user.id).order('created_at', { ascending: false }),
@@ -84,6 +90,12 @@ export async function GET(request: NextRequest) {
       supabase.from('notification_channel_configs').select('*').eq('user_id', user.id),
       supabase.from('external_provider_integrations').select('*').eq('user_id', user.id),
       supabase.from('external_proof_evidence').select('*').eq('user_id', user.id),
+      supabase.from('focus_sessions').select('*').eq('user_id', user.id),
+      supabase.from('habits').select('*').eq('user_id', user.id),
+      supabase.from('habit_occurrences').select('*').eq('user_id', user.id),
+      supabase.from('routine_templates').select('*').eq('user_id', user.id),
+      supabase.from('routine_items').select('*').eq('user_id', user.id),
+      supabase.from('weekly_reviews').select('*').eq('user_id', user.id),
     ]);
 
     const rawArchive: RawUserDataArchive = {
@@ -108,6 +120,12 @@ export async function GET(request: NextRequest) {
       notificationChannels: (notifChannelsRes.data as Record<string, unknown>[]) || [],
       externalProviders: (externalProvidersRes.data as Record<string, unknown>[]) || [],
       externalProofEvidence: (evidenceRes.data as Record<string, unknown>[]) || [],
+      focusSessions: (focusSessionsRes.data as Record<string, unknown>[]) || [],
+      habits: (habitsRes.data as Record<string, unknown>[]) || [],
+      habitOccurrences: (habitOccurrencesRes.data as Record<string, unknown>[]) || [],
+      routineTemplates: (routineTemplatesRes.data as Record<string, unknown>[]) || [],
+      routineItems: (routineItemsRes.data as Record<string, unknown>[]) || [],
+      weeklyReviews: (weeklyReviewsRes.data as Record<string, unknown>[]) || [],
     };
 
     const securityHeaders = {
