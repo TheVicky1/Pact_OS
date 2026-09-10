@@ -34,8 +34,11 @@ export async function getTasks(): Promise<DataAccessResult<TaskWithParents[]>> {
     const supabase = await createClient();
     const { data: { user }, error: authError } = await supabase.auth.getUser();
 
-    if (authError || !user) {
-      return { data: null, error: 'Authentication required.' };
+    // Run non-blocking user deadline sweep to ensure local wall-clock consistency
+    try {
+      await supabase.rpc('sweep_user_expired_tasks', { p_batch_size: 50 });
+    } catch {
+      // Gracefully continue if RPC fails or is still migrating
     }
 
     const { data, error } = await supabase
