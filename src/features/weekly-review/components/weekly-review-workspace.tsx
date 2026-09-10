@@ -29,20 +29,34 @@ import {
   Save,
   Calendar,
   History,
+  CheckCircle2,
+  Clock,
+  ShieldCheck,
+  Wallet,
+  Target,
 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { addDaysToDateString } from '@/lib/time';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 
 export interface WeeklyReviewWorkspaceProps {
   initialData: WeeklyReviewBootstrapData;
 }
 
-const STEP_LABELS = [
-  'Look Back',
-  'Accountability',
-  'Finance & Focus',
-  'Clean Up',
-  'Plan & Commit',
+interface StepMeta {
+  step: WeeklyReviewStep;
+  label: string;
+  shortLabel: string;
+  icon: React.ElementType;
+}
+
+const STEPS: StepMeta[] = [
+  { step: 1, label: 'Look Back', shortLabel: 'Facts', icon: Clock },
+  { step: 2, label: 'Accountability', shortLabel: 'Integrity', icon: ShieldCheck },
+  { step: 3, label: 'Finance & Focus', shortLabel: 'Discipline', icon: Wallet },
+  { step: 4, label: 'Clean Up', shortLabel: 'Triage', icon: CheckCircle2 },
+  { step: 5, label: 'Plan & Commit', shortLabel: 'Commit', icon: Target },
 ];
 
 export function WeeklyReviewWorkspace({ initialData }: WeeklyReviewWorkspaceProps) {
@@ -204,70 +218,81 @@ export function WeeklyReviewWorkspace({ initialData }: WeeklyReviewWorkspaceProp
   const nextWeekStart = addDaysToDateString(initialData.weekStart, 7);
 
   return (
-    <div className="max-w-5xl mx-auto space-y-6 pb-12">
+    <div className="max-w-5xl mx-auto space-y-8 pb-12">
       {/* Top Header Card */}
-      <div className="p-6 rounded-2xl border border-border/50 bg-card/60 backdrop-blur-md flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+      <div className="glass-card rounded-3xl p-6 sm:p-8 flex flex-col md:flex-row md:items-center justify-between gap-6">
         <div>
-          <div className="flex items-center space-x-2.5">
-            <h1 className="text-2xl font-bold tracking-tight text-foreground">
+          <div className="flex items-center gap-2">
+            <span className="text-xs font-semibold uppercase tracking-wider text-[#d4af37]">
+              Ritual Architecture
+            </span>
+            <span className="h-1 w-1 rounded-full bg-zinc-500" />
+            <span className="text-xs text-zinc-400">Cadence Command</span>
+          </div>
+
+          <div className="flex flex-wrap items-center gap-3 mt-1.5">
+            <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-zinc-100">
               Weekly Review & Sunday Ritual
             </h1>
-            <span
-              className={`text-xs px-2.5 py-0.5 rounded-full font-mono font-semibold ${
-                isCompleted
-                  ? 'bg-emerald-500/10 text-emerald-500 border border-emerald-500/20'
-                  : 'bg-primary/10 text-primary border border-primary/20'
-              }`}
+            <Badge
+              variant={isCompleted ? 'success' : 'warning'}
+              size="sm"
             >
-              {isCompleted ? 'Locked Plan' : 'In Progress'}
-            </span>
+              {isCompleted ? 'Certified Plan' : 'Draft in Progress'}
+            </Badge>
           </div>
-          <p className="text-sm text-muted-foreground mt-1 flex items-center space-x-2">
-            <Calendar className="w-3.5 h-3.5" />
-            <span>{initialData.weekLabel}</span>
-            <span>•</span>
-            <span>{initialData.userTimezone}</span>
+
+          <p className="text-xs sm:text-sm text-zinc-400 mt-1.5 flex flex-wrap items-center gap-2">
+            <span className="flex items-center gap-1.5 text-zinc-300">
+              <Calendar className="w-3.5 h-3.5 text-[#d4af37]" />
+              {initialData.weekLabel}
+            </span>
+            <span className="text-zinc-600">•</span>
+            <span className="text-zinc-400 font-mono text-xs">{initialData.userTimezone}</span>
           </p>
         </div>
 
         {/* Action Controls & Tab Switcher */}
-        <div className="flex items-center space-x-2">
-          <button
-            type="button"
-            onClick={() => setActiveTab(activeTab === 'review' ? 'history' : 'review')}
-            className={`px-3.5 py-2 rounded-xl text-xs font-medium border transition-colors flex items-center space-x-1.5 ${
-              activeTab === 'history'
-                ? 'bg-primary text-primary-foreground border-primary'
-                : 'bg-background/50 border-border/60 text-muted-foreground hover:text-foreground'
-            }`}
-          >
-            <History className="w-3.5 h-3.5" />
-            <span>{activeTab === 'history' ? 'Current Review' : 'Archive'}</span>
-          </button>
-
-          {!isCompleted && activeTab === 'review' && (
+        <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2.5 shrink-0 self-start md:self-auto">
+          <div className="flex items-center gap-2">
             <button
               type="button"
-              disabled={isSaving}
-              onClick={() => handleSaveDraft()}
-              className="px-3.5 py-2 rounded-xl text-xs font-medium border border-border/60 bg-background/50 hover:bg-background text-foreground transition-colors flex items-center space-x-1.5"
+              onClick={() => setActiveTab(activeTab === 'review' ? 'history' : 'review')}
+              className={`h-9 px-3.5 rounded-xl text-xs font-medium border transition-all flex items-center gap-2 cursor-pointer focus-visible:outline-none ${
+                activeTab === 'history'
+                  ? 'bg-[#121217] text-[#e2c056] border-[#d4af37]/40 shadow-sm'
+                  : 'bg-zinc-900/60 hover:bg-zinc-800/80 text-zinc-300 hover:text-zinc-100 border-white/[0.08]'
+              }`}
             >
-              <Save className="w-3.5 h-3.5" />
-              <span>{isSaving ? 'Saving...' : 'Save Draft'}</span>
+              <History className="w-3.5 h-3.5 text-[#d4af37]" />
+              <span>{activeTab === 'history' ? 'Current Ritual' : 'Archive'}</span>
             </button>
+
+            {!isCompleted && activeTab === 'review' && (
+              <button
+                type="button"
+                disabled={isSaving}
+                onClick={() => handleSaveDraft()}
+                className="h-9 px-3.5 rounded-xl text-xs font-medium border border-white/[0.08] bg-zinc-900/60 hover:bg-zinc-800/80 text-zinc-200 hover:text-zinc-100 transition-all flex items-center gap-2 cursor-pointer focus-visible:outline-none disabled:opacity-50"
+              >
+                <Save className="w-3.5 h-3.5 text-[#d4af37]" />
+                <span>{isSaving ? 'Saving...' : 'Save Draft'}</span>
+              </button>
+            )}
+          </div>
+
+          {lastSavedText && activeTab === 'review' && (
+            <span className="text-[11px] font-mono text-zinc-500 self-end sm:self-center">
+              {lastSavedText}
+            </span>
           )}
         </div>
       </div>
 
-      {lastSavedText && activeTab === 'review' && (
-        <div className="flex justify-end text-[11px] text-muted-foreground pr-2">
-          <span>{lastSavedText}</span>
-        </div>
-      )}
-
       {errorMessage && (
-        <div className="p-4 rounded-xl border border-destructive/40 bg-destructive/10 text-destructive text-xs">
-          {errorMessage}
+        <div className="p-4 rounded-2xl border border-rose-500/30 bg-rose-500/10 text-rose-300 text-xs flex items-center gap-2 animate-in fade-in duration-200">
+          <span className="font-semibold">Error:</span>
+          <span>{errorMessage}</span>
         </div>
       )}
 
@@ -284,46 +309,65 @@ export function WeeklyReviewWorkspace({ initialData }: WeeklyReviewWorkspaceProp
         />
       ) : (
         <div className="space-y-6">
-          {/* Step Progress Bar */}
-          <div className="p-4 rounded-xl border border-border/40 bg-card/40 backdrop-blur-sm">
-            <div className="flex items-center justify-between text-xs text-muted-foreground mb-2">
-              <span className="font-semibold text-foreground">
-                Step {currentStep} of 5: {STEP_LABELS[currentStep - 1]}
+          {/* Step Stepper Pill Bar */}
+          <div className="glass-card rounded-2xl p-3 sm:p-4">
+            <div className="flex items-center justify-between text-xs text-zinc-400 mb-3 px-1">
+              <span className="font-semibold text-zinc-200 flex items-center gap-2">
+                <span className="w-2 h-2 rounded-full bg-[#d4af37]" />
+                Step {currentStep} of 5: {STEPS[currentStep - 1].label}
               </span>
-              <span className="font-mono">{Math.round((currentStep / 5) * 100)}%</span>
+              <span className="font-mono text-zinc-400">
+                {Math.round((currentStep / 5) * 100)}% Complete
+              </span>
             </div>
 
-            {/* Stepper Dots & Line */}
-            <div className="grid grid-cols-5 gap-2">
-              {STEP_LABELS.map((label, idx) => {
-                const stepNum = (idx + 1) as WeeklyReviewStep;
+            {/* Stepper Grid */}
+            <div className="grid grid-cols-2 sm:grid-cols-5 gap-2">
+              {STEPS.map((stepMeta) => {
+                const stepNum = stepMeta.step;
                 const isPast = stepNum < currentStep;
                 const isCurrent = stepNum === currentStep;
+                const Icon = stepMeta.icon;
 
                 return (
                   <button
-                    key={label}
+                    key={stepMeta.label}
                     type="button"
                     onClick={() => {
                       setCurrentStep(stepNum);
                       handleSaveDraft(stepNum);
                     }}
-                    className={`h-2 rounded-full transition-all ${
-                      isPast
-                        ? 'bg-primary'
-                        : isCurrent
-                        ? 'bg-primary ring-2 ring-primary/30'
-                        : 'bg-muted'
+                    className={`flex items-center gap-2 p-2.5 rounded-xl border text-left transition-all cursor-pointer focus-visible:outline-none ${
+                      isCurrent
+                        ? 'bg-[#181822] text-zinc-100 border-[#d4af37]/50 shadow-md shadow-black/40 font-semibold ring-1 ring-[#d4af37]/20'
+                        : isPast
+                        ? 'bg-zinc-900/50 text-zinc-300 border-white/[0.06] hover:border-white/[0.12]'
+                        : 'bg-zinc-900/30 text-zinc-500 border-transparent hover:border-white/[0.04]'
                     }`}
-                    title={label}
-                  />
+                  >
+                    <div
+                      className={`w-6 h-6 rounded-lg flex items-center justify-center shrink-0 text-xs font-mono font-bold transition-colors ${
+                        isCurrent
+                          ? 'bg-[#d4af37]/20 text-[#e2c056] border border-[#d4af37]/40'
+                          : isPast
+                          ? 'bg-emerald-500/15 text-emerald-400 border border-emerald-500/30'
+                          : 'bg-zinc-800 text-zinc-500'
+                      }`}
+                    >
+                      {isPast ? <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" /> : stepNum}
+                    </div>
+                    <div className="min-w-0 flex items-center gap-1.5">
+                      <Icon className={`w-3.5 h-3.5 shrink-0 ${isCurrent ? 'text-[#d4af37]' : 'text-zinc-500'}`} />
+                      <span className="text-xs truncate block">{stepMeta.label}</span>
+                    </div>
+                  </button>
                 );
               })}
             </div>
           </div>
 
           {/* Active Step Content */}
-          <div className="min-h-[420px]">
+          <div className="min-h-[440px]">
             {currentStep === 1 && (
               <LookBackStep
                 metrics={initialData.liveMetrics}
@@ -372,29 +416,30 @@ export function WeeklyReviewWorkspace({ initialData }: WeeklyReviewWorkspaceProp
           </div>
 
           {/* Stepper Navigation Buttons */}
-          <div className="flex items-center justify-between pt-4 border-t border-border/40">
+          <div className="flex items-center justify-between pt-6 border-t border-white/[0.06]">
             <button
               type="button"
               disabled={currentStep === 1}
               onClick={handlePrevStep}
-              className="px-4 py-2 rounded-xl text-xs font-medium border border-border/60 bg-background/50 hover:bg-background text-foreground disabled:opacity-40 transition-colors flex items-center space-x-1.5"
+              className="h-10 px-4 rounded-xl text-xs font-medium border border-white/[0.08] bg-zinc-900/60 hover:bg-zinc-800 text-zinc-300 hover:text-zinc-100 disabled:opacity-30 disabled:hover:bg-zinc-900/60 transition-all flex items-center gap-2 cursor-pointer focus-visible:outline-none"
             >
-              <ArrowLeft className="w-3.5 h-3.5" />
+              <ArrowLeft className="w-4 h-4" />
               <span>Previous Step</span>
             </button>
 
             {currentStep < 5 ? (
-              <button
-                type="button"
+              <Button
+                variant="primary"
+                size="md"
                 onClick={handleNextStep}
-                className="px-5 py-2 rounded-xl text-xs font-semibold bg-primary text-primary-foreground hover:bg-primary/90 transition-colors flex items-center space-x-1.5 shadow-sm"
+                className="shadow-lg shadow-[#d4af37]/15"
               >
-                <span>Continue</span>
-                <ArrowRight className="w-3.5 h-3.5" />
-              </button>
+                <span>Continue to Step {currentStep + 1}</span>
+                <ArrowRight className="w-4 h-4 ml-1.5" />
+              </Button>
             ) : (
-              <span className="text-xs text-muted-foreground italic">
-                Final step: Review your commitment above and click Commit to lock.
+              <span className="text-xs text-zinc-400 italic">
+                Final step: Finalize priorities above and click Commit & Lock.
               </span>
             )}
           </div>

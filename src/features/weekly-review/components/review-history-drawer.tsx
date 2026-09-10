@@ -4,6 +4,7 @@ import React from 'react';
 import { WeeklyReview } from '@/lib/weekly-review/types';
 import { Calendar, ChevronRight, Clock } from 'lucide-react';
 import Link from 'next/link';
+import { Badge } from '@/components/ui/badge';
 
 export interface ReviewHistoryDrawerProps {
   reviews: WeeklyReview[];
@@ -16,23 +17,28 @@ export function ReviewHistoryDrawer({
 }: ReviewHistoryDrawerProps) {
   if (reviews.length === 0) {
     return (
-      <div className="p-6 rounded-xl border border-border/40 bg-card/30 text-center space-y-2">
-        <Clock className="w-8 h-8 text-muted-foreground/40 mx-auto" />
-        <p className="text-sm font-medium text-foreground">No Historical Reviews</p>
-        <p className="text-xs text-muted-foreground">
-          Completed weekly reviews will be preserved here with immutable metrics snapshots.
+      <div className="p-12 rounded-3xl border border-white/[0.08] bg-zinc-900/40 text-center space-y-3">
+        <div className="w-12 h-12 rounded-2xl bg-zinc-800/80 border border-white/[0.08] flex items-center justify-center mx-auto text-zinc-400">
+          <Clock className="w-6 h-6" />
+        </div>
+        <h3 className="text-base font-semibold text-zinc-200">No Historical Reviews</h3>
+        <p className="text-xs text-zinc-400 max-w-sm mx-auto">
+          Completed weekly reviews will be preserved here with certified, immutable metrics snapshots.
         </p>
       </div>
     );
   }
 
   return (
-    <div className="space-y-3">
-      <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider block">
-        Weekly Review Archive ({reviews.length})
-      </span>
+    <div className="space-y-4">
+      <div className="flex items-center justify-between px-1">
+        <span className="text-xs font-semibold text-zinc-400 uppercase tracking-wider">
+          Weekly Review Archive ({reviews.length})
+        </span>
+        <span className="text-xs text-zinc-500 font-mono">Immutable Snapshots</span>
+      </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {reviews.map((r) => {
           const isCurrent = r.week_start === currentWeekStart;
           const isCompleted = r.status === 'completed';
@@ -43,54 +49,51 @@ export function ReviewHistoryDrawer({
             <Link
               key={r.id}
               href={`/app/review?week=${r.week_start}`}
-              className={`p-4 rounded-xl border transition-all text-left space-y-3 block ${
+              className={`glass-card rounded-2xl p-5 border transition-all text-left space-y-3.5 block group ${
                 isCurrent
-                  ? 'border-primary/60 bg-primary/5 shadow-sm'
-                  : 'border-border/50 bg-card/40 hover:border-border/80 hover:bg-card/60'
+                  ? 'border-[#d4af37]/50 bg-[#15141c] shadow-md shadow-black/40'
+                  : 'border-white/[0.08] bg-zinc-900/60 hover:border-white/[0.16] hover:bg-zinc-800/60'
               }`}
             >
               <div className="flex items-center justify-between">
-                <div className="flex items-center space-x-2 text-xs font-medium text-foreground">
-                  <Calendar className="w-3.5 h-3.5 text-primary" />
-                  <span>{r.week_start} to {r.week_end}</span>
+                <div className="flex items-center gap-2 text-xs font-medium text-zinc-200">
+                  <Calendar className="w-3.5 h-3.5 text-[#d4af37]" />
+                  <span>{r.week_start} – {r.week_end}</span>
                 </div>
-                <span
-                  className={`text-[10px] px-2 py-0.5 rounded-full font-mono ${
-                    isCompleted
-                      ? 'bg-emerald-500/10 text-emerald-500 font-semibold'
-                      : 'bg-amber-500/10 text-amber-500 font-semibold'
-                  }`}
+                <Badge
+                  variant={isCompleted ? 'success' : 'warning'}
+                  size="sm"
                 >
                   {isCompleted ? 'Locked' : 'Draft'}
-                </span>
+                </Badge>
               </div>
 
               {metrics && (
-                <div className="grid grid-cols-3 gap-1 text-[11px] text-muted-foreground pt-1 border-t border-border/30">
+                <div className="grid grid-cols-3 gap-2 text-xs text-zinc-400 pt-2 border-t border-white/[0.06]">
                   <div>
-                    <span className="font-semibold text-foreground block">
+                    <span className="font-bold font-mono text-zinc-200 block text-sm">
                       {metrics.tasks.completionRate}%
                     </span>
-                    Tasks
+                    <span className="text-[10px] text-zinc-400">Tasks Rate</span>
                   </div>
                   <div>
-                    <span className="font-semibold text-foreground block">
+                    <span className="font-bold font-mono text-sky-400 block text-sm">
                       {metrics.focus.formattedDuration}
                     </span>
-                    Focus
+                    <span className="text-[10px] text-zinc-400">Deep Work</span>
                   </div>
                   <div>
-                    <span className="font-semibold text-foreground block">
+                    <span className="font-bold font-mono text-emerald-400 block text-sm">
                       {metrics.accountability.totalFulfilled}
                     </span>
-                    Pacts
+                    <span className="text-[10px] text-zinc-400">Pacts Done</span>
                   </div>
                 </div>
               )}
 
-              <div className="flex items-center justify-between text-xs text-muted-foreground pt-1">
+              <div className="flex items-center justify-between text-xs text-zinc-400 pt-1">
                 <span>{prioritiesCount} priorities committed</span>
-                <ChevronRight className="w-3.5 h-3.5 text-muted-foreground/60" />
+                <ChevronRight className="w-4 h-4 text-zinc-400 group-hover:text-[#d4af37] transition-colors" />
               </div>
             </Link>
           );

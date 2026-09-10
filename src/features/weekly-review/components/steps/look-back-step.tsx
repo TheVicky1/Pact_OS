@@ -23,200 +23,213 @@ export function LookBackStep({ metrics, weekLabel }: LookBackStepProps) {
 
   return (
     <div className="space-y-6 animate-in fade-in duration-300">
-      <div className="border-b border-border/40 pb-4">
-        <h2 className="text-xl font-semibold tracking-tight text-foreground">
-          Step 1: Look Back — Objective Weekly Facts
+      <div className="pb-2 border-b border-white/[0.06]">
+        <div className="flex items-center gap-2">
+          <span className="text-xs font-semibold uppercase tracking-wider text-[#d4af37]">
+            Step 1 • Fact Finding
+          </span>
+          <span className="h-1 w-1 rounded-full bg-zinc-500" />
+          <span className="text-xs text-zinc-400">Objective Truth</span>
+        </div>
+        <h2 className="text-xl font-semibold tracking-tight text-zinc-100 mt-1">
+          Look Back — Verified Weekly Facts
         </h2>
-        <p className="text-sm text-muted-foreground mt-1">
-          Authoritative review of verified activity and commitments for {weekLabel}.
+        <p className="text-xs sm:text-sm text-zinc-400 mt-1">
+          Authoritative audit of verified task execution, commitments, focus time, and cash flow for {weekLabel}.
         </p>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {/* Tasks Card */}
-        <div className="p-5 rounded-xl border border-border/50 bg-card/60 backdrop-blur-md space-y-3">
+        <div className="glass-card rounded-2xl p-5 border-white/[0.08] bg-zinc-900/60 space-y-3">
           <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-2 text-primary font-medium text-sm">
+            <div className="flex items-center gap-2 text-[#d4af37] font-medium text-xs">
               <CheckSquare className="w-4 h-4" />
               <span>Task Execution</span>
             </div>
-            <span className="text-xs px-2 py-0.5 rounded-full bg-primary/10 text-primary font-mono">
+            <span className="text-[11px] px-2 py-0.5 rounded-full bg-[#d4af37]/10 text-[#e2c056] border border-[#d4af37]/20 font-mono font-semibold">
               {tasks.completionRate}% Rate
             </span>
           </div>
-          <div className="text-2xl font-bold text-foreground">
+          <div className="text-3xl font-bold text-zinc-100 font-mono tracking-tight">
             {tasks.completedCount}{' '}
-            <span className="text-sm font-normal text-muted-foreground">
-              / {tasks.completedCount + tasks.pendingCount + tasks.missedCount} completed
+            <span className="text-xs font-normal text-zinc-400">
+              / {tasks.completedCount + tasks.pendingCount + tasks.missedCount} done
             </span>
           </div>
-          <div className="grid grid-cols-3 gap-2 text-xs text-muted-foreground pt-2 border-t border-border/40">
+          <div className="grid grid-cols-3 gap-2 text-xs text-zinc-400 pt-3 border-t border-white/[0.06]">
             <div>
-              <span className="block font-semibold text-foreground">{tasks.createdCount}</span>
-              Created
+              <span className="block font-semibold font-mono text-zinc-200">{tasks.createdCount}</span>
+              <span className="text-[11px] text-zinc-400">Created</span>
             </div>
             <div>
-              <span className="block font-semibold text-foreground">{tasks.pendingCount}</span>
-              Active
+              <span className="block font-semibold font-mono text-zinc-200">{tasks.pendingCount}</span>
+              <span className="text-[11px] text-zinc-400">Active</span>
             </div>
             <div>
-              <span className={`block font-semibold ${tasks.overdueCount > 0 ? 'text-destructive' : 'text-foreground'}`}>
+              <span className={`block font-semibold font-mono ${tasks.overdueCount > 0 ? 'text-rose-400' : 'text-zinc-200'}`}>
                 {tasks.overdueCount}
               </span>
-              Overdue
+              <span className="text-[11px] text-zinc-400">Overdue</span>
             </div>
           </div>
         </div>
 
         {/* Accountability Card */}
-        <div className="p-5 rounded-xl border border-border/50 bg-card/60 backdrop-blur-md space-y-3">
+        <div className="glass-card rounded-2xl p-5 border-white/[0.08] bg-zinc-900/60 space-y-3">
           <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-2 text-amber-500 font-medium text-sm">
+            <div className="flex items-center gap-2 text-amber-400 font-medium text-xs">
               <ShieldCheck className="w-4 h-4" />
               <span>Commitments & Integrity</span>
             </div>
-            <span className="text-xs px-2 py-0.5 rounded-full bg-amber-500/10 text-amber-500 font-mono">
+            <span className="text-[11px] px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 font-mono font-semibold">
               {accountability.totalFulfilled} Fulfilled
             </span>
           </div>
-          <div className="text-2xl font-bold text-foreground">
+          <div className="text-3xl font-bold text-zinc-100 font-mono tracking-tight">
             {accountability.totalActivated}{' '}
-            <span className="text-sm font-normal text-muted-foreground">pacts activated</span>
+            <span className="text-xs font-normal text-zinc-400">pacts activated</span>
           </div>
-          <div className="grid grid-cols-3 gap-2 text-xs text-muted-foreground pt-2 border-t border-border/40">
+          <div className="grid grid-cols-3 gap-2 text-xs text-zinc-400 pt-3 border-t border-white/[0.06]">
             <div>
-              <span className="block font-semibold text-emerald-500">{accountability.totalFulfilled}</span>
-              Fulfilled
+              <span className="block font-semibold font-mono text-emerald-400">{accountability.totalFulfilled}</span>
+              <span className="text-[11px] text-zinc-400">Fulfilled</span>
             </div>
             <div>
-              <span className="block font-semibold text-amber-500">{accountability.totalWaived}</span>
-              Waived
+              <span className="block font-semibold font-mono text-amber-400">{accountability.totalWaived}</span>
+              <span className="text-[11px] text-zinc-400">Waived</span>
             </div>
             <div>
-              <span className={`block font-semibold ${accountability.totalMissed > 0 ? 'text-destructive' : 'text-foreground'}`}>
+              <span className={`block font-semibold font-mono ${accountability.totalMissed > 0 ? 'text-rose-400' : 'text-zinc-200'}`}>
                 {accountability.totalMissed}
               </span>
-              Missed
+              <span className="text-[11px] text-zinc-400">Missed</span>
             </div>
           </div>
         </div>
 
         {/* Focus Work Card */}
-        <div className="p-5 rounded-xl border border-border/50 bg-card/60 backdrop-blur-md space-y-3">
+        <div className="glass-card rounded-2xl p-5 border-white/[0.08] bg-zinc-900/60 space-y-3">
           <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-2 text-sky-500 font-medium text-sm">
+            <div className="flex items-center gap-2 text-sky-400 font-medium text-xs">
               <Timer className="w-4 h-4" />
               <span>Deep Work Focus</span>
             </div>
-            <span className="text-xs px-2 py-0.5 rounded-full bg-sky-500/10 text-sky-500 font-mono">
+            <span className="text-[11px] px-2 py-0.5 rounded-full bg-sky-500/10 text-sky-400 border border-sky-500/20 font-mono font-semibold">
               {focus.totalSessions} Sessions
             </span>
           </div>
-          <div className="text-2xl font-bold text-foreground">
+          <div className="text-3xl font-bold text-sky-400 font-mono tracking-tight">
             {focus.formattedDuration}
           </div>
-          <div className="grid grid-cols-2 gap-2 text-xs text-muted-foreground pt-2 border-t border-border/40">
+          <div className="grid grid-cols-2 gap-2 text-xs text-zinc-400 pt-3 border-t border-white/[0.06]">
             <div>
-              <span className="block font-semibold text-foreground">{focus.completedSessions}</span>
-              Completed
+              <span className="block font-semibold font-mono text-zinc-200">{focus.completedSessions}</span>
+              <span className="text-[11px] text-zinc-400">Completed</span>
             </div>
             <div>
-              <span className="block font-semibold text-foreground">{focus.averageSessionMinutes}m</span>
-              Avg Session
+              <span className="block font-semibold font-mono text-zinc-200">{focus.averageSessionMinutes}m</span>
+              <span className="text-[11px] text-zinc-400">Avg Duration</span>
             </div>
           </div>
         </div>
 
         {/* Habits Card */}
-        <div className="p-5 rounded-xl border border-border/50 bg-card/60 backdrop-blur-md space-y-3">
+        <div className="glass-card rounded-2xl p-5 border-white/[0.08] bg-zinc-900/60 space-y-3">
           <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-2 text-emerald-500 font-medium text-sm">
+            <div className="flex items-center gap-2 text-emerald-400 font-medium text-xs">
               <Repeat className="w-4 h-4" />
               <span>Habit Consistency</span>
             </div>
-            <span className="text-xs px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-500 font-mono">
+            <span className="text-[11px] px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 font-mono font-semibold">
               {habits.completionRate}%
             </span>
           </div>
-          <div className="text-2xl font-bold text-foreground">
+          <div className="text-3xl font-bold text-zinc-100 font-mono tracking-tight">
             {habits.completedOccurrences}{' '}
-            <span className="text-sm font-normal text-muted-foreground">
-              / {habits.scheduledOccurrences} scheduled
+            <span className="text-xs font-normal text-zinc-400">
+              / {habits.scheduledOccurrences} done
             </span>
           </div>
-          <div className="grid grid-cols-3 gap-2 text-xs text-muted-foreground pt-2 border-t border-border/40">
+          <div className="grid grid-cols-3 gap-2 text-xs text-zinc-400 pt-3 border-t border-white/[0.06]">
             <div>
-              <span className="block font-semibold text-emerald-500">{habits.completedOccurrences}</span>
-              Completed
+              <span className="block font-semibold font-mono text-emerald-400">{habits.completedOccurrences}</span>
+              <span className="text-[11px] text-zinc-400">Completed</span>
             </div>
             <div>
-              <span className="block font-semibold text-foreground">{habits.skippedOccurrences}</span>
-              Skipped
+              <span className="block font-semibold font-mono text-zinc-200">{habits.skippedOccurrences}</span>
+              <span className="text-[11px] text-zinc-400">Skipped</span>
             </div>
             <div>
-              <span className={`block font-semibold ${habits.missedOccurrences > 0 ? 'text-destructive' : 'text-foreground'}`}>
+              <span className={`block font-semibold font-mono ${habits.missedOccurrences > 0 ? 'text-rose-400' : 'text-zinc-200'}`}>
                 {habits.missedOccurrences}
               </span>
-              Missed
+              <span className="text-[11px] text-zinc-400">Missed</span>
             </div>
           </div>
         </div>
 
         {/* Finance Card */}
-        <div className="p-5 rounded-xl border border-border/50 bg-card/60 backdrop-blur-md space-y-3">
+        <div className="glass-card rounded-2xl p-5 border-white/[0.08] bg-zinc-900/60 space-y-3">
           <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-2 text-violet-500 font-medium text-sm">
+            <div className="flex items-center gap-2 text-violet-400 font-medium text-xs">
               <Wallet className="w-4 h-4" />
               <span>Financial Cash Flow</span>
             </div>
-            <span className={`text-xs px-2 py-0.5 rounded-full font-mono ${finance.netCashFlowCents >= 0 ? 'bg-emerald-500/10 text-emerald-500' : 'bg-destructive/10 text-destructive'}`}>
+            <span
+              className={`text-[11px] px-2 py-0.5 rounded-full font-mono font-semibold ${
+                finance.netCashFlowCents >= 0
+                  ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'
+                  : 'bg-rose-500/10 text-rose-400 border border-rose-500/20'
+              }`}
+            >
               Net {finance.formattedNet}
             </span>
           </div>
-          <div className="flex items-baseline space-x-4">
+          <div className="flex items-baseline gap-4">
             <div>
-              <span className="text-xs text-muted-foreground flex items-center">
-                <ArrowDownRight className="w-3 h-3 text-destructive mr-0.5" /> Outflow
+              <span className="text-[11px] text-zinc-400 flex items-center gap-0.5">
+                <ArrowDownRight className="w-3 h-3 text-rose-400" /> Outflow
               </span>
-              <span className="text-lg font-bold text-foreground">{finance.formattedExpense}</span>
+              <span className="text-xl font-bold font-mono text-zinc-100">{finance.formattedExpense}</span>
             </div>
             <div>
-              <span className="text-xs text-muted-foreground flex items-center">
-                <ArrowUpRight className="w-3 h-3 text-emerald-500 mr-0.5" /> Inflow
+              <span className="text-[11px] text-zinc-400 flex items-center gap-0.5">
+                <ArrowUpRight className="w-3 h-3 text-emerald-400" /> Inflow
               </span>
-              <span className="text-lg font-bold text-foreground">{finance.formattedIncome}</span>
+              <span className="text-xl font-bold font-mono text-zinc-100">{finance.formattedIncome}</span>
             </div>
           </div>
-          <div className="text-xs text-muted-foreground pt-2 border-t border-border/40">
-            <span>{finance.exceededBudgetsCount} category budgets exceeded limit</span>
+          <div className="text-[11px] text-zinc-400 pt-3 border-t border-white/[0.06]">
+            <span>{finance.exceededBudgetsCount} category budget limit exceedances</span>
           </div>
         </div>
 
         {/* Goals & Projects Card */}
-        <div className="p-5 rounded-xl border border-border/50 bg-card/60 backdrop-blur-md space-y-3">
+        <div className="glass-card rounded-2xl p-5 border-white/[0.08] bg-zinc-900/60 space-y-3">
           <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-2 text-amber-400 font-medium text-sm">
+            <div className="flex items-center gap-2 text-[#d4af37] font-medium text-xs">
               <Target className="w-4 h-4" />
               <span>Strategic Focus</span>
             </div>
-            <span className="text-xs px-2 py-0.5 rounded-full bg-amber-400/10 text-amber-400 font-mono">
+            <span className="text-[11px] px-2 py-0.5 rounded-full bg-[#d4af37]/10 text-[#e2c056] border border-[#d4af37]/20 font-mono font-semibold">
               {goalsAndProjects.activeGoalsCount} Active
             </span>
           </div>
-          <div className="text-2xl font-bold text-foreground">
+          <div className="text-3xl font-bold text-zinc-100 font-mono tracking-tight">
             {goalsAndProjects.goalsWithProgressCount}{' '}
-            <span className="text-sm font-normal text-muted-foreground">goals progressed</span>
+            <span className="text-xs font-normal text-zinc-400">goals progressed</span>
           </div>
-          <div className="grid grid-cols-2 gap-2 text-xs text-muted-foreground pt-2 border-t border-border/40">
+          <div className="grid grid-cols-2 gap-2 text-xs text-zinc-400 pt-3 border-t border-white/[0.06]">
             <div>
-              <span className="block font-semibold text-foreground">{goalsAndProjects.activeProjectsCount}</span>
-              Active Projects
+              <span className="block font-semibold font-mono text-zinc-200">{goalsAndProjects.activeProjectsCount}</span>
+              <span className="text-[11px] text-zinc-400">Active Projects</span>
             </div>
             <div>
-              <span className={`block font-semibold ${goalsAndProjects.stalledGoalsCount > 0 ? 'text-amber-500' : 'text-foreground'}`}>
+              <span className={`block font-semibold font-mono ${goalsAndProjects.stalledGoalsCount > 0 ? 'text-amber-400' : 'text-zinc-200'}`}>
                 {goalsAndProjects.stalledGoalsCount}
               </span>
-              Stalled Goals
+              <span className="text-[11px] text-zinc-400">Stalled Goals</span>
             </div>
           </div>
         </div>

@@ -9,6 +9,7 @@ import { SecuritySettingsCard } from './security-settings-card';
 import { IntegrationsSettingsCard } from './integrations-settings-card';
 import { NotificationSettingsCard } from './notification-settings-card';
 import { DataPrivacySettingsCard } from './data-privacy-settings-card';
+import { WeeklyReviewSettingsCard } from './weekly-review-settings-card';
 import { Settings } from 'lucide-react';
 
 export interface SettingsWorkspaceProps {
@@ -55,6 +56,10 @@ export function SettingsWorkspace({ initialData }: SettingsWorkspaceProps) {
         <div className="lg:col-span-8 min-w-0">
           {activeTab === 'profile' && (
             <ProfileSettingsCard profile={initialData.profile} />
+          )}
+
+          {activeTab === 'review' && (
+            <WeeklyReviewSettingsCard userTimezone={initialData.profile.timezone} />
           )}
 
           {activeTab === 'accountability' && (

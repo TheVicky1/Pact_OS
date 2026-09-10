@@ -13,6 +13,7 @@ import {
   Clock,
 } from 'lucide-react';
 import { addDaysToDateString } from '@/lib/time';
+import { Button } from '@/components/ui/button';
 
 export interface CleanupStepProps {
   unfinishedTasks: Task[];
@@ -81,25 +82,32 @@ export function CleanupStep({
 
   return (
     <div className="space-y-6 animate-in fade-in duration-300">
-      <div className="border-b border-border/40 pb-4">
-        <h2 className="text-xl font-semibold tracking-tight text-foreground">
-          Step 4: Operational Clean Up & Carry Forward
+      <div className="pb-2 border-b border-white/[0.06]">
+        <div className="flex items-center gap-2">
+          <span className="text-xs font-semibold uppercase tracking-wider text-[#d4af37]">
+            Step 4 • Open Loops
+          </span>
+          <span className="h-1 w-1 rounded-full bg-zinc-500" />
+          <span className="text-xs text-zinc-400">Operational Clean Up</span>
+        </div>
+        <h2 className="text-xl font-semibold tracking-tight text-zinc-100 mt-1">
+          Operational Clean Up & Carry Forward
         </h2>
-        <p className="text-sm text-muted-foreground mt-1">
+        <p className="text-xs sm:text-sm text-zinc-400 mt-1">
           Triage open loops, carry forward essential commitments into next week (preserving task IDs), and eliminate obsolete items.
         </p>
       </div>
 
       {/* Unfinished / Overdue Tasks List */}
-      <div className="space-y-3">
-        <div className="flex items-center justify-between">
-          <span className="text-sm font-semibold text-foreground flex items-center space-x-2">
-            <Clock className="w-4 h-4 text-amber-500" />
-            <span>Unfinished & Overdue Commitments ({unfinishedTasks.length})</span>
+      <div className="glass-card rounded-2xl p-6 border-white/[0.08] bg-zinc-900/60 space-y-4">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <span className="text-xs font-semibold uppercase tracking-wider text-zinc-200 flex items-center gap-2">
+            <Clock className="w-4 h-4 text-amber-400" />
+            <span>Unfinished Commitments ({unfinishedTasks.length})</span>
           </span>
           {unfinishedTasks.length > 0 && (
-            <div className="flex items-center space-x-2">
-              <label className="text-xs text-muted-foreground">New Target Date:</label>
+            <div className="flex items-center gap-2">
+              <label className="text-xs text-zinc-400">Target New Deadline:</label>
               <input
                 type="date"
                 defaultValue={defaultCarryDeadline.slice(0, 10)}
@@ -119,22 +127,24 @@ export function CleanupStep({
                     });
                   }
                 }}
-                className="text-xs rounded border border-border/60 bg-background px-2 py-1 text-foreground"
+                className="text-xs rounded-xl border border-white/[0.08] bg-zinc-950/80 px-3 py-1.5 text-zinc-200 focus:outline-none focus:border-[#d4af37]/60"
               />
             </div>
           )}
         </div>
 
         {unfinishedTasks.length === 0 ? (
-          <div className="p-6 rounded-xl border border-emerald-500/20 bg-emerald-500/5 text-center space-y-2">
-            <CheckCircle2 className="w-8 h-8 text-emerald-500 mx-auto" />
-            <p className="text-sm font-medium text-foreground">Clean Slate Achieved</p>
-            <p className="text-xs text-muted-foreground">
-              No overdue or open commitments pending resolution.
+          <div className="p-8 rounded-2xl border border-emerald-500/20 bg-emerald-500/5 text-center space-y-2">
+            <div className="w-10 h-10 rounded-2xl bg-emerald-500/15 text-emerald-400 flex items-center justify-center mx-auto border border-emerald-500/30 mb-2">
+              <CheckCircle2 className="w-6 h-6" />
+            </div>
+            <p className="text-sm font-semibold text-zinc-200">Clean Slate Achieved</p>
+            <p className="text-xs text-zinc-400 max-w-sm mx-auto">
+              No overdue or open commitments pending resolution. Your queue is fully reconciled.
             </p>
           </div>
         ) : (
-          <div className="space-y-2 max-h-72 overflow-y-auto pr-1">
+          <div className="space-y-2.5 max-h-80 overflow-y-auto pr-1">
             {unfinishedTasks.map((task) => {
               const isSelected = selectedTaskIds.has(task.id);
               const isOverdue = task.status === 'missed' || (task.deadline_at && new Date(task.deadline_at) < new Date());
@@ -143,48 +153,52 @@ export function CleanupStep({
                 <div
                   key={task.id}
                   onClick={() => toggleTaskSelection(task.id, task.title)}
-                  className={`p-3.5 rounded-lg border transition-all cursor-pointer flex items-center justify-between ${
+                  className={`p-4 rounded-2xl border transition-all cursor-pointer flex items-center justify-between gap-4 ${
                     isSelected
-                      ? 'border-primary bg-primary/10 shadow-sm'
-                      : 'border-border/50 bg-card/40 hover:border-border/80'
+                      ? 'border-[#d4af37]/50 bg-[#15141c] shadow-sm'
+                      : 'border-white/[0.06] bg-zinc-950/40 hover:border-white/[0.12] hover:bg-zinc-900/60'
                   }`}
                 >
-                  <div className="flex items-center space-x-3">
+                  <div className="flex items-center gap-3.5 min-w-0">
                     <div
-                      className={`w-5 h-5 rounded border flex items-center justify-center transition-colors ${
+                      className={`w-5 h-5 rounded-lg border flex items-center justify-center shrink-0 transition-colors ${
                         isSelected
-                          ? 'border-primary bg-primary text-primary-foreground'
-                          : 'border-muted-foreground/40 bg-background'
+                          ? 'border-[#d4af37] bg-[#d4af37] text-zinc-950'
+                          : 'border-white/[0.15] bg-zinc-900/80'
                       }`}
                     >
                       {isSelected && <CheckCircle2 className="w-3.5 h-3.5" />}
                     </div>
-                    <div>
-                      <span className="text-sm font-medium text-foreground block">
+                    <div className="min-w-0">
+                      <span className="text-sm font-medium text-zinc-100 truncate block">
                         {task.title}
                       </span>
-                      <span className="text-xs text-muted-foreground flex items-center space-x-2 mt-0.5">
-                        <span className={`px-1.5 py-0.2 rounded text-[10px] font-mono ${
-                          task.priority === 'high' ? 'bg-destructive/10 text-destructive' : 'bg-muted text-muted-foreground'
+                      <div className="flex items-center gap-2 mt-1">
+                        <span className={`px-1.5 py-0.5 rounded text-[10px] font-mono uppercase font-semibold ${
+                          task.priority === 'urgent' || task.priority === 'high'
+                            ? 'bg-rose-500/10 text-rose-400 border border-rose-500/20'
+                            : 'bg-zinc-800 text-zinc-400'
                         }`}>
                           {task.priority}
                         </span>
                         {isOverdue && (
-                          <span className="text-destructive font-medium flex items-center">
-                            <AlertCircle className="w-3 h-3 mr-0.5" /> Overdue
+                          <span className="text-rose-400 text-xs font-medium flex items-center gap-1">
+                            <AlertCircle className="w-3 h-3" /> Overdue
                           </span>
                         )}
-                      </span>
+                      </div>
                     </div>
                   </div>
 
-                  <div className="text-right">
+                  <div className="shrink-0 text-right">
                     {isSelected ? (
-                      <span className="text-xs text-primary font-medium flex items-center">
-                        Carry Forward <ArrowRight className="w-3.5 h-3.5 ml-1" />
+                      <span className="text-xs text-[#e2c056] font-semibold flex items-center gap-1">
+                        Carrying Forward <ArrowRight className="w-3.5 h-3.5" />
                       </span>
                     ) : (
-                      <span className="text-xs text-muted-foreground">Click to carry forward</span>
+                      <span className="text-xs text-zinc-500 hover:text-zinc-300 transition-colors">
+                        Select to carry
+                      </span>
                     )}
                   </div>
                 </div>
@@ -194,38 +208,39 @@ export function CleanupStep({
         )}
 
         {selectedTaskIds.size > 0 && onCarryForwardBatch && (
-          <div className="flex justify-end pt-1">
-            <button
-              type="button"
+          <div className="flex justify-end pt-2">
+            <Button
+              variant="secondary"
+              size="sm"
               disabled={isExecutingCarry}
               onClick={handleApplyCarryForward}
-              className="text-xs px-3 py-1.5 rounded-lg bg-primary/20 text-primary font-medium hover:bg-primary/30 transition-colors"
+              className="text-xs"
             >
               {isExecutingCarry ? 'Applying...' : `Carry Forward ${selectedTaskIds.size} Selected Task(s) Now`}
-            </button>
+            </Button>
           </div>
         )}
       </div>
 
       {/* Lessons & Elimination Reflection */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
-        <div className="space-y-2">
-          <label className="text-sm font-medium text-foreground">
-            Lesson Learned (Key realization or strategic insight)
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-5 pt-2">
+        <div className="glass-card rounded-2xl p-5 border-white/[0.08] bg-zinc-900/60 space-y-3">
+          <label className="text-xs font-semibold text-zinc-200 uppercase tracking-wider block">
+            Lesson Learned <span className="text-zinc-400 font-normal font-sans lowercase">(key realization or strategic insight)</span>
           </label>
           <textarea
             value={reflection.lessonLearned}
             onChange={(e) => onUpdateReflection('lessonLearned', e.target.value)}
-            placeholder="e.g. Schedule hard tasks in the first 2 hours of the day before meetings."
+            placeholder="e.g. Schedule demanding deep work in the first 2 hours of the day before meetings."
             maxLength={2000}
             rows={3}
-            className="w-full rounded-lg border border-border/60 bg-background/80 px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground/60 focus:outline-none focus:ring-1 focus:ring-primary resize-none"
+            className="w-full rounded-xl border border-white/[0.08] bg-zinc-950/60 p-3.5 text-xs sm:text-sm text-zinc-100 placeholder:text-zinc-500 focus:outline-none focus:border-[#d4af37]/60 focus:ring-1 focus:ring-[#d4af37]/30 transition-all resize-none"
           />
         </div>
 
-        <div className="space-y-2">
-          <label className="text-sm font-medium text-foreground">
-            What to Stop? (Activities to intentionally eliminate)
+        <div className="glass-card rounded-2xl p-5 border-white/[0.08] bg-zinc-900/60 space-y-3">
+          <label className="text-xs font-semibold text-zinc-200 uppercase tracking-wider block">
+            What to Stop? <span className="text-zinc-400 font-normal font-sans lowercase">(activities to intentionally eliminate)</span>
           </label>
           <textarea
             value={reflection.whatToStop}
@@ -233,7 +248,7 @@ export function CleanupStep({
             placeholder="e.g. Stop checking analytics multiple times daily."
             maxLength={2000}
             rows={3}
-            className="w-full rounded-lg border border-border/60 bg-background/80 px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground/60 focus:outline-none focus:ring-1 focus:ring-primary resize-none"
+            className="w-full rounded-xl border border-white/[0.08] bg-zinc-950/60 p-3.5 text-xs sm:text-sm text-zinc-100 placeholder:text-zinc-500 focus:outline-none focus:border-[#d4af37]/60 focus:ring-1 focus:ring-[#d4af37]/30 transition-all resize-none"
           />
         </div>
       </div>

@@ -3,6 +3,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { Sparkles, ArrowRight, CheckCircle2 } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 
 export interface SundayRitualBannerProps {
   isSunday: boolean;
@@ -17,51 +18,57 @@ export function SundayRitualBanner({
 }: SundayRitualBannerProps) {
   if (isCompleted) {
     return (
-      <div className="p-4 rounded-xl border border-emerald-500/20 bg-emerald-500/5 backdrop-blur-sm flex items-center justify-between">
-        <div className="flex items-center space-x-3">
-          <CheckCircle2 className="w-5 h-5 text-emerald-500 shrink-0" />
+      <div className="glass-card rounded-2xl p-4 sm:p-5 border-emerald-500/20 bg-emerald-500/5 flex items-center justify-between gap-4">
+        <div className="flex items-center gap-3.5">
+          <div className="p-2 rounded-xl bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 shrink-0">
+            <CheckCircle2 className="w-5 h-5" />
+          </div>
           <div className="text-xs">
-            <span className="font-semibold text-foreground block">
+            <span className="font-semibold text-zinc-100 text-sm block">
               Sunday Review Completed ({weekLabel})
             </span>
-            <span className="text-muted-foreground">
-              Weekly operating plan is locked. Ready to execute.
+            <span className="text-zinc-400">
+              Weekly operating plan is certified and locked.
             </span>
           </div>
         </div>
         <Link
           href="/app/review"
-          className="text-xs px-3 py-1.5 rounded-lg bg-emerald-500/10 text-emerald-500 hover:bg-emerald-500/20 transition-colors font-medium flex items-center space-x-1"
+          className="shrink-0 focus-visible:outline-none"
         >
-          <span>View Plan</span>
-          <ArrowRight className="w-3 h-3" />
+          <Button variant="secondary" size="sm" className="text-xs">
+            <span>View Plan</span>
+            <ArrowRight className="w-3.5 h-3.5 ml-1" />
+          </Button>
         </Link>
       </div>
     );
   }
 
   return (
-    <div className="p-4 rounded-xl border border-primary/30 bg-gradient-to-r from-primary/10 via-background to-card/60 backdrop-blur-md flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
-      <div className="flex items-center space-x-3">
-        <div className="w-8 h-8 rounded-lg bg-primary/20 text-primary flex items-center justify-center shrink-0">
-          <Sparkles className="w-4 h-4" />
+    <div className="glass-card rounded-2xl p-5 border-[#d4af37]/30 bg-gradient-to-r from-[#181622] via-[#121217] to-black flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 shadow-lg shadow-black/40">
+      <div className="flex items-start sm:items-center gap-3.5">
+        <div className="p-2.5 rounded-xl bg-[#d4af37]/15 text-[#e2c056] border border-[#d4af37]/30 shrink-0 mt-0.5 sm:mt-0">
+          <Sparkles className="w-5 h-5" />
         </div>
         <div>
-          <span className="font-semibold text-sm text-foreground block">
+          <span className="font-semibold text-sm text-zinc-100 block">
             {isSunday ? 'Sunday Weekly Review Ready' : `Weekly Review (${weekLabel})`}
           </span>
-          <span className="text-xs text-muted-foreground">
-            Review past outcomes, clean up open loops, and commit to next week&apos;s priorities.
+          <span className="text-xs text-zinc-400 mt-0.5 block">
+            Audit verified facts, triage open loops, and commit to next week&apos;s strategic priorities.
           </span>
         </div>
       </div>
 
       <Link
         href="/app/review"
-        className="text-xs px-4 py-2 rounded-lg bg-primary text-primary-foreground hover:bg-primary/90 transition-colors font-medium flex items-center space-x-1.5 shadow-sm shrink-0"
+        className="self-start sm:self-auto shrink-0 focus-visible:outline-none"
       >
-        <span>Start Ritual</span>
-        <ArrowRight className="w-3.5 h-3.5" />
+        <Button variant="primary" size="sm" className="shadow-lg shadow-[#d4af37]/15">
+          <span>Start Ritual</span>
+          <ArrowRight className="w-4 h-4 ml-1.5" />
+        </Button>
       </Link>
     </div>
   );
