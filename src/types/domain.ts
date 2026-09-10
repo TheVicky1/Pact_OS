@@ -310,3 +310,48 @@ export type {
   AccountabilityAggregates,
   AnalyticsOverviewData,
 } from '@/lib/analytics';
+
+// Phase 4I-4 Settings Domain Types
+export interface UserProfileSettings {
+  id: string;
+  fullName: string;
+  timezone: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface UserAccountInfo {
+  email: string | null;
+  provider: 'email' | 'google' | 'other';
+  createdAt: string | null;
+  lastSignInAt: string | null;
+}
+
+export type IntegrationProviderId = 'github' | 'codeforces' | 'leetcode';
+
+export interface IntegrationStatus {
+  id: IntegrationProviderId;
+  name: string;
+  description: string;
+  category: 'code' | 'competitive_programming';
+  isConnected: boolean;
+  accountHandle: string | null;
+  lastSyncedAt: string | null;
+}
+
+export interface NotificationPreferences {
+  dailyPlanReminder: boolean;
+  deadlineAlerts: boolean;
+  consequenceAlerts: boolean;
+  weeklyReviewNotice: boolean;
+}
+
+export interface SettingsOverviewData {
+  profile: UserProfileSettings;
+  account: UserAccountInfo;
+  accountabilityPreferences: UserAccountabilityPreferences | null;
+  consequenceDefinitions: ConsequenceDefinition[];
+  integrations: IntegrationStatus[];
+  notifications: NotificationPreferences;
+}
+
