@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { PactLogo } from '@/components/brand/pact-logo';
 import { signOutAction } from '@/features/auth/actions';
+import { NotificationPopover } from '@/components/ui/notification-popover';
 import {
   LayoutDashboard,
   Target,
@@ -42,6 +43,7 @@ interface NavItem {
 export function AppHeader({ userName }: AppHeaderProps) {
   const pathname = usePathname();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isNotificationOpen, setIsNotificationOpen] = useState(false);
 
   const isDashboardActive = pathname === '/app';
   const isGoalsActive = pathname === '/app/goals' || pathname.startsWith('/app/goals/');
@@ -171,15 +173,30 @@ export function AppHeader({ userName }: AppHeaderProps) {
 
         {/* Right Section: Utilities & User Identity */}
         <div className="flex items-center gap-3 sm:gap-4">
-          {/* Notification Bell (from North Star) */}
-          <button
-            type="button"
-            aria-label="Notifications"
-            className="relative p-2 rounded-full text-zinc-400 hover:text-zinc-100 hover:bg-white/[0.06] transition-colors focus-visible:outline-none cursor-pointer"
-          >
-            <Bell className="w-4 h-4" />
-            <span className="absolute top-1.5 right-1.5 w-1.5 h-1.5 rounded-full bg-[#d4af37]" />
-          </button>
+          {/* Notification Bell with Popover Center */}
+          <div className="relative">
+            <button
+              type="button"
+              onClick={() => setIsNotificationOpen(!isNotificationOpen)}
+              aria-label="Notifications"
+              aria-haspopup="dialog"
+              aria-expanded={isNotificationOpen}
+              className={`relative p-2 rounded-full transition-colors focus-visible:outline-none cursor-pointer ${
+                isNotificationOpen
+                  ? 'bg-white/[0.1] text-zinc-100'
+                  : 'text-zinc-400 hover:text-zinc-100 hover:bg-white/[0.06]'
+              }`}
+            >
+              <Bell className="w-4 h-4" />
+              <span className="absolute top-1.5 right-1.5 w-1.5 h-1.5 rounded-full bg-[#d4af37]" />
+            </button>
+
+            {/* Interactive Popover */}
+            <NotificationPopover
+              isOpen={isNotificationOpen}
+              onClose={() => setIsNotificationOpen(false)}
+            />
+          </div>
 
           {/* User Profile Area */}
           <div className="flex items-center gap-2.5 pl-2 border-l border-white/[0.06]">
