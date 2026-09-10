@@ -338,3 +338,43 @@ export async function getCompletedTasksAction(
     };
   }
 }
+
+/**
+ * Server action to trigger on-demand external proof-of-work verification.
+ */
+export async function verifyExternalProofAction(
+  commitmentId: string
+): Promise<AccountabilityActionResult> {
+  try {
+    const supabase = await createClient();
+    const {
+      data: { user },
+      error: authError,
+    } = await supabase.auth.getUser();
+
+    if (authError || !user) {
+      return { success: false, error: 'Authentication required.' };
+    }
+
+    const uuidValidation = z.string().uuid().safeParse(commitmentId);
+    if (!uuidValidation.success) {
+      return { success: false, error: 'Invalid commitment identifier.' };
+    }
+
+    const { verifyAndFulfillExternalProofCommitment } = await import(
+      '@/lib/accountability/service'
+    );
+    const res = await verifyAndFulfillExternalProofCommitment(commitmentId);
+
+    revalidatePath('/app');
+    revalidatePath('/app/tasks');
+    revalidatePath('/app/accountability');
+
+    return res;
+  } catch (err: unknown) {
+    return {
+      success: false,
+      error: getErrorMessage(err, 'Failed to verify external proof.'),
+    };
+  }
+}

@@ -658,5 +658,156 @@ export async function fulfillTaskCompletion(
   return data as AccountabilityResolutionResult;
 }
 
+/**
+ * Evaluates external proof-of-work evidence and authoritatively fulfills commitment if rule is satisfied.
+ * Enforces server trust boundary and isolates tokens.
+ */
+export async function verifyAndFulfillExternalProofCommitment(
+  commitmentId: string,
+  fetcherOverrides?: any
+): Promise<{
+  success: boolean;
+  code: string;
+  ruleResult?: any;
+  data?: any;
+  error?: string;
+}> {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) {
+    throw new Error('Authentication required.');
+  }
+
+  // 1. Fetch commitment and task details
+  const { data: commitment, error: commError } = await supabase
+    .from('task_accountability_commitments')
+    .select('*, tasks!inner(*)')
+    .eq('id', commitmentId)
+    .eq('user_id', user.id)
+    .single();
+
+  if (commError || !commitment) {
+    return {
+      success: false,
+      code: 'NOT_FOUND',
+      error: 'Accountability commitment not found or access denied.',
+    };
+  }
+
+  const snapshot = commitment.consequence_snapshot || {};
+  const verifType = snapshot.verification_type || 'declaration';
+  const verifConfig = snapshot.verification_config || {};
+
+  // 2. Map verification type to provider
+  let provider: 'github' | 'leetcode' | 'codeforces' = 'github';
+  if (verifType === 'github_commits' || verifType === 'github_pr') {
+    provider = 'github';
+  } else if (verifType === 'leetcode_solve') {
+    provider = 'leetcode';
+  } else if (verifType === 'codeforces_solve') {
+    provider = 'codeforces';
+  } else if (verifType === 'external_proof') {
+    provider = (verifConfig.provider as any) || 'github';
+  } else {
+    return {
+      success: false,
+      code: 'INVALID_VERIFICATION_TYPE',
+      error: `Commitment verification type "${verifType}" is not an external proof requirement.`,
+    };
+  }
+
+  // 3. Fetch linked provider integration
+  const { data: integrationRecord } = await supabase
+    .from('external_provider_integrations')
+    .select('*')
+    .eq('user_id', user.id)
+    .eq('provider', provider)
+    .maybeSingle();
+
+  if (!integrationRecord || !integrationRecord.account_handle) {
+    return {
+      success: false,
+      code: 'NO_LINKED_ACCOUNT',
+      error: `No linked ${provider.toUpperCase()} account found. Please connect your account in Settings.`,
+    };
+  }
+
+  // 4. Derive authoritative time window
+  const task = commitment.tasks;
+  const windowStart = commitment.created_at || task.created_at || new Date().toISOString();
+  const windowEnd = task.deadline_at || new Date().toISOString();
+
+  // 5. Evaluate proof-of-work rule via deterministic engine
+  const { evaluateProofOfWorkRule } = await import('@/lib/integrations/proof-of-work');
+  const ruleResult = await evaluateProofOfWorkRule({
+    provider,
+    ruleType: verifType,
+    config: verifConfig,
+    windowStart,
+    windowEnd,
+    accountHandle: integrationRecord.account_handle,
+    token: integrationRecord.access_token,
+    fetcherOverrides,
+  });
+
+  if (!ruleResult.verified) {
+    return {
+      success: false,
+      code: ruleResult.code,
+      error: ruleResult.error || ruleResult.summary,
+      ruleResult,
+    };
+  }
+
+  // 6. Fulfill commitment via server-authoritative RPC
+  const { data: rpcData, error: rpcError } = await supabase.rpc(
+    'fulfill_external_proof_commitment',
+    {
+      p_commitment_id: commitmentId,
+      p_provider: provider,
+      p_rule_summary: ruleResult.summary,
+      p_evidence_items: ruleResult.evidence,
+    }
+  );
+
+  if (rpcError) {
+    return {
+      success: false,
+      code: 'RPC_ERROR',
+      error: `Failed to record verified proof: ${rpcError.message}`,
+      ruleResult,
+    };
+  }
+
+  // 7. Deliver in-app notification
+  try {
+    const { deliverInApp } = await import('@/lib/notifications/delivery');
+    await deliverInApp(supabase, {
+      userId: user.id,
+      type: 'verification_completed',
+      title: 'Proof-of-Work Verified',
+      body: ruleResult.summary,
+      actionUrl: '/app/accountability',
+      idempotencyKey: `pow_${commitmentId}_${Date.now()}`,
+      metadata: {
+        provider,
+        evidence_count: ruleResult.evidence.length,
+      },
+    });
+  } catch {
+    // Non-fatal
+  }
+
+  return {
+    success: true,
+    code: 'FULFILLED',
+    ruleResult,
+    data: rpcData?.data,
+  };
+}
+
 
 
