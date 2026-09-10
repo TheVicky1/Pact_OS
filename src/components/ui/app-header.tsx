@@ -6,7 +6,6 @@ import { usePathname } from 'next/navigation';
 import { PactLogo } from '@/components/brand/pact-logo';
 import { signOutAction } from '@/features/auth/actions';
 import { NotificationPopover } from '@/components/ui/notification-popover';
-import { useCommandCenter } from '@/features/command-center';
 import {
   LayoutDashboard,
   Target,
@@ -22,7 +21,6 @@ import {
   Wallet,
   TrendingUp,
   Settings as SettingsIcon,
-  Search,
 } from 'lucide-react';
 
 export interface AppHeaderProps {
@@ -39,12 +37,12 @@ interface NavItem {
 
 /**
  * PACT Application Global Header & Navigation System
- * Unified single-axis horizontal layout with controlled max-width containment (max-w-7xl),
- * pristine vertical alignment, non-colliding Command Center trigger, and responsive tiering.
+ * Clean three-zone horizontal layout:
+ * [Logo] -> [Primary Navigation: 8 Core Modules] -> [Flexible Space] -> [Notifications, Profile, Settings, Sign Out]
+ * Full responsiveness across desktop, laptop, tablet, and mobile with zero visual collision.
  */
 export function AppHeader({ userName }: AppHeaderProps) {
   const pathname = usePathname();
-  const { openCommandCenter } = useCommandCenter();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isNotificationOpen, setIsNotificationOpen] = useState(false);
   const [unreadCount, setUnreadCount] = useState<number>(0);
@@ -129,9 +127,9 @@ export function AppHeader({ userName }: AppHeaderProps) {
 
   return (
     <header className="sticky top-0 z-40 w-full border-b border-white/[0.06] bg-[#09090b]/85 backdrop-blur-xl transition-all">
-      <div className="max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">
+      <div className="max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4 sm:gap-6">
         {/* Left Section: Brand Logo & Desktop Navigation */}
-        <div className="flex items-center gap-5 xl:gap-7 h-full shrink-0 min-w-0">
+        <div className="flex items-center gap-6 xl:gap-8 h-full shrink-0 min-w-0">
           <Link
             href="/app"
             className="focus-visible:outline-none rounded-xl transition-opacity hover:opacity-90 flex-shrink-0 flex items-center"
@@ -141,7 +139,7 @@ export function AppHeader({ userName }: AppHeaderProps) {
           </Link>
 
           {/* Desktop Navigation (Available on xl screens and above; tablet/laptop gracefully tiered) */}
-          <nav aria-label="Main Navigation" className="hidden xl:flex items-center gap-0.5 2xl:gap-1.5 h-full">
+          <nav aria-label="Main Navigation" className="hidden xl:flex items-center gap-1 2xl:gap-2 h-full">
             {navItems.map((item) => (
               <Link
                 key={item.href}
@@ -172,34 +170,8 @@ export function AppHeader({ userName }: AppHeaderProps) {
           </nav>
         </div>
 
-        {/* Right Section: Command Center, Notification Bell, User Identity, Settings, Sign Out */}
+        {/* Right Section: Notification Bell, User Identity, Settings, Sign Out */}
         <div className="flex items-center gap-2 sm:gap-2.5 shrink-0">
-          {/* Desktop Command Center Search Trigger */}
-          <button
-            type="button"
-            onClick={openCommandCenter}
-            aria-label="Open Command Center (Cmd+K / Ctrl+K)"
-            className="hidden md:flex items-center justify-between w-40 lg:w-44 xl:w-48 h-9 px-3 rounded-xl bg-zinc-900/60 hover:bg-zinc-800/80 border border-white/[0.08] hover:border-white/[0.15] text-xs text-zinc-400 hover:text-zinc-200 transition-all cursor-pointer shadow-sm group focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[#d4af37]/50"
-          >
-            <div className="flex items-center gap-2 truncate">
-              <Search className="w-3.5 h-3.5 text-zinc-400 group-hover:text-[#d4af37] transition-colors shrink-0" />
-              <span className="font-normal text-zinc-400 truncate">Search...</span>
-            </div>
-            <kbd className="inline-flex items-center px-1.5 py-0.5 text-[10px] font-mono text-zinc-400 bg-white/[0.06] border border-white/[0.08] rounded shrink-0">
-              ⌘K
-            </kbd>
-          </button>
-
-          {/* Mobile / Tablet Quick Search Icon Button */}
-          <button
-            type="button"
-            onClick={openCommandCenter}
-            aria-label="Open Command Center"
-            className="md:hidden h-9 w-9 flex items-center justify-center text-zinc-400 hover:text-zinc-100 bg-zinc-900/40 hover:bg-zinc-800/80 border border-white/[0.06] rounded-xl focus-visible:outline-none cursor-pointer transition-colors"
-          >
-            <Search className="w-4 h-4" />
-          </button>
-
           {/* Notification Bell with Popover Center */}
           <div className="relative">
             <button
@@ -237,7 +209,7 @@ export function AppHeader({ userName }: AppHeaderProps) {
               <div className="w-6 h-6 rounded-full bg-gradient-to-br from-[#1e1e28] to-[#121217] border border-[#d4af37]/40 flex items-center justify-center font-semibold text-[11px] text-[#e2c056] shadow-sm shrink-0">
                 {userInitial ? userInitial : <User className="w-3 h-3 text-[#d4af37]" />}
               </div>
-              <span className="font-medium truncate max-w-[100px] 2xl:max-w-[130px] select-none">
+              <span className="font-medium truncate max-w-[100px] 2xl:max-w-[140px] select-none">
                 {userName}
               </span>
             </div>
@@ -284,24 +256,6 @@ export function AppHeader({ userName }: AppHeaderProps) {
       {/* Responsive Mobile / Tablet Navigation Drawer */}
       {isMobileMenuOpen && (
         <div className="xl:hidden border-t border-white/[0.08] bg-[#09090b]/95 backdrop-blur-2xl px-4 py-4 space-y-3 animate-in slide-in-from-top-2 duration-150">
-          {/* Mobile Command Palette Trigger */}
-          <button
-            type="button"
-            onClick={() => {
-              setIsMobileMenuOpen(false);
-              openCommandCenter();
-            }}
-            className="w-full flex items-center justify-between px-4 py-3 rounded-xl text-sm font-medium bg-zinc-900/80 border border-white/[0.08] text-zinc-200 hover:bg-white/[0.06] transition-all min-h-[44px] cursor-pointer"
-          >
-            <div className="flex items-center gap-3">
-              <Search className="w-4 h-4 text-[#d4af37]" />
-              <span>Command Palette</span>
-            </div>
-            <kbd className="px-2 py-0.5 text-[10px] font-medium text-zinc-400 bg-white/[0.06] border border-white/[0.08] rounded">
-              ⌘K
-            </kbd>
-          </button>
-
           <nav aria-label="Mobile Navigation" className="flex flex-col space-y-1">
             {navItems.map((item) => (
               <Link
