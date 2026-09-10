@@ -14,7 +14,7 @@ export const metadata = {
   description: 'Visual scheduling workspace, daily timeline, weekly planning, and monthly calendar for your commitments.',
 };
 
-export default async function CalendarPage() {
+export default async function PlannerPage() {
   const supabase = await createClient();
   const {
     data: { user },
@@ -50,4 +50,3 @@ export default async function CalendarPage() {
     </PageContainer>
   );
 }
-

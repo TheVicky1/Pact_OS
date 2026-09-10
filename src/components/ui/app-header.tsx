@@ -45,7 +45,11 @@ export function AppHeader({ userName }: AppHeaderProps) {
   const isProjectsActive = pathname === '/app/projects' || pathname.startsWith('/app/projects/');
   const isTasksActive = pathname === '/app/tasks' || pathname.startsWith('/app/tasks/');
   const isAccountabilityActive = pathname === '/app/accountability' || pathname.startsWith('/app/accountability/');
-  const isCalendarActive = pathname === '/app/calendar' || pathname.startsWith('/app/calendar/');
+  const isCalendarActive =
+    pathname === '/app/calendar' ||
+    pathname.startsWith('/app/calendar/') ||
+    pathname === '/app/planner' ||
+    pathname.startsWith('/app/planner/');
 
   const navItems: NavItem[] = [
     {
@@ -55,8 +59,8 @@ export function AppHeader({ userName }: AppHeaderProps) {
       isActive: isDashboardActive,
     },
     {
-      href: '/app/calendar',
-      label: 'Calendar',
+      href: '/app/planner',
+      label: 'Planner',
       icon: CalendarIcon,
       isActive: isCalendarActive,
     },
