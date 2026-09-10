@@ -434,6 +434,12 @@ export function DailyCalendarWidget({
                           <h3 className={`text-xs font-semibold truncate ${colors.text}`}>
                             {pe.event.title}
                           </h3>
+                          {(pe.event.is_external || pe.event.google_event_id) && (
+                            <span className="inline-flex items-center gap-1 text-[9px] text-blue-300 bg-blue-500/10 border border-blue-500/20 px-1.5 py-0.5 rounded shrink-0">
+                              <CalendarIcon className="w-2.5 h-2.5 text-blue-400" />
+                              <span className="hidden md:inline">Google</span>
+                            </span>
+                          )}
                           <span className="text-[10px] text-zinc-400 font-mono shrink-0 hidden sm:inline">
                             {startStr} – {endStr}
                           </span>

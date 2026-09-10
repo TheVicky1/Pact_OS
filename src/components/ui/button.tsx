@@ -51,9 +51,9 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button
   }[variant];
 
   const sizeStyles = {
-    sm: 'text-xs px-3 py-1.5 gap-1.5 min-h-[32px]',
-    md: 'text-sm px-4 py-2.5 gap-2 min-h-[40px]',
-    lg: 'text-base px-6 py-3.5 gap-2.5 min-h-[48px]',
+    sm: 'text-xs px-3 py-1.5 gap-1.5 min-h-[36px] touch-manipulation',
+    md: 'text-sm px-4 py-2.5 gap-2 min-h-[42px] touch-manipulation',
+    lg: 'text-base px-6 py-3.5 gap-2.5 min-h-[48px] touch-manipulation',
   }[size];
 
   return (

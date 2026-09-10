@@ -165,6 +165,21 @@ function EventModalContent({
           </Alert>
         )}
 
+        {/* Google Calendar Sync Indicator Banner */}
+        {eventToEdit && (eventToEdit.is_external || eventToEdit.google_event_id) && (
+          <div className="p-3 rounded-xl bg-blue-500/10 border border-blue-500/20 text-xs text-blue-300 flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <CalendarIcon className="w-4 h-4 text-blue-400" />
+              <span>
+                {eventToEdit.is_external ? 'Imported from Google Calendar' : 'Synchronized with Google Calendar'}
+              </span>
+            </div>
+            <span className="text-[11px] font-mono px-2 py-0.5 rounded bg-blue-500/20 text-blue-200">
+              Google Sync
+            </span>
+          </div>
+        )}
+
         {/* Title */}
         <FormField label="Event Title" required>
           <Input

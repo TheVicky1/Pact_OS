@@ -54,6 +54,17 @@ export function AccountabilityHistoryView({ events, timezone }: AccountabilityHi
     // Fulfilled
     const vType = event.verification_type || (event.metadata?.verification_type as string);
     switch (vType) {
+      case 'external_proof':
+      case 'github_commits':
+      case 'github_pr':
+      case 'leetcode_solve':
+      case 'codeforces_solve': {
+        const provider = (event.metadata?.provider as string) || 'Developer';
+        return {
+          label: `Objectively Verified (${provider.toUpperCase()} Proof)`,
+          variant: 'success' as const,
+        };
+      }
       case 'timed_session': {
         const actualSec = event.metadata?.actual_duration_seconds;
         const mins = typeof actualSec === 'number' ? Math.round(actualSec / 60) : null;

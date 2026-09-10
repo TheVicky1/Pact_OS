@@ -14,6 +14,11 @@ export const verificationTypeSchema = z.enum([
   'task_completion',
   'written_reflection',
   'declaration',
+  'github_commits',
+  'github_pr',
+  'leetcode_solve',
+  'codeforces_solve',
+  'external_proof',
   'custom',
 ]);
 

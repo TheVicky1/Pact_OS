@@ -1,7 +1,9 @@
 /**
- * PACT Phase 4I-2: Pure Money, Currency & Financial Calculation Layer
+ * PACT Phase 4I-2 & 5E: Pure Money, Currency & Financial Calculation Layer
  * Enforces integer-cents precision, deterministic formatting, and server-authoritative calculations.
  */
+
+export * from './finance';
 
 export type TransactionType = 'expense' | 'income';
 export type FinanceColorTag = 'gold' | 'blue' | 'purple' | 'emerald' | 'amber' | 'rose' | 'cyan' | 'slate';
