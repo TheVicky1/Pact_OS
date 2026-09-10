@@ -484,4 +484,63 @@ export interface ExternalProofRuleResult {
   error?: string;
 }
 
+// Phase 5F Onboarding & Account Data Portability Domain Types
+export type OnboardingStatus = 'not_started' | 'in_progress' | 'completed';
+export type OnboardingStep = 1 | 2 | 3;
+
+export interface OnboardingData {
+  displayName?: string;
+  timezone?: string;
+  workStartTime?: string;
+  workEndTime?: string;
+  dailyTaskTarget?: number;
+  notificationPreferences?: {
+    dailyPlanReminder?: boolean;
+    deadlineAlerts?: boolean;
+    consequenceAlerts?: boolean;
+    weeklyReviewNotice?: boolean;
+  };
+  initialGoalTitle?: string;
+  initialProjectTitle?: string;
+  [key: string]: unknown;
+}
+
+export interface OnboardingState {
+  status: OnboardingStatus;
+  step: OnboardingStep;
+  data: OnboardingData;
+  completedAt: string | null;
+}
+
+export interface UserAccountExport {
+  schema_version: string;
+  exported_at: string;
+  user_id: string;
+  profile: Record<string, unknown>;
+  user_preferences: Record<string, unknown>;
+  onboarding: OnboardingState;
+  goals: Record<string, unknown>[];
+  projects: Record<string, unknown>[];
+  tasks: Record<string, unknown>[];
+  commitments: Record<string, unknown>[];
+  verification_sessions: Record<string, unknown>[];
+  waivers: Record<string, unknown>[];
+  accountability_events: Record<string, unknown>[];
+  consequence_definitions: Record<string, unknown>[];
+  calendar_events: Record<string, unknown>[];
+  google_calendar_sync_state: Record<string, unknown> | null;
+  finance: {
+    categories: Record<string, unknown>[];
+    transactions: Record<string, unknown>[];
+    recurring_transactions: Record<string, unknown>[];
+    budgets: Record<string, unknown>[];
+  };
+  notifications: Record<string, unknown>[];
+  notification_channels: Record<string, unknown>[];
+  integrations: {
+    external_providers: Record<string, unknown>[];
+  };
+  external_proof_evidence: Record<string, unknown>[];
+}
+
 

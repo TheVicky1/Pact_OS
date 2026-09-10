@@ -1,12 +1,14 @@
 import { SupabaseClient } from '@supabase/supabase-js';
+import { OnboardingStatus } from '@/types/domain';
 
 export interface UserProfileInfo {
   fullName: string;
   timezone: string;
+  onboardingStatus?: OnboardingStatus;
 }
 
 /**
- * Authoritatively retrieves user profile information (full_name, timezone),
+ * Authoritatively retrieves user profile information (full_name, timezone, onboarding_status),
  * checking the public.profiles database table first, then falling back to
  * auth user_metadata, and finally defaulting to safe canonical fallbacks.
  */
@@ -17,7 +19,7 @@ export async function getUserProfileInfo(
 ): Promise<UserProfileInfo> {
   const { data: profile } = await supabase
     .from('profiles')
-    .select('full_name, timezone')
+    .select('full_name, timezone, onboarding_status')
     .eq('id', userId)
     .maybeSingle();
 
@@ -32,5 +34,8 @@ export async function getUserProfileInfo(
     (typeof userMetadata?.timezone === 'string' && userMetadata.timezone.trim()) ||
     'UTC';
 
-  return { fullName, timezone };
+  const onboardingStatus = (profile?.onboarding_status as OnboardingStatus) || 'completed';
+
+  return { fullName, timezone, onboardingStatus };
 }
+
