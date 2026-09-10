@@ -93,7 +93,6 @@ export async function evaluateProofOfWorkRule(
   // 1. GitHub Evaluation
   if (provider === 'github') {
     const targetRepo = typeof config.repo === 'string' && config.repo.trim() ? config.repo.trim() : undefined;
-    const requiredCount = typeof config.min_count === 'number' && config.min_count > 0 ? config.min_count : 1;
 
     if (ruleType === 'github_pr') {
       const requiredCount =
