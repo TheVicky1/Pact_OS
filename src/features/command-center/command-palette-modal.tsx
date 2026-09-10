@@ -24,6 +24,7 @@ import {
   CornerDownLeft,
   Command as CommandIcon,
   Loader2,
+  Repeat,
 } from 'lucide-react';
 
 const ICON_MAP: Record<string, React.ElementType> = {
@@ -39,6 +40,7 @@ const ICON_MAP: Record<string, React.ElementType> = {
   Settings: SettingsIcon,
   ArrowDownRight,
   ArrowUpRight,
+  Repeat,
 };
 
 const EMPTY_ENTITIES: EntitySearchPayload = {
