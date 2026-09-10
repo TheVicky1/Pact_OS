@@ -5,13 +5,29 @@ import {
   FinanceSummary,
   CategoryBreakdownItem,
   MonthlyTrendItem,
+  RecurrenceStatus,
+  FinanceRecurringTransaction,
+  FinanceBudget,
+  CategoryBudgetStatus,
+  MonthlyBudgetOverview,
   calculateFinanceSummary,
   calculateCategoryBreakdown,
   calculateMonthlyTrends,
+  calculateBudgetStatus,
   DEFAULT_FINANCE_CATEGORIES,
 } from '@/lib/money';
 
-export type { FinanceCategory, FinanceTransaction, FinanceSummary, CategoryBreakdownItem, MonthlyTrendItem };
+export type {
+  FinanceCategory,
+  FinanceTransaction,
+  FinanceSummary,
+  CategoryBreakdownItem,
+  MonthlyTrendItem,
+  FinanceRecurringTransaction,
+  FinanceBudget,
+  CategoryBudgetStatus,
+  MonthlyBudgetOverview,
+};
 
 export interface DataAccessResult<T> {
   data: T | null;
@@ -131,17 +147,103 @@ export async function getFinanceTransactions(options?: {
   }
 }
 
+/**
+ * Retrieves recurring transactions for the authenticated user.
+ */
+export async function getFinanceRecurringTransactions(options?: {
+  status?: RecurrenceStatus;
+}): Promise<DataAccessResult<FinanceRecurringTransaction[]>> {
+  try {
+    const supabase = await createClient();
+    const {
+      data: { user },
+      error: authError,
+    } = await supabase.auth.getUser();
+
+    if (authError || !user) {
+      return { data: null, error: 'Authentication required.' };
+    }
+
+    let query = supabase
+      .from('finance_recurring_transactions')
+      .select('*, categories:finance_categories(id, name, color_tag)')
+      .eq('user_id', user.id)
+      .order('status', { ascending: true })
+      .order('next_occurrence', { ascending: true });
+
+    if (options?.status) {
+      query = query.eq('status', options.status);
+    }
+
+    const { data, error } = await query;
+
+    if (error) {
+      console.warn('Finance recurring transactions query warning:', error.message);
+      return { data: [], error: null };
+    }
+
+    return { data: (data as FinanceRecurringTransaction[]) || [], error: null };
+  } catch (err: unknown) {
+    const msg = err instanceof Error ? err.message : 'Unknown error';
+    console.warn('getFinanceRecurringTransactions failed:', msg);
+    return { data: [], error: null };
+  }
+}
+
+/**
+ * Retrieves category budgets for the authenticated user.
+ */
+export async function getFinanceBudgets(period?: string): Promise<DataAccessResult<FinanceBudget[]>> {
+  try {
+    const supabase = await createClient();
+    const {
+      data: { user },
+      error: authError,
+    } = await supabase.auth.getUser();
+
+    if (authError || !user) {
+      return { data: null, error: 'Authentication required.' };
+    }
+
+    let query = supabase
+      .from('finance_budgets')
+      .select('*, categories:finance_categories(id, name, color_tag)')
+      .eq('user_id', user.id)
+      .order('period', { ascending: false });
+
+    if (period) {
+      query = query.eq('period', period);
+    }
+
+    const { data, error } = await query;
+
+    if (error) {
+      console.warn('Finance budgets query warning:', error.message);
+      return { data: [], error: null };
+    }
+
+    return { data: (data as FinanceBudget[]) || [], error: null };
+  } catch (err: unknown) {
+    const msg = err instanceof Error ? err.message : 'Unknown error';
+    console.warn('getFinanceBudgets failed:', msg);
+    return { data: [], error: null };
+  }
+}
+
 export interface FinanceOverviewData {
   summary: FinanceSummary;
   breakdown: CategoryBreakdownItem[];
   trends: MonthlyTrendItem[];
   recentTransactions: FinanceTransaction[];
   categories: FinanceCategory[];
+  recurringTransactions: FinanceRecurringTransaction[];
+  budgets: FinanceBudget[];
+  budgetOverview: MonthlyBudgetOverview;
   monthStr: string; // "YYYY-MM"
 }
 
 /**
- * Server-authoritative query computing full monthly financial metrics.
+ * Server-authoritative query computing full monthly financial metrics, recurring schedules, and category budgets.
  */
 export async function getFinanceMonthlyOverview(
   yearMonthStr: string, // "YYYY-MM"
@@ -153,20 +255,25 @@ export async function getFinanceMonthlyOverview(
     const totalDays = new Date(Date.UTC(year, month, 0)).getUTCDate();
     const lastDateStr = `${year}-${String(month).padStart(2, '0')}-${String(totalDays).padStart(2, '0')}`;
 
-    // Query month transactions, all recent transactions for trend analysis, and categories in parallel
-    const [monthTxRes, allTxRes, catRes] = await Promise.all([
+    // Query month transactions, all recent transactions for trend analysis, categories, recurring txs, and budgets in parallel
+    const [monthTxRes, allTxRes, catRes, recurringRes, budgetsRes] = await Promise.all([
       getFinanceTransactions({ startDate: firstDateStr, endDate: lastDateStr }),
       getFinanceTransactions({ limit: 200 }),
       getFinanceCategories(),
+      getFinanceRecurringTransactions(),
+      getFinanceBudgets(yearMonthStr),
     ]);
 
     const monthTransactions = monthTxRes.data || [];
     const allTransactions = allTxRes.data || [];
     const categories = catRes.data || [];
+    const recurringTransactions = recurringRes.data || [];
+    const budgets = budgetsRes.data || [];
 
     const summary = calculateFinanceSummary(monthTransactions);
     const breakdown = calculateCategoryBreakdown(monthTransactions, categories);
     const trends = calculateMonthlyTrends(allTransactions, timeZone, 6);
+    const budgetOverview = calculateBudgetStatus(budgets, monthTransactions, categories, yearMonthStr);
 
     return {
       data: {
@@ -175,6 +282,9 @@ export async function getFinanceMonthlyOverview(
         trends,
         recentTransactions: monthTransactions,
         categories,
+        recurringTransactions,
+        budgets,
+        budgetOverview,
         monthStr: yearMonthStr,
       },
       error: null,

@@ -4,10 +4,12 @@ import React, { useState, useTransition } from 'react';
 import {
   FinanceOverviewData,
   FinanceTransaction,
+  FinanceRecurringTransaction,
 } from '../data-access';
 import {
   TransactionType,
   FinanceColorTag,
+  RecurrenceFrequency,
 } from '@/lib/money';
 import {
   createTransactionAction,
@@ -15,15 +17,26 @@ import {
   deleteTransactionAction,
   createCategoryAction,
   updateCategoryAction,
+  createRecurringTransactionAction,
+  updateRecurringTransactionAction,
+  deleteRecurringTransactionAction,
+  pauseResumeRecurringTransactionAction,
+  triggerRecurrenceGenerationAction,
+  createBudgetAction,
+  deleteBudgetAction,
   getFinanceMonthlyOverviewAction,
 } from '../actions';
 import { FinanceHeader } from './finance-header';
 import { FinanceSummaryCards } from './finance-summary-cards';
 import { SpendingBreakdownCard } from './spending-breakdown-card';
 import { MonthlyTrendCard } from './monthly-trend-card';
+import { BudgetDisciplineCard } from './budget-discipline-card';
+import { RecurringTransactionsCard } from './recurring-transactions-card';
 import { TransactionList } from './transaction-list';
 import { TransactionModal } from './transaction-modal';
 import { CategoryManagerModal } from './category-manager-modal';
+import { RecurringTransactionModal } from './recurring-transaction-modal';
+import { BudgetManagerModal } from './budget-manager-modal';
 
 interface FinanceWorkspaceProps {
   initialData: FinanceOverviewData;
@@ -39,12 +52,19 @@ export function FinanceWorkspace({
   const [data, setData] = useState<FinanceOverviewData>(initialData);
   const [isPending, startTransition] = useTransition();
 
-  // Modals state
+  // Modals & form state
   const [isTxModalOpen, setIsTxModalOpen] = useState(false);
   const [txModalType, setTxModalType] = useState<TransactionType>('expense');
   const [editingTransaction, setEditingTransaction] = useState<FinanceTransaction | null>(null);
+
   const [isCategoryModalOpen, setIsCategoryModalOpen] = useState(false);
   const [deletingId, setDeletingId] = useState<string | null>(null);
+
+  const [isRecurringModalOpen, setIsRecurringModalOpen] = useState(false);
+  const [editingRecurring, setEditingRecurring] = useState<FinanceRecurringTransaction | null>(null);
+  const [isRunningDue, setIsRunningDue] = useState(false);
+
+  const [isBudgetModalOpen, setIsBudgetModalOpen] = useState(false);
 
   // Derive current date in user's timezone YYYY-MM-DD
   const now = new Date();
@@ -69,6 +89,7 @@ export function FinanceWorkspace({
     refreshMonthData(newYearMonth);
   };
 
+  // Transaction Handlers
   const handleOpenAddTransaction = (type: TransactionType = 'expense') => {
     setEditingTransaction(null);
     setTxModalType(type);
@@ -133,6 +154,7 @@ export function FinanceWorkspace({
     }
   };
 
+  // Category Handlers
   const handleCreateCategory = async (
     name: string,
     colorTag: FinanceColorTag
@@ -161,6 +183,100 @@ export function FinanceWorkspace({
     return { success: false, error: res.error || 'Failed to update category.' };
   };
 
+  // Recurring Transactions Handlers
+  const handleOpenAddRecurring = () => {
+    setEditingRecurring(null);
+    setIsRecurringModalOpen(true);
+  };
+
+  const handleOpenEditRecurring = (rec: FinanceRecurringTransaction) => {
+    setEditingRecurring(rec);
+    setIsRecurringModalOpen(true);
+  };
+
+  const handleSaveRecurring = async (input: {
+    type: TransactionType;
+    amount: string;
+    description: string;
+    category_id?: string | null;
+    frequency: RecurrenceFrequency;
+    start_date: string;
+    end_date?: string | null;
+    status: 'active' | 'paused';
+  }): Promise<{ success: boolean; error?: string }> => {
+    let result;
+    if (editingRecurring) {
+      result = await updateRecurringTransactionAction(editingRecurring.id, input);
+    } else {
+      result = await createRecurringTransactionAction(input);
+    }
+
+    if (result.success) {
+      refreshMonthData(data.monthStr);
+      return { success: true };
+    }
+    return { success: false, error: result.error || 'Failed to save recurring transaction.' };
+  };
+
+  const handleDeleteRecurring = async (id: string) => {
+    if (!window.confirm('Are you sure you want to delete this subscription?')) {
+      return;
+    }
+    const res = await deleteRecurringTransactionAction(id);
+    if (res.success) {
+      refreshMonthData(data.monthStr);
+    } else {
+      alert(res.error || 'Failed to delete subscription.');
+    }
+  };
+
+  const handleToggleRecurringStatus = async (item: FinanceRecurringTransaction) => {
+    const newStatus = item.status === 'active' ? 'paused' : 'active';
+    const res = await pauseResumeRecurringTransactionAction(item.id, newStatus);
+    if (res.success) {
+      refreshMonthData(data.monthStr);
+    } else {
+      alert(res.error || 'Failed to change subscription status.');
+    }
+  };
+
+  const handleRunDueRecurring = async () => {
+    setIsRunningDue(true);
+    try {
+      const res = await triggerRecurrenceGenerationAction();
+      if (res.success) {
+        refreshMonthData(data.monthStr);
+      } else {
+        alert(res.error || 'Failed to process recurring transactions.');
+      }
+    } finally {
+      setIsRunningDue(false);
+    }
+  };
+
+  // Budget Handlers
+  const handleSaveBudget = async (input: {
+    category_id: string;
+    period: string;
+    limit: string;
+  }): Promise<{ success: boolean; error?: string }> => {
+    const res = await createBudgetAction(input);
+    if (res.success) {
+      refreshMonthData(data.monthStr);
+      return { success: true };
+    }
+    return { success: false, error: res.error || 'Failed to set budget.' };
+  };
+
+  const handleDeleteBudget = async (id: string): Promise<{ success: boolean; error?: string }> => {
+    const res = await deleteBudgetAction(id);
+    if (res.success) {
+      refreshMonthData(data.monthStr);
+      return { success: true };
+    }
+    return { success: false, error: res.error || 'Failed to delete budget.' };
+  };
+
   return (
     <div className="space-y-6 pb-12">
       {/* 1. Header with Month Navigator and Quick Actions */}
@@ -186,7 +302,26 @@ export function FinanceWorkspace({
         <MonthlyTrendCard trends={data.trends} currency={currency} />
       </div>
 
-      {/* 4. Transactions Ledger & Filters */}
+      {/* 4. Phase 5E Discipline Grid: Budget Discipline & Subscriptions */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <BudgetDisciplineCard
+          budgetOverview={data.budgetOverview}
+          currency={currency}
+          onManageBudgets={() => setIsBudgetModalOpen(true)}
+        />
+        <RecurringTransactionsCard
+          recurringTransactions={data.recurringTransactions}
+          currency={currency}
+          onAddRecurring={handleOpenAddRecurring}
+          onEditRecurring={handleOpenEditRecurring}
+          onToggleStatus={handleToggleRecurringStatus}
+          onDeleteRecurring={handleDeleteRecurring}
+          onRunDue={handleRunDueRecurring}
+          isRunningDue={isRunningDue}
+        />
+      </div>
+
+      {/* 5. Transactions Ledger & Filters */}
       <TransactionList
         transactions={data.recentTransactions}
         categories={data.categories}
@@ -197,7 +332,7 @@ export function FinanceWorkspace({
         isDeletingId={deletingId}
       />
 
-      {/* 5. Transaction Modal (Add / Edit) */}
+      {/* 6. Transaction Modal (Add / Edit) */}
       <TransactionModal
         isOpen={isTxModalOpen}
         onClose={() => setIsTxModalOpen(false)}
@@ -209,13 +344,36 @@ export function FinanceWorkspace({
         onSave={handleSaveTransaction}
       />
 
-      {/* 6. Category Manager Modal */}
+      {/* 7. Category Manager Modal */}
       <CategoryManagerModal
         isOpen={isCategoryModalOpen}
         onClose={() => setIsCategoryModalOpen(false)}
         categories={data.categories}
         onCreateCategory={handleCreateCategory}
         onUpdateCategory={handleUpdateCategory}
+      />
+
+      {/* 8. Phase 5E: Recurring Transaction Modal */}
+      <RecurringTransactionModal
+        isOpen={isRecurringModalOpen}
+        onClose={() => setIsRecurringModalOpen(false)}
+        categories={data.categories}
+        editingRecurring={editingRecurring}
+        currentDateStr={currentDateStr}
+        currencySymbol={currency.toUpperCase() === 'INR' ? '₹' : '$'}
+        onSave={handleSaveRecurring}
+      />
+
+      {/* 9. Phase 5E: Budget Manager Modal */}
+      <BudgetManagerModal
+        isOpen={isBudgetModalOpen}
+        onClose={() => setIsBudgetModalOpen(false)}
+        categories={data.categories}
+        budgets={data.budgets}
+        currentPeriod={data.monthStr}
+        currencySymbol={currency.toUpperCase() === 'INR' ? '₹' : '$'}
+        onSaveBudget={handleSaveBudget}
+        onDeleteBudget={handleDeleteBudget}
       />
     </div>
   );

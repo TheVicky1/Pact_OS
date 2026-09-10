@@ -40,6 +40,18 @@ export default async function FinancePage() {
     trends: [],
     recentTransactions: [],
     categories: [],
+    recurringTransactions: [],
+    budgets: [],
+    budgetOverview: {
+      period: currentYearMonth,
+      totalBudgetLimitCents: 0,
+      totalBudgetSpentCents: 0,
+      totalBudgetRemainingCents: 0,
+      overallUtilizationPercent: 0,
+      categories: [],
+      exceededCount: 0,
+      approachingCount: 0,
+    },
     monthStr: currentYearMonth,
   };
 
