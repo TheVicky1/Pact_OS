@@ -1,13 +1,14 @@
 'use client';
 
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useTransition } from 'react';
+import { useRouter } from 'next/navigation';
 import { Goal, ProjectStatus } from '@/types/domain';
 import { ProjectWithGoal } from '@/features/projects/data-access';
 import { ProjectCard } from './project-card';
 import { ProjectFormModal } from './project-form-modal';
 import { DeleteProjectModal } from './delete-project-modal';
 import { archiveProjectAction } from '@/features/projects/actions';
-import { Plus, FolderKanban, Search, Filter, Layers } from 'lucide-react';
+import { Plus, FolderKanban, Search, Layers } from 'lucide-react';
 
 interface ProjectsViewProps {
   initialProjects: ProjectWithGoal[];
@@ -15,22 +16,49 @@ interface ProjectsViewProps {
   error?: string | null;
 }
 
+type ProjectFilter = ProjectStatus | 'all';
+
+const FILTER_TABS: { value: ProjectFilter; label: string }[] = [
+  { value: 'active', label: 'Active' },
+  { value: 'completed', label: 'Completed' },
+  { value: 'paused', label: 'Paused' },
+  { value: 'archived', label: 'Archived' },
+  { value: 'all', label: 'All' },
+];
+
 export function ProjectsView({ initialProjects, availableGoals, error }: ProjectsViewProps) {
-  const [projects] = useState<ProjectWithGoal[]>(initialProjects);
+  const router = useRouter();
   const [searchQuery, setSearchQuery] = useState('');
-  const [activeTab, setActiveTab] = useState<ProjectStatus | 'all'>('active');
+  const [activeFilter, setActiveFilter] = useState<ProjectFilter>('active');
   const [goalFilter, setGoalFilter] = useState<string>('all');
 
   // Modal states
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [projectToEdit, setProjectToEdit] = useState<ProjectWithGoal | null>(null);
-
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
   const [projectToDelete, setProjectToDelete] = useState<ProjectWithGoal | null>(null);
 
+  const [, startTransition] = useTransition();
+
+  // Counts per status
+  const countByStatus = useMemo(() => {
+    const counts: Record<string, number> = {
+      active: 0,
+      completed: 0,
+      paused: 0,
+      archived: 0,
+      all: 0,
+    };
+    for (const p of initialProjects) {
+      counts[p.status] = (counts[p.status] ?? 0) + 1;
+      counts.all += 1;
+    }
+    return counts;
+  }, [initialProjects]);
+
   const filteredProjects = useMemo(() => {
-    return projects.filter((project) => {
-      const matchesTab = activeTab === 'all' || project.status === activeTab;
+    return initialProjects.filter((project) => {
+      const matchesStatus = activeFilter === 'all' || project.status === activeFilter;
 
       let matchesGoal = true;
       if (goalFilter === 'independent') {
@@ -39,20 +67,15 @@ export function ProjectsView({ initialProjects, availableGoals, error }: Project
         matchesGoal = project.goal_id === goalFilter;
       }
 
-      const query = searchQuery.trim().toLowerCase();
+      const q = searchQuery.trim().toLowerCase();
       const matchesSearch =
-        !query ||
-        project.title.toLowerCase().includes(query) ||
-        (project.description && project.description.toLowerCase().includes(query));
+        !q ||
+        project.title.toLowerCase().includes(q) ||
+        (project.description && project.description.toLowerCase().includes(q));
 
-      return matchesTab && matchesGoal && matchesSearch;
+      return matchesStatus && matchesGoal && matchesSearch;
     });
-  }, [projects, activeTab, goalFilter, searchQuery]);
-
-  const activeCount = useMemo(() => projects.filter((p) => p.status === 'active').length, [projects]);
-  const completedCount = useMemo(() => projects.filter((p) => p.status === 'completed').length, [projects]);
-  const pausedCount = useMemo(() => projects.filter((p) => p.status === 'paused').length, [projects]);
-  const archivedCount = useMemo(() => projects.filter((p) => p.status === 'archived').length, [projects]);
+  }, [initialProjects, activeFilter, goalFilter, searchQuery]);
 
   const handleOpenCreate = () => {
     setProjectToEdit(null);
@@ -69,126 +92,126 @@ export function ProjectsView({ initialProjects, availableGoals, error }: Project
     setIsDeleteOpen(true);
   };
 
-  const handleArchive = async (project: ProjectWithGoal) => {
-    await archiveProjectAction(project.id);
+  const handleArchive = (project: ProjectWithGoal) => {
+    startTransition(async () => {
+      await archiveProjectAction(project.id);
+      router.refresh();
+    });
   };
+
+  const handleFormClose = () => {
+    setIsFormOpen(false);
+    setProjectToEdit(null);
+    router.refresh();
+  };
+
+  const handleDeleteClose = () => {
+    setIsDeleteOpen(false);
+    setProjectToDelete(null);
+    router.refresh();
+  };
+
+  const isFiltered = !!searchQuery.trim() || goalFilter !== 'all';
 
   return (
     <div className="space-y-8">
-      {/* Top Banner & Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-zinc-800/80 pb-6">
-        <div>
-          <div className="inline-flex items-center gap-2 text-xs font-semibold text-[#d4af37] bg-[#d4af37]/10 border border-[#d4af37]/30 px-3 py-1 rounded-full mb-2">
-            <FolderKanban className="w-3.5 h-3.5" />
-            <span>Initiatives & Execution Streams</span>
+      {/* Page Header */}
+      <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4 pb-6 border-b border-zinc-800/80">
+        <div className="min-w-0">
+          <div className="inline-flex items-center gap-2 text-[11px] font-semibold text-[#d4af37] bg-[#d4af37]/8 border border-[#d4af37]/25 px-3 py-1 rounded-full mb-3 tracking-wide uppercase">
+            <FolderKanban className="w-3 h-3" aria-hidden="true" />
+            <span>Initiatives &amp; Execution Streams</span>
           </div>
           <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-zinc-100">Projects</h1>
-          <p className="text-xs sm:text-sm text-zinc-400 mt-1 max-w-xl">
-            Organize commitments under structured initiatives. Projects bridge long-term goals with day-to-day execution.
+          <p className="text-xs sm:text-sm text-zinc-400 mt-1.5 max-w-md leading-relaxed">
+            Organize commitments under structured initiatives. Projects bridge long-term goals with
+            day-to-day execution.
           </p>
         </div>
 
         <button
           onClick={handleOpenCreate}
-          className="inline-flex items-center justify-center gap-2 bg-[#d4af37] hover:bg-[#e5c158] text-zinc-950 font-semibold px-4 py-2.5 rounded-xl text-xs transition-colors shadow-lg cursor-pointer shrink-0"
+          className="inline-flex items-center justify-center gap-2 bg-[#d4af37] hover:bg-[#e5c158] active:bg-[#c9a832] text-zinc-950 font-semibold px-4 py-2.5 rounded-xl text-xs transition-colors shadow-lg cursor-pointer shrink-0 focus-visible:ring-2 focus-visible:ring-[#d4af37] focus-visible:ring-offset-2 focus-visible:ring-offset-zinc-950"
+          aria-label="Create new project"
         >
-          <Plus className="w-4 h-4" />
+          <Plus className="w-4 h-4" aria-hidden="true" />
           <span>New Project</span>
         </button>
       </div>
 
-      {/* Fetch Error */}
+      {/* Error Banner */}
       {error && (
-        <div className="p-4 rounded-xl bg-rose-950/60 border border-rose-800/60 text-xs text-rose-300">
-          {error}
+        <div
+          role="alert"
+          className="p-4 rounded-xl bg-rose-950/60 border border-rose-800/60 text-xs text-rose-300 flex items-center gap-2"
+        >
+          <span className="font-medium">Error:</span> {error}
         </div>
       )}
 
-      {/* Toolbar: Search & Status Filters */}
+      {/* Toolbar: Status Filters + Goal Filter + Search */}
       <div className="flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-4">
-        {/* Status Filter Tabs */}
-        <div className="flex items-center gap-1 bg-zinc-900/90 border border-zinc-800 p-1 rounded-xl text-xs overflow-x-auto">
-          <button
-            onClick={() => setActiveTab('active')}
-            className={`px-3 py-1.5 rounded-lg font-medium transition-colors cursor-pointer whitespace-nowrap ${
-              activeTab === 'active'
-                ? 'bg-zinc-800 text-zinc-100 border border-zinc-700/80'
-                : 'text-zinc-400 hover:text-zinc-200'
-            }`}
-          >
-            Active ({activeCount})
-          </button>
-
-          <button
-            onClick={() => setActiveTab('completed')}
-            className={`px-3 py-1.5 rounded-lg font-medium transition-colors cursor-pointer whitespace-nowrap ${
-              activeTab === 'completed'
-                ? 'bg-zinc-800 text-zinc-100 border border-zinc-700/80'
-                : 'text-zinc-400 hover:text-zinc-200'
-            }`}
-          >
-            Completed ({completedCount})
-          </button>
-
-          <button
-            onClick={() => setActiveTab('paused')}
-            className={`px-3 py-1.5 rounded-lg font-medium transition-colors cursor-pointer whitespace-nowrap ${
-              activeTab === 'paused'
-                ? 'bg-zinc-800 text-zinc-100 border border-zinc-700/80'
-                : 'text-zinc-400 hover:text-zinc-200'
-            }`}
-          >
-            Paused ({pausedCount})
-          </button>
-
-          <button
-            onClick={() => setActiveTab('archived')}
-            className={`px-3 py-1.5 rounded-lg font-medium transition-colors cursor-pointer whitespace-nowrap ${
-              activeTab === 'archived'
-                ? 'bg-zinc-800 text-zinc-100 border border-zinc-700/80'
-                : 'text-zinc-400 hover:text-zinc-200'
-            }`}
-          >
-            Archived ({archivedCount})
-          </button>
-
-          <button
-            onClick={() => setActiveTab('all')}
-            className={`px-3 py-1.5 rounded-lg font-medium transition-colors cursor-pointer whitespace-nowrap ${
-              activeTab === 'all'
-                ? 'bg-zinc-800 text-zinc-100 border border-zinc-700/80'
-                : 'text-zinc-400 hover:text-zinc-200'
-            }`}
-          >
-            All ({projects.length})
-          </button>
+        {/* Status filter pills */}
+        <div
+          className="flex items-center gap-1 bg-zinc-900/90 border border-zinc-800 p-1 rounded-xl text-xs overflow-x-auto"
+          role="tablist"
+          aria-label="Filter projects by status"
+        >
+          {FILTER_TABS.map(({ value, label }) => {
+            const isActive = activeFilter === value;
+            return (
+              <button
+                key={value}
+                role="tab"
+                aria-selected={isActive}
+                onClick={() => setActiveFilter(value)}
+                className={`px-3 py-1.5 rounded-lg font-medium transition-colors cursor-pointer whitespace-nowrap ${
+                  isActive
+                    ? 'bg-zinc-800 text-zinc-100 border border-zinc-700/80 shadow-sm'
+                    : 'text-zinc-400 hover:text-zinc-200 hover:bg-zinc-800/50'
+                }`}
+              >
+                {label}
+                <span
+                  className={`ml-1.5 tabular-nums ${isActive ? 'text-zinc-300' : 'text-zinc-600'}`}
+                >
+                  ({countByStatus[value] ?? 0})
+                </span>
+              </button>
+            );
+          })}
         </div>
 
-        {/* Filters & Search */}
+        {/* Goal filter + Search */}
         <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
-          {/* Goal Association Filter */}
+          {/* Goal association filter */}
           <select
             value={goalFilter}
             onChange={(e) => setGoalFilter(e.target.value)}
+            aria-label="Filter by goal association"
             className="bg-zinc-950/80 border border-zinc-800 rounded-xl px-3 py-1.5 text-xs text-zinc-100 focus:border-[#d4af37] focus:outline-none transition-colors cursor-pointer"
           >
             <option value="all">All Goal Links</option>
-            <option value="independent">Independent Projects (No Goal)</option>
+            <option value="independent">Independent (No Goal)</option>
             {availableGoals.map((goal) => (
               <option key={goal.id} value={goal.id}>
-                Goal: {goal.title}
+                {goal.title}
               </option>
             ))}
           </select>
 
-          {/* Search Bar */}
+          {/* Search */}
           <div className="relative sm:w-56">
-            <Search className="w-3.5 h-3.5 text-zinc-500 absolute left-3 top-1/2 -translate-y-1/2" />
+            <Search
+              className="w-3.5 h-3.5 text-zinc-500 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none"
+              aria-hidden="true"
+            />
             <input
-              type="text"
+              type="search"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Filter projects..."
+              placeholder="Search projects..."
+              aria-label="Search projects"
               className="w-full bg-zinc-950/80 border border-zinc-800 rounded-xl pl-9 pr-3 py-1.5 text-xs text-zinc-100 placeholder-zinc-500 focus:border-[#d4af37] focus:outline-none transition-colors"
             />
           </div>
@@ -209,51 +232,93 @@ export function ProjectsView({ initialProjects, availableGoals, error }: Project
           ))}
         </div>
       ) : (
-        <div className="glass-card p-12 rounded-3xl border border-zinc-800/80 text-center flex flex-col items-center justify-center space-y-4 max-w-lg mx-auto my-8">
-          <div className="w-14 h-14 rounded-2xl bg-zinc-900 border border-zinc-800 flex items-center justify-center text-zinc-400">
-            {searchQuery || goalFilter !== 'all' ? (
-              <Filter className="w-6 h-6" />
-            ) : (
-              <Layers className="w-6 h-6 text-[#d4af37]" />
-            )}
-          </div>
-
-          <div>
-            <h3 className="text-base font-semibold text-zinc-200">
-              {searchQuery || goalFilter !== 'all' ? 'No matching projects found' : 'Turn a goal into a body of work.'}
-            </h3>
-            <p className="text-xs text-zinc-400 mt-1 leading-relaxed">
-              {searchQuery || goalFilter !== 'all'
-                ? 'No projects matched your active filters. Try clearing your search or goal selection.'
-                : 'Create your first project to structure commitments under a focused initiative.'}
-            </p>
-          </div>
-
-          {!searchQuery && goalFilter === 'all' && (
-            <button
-              onClick={handleOpenCreate}
-              className="inline-flex items-center gap-2 bg-[#d4af37] hover:bg-[#e5c158] text-zinc-950 font-semibold px-4 py-2 rounded-xl text-xs transition-colors shadow-md cursor-pointer mt-2"
-            >
-              <Plus className="w-4 h-4" />
-              <span>Create Your First Project</span>
-            </button>
-          )}
-        </div>
+        <ProjectsEmptyState
+          isFiltered={isFiltered}
+          searchQuery={searchQuery.trim()}
+          onCreateProject={handleOpenCreate}
+          onClearFilters={() => {
+            setSearchQuery('');
+            setGoalFilter('all');
+          }}
+        />
       )}
 
       {/* Modals */}
       <ProjectFormModal
         isOpen={isFormOpen}
-        onClose={() => setIsFormOpen(false)}
+        onClose={handleFormClose}
         projectToEdit={projectToEdit}
         availableGoals={availableGoals}
       />
 
       <DeleteProjectModal
         isOpen={isDeleteOpen}
-        onClose={() => setIsDeleteOpen(false)}
+        onClose={handleDeleteClose}
         project={projectToDelete}
       />
+    </div>
+  );
+}
+
+// ──────────────────────────────────────────────────────────────────────────────
+// Empty State
+// ──────────────────────────────────────────────────────────────────────────────
+
+interface ProjectsEmptyStateProps {
+  isFiltered: boolean;
+  searchQuery: string;
+  onCreateProject: () => void;
+  onClearFilters: () => void;
+}
+
+function ProjectsEmptyState({
+  isFiltered,
+  searchQuery,
+  onCreateProject,
+  onClearFilters,
+}: ProjectsEmptyStateProps) {
+  return (
+    <div className="glass-card p-12 rounded-3xl border border-zinc-800/60 text-center flex flex-col items-center justify-center space-y-5 max-w-md mx-auto my-8">
+      <div
+        className={`w-14 h-14 rounded-2xl flex items-center justify-center ${
+          isFiltered
+            ? 'bg-zinc-900 border border-zinc-800 text-zinc-500'
+            : 'bg-[#d4af37]/8 border border-[#d4af37]/25 text-[#d4af37]'
+        }`}
+        aria-hidden="true"
+      >
+        <Layers className="w-6 h-6" />
+      </div>
+
+      <div>
+        <h3 className="text-base font-semibold text-zinc-200">
+          {isFiltered ? 'No projects match your filters.' : 'Turn a goal into a body of work.'}
+        </h3>
+        <p className="text-xs text-zinc-400 mt-1.5 leading-relaxed max-w-xs mx-auto">
+          {searchQuery
+            ? `No projects matched "${searchQuery}".`
+            : isFiltered
+              ? 'Try clearing your filters to see all projects.'
+              : 'Create your first project to structure commitments under a focused initiative.'}
+        </p>
+      </div>
+
+      {isFiltered ? (
+        <button
+          onClick={onClearFilters}
+          className="px-3 py-1.5 rounded-lg text-xs font-medium text-zinc-400 hover:text-zinc-200 hover:bg-zinc-800 border border-zinc-700/60 transition-colors cursor-pointer"
+        >
+          Clear filters
+        </button>
+      ) : (
+        <button
+          onClick={onCreateProject}
+          className="inline-flex items-center gap-2 bg-[#d4af37] hover:bg-[#e5c158] text-zinc-950 font-semibold px-4 py-2 rounded-xl text-xs transition-colors shadow-md cursor-pointer"
+        >
+          <Plus className="w-4 h-4" aria-hidden="true" />
+          <span>Create Your First Project</span>
+        </button>
+      )}
     </div>
   );
 }
