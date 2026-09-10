@@ -17,6 +17,7 @@ import {
   RotateCcw,
   Loader2,
   ShieldAlert,
+  Timer,
 } from 'lucide-react';
 import { utcToLocal } from '@/lib/time';
 import Link from 'next/link';
@@ -302,6 +303,17 @@ export function TaskCard({
                       Edit Commitment
                     </button>
 
+                    {!isCompleted && !isArchived && (
+                      <Link
+                        href={`/app/focus?taskId=${task.id}`}
+                        onClick={() => setIsMenuOpen(false)}
+                        className="flex w-full items-center gap-2 rounded-xl px-3 py-2 text-xs font-medium text-[#e2c056] hover:bg-[#d4af37]/10 transition-colors cursor-pointer"
+                      >
+                        <Timer className="h-3.5 w-3.5 text-[#d4af37]" />
+                        Focus Timer
+                      </Link>
+                    )}
+
                     {onStatusChange && !isCompleted && !isArchived && (
                       <button
                         type="button"
@@ -315,7 +327,7 @@ export function TaskCard({
                         className="flex w-full items-center gap-2 rounded-xl px-3 py-2 text-xs font-medium text-amber-300 hover:bg-amber-500/10 transition-colors cursor-pointer"
                       >
                         <Play className="h-3.5 w-3.5" />
-                        {isInProgress ? 'Mark Pending' : 'Start Focus'}
+                        {isInProgress ? 'Mark Pending' : 'Mark In Progress'}
                       </button>
                     )}
 
