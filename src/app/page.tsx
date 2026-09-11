@@ -1,95 +1,124 @@
-import Link from 'next/link';
-import { PactLogo } from '@/components/brand/pact-logo';
-import { ArrowRight, ShieldCheck, Target, Clock } from 'lucide-react';
+'use client';
+
+import React, { useState } from 'react';
+import Image from 'next/image';
+import { UnifiedAuthCard, AuthMode } from '@/components/auth/unified-auth-card';
+import { Sparkles } from 'lucide-react';
 
 export default function LandingPage() {
-  return (
-    <div className="relative min-h-screen flex flex-col items-center justify-between p-6 sm:p-12 bg-[#09090b] text-zinc-100 overflow-hidden">
-      {/* Ambient Background Backlight */}
-      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[300px] bg-[#d4af37]/10 blur-[120px] rounded-full pointer-events-none" />
+  const [authMode, setAuthMode] = useState<AuthMode>('signin');
 
-      {/* Navigation Header */}
-      <header className="w-full max-w-6xl flex items-center justify-between z-10">
-        <PactLogo size="md" />
-        <div className="flex items-center gap-4">
-          <Link
-            href="/login"
-            className="text-sm text-zinc-300 hover:text-zinc-100 transition-colors font-medium px-4 py-2"
-          >
-            Sign In
-          </Link>
-          <Link
-            href="/register"
-            className="text-sm font-medium bg-[#d4af37] text-zinc-950 hover:bg-[#e5c158] transition-all px-4 py-2 rounded-xl shadow-lg shadow-[#d4af37]/10"
-          >
-            Get Started
-          </Link>
+  return (
+    <div className="min-h-screen lg:h-screen lg:overflow-hidden bg-[#060608] text-zinc-100 flex flex-col justify-between relative selection:bg-[#d4af37]/30 selection:text-white">
+      {/* 1. Atmospheric Ambient Background Lighting & Celestial Gold Arc */}
+      <div className="absolute inset-0 pointer-events-none overflow-hidden">
+        {/* Soft Radial Gold Diffusion Center-Left */}
+        <div className="absolute top-1/2 left-[28%] -translate-x-1/2 -translate-y-1/2 w-[650px] sm:w-[850px] h-[650px] sm:h-[850px] bg-gradient-to-tr from-[#d4af37]/12 via-[#aa820a]/06 to-transparent rounded-full blur-[130px]" />
+
+        {/* Deep Atmospheric Horizon Eclipse Glow */}
+        <div className="hidden lg:block absolute top-[16%] left-[24%] w-[540px] h-[540px] rounded-full border border-[#d4af37]/25 shadow-[0_0_90px_rgba(212,175,55,0.2),inset_0_0_70px_rgba(212,175,55,0.1)] opacity-75" />
+
+        {/* Radiant Rim Light Highlight on the Celestial Horizon */}
+        <div className="hidden lg:block absolute top-[20%] left-[42%] w-[220px] h-[420px] bg-gradient-to-b from-[#f5e0a3]/35 via-[#d4af37]/20 to-transparent blur-[26px] -rotate-[18deg] rounded-full" />
+
+        {/* Ambient Top Vignette */}
+        <div className="absolute top-0 inset-x-0 h-32 bg-gradient-to-b from-black/80 to-transparent" />
+        {/* Ambient Bottom Vignette */}
+        <div className="absolute bottom-0 inset-x-0 h-32 bg-gradient-to-t from-black/90 to-transparent" />
+      </div>
+
+      {/* Top Left Brand Anchor */}
+      <header className="relative z-10 w-full max-w-[1400px] mx-auto pt-5 sm:pt-6 lg:pt-7 px-5 sm:px-10 lg:px-14 flex items-center justify-start">
+        <div className="flex items-center gap-3 select-none">
+          <div className="relative w-7 h-7 flex items-center justify-center flex-shrink-0">
+            <div className="absolute inset-0 rounded-full bg-[#d4af37]/20 blur-md pointer-events-none" />
+            <Image
+              src="/brand/pact-logo.png"
+              alt="PACT"
+              width={28}
+              height={28}
+              className="relative z-10 object-contain drop-shadow-[0_1px_4px_rgba(0,0,0,0.5)]"
+              priority
+            />
+          </div>
+          <span className="text-xs sm:text-sm font-semibold tracking-[0.3em] text-white uppercase">
+            P A C T
+          </span>
         </div>
       </header>
 
-      {/* Hero Section */}
-      <main className="w-full max-w-4xl flex flex-col items-center text-center my-auto py-16 z-10">
-        <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-zinc-900/80 border border-zinc-800 text-xs text-[#e2c056] mb-8">
-          <ShieldCheck className="w-3.5 h-3.5" />
-          <span>Personal Operating System</span>
+      {/* Main Single-Screen Hero + Auth Grid Composition */}
+      <main className="relative z-10 w-full max-w-[1400px] mx-auto px-5 sm:px-10 lg:px-14 my-auto py-6 lg:py-0 grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
+        {/* Left Column: Hero Philosophy (7 cols on lg) */}
+        <div className="lg:col-span-7 flex flex-col justify-center space-y-4 sm:space-y-6 relative">
+          {/* Top Tag / Pill */}
+          <div className="flex items-center gap-3">
+            <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-zinc-900/90 border border-white/[0.08] text-[10px] font-mono tracking-wider text-[#e2c056] shadow-sm">
+              <Sparkles className="w-3 h-3 text-[#d4af37]" />
+              <span>PERSONAL OPERATING SYSTEM</span>
+            </div>
+          </div>
+
+          {/* Main Headline & Pillars Row */}
+          <div className="flex gap-4 sm:gap-7 items-start">
+            {/* Vertical Discipline Rail */}
+            <div className="hidden sm:flex flex-col items-center gap-2 text-[9px] font-mono tracking-[0.25em] text-zinc-500 uppercase select-none pt-1.5">
+              <span className="hover:text-amber-400/80 transition-colors">PLAN</span>
+              <div className="w-3.5 h-[1px] bg-zinc-800" />
+              <span className="hover:text-amber-400/80 transition-colors">TRACK</span>
+              <div className="w-3.5 h-[1px] bg-zinc-800" />
+              <span className="hover:text-amber-400/80 transition-colors">IMPROVE</span>
+              <div className="w-3.5 h-[1px] bg-zinc-800" />
+              <span className="hover:text-amber-400/80 transition-colors">REPEAT</span>
+            </div>
+
+            {/* Core Hero Headline & Subtitle */}
+            <div className="space-y-3 max-w-lg">
+              <h1 className="text-3xl sm:text-5xl xl:text-6xl font-bold tracking-tight text-white leading-[1.08]">
+                Build a<br />
+                <span className="bg-gradient-to-r from-[#fceabb] via-[#d4af37] to-[#aa820a] bg-clip-text text-transparent">
+                  Better You.
+                </span>
+              </h1>
+
+              <p className="text-xs sm:text-sm text-zinc-400 font-normal leading-relaxed max-w-md">
+                Plan. Track. Stay Accountable. Achieve what truly matters — with PACT. Transform fleeting intent into consistent, unbreakable daily execution.
+              </p>
+            </div>
+          </div>
+
+          {/* Bottom Left: Refined Editorial Philosophy Quote */}
+          <div className="pt-0.5 max-w-sm space-y-1 pl-0.5 select-none">
+            <span className="text-amber-400/80 text-lg font-serif leading-none block">
+              &ldquo;
+            </span>
+            <p className="text-xs text-zinc-300/90 italic font-light leading-relaxed">
+              Discipline today, a brighter tomorrow.
+            </p>
+            <p className="text-[9px] font-mono tracking-[0.25em] text-zinc-500 uppercase pt-0.5">
+              — PACT OS
+            </p>
+          </div>
         </div>
 
-        <h1 className="text-4xl sm:text-6xl font-bold tracking-tight text-zinc-100 mb-6 max-w-3xl leading-tight">
-          A System for Keeping <span className="text-[#d4af37]">Promises to Yourself.</span>
-        </h1>
-
-        <p className="text-lg sm:text-xl text-zinc-400 max-w-2xl mb-10 leading-relaxed font-normal">
-          Turn Intent Into Discipline. Transform abstract goals into consistent action with server-enforceable commitments, time-blocking, and intentional accountability.
-        </p>
-
-        <div className="flex flex-col sm:flex-row items-center gap-4 w-full justify-center">
-          <Link
-            href="/register"
-            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 text-base font-semibold bg-[#d4af37] text-zinc-950 hover:bg-[#e5c158] transition-all px-8 py-3.5 rounded-xl shadow-xl shadow-[#d4af37]/15"
-          >
-            <span>Begin Your Pact</span>
-            <ArrowRight className="w-4 h-4" />
-          </Link>
-          <Link
-            href="/login"
-            className="w-full sm:w-auto inline-flex items-center justify-center text-base font-medium bg-zinc-900/60 border border-zinc-800 text-zinc-300 hover:text-zinc-100 hover:bg-zinc-800/60 transition-all px-8 py-3.5 rounded-xl"
-          >
-            Sign In to Account
-          </Link>
-        </div>
-
-        {/* Feature Highlights Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 w-full mt-20 text-left">
-          <div className="glass-card p-6 rounded-2xl border border-zinc-800/80">
-            <Target className="w-6 h-6 text-[#d4af37] mb-3" />
-            <h3 className="font-semibold text-zinc-100 text-base mb-1">Intentional Focus</h3>
-            <p className="text-xs text-zinc-400 leading-relaxed">
-              Define commitments with goals and projects. Keep priorities clear and visual noise low.
-            </p>
-          </div>
-
-          <div className="glass-card p-6 rounded-2xl border border-zinc-800/80">
-            <Clock className="w-6 h-6 text-[#d4af37] mb-3" />
-            <h3 className="font-semibold text-zinc-100 text-base mb-1">Timezone Authority</h3>
-            <p className="text-xs text-zinc-400 leading-relaxed">
-              Server-enforced deadline boundaries with UTC integrity and local timezone daily planning.
-            </p>
-          </div>
-
-          <div className="glass-card p-6 rounded-2xl border border-zinc-800/80">
-            <ShieldCheck className="w-6 h-6 text-[#d4af37] mb-3" />
-            <h3 className="font-semibold text-zinc-100 text-base mb-1">Strict Privacy</h3>
-            <p className="text-xs text-zinc-400 leading-relaxed">
-              Row-Level Security enforces absolute user data isolation at the database layer.
-            </p>
-          </div>
+        {/* Right Column: Seamless Interactive Auth Panel (5 cols on lg) */}
+        <div id="auth-panel" className="lg:col-span-5 flex justify-center lg:justify-end w-full">
+          <UnifiedAuthCard initialMode={authMode} onModeChange={setAuthMode} />
         </div>
       </main>
 
-      {/* Footer */}
-      <footer className="w-full max-w-6xl flex items-center justify-between py-4 text-xs text-zinc-500 border-t border-zinc-900 z-10">
-        <span>PACT OS © 2026</span>
-        <span>Turn Intent Into Discipline</span>
+      {/* Footer Ticker / Bottom Branding */}
+      <footer className="relative z-10 w-full max-w-[1400px] mx-auto pb-4 sm:pb-5 pt-2 px-5 sm:px-10 lg:px-14 flex flex-col sm:flex-row items-center justify-between gap-2 text-xs text-zinc-500">
+        <div className="flex items-center gap-3">
+          <span>PACT OS © 2026</span>
+          <span>•</span>
+          <span className="text-zinc-400">Turn Intent Into Discipline</span>
+        </div>
+
+        {/* Editorial Philosophy Rule */}
+        <div className="text-[10px] font-mono tracking-[0.3em] text-zinc-600 uppercase">
+          SMALL STEPS. BIGGER TOMORROWS.
+        </div>
       </footer>
     </div>
   );
