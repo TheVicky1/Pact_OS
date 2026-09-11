@@ -26,6 +26,7 @@ export type ProofOfWorkPlatform = 'github' | 'leetcode' | 'codeforces';
 interface AnalyticsWorkspaceProps {
   initialData: AnalyticsOverviewData;
   userTimeZone: string;
+  initialPlatform?: ProofOfWorkPlatform;
   initialGitHubActivity?: GitHubActivityActionResult | null;
   initialLeetCodeActivity?: LeetCodeActivityActionResult | null;
   initialCodeforcesActivity?: CodeforcesActivityActionResult | null;
@@ -34,13 +35,14 @@ interface AnalyticsWorkspaceProps {
 export function AnalyticsWorkspace({
   initialData,
   userTimeZone,
+  initialPlatform,
   initialGitHubActivity,
   initialLeetCodeActivity,
   initialCodeforcesActivity,
 }: AnalyticsWorkspaceProps) {
   const [data, setData] = useState<AnalyticsOverviewData>(initialData);
   const [activePlatform, setActivePlatform] = useState<ProofOfWorkPlatform>(() => {
-    // Default to first connected provider if available
+    if (initialPlatform) return initialPlatform;
     if (initialGitHubActivity?.isConnected) return 'github';
     if (initialLeetCodeActivity?.isConnected) return 'leetcode';
     if (initialCodeforcesActivity?.isConnected) return 'codeforces';
@@ -139,7 +141,7 @@ export function AnalyticsWorkspace({
       </div>
 
       {/* 5. External Proof-of-Work Hub */}
-      <div className="space-y-4">
+      <div id="proof-of-work" className="space-y-4 scroll-mt-24">
         {/* Platform Selection Tab Bar */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-2 rounded-2xl bg-zinc-900/60 border border-white/[0.06]">
           <div className="flex items-center gap-1.5 p-1 rounded-xl bg-[#121217] border border-white/[0.04]">

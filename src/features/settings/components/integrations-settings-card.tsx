@@ -455,10 +455,10 @@ export function IntegrationsSettingsCard({
               </div>
 
               <div className="flex items-center gap-2 self-end sm:self-center shrink-0">
-                {isConnected && item.id === 'github' && (
+                {isConnected && (item.id === 'github' || item.id === 'leetcode' || item.id === 'codeforces') && (
                   <Link
-                    href="/app/analytics"
-                    className="px-3.5 py-2 rounded-xl text-xs font-semibold bg-amber-500/10 hover:bg-amber-500/20 text-amber-300 border border-amber-500/30 transition-all flex items-center gap-1.5"
+                    href={`/app/analytics?platform=${item.id}#proof-of-work`}
+                    className="px-3.5 py-2 rounded-xl text-xs font-semibold bg-[#d4af37]/10 hover:bg-[#d4af37]/20 text-[#e2c056] border border-[#d4af37]/30 transition-all flex items-center gap-1.5"
                   >
                     <span>View Activity</span>
                     <ArrowUpRight className="w-3.5 h-3.5" />
