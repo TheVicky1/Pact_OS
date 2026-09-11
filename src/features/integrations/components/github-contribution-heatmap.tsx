@@ -9,11 +9,11 @@ interface GitHubContributionHeatmapProps {
 }
 
 const LEVEL_COLORS: Record<0 | 1 | 2 | 3 | 4, string> = {
-  0: 'bg-[#18181b]/80 border-[#27272a]/60 text-zinc-600',
-  1: 'bg-[#423408] border-[#614b0e] text-amber-300',
-  2: 'bg-[#785e0d] border-[#a17e13] text-amber-200',
-  3: 'bg-[#b89218] border-[#d4af37] text-amber-100',
-  4: 'bg-[#f0cb46] border-[#fef08a] text-zinc-950 shadow-[0_0_6px_rgba(240,203,70,0.4)]',
+  0: 'bg-[#141419] border-white/[0.04]',
+  1: 'bg-[#423408] border-[#614b0e]',
+  2: 'bg-[#785e0d] border-[#a17e13]',
+  3: 'bg-[#b89218] border-[#d4af37]',
+  4: 'bg-[#f0cb46] border-[#fef08a] shadow-[0_0_8px_rgba(240,203,70,0.35)]',
 };
 
 function getDayOfWeek(dateStr: string): number {
@@ -40,16 +40,16 @@ export function GitHubContributionHeatmap({
   const [hoveredDay, setHoveredDay] = useState<GitHubDailyContribution | null>(null);
   const [tooltipPos, setTooltipPos] = useState<{ x: number; y: number } | null>(null);
 
-  // 1. Slice data based on active range
+  // 1. Filter data based on active range
   const filteredData = useMemo(() => {
     if (!dailyContributions || dailyContributions.length === 0) return [];
     if (viewRange === '90') {
       return dailyContributions.slice(-90);
     }
-    return dailyContributions.slice(-365);
+    return dailyContributions.slice(-371); // ~53 weeks of data
   }, [dailyContributions, viewRange]);
 
-  // 2. Compute exact sum of displayed contributions (guarantees header matches graph)
+  // 2. Compute exact sum of displayed contributions (guarantees header matches calendar data)
   const displayedTotal = useMemo(() => {
     return filteredData.reduce((sum, item) => sum + (item?.count || 0), 0);
   }, [filteredData]);
@@ -62,7 +62,7 @@ export function GitHubContributionHeatmap({
     const firstDayOfWeek = getDayOfWeek(firstDateStr); // 0 (Sun) to 6 (Sat)
 
     const paddedList: (GitHubDailyContribution | null)[] = [];
-    // Pad leading days for the first partial week
+    // Pad leading days for the first partial week so Sunday is at index 0
     for (let i = 0; i < firstDayOfWeek; i++) {
       paddedList.push(null);
     }
@@ -99,7 +99,7 @@ export function GitHubContributionHeatmap({
         const dateObj = new Date(Date.UTC(y, m - 1, d));
         const monthNum = dateObj.getUTCMonth();
 
-        // Place label on first week of month if not too close to previous label
+        // Place label on first week of month if not colliding with previous label
         if (monthNum !== lastMonth && weekIdx - lastLabeledCol >= 2) {
           months.push({
             label: dateObj.toLocaleString('en-US', { month: 'short', timeZone: 'UTC' }),
@@ -137,7 +137,7 @@ export function GitHubContributionHeatmap({
       {/* Header Controls */}
       <div className="flex flex-wrap items-center justify-between gap-3 text-xs">
         <div className="flex items-center gap-2 text-zinc-400">
-          <span className="font-medium text-zinc-200">
+          <span className="font-semibold text-zinc-200">
             {`${displayedTotal.toLocaleString()} ${
               displayedTotal === 1 ? 'contribution' : 'contributions'
             } ${viewRange === '90' ? 'in the last 90 days' : 'in the past year'}`}
@@ -150,13 +150,13 @@ export function GitHubContributionHeatmap({
         </div>
 
         {/* 90d / 365d Toggle */}
-        <div className="inline-flex rounded-lg bg-zinc-900/80 p-0.5 border border-zinc-800">
+        <div className="inline-flex rounded-xl bg-zinc-900/80 p-0.5 border border-white/[0.08]">
           <button
             type="button"
             onClick={() => setViewRange('90')}
-            className={`px-2.5 py-1 text-xs rounded-md transition-colors cursor-pointer ${
+            className={`px-3 py-1 text-xs rounded-lg transition-all cursor-pointer font-medium ${
               viewRange === '90'
-                ? 'bg-amber-500/20 text-amber-300 font-medium border border-amber-500/30'
+                ? 'bg-[#d4af37]/20 text-[#e2c056] border border-[#d4af37]/40 shadow-sm'
                 : 'text-zinc-400 hover:text-zinc-200'
             }`}
           >
@@ -165,9 +165,9 @@ export function GitHubContributionHeatmap({
           <button
             type="button"
             onClick={() => setViewRange('365')}
-            className={`px-2.5 py-1 text-xs rounded-md transition-colors cursor-pointer ${
+            className={`px-3 py-1 text-xs rounded-lg transition-all cursor-pointer font-medium ${
               viewRange === '365'
-                ? 'bg-amber-500/20 text-amber-300 font-medium border border-amber-500/30'
+                ? 'bg-[#d4af37]/20 text-[#e2c056] border border-[#d4af37]/40 shadow-sm'
                 : 'text-zinc-400 hover:text-zinc-200'
             }`}
           >
@@ -180,12 +180,12 @@ export function GitHubContributionHeatmap({
       <div className="relative overflow-x-auto pb-2 scrollbar-thin scrollbar-thumb-zinc-800">
         <div className="inline-block min-w-full">
           {/* Month Label Row */}
-          <div className="flex text-[10px] text-zinc-500 mb-1.5 pl-8 h-4 relative select-none">
+          <div className="flex text-[10px] text-zinc-400 font-medium mb-1.5 pl-8 h-4 relative select-none">
             {monthHeaders.map((m, i) => (
               <span
                 key={i}
                 className="absolute transform"
-                style={{ left: `${m.weekIndex * 14 + 32}px` }}
+                style={{ left: `${m.weekIndex * 15 + 32}px` }}
               >
                 {m.label}
               </span>
@@ -195,7 +195,7 @@ export function GitHubContributionHeatmap({
           {/* Grid with Day Labels on Left */}
           <div className="flex gap-2 items-start">
             {/* 7 Day Rows Labels: Mon (1), Wed (3), Fri (5) */}
-            <div className="flex flex-col gap-[3px] text-[9px] text-zinc-500 select-none w-6 text-right">
+            <div className="flex flex-col gap-[3px] text-[9px] text-zinc-500 font-medium select-none w-6 text-right">
               <span className="h-[11px] leading-[11px]" />
               <span className="h-[11px] leading-[11px]">Mon</span>
               <span className="h-[11px] leading-[11px]" />
@@ -232,7 +232,7 @@ export function GitHubContributionHeatmap({
                           handleMouseEnter(day, e as unknown as React.MouseEvent<HTMLDivElement>)
                         }
                         onBlur={handleMouseLeave}
-                        className={`w-[11px] h-[11px] rounded-[2px] border transition-all duration-150 cursor-pointer focus:outline-none focus:ring-1 focus:ring-amber-400 hover:scale-125 ${levelClass}`}
+                        className={`w-[11px] h-[11px] rounded-[2px] border transition-all duration-150 cursor-pointer focus:outline-none focus:ring-1 focus:ring-[#d4af37] hover:scale-125 ${levelClass}`}
                       />
                     );
                   })}
@@ -244,11 +244,11 @@ export function GitHubContributionHeatmap({
       </div>
 
       {/* Footer: Legend & Description */}
-      <div className="flex items-center justify-between pt-2 border-t border-zinc-800/60 text-[11px] text-zinc-500">
+      <div className="flex items-center justify-between pt-2 border-t border-white/[0.06] text-[11px] text-zinc-500">
         <div className="flex items-center gap-2">
           <span>Less</span>
           <div className="flex items-center gap-1">
-            <span className="w-2.5 h-2.5 rounded-[2px] bg-[#18181b]/80 border border-[#27272a]/60" />
+            <span className="w-2.5 h-2.5 rounded-[2px] bg-[#141419] border border-white/[0.04]" />
             <span className="w-2.5 h-2.5 rounded-[2px] bg-[#423408] border border-[#614b0e]" />
             <span className="w-2.5 h-2.5 rounded-[2px] bg-[#785e0d] border border-[#a17e13]" />
             <span className="w-2.5 h-2.5 rounded-[2px] bg-[#b89218] border border-[#d4af37]" />
@@ -257,8 +257,8 @@ export function GitHubContributionHeatmap({
           <span>More</span>
         </div>
 
-        <span className="text-[10px] text-zinc-500">
-          Daily contribution history
+        <span className="text-[10px] text-zinc-400">
+          GitHub Contribution Calendar
         </span>
       </div>
 
@@ -273,16 +273,16 @@ export function GitHubContributionHeatmap({
             pointerEvents: 'none',
             zIndex: 9999,
           }}
-          className="bg-zinc-950/95 backdrop-blur-md border border-amber-500/30 text-zinc-100 text-xs px-3 py-2 rounded-lg shadow-xl shadow-black/80 whitespace-nowrap animate-in fade-in-50 zoom-in-95 duration-100"
+          className="bg-[#0e0e14]/95 backdrop-blur-md border border-[#d4af37]/30 text-zinc-100 text-xs px-3 py-2 rounded-xl shadow-2xl shadow-black/90 whitespace-nowrap animate-in fade-in-50 zoom-in-95 duration-100"
         >
-          <div className="font-semibold text-amber-300">
+          <div className="font-semibold text-[#e2c056]">
             {formatTooltipDate(hoveredDay.date)} —{' '}
             {hoveredDay.count === 0
               ? 'No contributions'
               : `${hoveredDay.count} ${hoveredDay.count === 1 ? 'contribution' : 'contributions'}`}
           </div>
           {(hoveredDay.commitCount > 0 || hoveredDay.prCount > 0) && (
-            <div className="text-[10px] text-zinc-400 mt-1 pt-1 border-t border-zinc-800 flex items-center gap-2">
+            <div className="text-[10px] text-zinc-400 mt-1 pt-1 border-t border-white/[0.06] flex items-center gap-2">
               {hoveredDay.commitCount > 0 && (
                 <span>
                   {hoveredDay.commitCount}{' '}

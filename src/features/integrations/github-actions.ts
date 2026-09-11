@@ -85,6 +85,17 @@ export async function getGitHubActivitySummaryAction(
     }
 
     if (forceRefresh) {
+      // Update authoritative last_verified_at in database
+      await supabase
+        .from('external_provider_integrations')
+        .update({
+          last_verified_at: new Date().toISOString(),
+          last_error: null,
+          updated_at: new Date().toISOString(),
+        })
+        .eq('user_id', user.id)
+        .eq('provider', 'github');
+
       revalidatePath('/app/analytics');
       revalidatePath('/app/settings');
     }

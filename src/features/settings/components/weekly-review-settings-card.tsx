@@ -58,8 +58,8 @@ export function WeeklyReviewSettingsCard({
   return (
     <div className="glass-card rounded-3xl p-6 sm:p-8 space-y-8">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-white/[0.06]">
-        <div>
+      <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4 pb-6 border-b border-white/[0.06]">
+        <div className="space-y-1 min-w-0 flex-1">
           <div className="flex items-center gap-2">
             <span className="text-xs font-semibold uppercase tracking-wider text-[#d4af37]">
               Cadence & Rituals
@@ -67,24 +67,26 @@ export function WeeklyReviewSettingsCard({
             <span className="h-1 w-1 rounded-full bg-zinc-500" />
             <span className="text-xs text-zinc-400">Weekly Operating System</span>
           </div>
-          <h2 className="text-xl font-semibold text-zinc-100 flex items-center gap-2.5 mt-1">
-            <BookOpen className="w-5 h-5 text-[#d4af37]" />
-            Weekly Review & Planning Ritual
+          <h2 className="text-xl font-semibold text-zinc-100 flex items-center gap-2.5">
+            <BookOpen className="w-5 h-5 text-[#d4af37] shrink-0" />
+            <span>Weekly Review & Planning Ritual</span>
           </h2>
-          <p className="text-xs sm:text-sm text-zinc-400 mt-1">
+          <p className="text-xs sm:text-sm text-zinc-400 leading-relaxed max-w-2xl">
             Conduct your weekly look-back, reconcile commitments, and lock in your upcoming operating plan.
           </p>
         </div>
 
-        <Link
-          href="/app/review"
-          className="self-start sm:self-auto focus-visible:outline-none"
-        >
-          <Button variant="primary" size="sm" className="shadow-lg shadow-[#d4af37]/15">
-            <span>Launch Weekly Review</span>
-            <ArrowRight className="w-4 h-4 ml-1.5" />
-          </Button>
-        </Link>
+        <div className="shrink-0 self-start sm:self-start">
+          <Link
+            href="/app/review"
+            className="focus-visible:outline-none inline-flex"
+          >
+            <Button variant="primary" size="sm" className="shadow-lg shadow-[#d4af37]/15">
+              <span>Launch Weekly Review</span>
+              <ArrowRight className="w-4 h-4 ml-1.5" />
+            </Button>
+          </Link>
+        </div>
       </div>
 
       {/* Ritual Overview Banner */}

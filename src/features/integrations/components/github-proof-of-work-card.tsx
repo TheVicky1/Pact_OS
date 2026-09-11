@@ -47,10 +47,14 @@ export function GitHubProofOfWorkCard({
   const [username, setUsername] = useState<string | undefined>(initialUsername);
   const [verifiedCount, setVerifiedCount] = useState<number>(initialVerifiedCount);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [justSynced, setJustSynced] = useState<boolean>(false);
   const [isPending, startTransition] = useTransition();
 
   const handleRefresh = () => {
+    if (isPending) return;
     setErrorMessage(null);
+    setJustSynced(false);
+
     startTransition(async () => {
       const res = await getGitHubActivitySummaryAction(true);
       if (res.success && res.data) {
@@ -60,6 +64,8 @@ export function GitHubProofOfWorkCard({
         if (typeof res.verifiedProofsCount === 'number') {
           setVerifiedCount(res.verifiedProofsCount);
         }
+        setJustSynced(true);
+        setTimeout(() => setJustSynced(false), 3000);
       } else if (!res.isConnected) {
         setIsConnected(false);
       } else if (res.error) {
@@ -91,20 +97,20 @@ export function GitHubProofOfWorkCard({
   // 1. Disconnected State Banner
   if (!isConnected) {
     return (
-      <div className="rounded-xl border border-zinc-800 bg-[#121217]/80 backdrop-blur-md p-6 shadow-lg shadow-black/40">
+      <div className="glass-card rounded-3xl p-6 sm:p-7 shadow-xl shadow-black/40">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div className="flex items-start gap-3.5">
-            <div className="p-3 rounded-lg bg-zinc-900 border border-zinc-800 text-amber-400">
+            <div className="p-3 rounded-2xl bg-zinc-900 border border-white/[0.08] text-[#d4af37] shrink-0">
               <GitHubIcon className="w-6 h-6" />
             </div>
             <div className="space-y-1">
               <h3 className="text-base font-semibold text-zinc-100 flex items-center gap-2">
                 GitHub Proof of Work
-                <span className="text-[11px] font-normal px-2 py-0.5 rounded-full bg-zinc-800/80 text-zinc-400 border border-zinc-700/50">
+                <span className="text-[11px] font-normal px-2.5 py-0.5 rounded-full bg-zinc-800 text-zinc-400 border border-white/[0.06]">
                   Not Connected
                 </span>
               </h3>
-              <p className="text-xs text-zinc-400 max-w-xl">
+              <p className="text-xs text-zinc-400 max-w-xl leading-relaxed">
                 Connect your GitHub account in Settings to automatically sync and visualize your daily
                 commits, pull requests, contribution streaks, and fulfill accountability commitments with cryptographically verifiable proof.
               </p>
@@ -113,7 +119,7 @@ export function GitHubProofOfWorkCard({
 
           <Link
             href="/app/settings"
-            className="inline-flex items-center gap-2 px-4 py-2 text-xs font-medium rounded-lg bg-amber-500/10 text-amber-400 border border-amber-500/30 hover:bg-amber-500/20 hover:border-amber-500/50 transition-colors shrink-0"
+            className="inline-flex items-center gap-2 px-4 py-2.5 text-xs font-semibold rounded-xl bg-[#d4af37]/15 text-[#e2c056] border border-[#d4af37]/40 hover:bg-[#d4af37]/25 transition-all shrink-0"
           >
             <GitHubIcon className="w-4 h-4" />
             Connect GitHub in Settings
@@ -124,11 +130,11 @@ export function GitHubProofOfWorkCard({
   }
 
   return (
-    <div className="rounded-xl border border-zinc-800 bg-[#121217]/80 backdrop-blur-md p-6 shadow-lg shadow-black/40 space-y-6">
+    <div className="glass-card rounded-3xl p-6 sm:p-7 shadow-xl shadow-black/40 space-y-6">
       {/* 1. Header with Account Details and Live Refresh */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-zinc-800/60">
-        <div className="flex items-center gap-3">
-          <div className="p-2.5 rounded-lg bg-zinc-900 border border-zinc-800 text-amber-400">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-white/[0.06]">
+        <div className="flex items-center gap-3.5">
+          <div className="p-2.5 rounded-2xl bg-zinc-900 border border-white/[0.08] text-[#d4af37] shrink-0">
             <GitHubIcon className="w-5 h-5" />
           </div>
           <div>
@@ -136,62 +142,91 @@ export function GitHubProofOfWorkCard({
               <h3 className="text-base font-semibold text-zinc-100">
                 GitHub Proof of Work
               </h3>
-              <span className="inline-flex items-center gap-1.5 text-[11px] font-medium px-2 py-0.5 rounded-full bg-emerald-950/60 text-emerald-400 border border-emerald-800/50">
+              <span className="inline-flex items-center gap-1.5 text-[11px] font-medium px-2.5 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
                 <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
                 Live Sync
               </span>
             </div>
             <p className="text-xs text-zinc-400 mt-0.5">
               Verified contribution history and execution metrics for{' '}
-              <span className="text-amber-400 font-mono">@{username || summary?.username}</span>
+              <span className="text-[#e2c056] font-mono">@{username || summary?.username}</span>
             </p>
           </div>
         </div>
 
-        <div className="flex items-center gap-2">
-          {summary?.syncedAt && (
-            <span className="text-[11px] text-zinc-500 hidden md:inline-block">
+        <div className="flex items-center gap-3 self-end sm:self-center">
+          {justSynced ? (
+            <span className="text-xs text-emerald-400 font-medium flex items-center gap-1 animate-in fade-in duration-150">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
+              Synced Just now
+            </span>
+          ) : summary?.syncedAt ? (
+            <span className="text-xs text-zinc-400 hidden md:inline-block">
               Synced {formatRelativeTime(summary.syncedAt)}
             </span>
-          )}
+          ) : null}
           <button
             type="button"
             onClick={handleRefresh}
             disabled={isPending}
-            className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-lg bg-zinc-900 border border-zinc-800 text-zinc-300 hover:text-white hover:border-zinc-700 disabled:opacity-50 transition-colors cursor-pointer"
+            className={`inline-flex items-center gap-1.5 px-3.5 py-2 text-xs font-semibold rounded-xl border transition-all cursor-pointer ${
+              isPending
+                ? 'bg-[#121217] text-zinc-400 border-white/[0.08] opacity-70 cursor-not-allowed'
+                : justSynced
+                ? 'bg-emerald-500/10 text-emerald-300 border-emerald-500/30 shadow-sm'
+                : 'bg-zinc-900 hover:bg-zinc-800 text-zinc-200 border border-white/[0.08] hover:border-white/[0.16]'
+            }`}
             title="Refresh GitHub activity"
           >
-            <RefreshCw className={`w-3.5 h-3.5 ${isPending ? 'animate-spin text-amber-400' : ''}`} />
-            <span>{isPending ? 'Syncing...' : 'Sync'}</span>
+            <RefreshCw
+              className={`w-3.5 h-3.5 ${
+                isPending
+                  ? 'animate-spin text-[#d4af37]'
+                  : justSynced
+                  ? 'text-emerald-400'
+                  : 'text-[#d4af37]'
+              }`}
+            />
+            <span>{isPending ? 'Syncing...' : justSynced ? 'Synced' : 'Sync'}</span>
           </button>
         </div>
       </div>
 
       {errorMessage && (
-        <div className="p-3 rounded-lg bg-red-950/40 border border-red-900/60 text-red-300 text-xs flex items-center gap-2">
-          <AlertCircle className="w-4 h-4 shrink-0 text-red-400" />
-          <span>{errorMessage}</span>
+        <div className="p-3.5 rounded-xl bg-rose-500/10 border border-rose-500/20 text-rose-300 text-xs flex flex-col sm:flex-row sm:items-center justify-between gap-3 animate-in fade-in duration-150">
+          <div className="flex items-center gap-2">
+            <AlertCircle className="w-4 h-4 shrink-0 text-rose-400" />
+            <span>{errorMessage}</span>
+          </div>
+          <button
+            type="button"
+            onClick={handleRefresh}
+            disabled={isPending}
+            className="self-start sm:self-auto px-2.5 py-1 text-[11px] font-semibold rounded-lg bg-rose-500/20 hover:bg-rose-500/30 text-rose-200 border border-rose-500/30 transition-colors cursor-pointer"
+          >
+            Retry
+          </button>
         </div>
       )}
 
       {/* 2. Key Proof-of-Work Metric Cards */}
       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
         {/* Total Contributions */}
-        <div className="p-3.5 rounded-lg bg-zinc-900/60 border border-zinc-800/80 space-y-1">
+        <div className="p-3.5 rounded-2xl bg-zinc-900/60 border border-white/[0.06] hover:border-white/[0.12] transition-colors space-y-1">
           <div className="flex items-center justify-between text-zinc-400 text-xs">
             <span>Contributions</span>
-            <Calendar className="w-3.5 h-3.5 text-amber-400" />
+            <Calendar className="w-3.5 h-3.5 text-[#d4af37]" />
           </div>
           <div className="text-xl font-bold text-zinc-100">
             {summary ? summary.totalContributions.toLocaleString() : '—'}
           </div>
           <div className="text-[10px] text-zinc-500">
-            {summary ? `${summary.last30DaysCount} in last 30d` : 'Past 365 days'}
+            {summary ? `${summary.last30DaysCount} in last 30d` : 'Past year calendar'}
           </div>
         </div>
 
         {/* Current Streak */}
-        <div className="p-3.5 rounded-lg bg-zinc-900/60 border border-zinc-800/80 space-y-1">
+        <div className="p-3.5 rounded-2xl bg-zinc-900/60 border border-white/[0.06] hover:border-white/[0.12] transition-colors space-y-1">
           <div className="flex items-center justify-between text-zinc-400 text-xs">
             <span>Current Streak</span>
             <Flame className="w-3.5 h-3.5 text-amber-500" />
@@ -205,10 +240,10 @@ export function GitHubProofOfWorkCard({
         </div>
 
         {/* Longest Streak */}
-        <div className="p-3.5 rounded-lg bg-zinc-900/60 border border-zinc-800/80 space-y-1">
+        <div className="p-3.5 rounded-2xl bg-zinc-900/60 border border-white/[0.06] hover:border-white/[0.12] transition-colors space-y-1">
           <div className="flex items-center justify-between text-zinc-400 text-xs">
             <span>Longest Streak</span>
-            <Trophy className="w-3.5 h-3.5 text-amber-400" />
+            <Trophy className="w-3.5 h-3.5 text-[#d4af37]" />
           </div>
           <div className="text-xl font-bold text-zinc-100">
             {summary ? `${summary.longestStreak} ${summary.longestStreak === 1 ? 'day' : 'days'}` : '—'}
@@ -219,10 +254,10 @@ export function GitHubProofOfWorkCard({
         </div>
 
         {/* Total Commits */}
-        <div className="p-3.5 rounded-lg bg-zinc-900/60 border border-zinc-800/80 space-y-1">
+        <div className="p-3.5 rounded-2xl bg-zinc-900/60 border border-white/[0.06] hover:border-white/[0.12] transition-colors space-y-1">
           <div className="flex items-center justify-between text-zinc-400 text-xs">
             <span>Total Commits</span>
-            <GitCommit className="w-3.5 h-3.5 text-amber-400" />
+            <GitCommit className="w-3.5 h-3.5 text-[#d4af37]" />
           </div>
           <div className="text-xl font-bold text-zinc-100">
             {summary ? summary.totalCommits.toLocaleString() : '—'}
@@ -233,10 +268,10 @@ export function GitHubProofOfWorkCard({
         </div>
 
         {/* Total PRs */}
-        <div className="p-3.5 rounded-lg bg-zinc-900/60 border border-zinc-800/80 space-y-1">
+        <div className="p-3.5 rounded-2xl bg-zinc-900/60 border border-white/[0.06] hover:border-white/[0.12] transition-colors space-y-1">
           <div className="flex items-center justify-between text-zinc-400 text-xs">
             <span>Pull Requests</span>
-            <GitPullRequest className="w-3.5 h-3.5 text-amber-400" />
+            <GitPullRequest className="w-3.5 h-3.5 text-[#d4af37]" />
           </div>
           <div className="text-xl font-bold text-zinc-100">
             {summary ? summary.totalPRs.toLocaleString() : '—'}
@@ -247,7 +282,7 @@ export function GitHubProofOfWorkCard({
         </div>
 
         {/* Verified Proofs */}
-        <div className="p-3.5 rounded-lg bg-zinc-900/60 border border-zinc-800/80 space-y-1">
+        <div className="p-3.5 rounded-2xl bg-zinc-900/60 border border-white/[0.06] hover:border-white/[0.12] transition-colors space-y-1">
           <div className="flex items-center justify-between text-zinc-400 text-xs">
             <span>PACT Proofs</span>
             <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
@@ -262,7 +297,7 @@ export function GitHubProofOfWorkCard({
       </div>
 
       {/* 3. Heatmap Visualization */}
-      <div className="p-4 rounded-lg bg-zinc-900/40 border border-zinc-800/80">
+      <div className="p-4 sm:p-5 rounded-2xl bg-zinc-900/60 border border-white/[0.06]">
         <GitHubContributionHeatmap
           dailyContributions={summary?.dailyContributions || []}
           username={username || summary?.username}
