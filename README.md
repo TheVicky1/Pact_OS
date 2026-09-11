@@ -131,28 +131,26 @@ PACT runs an autonomous, idempotent deadline sweeping engine that expires overdu
 
 ## 📄 Documentation Baseline
 
-Comprehensive architectural specifications and phase completion reports are maintained in the [`docs/`](./docs/) directory:
+Comprehensive specifications, system architectures, and engineering runbooks are maintained in the [`docs/`](./docs/README.md) directory:
 
 | Document | Purpose |
 |---|---|
-| 📖 [**Product Vision**](./docs/PRODUCT.md) | Vision, dual taglines, product philosophy, and scope rules |
-| 📋 [**Core Features**](./docs/FEATURES.md) | Inventory of the 12 core product areas and optional integrations |
+| 🌟 [**Master Documentation**](./docs/PACT_MASTER_DOCUMENTATION.md) | Central comprehensive technical and product reference |
+| 📖 [**Product Vision**](./docs/PRODUCT.md) | Vision, dual taglines, product philosophy, and core principles |
+| 📋 [**Feature Inventory**](./docs/FEATURES.md) | Authoritative inventory of all 14 core product modules |
+| 🏗️ [**Architecture**](./docs/ARCHITECTURE.md) | Next.js 16 App Router architecture, server boundaries, and timezone safety |
+| 🗄️ [**Data Model**](./docs/DATA_MODEL.md) | Relational entity schemas, trusted fields, indexes, and RLS policies |
+| 🔌 [**Integrations**](./docs/INTEGRATIONS.md) | Google Calendar, GitHub, LeetCode, and Codeforces connectors |
+| 🔒 [**Security Architecture**](./docs/SECURITY.md) | 28-point security matrix, zero-trust validation, and secret sanitization |
+| 🛡️ [**Threat Model**](./docs/THREAT_MODEL.md) | Threat actor matrix, attack surfaces, and defense-in-depth mitigations |
+| 💻 [**Developer Guide**](./docs/DEVELOPMENT.md) | Local environment setup, database migrations, and development commands |
+| 🧪 [**Testing Strategy**](./docs/TESTING.md) | 34-suite automated test matrix and verification runbooks |
+| 🌿 [**Git Workflow**](./docs/GIT_WORKFLOW.md) | Conventional Commits, branch hygiene, and pre-commit safety rules |
+| 🗺️ [**Product Roadmap**](./docs/ROADMAP.md) | Verified implementation status and future planned milestones |
+| 🎨 [**Design System**](./docs/DESIGN_SYSTEM.md) | Gold P monogram, dark glassmorphic UI, and design tokens |
 | 🔄 [**User Flows**](./docs/USER_FLOWS.md) | Domain hierarchy flow, daily planning, and consequence lifecycle |
-| 🏗️ [**Architecture**](./docs/ARCHITECTURE.md) | Tech stack preferences, feature-oriented structure, timezone safety |
-| 🗄️ [**Database Model**](./docs/DATABASE.md) | Relational entity schemas, trusted fields, and indexing strategy |
-| 🔒 [**Security Architecture**](./docs/SECURITY.md) | 28-point security matrix, RLS policies, zero-trust validation |
-| 🛡️ [**Threat Model**](./docs/THREAT_MODEL.md) | Threat actor matrix, attack surfaces, mitigations, and test requirements |
-| 🎨 [**Design System**](./docs/DESIGN_SYSTEM.md) | Gold P Monogram brand mark, dark glassmorphic UI, design tokens |
-| 🔌 [**Integrations**](./docs/INTEGRATIONS.md) | GitHub, Codeforces, and LeetCode connectors & token lifecycle |
-| 🧪 [**Testing Strategy**](./docs/TESTING.md) | Unit, integration, E2E, and mandatory security test contracts |
-| 🌿 [**Git Workflow**](./docs/GIT_WORKFLOW.md) | Conventional commits, secret prevention rules, gitignore standards |
-| 📊 [**Phase 5G Report**](./docs/PHASE_5G_PRODUCTION_HARDENING_REPORT.md) | Production Hardening, Integration Reliability & Product Completion Report |
-| ⚡ [**Phase 6A Report**](./docs/PHASE_6A_COMMAND_CENTER_REPORT.md) | Global Command Center (Cmd+K) & Universal Quick Capture Verification Report |
-| ⏱️ [**Phase 6B Report**](./docs/PHASE_6B_FOCUS_TIMER_REPORT.md) | Focus Timer & Deep Work Session Engine Verification Report |
-| 🔄 [**Phase 6C Report**](./docs/PHASE_6C_HABITS_AND_ROUTINES_REPORT.md) | Recurring Habits & Daily Routine Template Engine Report |
-| 📅 [**Phase 6D Report**](./docs/PHASE_6D_WEEKLY_REVIEW_REPORT.md) | Structured Weekly Review & Sunday Planning Ritual Report |
-| 🔗 [**Phase 6E Report**](./docs/PHASE_6E_DEEP_LINK_BULK_OPERATIONS_REPORT.md) | Deep-Link URL State & Bulk Data Operations Report |
-| 🏆 [**Phase 6F Report**](./docs/PHASE_6F_MASTER_SYSTEM_CERTIFICATION_REPORT.md) | Master System Certification, Final Polish & Release Readiness Report |
+| 🚀 [**Deployment Runbook**](./docs/PRODUCTION_DEPLOYMENT_RUNBOOK.md) | Production cloud deployment guide and environment configuration |
+| 📦 [**Historical Archive**](./docs/archive/README.md) | Preserved historical phase completion reports (Phases 4 through 6) |
 
 ---
 
