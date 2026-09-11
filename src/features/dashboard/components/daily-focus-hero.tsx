@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useMemo } from 'react';
+import React, { useMemo, useState, useRef, useEffect } from 'react';
 import { Button } from '@/components/ui';
 import { ShieldCheck, Plus, Calendar, ArrowLeft, ArrowRight } from 'lucide-react';
 import Link from 'next/link';
@@ -17,7 +17,7 @@ export interface DailyFocusHeroProps {
 /**
  * PACT Daily Focus Hero & Date Horizon Ribbon
  * Luxury cinematic hero featuring a photorealistic 3D celestial dark planet
- * with volumetric golden rim illumination, atmospheric corona, and restrained authority.
+ * with volumetric golden rim illumination, atmospheric corona, and refined date navigation.
  */
 export function DailyFocusHero({
   userName,
@@ -48,6 +48,29 @@ export function DailyFocusHero({
       return { dayNumber: `${new Date().getDate()}`, monthAbbrev: 'Today', weekdayName: 'Today' };
     }
   }, [timezone]);
+
+  // Refined Tooltip state with controlled hover delay
+  const [isTooltipVisible, setIsTooltipVisible] = useState(false);
+  const hoverTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+  const handleMouseEnter = () => {
+    if (hoverTimeoutRef.current) clearTimeout(hoverTimeoutRef.current);
+    // 350ms delay to avoid accidental triggers while passing cursor
+    hoverTimeoutRef.current = setTimeout(() => {
+      setIsTooltipVisible(true);
+    }, 350);
+  };
+
+  const handleMouseLeave = () => {
+    if (hoverTimeoutRef.current) clearTimeout(hoverTimeoutRef.current);
+    setIsTooltipVisible(false);
+  };
+
+  useEffect(() => {
+    return () => {
+      if (hoverTimeoutRef.current) clearTimeout(hoverTimeoutRef.current);
+    };
+  }, []);
 
   return (
     <div className="space-y-4">
@@ -219,13 +242,30 @@ export function DailyFocusHero({
           </div>
         </div>
 
-        {/* Informational Day Navigation Controls */}
-        <div className="flex items-center gap-1.5 self-end sm:self-center">
+        {/* Informational Day Navigation Controls with Refined Tooltip */}
+        <div
+          className="relative flex items-center gap-1.5 self-end sm:self-center"
+          onMouseEnter={handleMouseEnter}
+          onMouseLeave={handleMouseLeave}
+        >
+          {/* Custom PACT Tooltip positioned above the controls without obstructing content */}
+          <div
+            aria-hidden={!isTooltipVisible}
+            className={`absolute bottom-full mb-2 right-0 sm:right-auto sm:left-1/2 sm:-translate-x-1/2 px-2.5 py-1 rounded-lg bg-[#101012] border border-white/[0.08] text-[11px] font-medium text-[#E8E8E8] shadow-xl shadow-black/90 pointer-events-none whitespace-nowrap z-50 transition-all duration-200 flex items-center gap-1.5 ${
+              isTooltipVisible
+                ? 'opacity-100 translate-y-0'
+                : 'opacity-0 translate-y-1 pointer-events-none'
+            }`}
+          >
+            <span className="w-1.5 h-1.5 rounded-full bg-[#D4AF37]" />
+            <span>Viewing current active day</span>
+          </div>
+
           <button
             type="button"
             disabled
-            title="Viewing current active day"
-            className="w-8 h-8 rounded-xl border border-white/[0.04] bg-[#0C0C0F] text-[#71717A] flex items-center justify-center cursor-not-allowed"
+            aria-label="Previous Day"
+            className="w-8 h-8 rounded-xl border border-white/[0.04] bg-[#0C0C0F] text-[#71717A] flex items-center justify-center cursor-not-allowed transition-colors"
           >
             <ArrowLeft className="w-3.5 h-3.5" />
           </button>
@@ -236,8 +276,8 @@ export function DailyFocusHero({
           <button
             type="button"
             disabled
-            title="Viewing current active day"
-            className="w-8 h-8 rounded-xl border border-white/[0.04] bg-[#0C0C0F] text-[#71717A] flex items-center justify-center cursor-not-allowed"
+            aria-label="Next Day"
+            className="w-8 h-8 rounded-xl border border-white/[0.04] bg-[#0C0C0F] text-[#71717A] flex items-center justify-center cursor-not-allowed transition-colors"
           >
             <ArrowRight className="w-3.5 h-3.5" />
           </button>
