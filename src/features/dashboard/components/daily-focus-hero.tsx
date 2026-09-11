@@ -16,8 +16,8 @@ export interface DailyFocusHeroProps {
 
 /**
  * PACT Daily Focus Hero & Date Horizon Ribbon
- * Luxury cinematic hero featuring the signature dark planetary sphere on the right 35%,
- * warm golden rim lighting, crisp typography, and restrained ambient lighting.
+ * Luxury cinematic hero featuring a photorealistic 3D celestial dark planet
+ * with volumetric golden rim illumination, atmospheric corona, and restrained authority.
  */
 export function DailyFocusHero({
   userName,
@@ -53,43 +53,95 @@ export function DailyFocusHero({
     <div className="space-y-4">
       {/* Primary Hero Banner */}
       <div className="relative rounded-[28px] bg-[#0C0C0F] border border-white/[0.06] p-6 sm:p-8 lg:p-10 shadow-2xl shadow-black/80 overflow-hidden group">
-        {/* 1. Cinematic Dark Planetary Sphere on the Right (Occupies ~35% of container) */}
+        {/* 1. Cinematic 3D Celestial Planet on the Right (~40% width) */}
         <div
           aria-hidden="true"
-          className="absolute -top-12 -right-12 sm:-top-16 sm:-right-16 lg:-top-20 lg:-right-16 w-[280px] sm:w-[380px] lg:w-[460px] h-[280px] sm:h-[380px] lg:h-[460px] pointer-events-none select-none z-0"
+          className="absolute -top-20 -right-16 sm:-top-28 sm:-right-20 lg:-top-32 lg:-right-16 w-[340px] sm:w-[480px] lg:w-[580px] h-[340px] sm:h-[480px] lg:h-[580px] pointer-events-none select-none z-0"
         >
-          {/* Localized Soft Gold Atmospheric Glow Halo */}
-          <div
-            className="absolute top-2 right-2 sm:top-4 sm:right-4 w-48 sm:w-64 h-48 sm:h-64 rounded-full blur-3xl opacity-25"
-            style={{
-              background: 'radial-gradient(circle, rgba(212, 175, 55, 0.4) 0%, rgba(230, 195, 74, 0.12) 40%, transparent 70%)',
-            }}
-          />
-
-          {/* Core Dark Planetary Sphere Body */}
-          <div
-            className="absolute inset-4 sm:inset-6 rounded-full border border-white/[0.04]"
-            style={{
-              background: 'radial-gradient(circle at 74% 24%, #18181C 0%, #101013 32%, #0C0C0F 64%, #050506 100%)',
-              boxShadow: 'inset -2px 2px 14px 1px rgba(212, 175, 55, 0.45), inset -1px 1px 3px 0px rgba(255, 245, 220, 0.9), 0 10px 40px rgba(0,0,0,0.95)',
-            }}
+          <svg
+            className="w-full h-full"
+            viewBox="0 0 500 500"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
           >
-            {/* Upper-Right Gold Crescent & Specular Highlight */}
-            <div
-              className="absolute inset-0 rounded-full"
-              style={{
-                background: 'radial-gradient(circle at 82% 18%, rgba(240, 185, 11, 0.5) 0%, rgba(212, 175, 55, 0.2) 20%, transparent 45%)',
-              }}
+            <defs>
+              {/* Outer atmospheric corona glow */}
+              <radialGradient id="pactAtmosphereGlow" cx="76%" cy="24%" r="60%" fx="76%" fy="24%">
+                <stop offset="0%" stopColor="#D4AF37" stopOpacity="0.32" />
+                <stop offset="25%" stopColor="#E6C34A" stopOpacity="0.14" />
+                <stop offset="55%" stopColor="#AA820A" stopOpacity="0.04" />
+                <stop offset="100%" stopColor="#0C0C0F" stopOpacity="0" />
+              </radialGradient>
+
+              {/* Volumetric planet body shading (deep 3D sphere) */}
+              <radialGradient id="pactPlanetSphere" cx="72%" cy="28%" r="68%" fx="72%" fy="28%">
+                <stop offset="0%" stopColor="#1E1E26" />
+                <stop offset="24%" stopColor="#14141A" />
+                <stop offset="48%" stopColor="#0E0E12" />
+                <stop offset="75%" stopColor="#08080B" />
+                <stop offset="100%" stopColor="#050507" />
+              </radialGradient>
+
+              {/* Internal atmospheric Rayleigh scattering & crescent light */}
+              <radialGradient id="pactAtmosphericScatter" cx="80%" cy="20%" r="50%" fx="80%" fy="20%">
+                <stop offset="0%" stopColor="#FFF2C6" stopOpacity="0.85" />
+                <stop offset="10%" stopColor="#F5C037" stopOpacity="0.60" />
+                <stop offset="26%" stopColor="#D4AF37" stopOpacity="0.25" />
+                <stop offset="48%" stopColor="#AA820A" stopOpacity="0.06" />
+                <stop offset="70%" stopColor="#0C0C0F" stopOpacity="0" />
+              </radialGradient>
+
+              {/* Razor-sharp glowing rim gradient */}
+              <linearGradient id="pactRimGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stopColor="#AA820A" stopOpacity="0" />
+                <stop offset="25%" stopColor="#D4AF37" stopOpacity="0.8" />
+                <stop offset="50%" stopColor="#FFF5D6" stopOpacity="1" />
+                <stop offset="75%" stopColor="#F0B90B" stopOpacity="0.8" />
+                <stop offset="100%" stopColor="#AA820A" stopOpacity="0" />
+              </linearGradient>
+
+              {/* Golden atmospheric glow filter */}
+              <filter id="pactCrescentGlow" x="-30%" y="-30%" width="160%" height="160%">
+                <feGaussianBlur stdDeviation="8" result="glowBlur" />
+                <feMerge>
+                  <feMergeNode in="glowBlur" />
+                  <feMergeNode in="SourceGraphic" />
+                </feMerge>
+              </filter>
+            </defs>
+
+            {/* Subtle distant orbital geometry in background */}
+            <circle cx="250" cy="250" r="236" stroke="#D4AF37" strokeWidth="0.75" strokeDasharray="4 6" opacity="0.12" />
+            <circle cx="250" cy="250" r="218" stroke="rgba(255,255,255,0.04)" strokeWidth="0.5" />
+
+            {/* Atmospheric Outer Corona */}
+            <circle cx="250" cy="250" r="225" fill="url(#pactAtmosphereGlow)" />
+
+            {/* Main Volumetric 3D Planet Sphere (Dissolves naturally into black space on left) */}
+            <circle cx="250" cy="250" r="200" fill="url(#pactPlanetSphere)" />
+
+            {/* Atmospheric Rayleigh Scatter overlay */}
+            <circle cx="250" cy="250" r="200" fill="url(#pactAtmosphericScatter)" style={{ mixBlendMode: 'screen' }} />
+
+            {/* Specular Upper-Right Rim Arc (Glow) */}
+            <path
+              d="M 230 52 A 200 200 0 0 1 448 270"
+              stroke="url(#pactRimGradient)"
+              strokeWidth="3.5"
+              strokeLinecap="round"
+              filter="url(#pactCrescentGlow)"
+              opacity="0.85"
             />
 
-            {/* Subtle Surface Texture Contours */}
-            <div
-              className="absolute inset-0 rounded-full opacity-15 mix-blend-overlay"
-              style={{
-                backgroundImage: 'radial-gradient(ellipse at 70% 30%, rgba(255, 255, 255, 0.18) 0%, transparent 60%)',
-              }}
+            {/* Intense Razor-Thin Golden Highlight Line */}
+            <path
+              d="M 270 54 A 200 200 0 0 1 446 230"
+              stroke="#FFF7D6"
+              strokeWidth="1.5"
+              strokeLinecap="round"
+              opacity="0.95"
             />
-          </div>
+          </svg>
         </div>
 
         {/* 2. Hero Content */}
@@ -126,7 +178,7 @@ export function DailyFocusHero({
                 variant="primary"
                 size="md"
                 icon={<Plus className="w-4 h-4 text-[#090909]" />}
-                className="bg-[#D4AF37] hover:bg-[#E6C34A] text-[#090909] font-semibold border border-[#E6C34A]/50 shadow-lg shadow-[#D4AF37]/15 transition-all duration-200"
+                className="bg-[#D4AF37] hover:bg-[#E6C34A] text-[#090909] font-semibold border border-[#E6C34A]/50 shadow-xl shadow-[#D4AF37]/20 transition-all duration-200 hover:brightness-105 active:scale-[0.98]"
               >
                 New Commitment
               </Button>
