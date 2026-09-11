@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect, useMemo, useRef, useCallback } from 'react';
-import { GlassCard, Button } from '@/components/ui';
+import { Button } from '@/components/ui';
 import {
   Calendar as CalendarIcon,
   ChevronLeft,
@@ -38,45 +38,45 @@ export interface DailyCalendarWidgetProps {
 
 const COLOR_MAP: Record<string, { bg: string; border: string; text: string; glow: string; dot: string }> = {
   gold: {
-    bg: 'bg-[#d4af37]/10',
-    border: 'border-[#d4af37]/40',
-    text: 'text-[#d4af37]',
-    glow: 'hover:border-[#d4af37]/70',
+    bg: 'bg-[#d4af37]/15',
+    border: 'border-[#d4af37]/50',
+    text: 'text-[#f5e0a3]',
+    glow: 'hover:border-[#d4af37]',
     dot: 'bg-[#d4af37]',
   },
   blue: {
-    bg: 'bg-blue-500/10',
-    border: 'border-blue-500/40',
-    text: 'text-blue-400',
-    glow: 'hover:border-blue-500/70',
-    dot: 'bg-blue-400',
+    bg: 'bg-zinc-800/80',
+    border: 'border-white/[0.12]',
+    text: 'text-zinc-200',
+    glow: 'hover:border-[#d4af37]/40',
+    dot: 'bg-zinc-400',
   },
   purple: {
-    bg: 'bg-purple-500/10',
-    border: 'border-purple-500/40',
-    text: 'text-purple-400',
-    glow: 'hover:border-purple-500/70',
-    dot: 'bg-purple-400',
+    bg: 'bg-zinc-800/60',
+    border: 'border-white/[0.10]',
+    text: 'text-zinc-300',
+    glow: 'hover:border-[#d4af37]/40',
+    dot: 'bg-zinc-500',
   },
   emerald: {
-    bg: 'bg-emerald-500/10',
-    border: 'border-emerald-500/40',
-    text: 'text-emerald-400',
-    glow: 'hover:border-emerald-500/70',
+    bg: 'bg-emerald-950/40',
+    border: 'border-emerald-700/40',
+    text: 'text-emerald-300',
+    glow: 'hover:border-emerald-500/60',
     dot: 'bg-emerald-400',
   },
   amber: {
-    bg: 'bg-amber-500/10',
-    border: 'border-amber-500/40',
-    text: 'text-amber-400',
-    glow: 'hover:border-amber-500/70',
+    bg: 'bg-amber-950/40',
+    border: 'border-amber-700/40',
+    text: 'text-amber-300',
+    glow: 'hover:border-amber-500/60',
     dot: 'bg-amber-400',
   },
   rose: {
-    bg: 'bg-rose-500/10',
-    border: 'border-rose-500/40',
-    text: 'text-rose-400',
-    glow: 'hover:border-rose-500/70',
+    bg: 'bg-rose-950/40',
+    border: 'border-rose-700/40',
+    text: 'text-rose-300',
+    glow: 'hover:border-rose-500/60',
     dot: 'bg-rose-400',
   },
 };
@@ -209,11 +209,11 @@ export function DailyCalendarWidget({
   };
 
   return (
-    <GlassCard variant="default" padding="none" className="overflow-hidden border-white/[0.08]">
+    <div className="rounded-3xl bg-[rgba(16,16,22,0.85)] border border-white/[0.08] shadow-2xl shadow-black/50 backdrop-blur-2xl overflow-hidden">
       {/* 1. Header — Visual & Structural Alignment */}
-      <div className="p-4 sm:p-5 border-b border-white/[0.08] flex flex-col md:flex-row md:items-center justify-between gap-4 bg-zinc-950/40">
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-zinc-900/90 border border-white/[0.1] flex items-center justify-center text-[#d4af37] shadow-inner shrink-0">
+      <div className="p-5 sm:p-6 border-b border-white/[0.08] flex flex-col md:flex-row md:items-center justify-between gap-4 bg-zinc-950/50">
+        <div className="flex items-center gap-3.5">
+          <div className="w-10 h-10 rounded-2xl bg-zinc-900/90 border border-white/[0.1] flex items-center justify-center text-[#d4af37] shadow-inner shrink-0">
             <CalendarIcon className="w-5 h-5" />
           </div>
           <div>
@@ -222,7 +222,7 @@ export function DailyCalendarWidget({
                 Daily Calendar
               </h2>
               <span className="text-zinc-600">|</span>
-              <span className="text-xs text-zinc-400 font-medium">
+              <span className="text-xs text-zinc-400 font-medium font-mono">
                 {events.length} {events.length === 1 ? 'event' : 'events'}
               </span>
             </div>
@@ -233,22 +233,22 @@ export function DailyCalendarWidget({
         </div>
 
         {/* Navigation & Actions */}
-        <div className="flex items-center gap-2 flex-wrap sm:flex-nowrap">
+        <div className="flex items-center gap-2.5 flex-wrap sm:flex-nowrap">
           {/* Day Navigation */}
-          <div className="flex items-center rounded-xl bg-zinc-900/80 border border-white/[0.08] p-1 shadow-sm">
+          <div className="flex items-center rounded-2xl bg-zinc-900/90 border border-white/[0.08] p-1 shadow-sm">
             <button
               onClick={handlePrevDay}
               aria-label="Previous Day"
-              className="p-1.5 rounded-lg text-zinc-400 hover:text-zinc-100 hover:bg-white/[0.06] transition-colors"
+              className="p-1.5 rounded-xl text-zinc-400 hover:text-zinc-100 hover:bg-white/[0.06] transition-colors"
             >
               <ChevronLeft className="w-4 h-4" />
             </button>
 
             <button
               onClick={handleToday}
-              className={`px-3 py-1 text-xs font-semibold rounded-lg transition-colors ${
+              className={`px-3 py-1 text-xs font-semibold rounded-xl transition-colors ${
                 isToday
-                  ? 'bg-[#d4af37]/20 text-[#d4af37] border border-[#d4af37]/30'
+                  ? 'bg-[#d4af37]/20 text-[#d4af37] border border-[#d4af37]/40 shadow-sm'
                   : 'text-zinc-300 hover:text-white hover:bg-white/[0.06]'
               }`}
             >
@@ -258,7 +258,7 @@ export function DailyCalendarWidget({
             <button
               onClick={handleNextDay}
               aria-label="Next Day"
-              className="p-1.5 rounded-lg text-zinc-400 hover:text-zinc-100 hover:bg-white/[0.06] transition-colors"
+              className="p-1.5 rounded-xl text-zinc-400 hover:text-zinc-100 hover:bg-white/[0.06] transition-colors"
             >
               <ChevronRight className="w-4 h-4" />
             </button>
@@ -277,8 +277,8 @@ export function DailyCalendarWidget({
               aria-label="Select Date"
               className="absolute inset-0 opacity-0 cursor-pointer w-full h-full z-10"
             />
-            <div className="px-3 py-1.5 rounded-xl bg-zinc-900/60 border border-white/[0.08] hover:border-white/20 text-xs font-semibold text-zinc-200 transition-colors flex items-center gap-1.5 pointer-events-none">
-              <CalendarIcon className="w-3.5 h-3.5 text-zinc-400" />
+            <div className="px-3.5 py-2 rounded-2xl bg-zinc-900/80 border border-white/[0.08] hover:border-white/20 text-xs font-semibold text-zinc-200 transition-colors flex items-center gap-2 pointer-events-none">
+              <CalendarIcon className="w-3.5 h-3.5 text-[#d4af37]" />
               <span>{dateHeader.formatted}</span>
             </div>
           </div>
@@ -289,19 +289,19 @@ export function DailyCalendarWidget({
             size="sm"
             onClick={handleOpenAddEvent}
             icon={<Plus className="w-3.5 h-3.5" />}
-            className="shadow-md shadow-[#d4af37]/10 shrink-0"
+            className="shadow-lg shadow-[#d4af37]/15 border border-[#f5c037]/40 font-semibold shrink-0"
           >
             Add Event
           </Button>
         </div>
       </div>
 
-      {/* 2. Empty State Secondary Banner (Timeline remains visible below) */}
+      {/* 2. Empty State Secondary Banner */}
       {events.length === 0 && !isLoadingEvents && (
-        <div className="px-4 py-2.5 bg-zinc-900/30 border-b border-white/[0.04] flex items-center justify-between gap-4">
+        <div className="px-5 py-3 bg-zinc-900/40 border-b border-white/[0.04] flex items-center justify-between gap-4">
           <div className="flex items-center gap-2 text-xs text-zinc-400">
             <Sparkles className="w-3.5 h-3.5 text-[#d4af37]" />
-            <span>Your day is clear. Click an open slot to schedule something.</span>
+            <span>Your day is clear. Click any open slot on the timeline to schedule a block.</span>
           </div>
           <button
             onClick={handleOpenAddEvent}
@@ -313,10 +313,10 @@ export function DailyCalendarWidget({
       )}
 
       {/* 3. Horizontal Calendar Container */}
-      <div className="overflow-x-auto select-none focus:outline-none p-4 sm:p-5" tabIndex={0} aria-label="Daily Calendar Timeline">
+      <div className="overflow-x-auto select-none focus:outline-none p-5 sm:p-6" tabIndex={0} aria-label="Daily Calendar Timeline">
         <div className="min-w-[820px] relative">
           {/* Horizontal Time Axis Header */}
-          <div className="relative h-8 border-b border-white/[0.08] bg-zinc-950/40 rounded-t-xl overflow-hidden">
+          <div className="relative h-9 border-b border-white/[0.08] bg-zinc-950/60 rounded-t-2xl overflow-hidden">
             {range.hoursList.map((slot, idx) => {
               const isFirst = idx === 0;
               const isLast = idx === range.hoursList.length - 1;
@@ -327,17 +327,17 @@ export function DailyCalendarWidget({
                   style={{ left: `${slot.offsetPercent}%` }}
                 >
                   <span
-                    className={`text-[11px] font-mono text-zinc-400 font-medium pt-1 ${
+                    className={`text-[11px] font-mono text-zinc-400 font-medium pt-1.5 ${
                       isFirst
-                        ? 'translate-x-1'
+                        ? 'translate-x-2'
                         : isLast
-                        ? '-translate-x-full pr-1'
+                        ? '-translate-x-full pr-2'
                         : '-translate-x-1/2'
                     }`}
                   >
                     {slot.label}
                   </span>
-                  <div className="w-px h-1.5 bg-white/20" />
+                  <div className="w-px h-2 bg-white/20" />
                 </div>
               );
             })}
@@ -347,13 +347,12 @@ export function DailyCalendarWidget({
           <div
             ref={trackRef}
             onClick={handleTrackClick}
-            className="relative cursor-pointer bg-zinc-950/20 hover:bg-zinc-900/10 transition-colors border-x border-b border-white/[0.08] rounded-b-xl overflow-hidden"
-            style={{ minHeight: `${Math.max(140, totalHeightPx + 24)}px` }}
+            className="relative cursor-pointer bg-zinc-950/30 hover:bg-zinc-900/20 transition-colors border-x border-b border-white/[0.08] rounded-b-2xl overflow-hidden"
+            style={{ minHeight: `${Math.max(150, totalHeightPx + 24)}px` }}
             title="Click any open time slot to create an event"
           >
             {/* Vertical Guide Lines */}
             {range.hoursList.map((slot) => {
-              // Calculate half-hour guide line
               const halfHourPercent =
                 slot.hour < range.endHour
                   ? ((slot.hour * 60 + 30 - range.startMinutes) / range.totalMinutes) * 100
@@ -384,14 +383,14 @@ export function DailyCalendarWidget({
                 style={{ left: `${currentOffsetPercent}%` }}
               >
                 {/* Top Badge with Dot and Time */}
-                <div className="absolute top-1 -translate-x-1/2 flex items-center gap-1 px-1.5 py-0.5 rounded bg-zinc-950/90 border border-[#d4af37]/50 shadow-md">
+                <div className="absolute top-1 -translate-x-1/2 flex items-center gap-1 px-2 py-0.5 rounded-full bg-zinc-950/95 border border-[#d4af37]/60 shadow-lg">
                   <div className="w-1.5 h-1.5 rounded-full bg-[#d4af37] animate-pulse" />
                   <span className="text-[10px] font-mono font-bold text-[#d4af37]">
                     {currentTimeFormatted}
                   </span>
                 </div>
                 {/* Vertical gold guide line extending through the timeline */}
-                <div className="w-[2px] h-full bg-gradient-to-b from-[#d4af37] via-[#d4af37]/80 to-[#d4af37]/30 shadow-[0_0_8px_#d4af37]" />
+                <div className="w-[2px] h-full bg-gradient-to-b from-[#d4af37] via-[#d4af37]/80 to-[#d4af37]/20 shadow-[0_0_8px_#d4af37]" />
               </div>
             )}
 
@@ -425,9 +424,9 @@ export function DailyCalendarWidget({
                       left: `calc(${pe.leftPercent}% + 2px)`,
                       width: `calc(${pe.widthPercent}% - 4px)`,
                     }}
-                    className={`absolute z-10 rounded-xl px-3 py-1.5 border backdrop-blur-md transition-all cursor-pointer shadow-md overflow-hidden flex items-center justify-between gap-2 group ${colors.bg} ${colors.border} ${colors.glow}`}
+                    className={`absolute z-10 rounded-2xl px-3.5 py-1.5 border backdrop-blur-md transition-all cursor-pointer shadow-lg overflow-hidden flex items-center justify-between gap-2 group ${colors.bg} ${colors.border} ${colors.glow}`}
                   >
-                    <div className="flex items-center gap-2 min-w-0 flex-1">
+                    <div className="flex items-center gap-2.5 min-w-0 flex-1">
                       <div className={`w-2 h-2 rounded-full shrink-0 ${colors.dot}`} />
                       <div className="min-w-0 flex-1">
                         <div className="flex items-center gap-2">
@@ -435,8 +434,8 @@ export function DailyCalendarWidget({
                             {pe.event.title}
                           </h3>
                           {(pe.event.is_external || pe.event.google_event_id) && (
-                            <span className="inline-flex items-center gap-1 text-[9px] text-blue-300 bg-blue-500/10 border border-blue-500/20 px-1.5 py-0.5 rounded shrink-0">
-                              <CalendarIcon className="w-2.5 h-2.5 text-blue-400" />
+                            <span className="inline-flex items-center gap-1 text-[9px] text-zinc-300 bg-zinc-900 border border-[#d4af37]/30 px-1.5 py-0.5 rounded shrink-0">
+                              <CalendarIcon className="w-2.5 h-2.5 text-[#d4af37]" />
                               <span className="hidden md:inline">Google</span>
                             </span>
                           )}
@@ -448,20 +447,20 @@ export function DailyCalendarWidget({
                         <div className="flex items-center gap-1.5 flex-wrap">
                           {pe.event.tasks && (
                             <span className="inline-flex items-center gap-1 text-[10px] text-zinc-300 truncate">
-                              <CheckSquare className="w-2.5 h-2.5 text-emerald-400 shrink-0" />
-                              <span className="truncate max-w-[140px]">{pe.event.tasks.title}</span>
+                              <CheckSquare className="w-2.5 h-2.5 text-[#d4af37] shrink-0" />
+                              <span className="truncate max-w-[150px]">{pe.event.tasks.title}</span>
                             </span>
                           )}
                           {pe.event.projects && !pe.event.tasks && (
                             <span className="inline-flex items-center gap-1 text-[10px] text-zinc-300 truncate">
                               <FolderKanban className="w-2.5 h-2.5 text-[#d4af37] shrink-0" />
-                              <span className="truncate max-w-[140px]">{pe.event.projects.title}</span>
+                              <span className="truncate max-w-[150px]">{pe.event.projects.title}</span>
                             </span>
                           )}
                           {pe.event.goals && !pe.event.tasks && !pe.event.projects && (
                             <span className="inline-flex items-center gap-1 text-[10px] text-zinc-300 truncate">
-                              <Target className="w-2.5 h-2.5 text-blue-400 shrink-0" />
-                              <span className="truncate max-w-[140px]">{pe.event.goals.title}</span>
+                              <Target className="w-2.5 h-2.5 text-[#d4af37] shrink-0" />
+                              <span className="truncate max-w-[150px]">{pe.event.goals.title}</span>
                             </span>
                           )}
                         </div>
@@ -495,6 +494,6 @@ export function DailyCalendarWidget({
           onEventSaved={refreshEvents}
         />
       )}
-    </GlassCard>
+    </div>
   );
 }

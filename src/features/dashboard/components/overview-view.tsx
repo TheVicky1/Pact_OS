@@ -11,8 +11,9 @@ import {
   FolderKanban,
   CheckSquare,
   Clock,
+  ArrowUpRight,
 } from 'lucide-react';
-import { GlassCard, Alert } from '@/components/ui';
+import { Alert } from '@/components/ui';
 
 // Modular Phase 4E Dashboard Components
 import { DailyFocusHero } from './daily-focus-hero';
@@ -178,101 +179,144 @@ export function OverviewView({
         </Alert>
       )}
 
-      {/* 2. Metrics Summary Strip (Real Data Only) */}
+      {/* 2. Metrics Summary Strip (Real Data Only — Luxury Dark + Warm Gold) */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
         {/* Pending Commitments */}
-        <Link href="/app/tasks" className="block focus-visible:outline-none">
-          <GlassCard
-            variant="interactive"
-            padding="md"
-            className="h-full flex flex-col justify-between"
-          >
-            <div className="flex items-center justify-between text-zinc-400 mb-3">
+        <Link href="/app/tasks" className="block focus-visible:outline-none group">
+          <div className="h-full flex flex-col justify-between rounded-3xl bg-[rgba(16,16,22,0.85)] border border-white/[0.08] p-5 sm:p-6 shadow-xl shadow-black/40 backdrop-blur-xl relative overflow-hidden transition-all duration-200 hover:border-[#d4af37]/35 hover:shadow-2xl hover:shadow-[#d4af37]/5 hover:-translate-y-0.5">
+            {/* Subtle Orbital Background Accent */}
+            <svg
+              aria-hidden="true"
+              className="absolute -top-6 -right-6 w-24 h-24 text-[#d4af37]/10 group-hover:text-[#d4af37]/20 transition-all pointer-events-none stroke-current"
+              viewBox="0 0 100 100"
+              fill="none"
+            >
+              <circle cx="80" cy="20" r="40" strokeWidth="1.5" strokeDasharray="4 4" />
+              <circle cx="80" cy="20" r="60" strokeWidth="1" opacity="0.6" />
+            </svg>
+
+            <div className="relative z-10 flex items-center justify-between text-zinc-400 mb-3">
               <span className="text-xs font-semibold uppercase tracking-wider text-zinc-400">
                 Pending Commitments
               </span>
-              <CheckSquare className="w-4 h-4 text-[#d4af37]" />
+              <div className="w-8 h-8 rounded-xl bg-zinc-900/80 border border-white/[0.08] flex items-center justify-center text-[#d4af37] group-hover:border-[#d4af37]/30 transition-colors">
+                <CheckSquare className="w-4 h-4" />
+              </div>
             </div>
-            <div>
-              <div className="text-3xl sm:text-4xl font-bold text-zinc-100 font-mono tracking-tight">
+
+            <div className="relative z-10">
+              <div className="text-3xl sm:text-4xl font-extrabold text-zinc-100 font-mono tracking-tight">
                 {pendingTasks.length}
               </div>
-              <p className="text-[11px] text-zinc-400 mt-1.5">
-                {completedTasks.length} completed
-              </p>
+              <div className="flex items-center justify-between text-xs text-zinc-400 mt-1.5">
+                <span>{completedTasks.length} completed</span>
+                <ArrowUpRight className="w-3.5 h-3.5 text-zinc-600 group-hover:text-[#d4af37] transition-colors" />
+              </div>
             </div>
-          </GlassCard>
+          </div>
         </Link>
 
         {/* Active Goals */}
-        <Link href="/app/goals" className="block focus-visible:outline-none">
-          <GlassCard
-            variant="interactive"
-            padding="md"
-            className="h-full flex flex-col justify-between"
-          >
-            <div className="flex items-center justify-between text-zinc-400 mb-3">
+        <Link href="/app/goals" className="block focus-visible:outline-none group">
+          <div className="h-full flex flex-col justify-between rounded-3xl bg-[rgba(16,16,22,0.85)] border border-white/[0.08] p-5 sm:p-6 shadow-xl shadow-black/40 backdrop-blur-xl relative overflow-hidden transition-all duration-200 hover:border-[#d4af37]/35 hover:shadow-2xl hover:shadow-[#d4af37]/5 hover:-translate-y-0.5">
+            {/* Subtle Orbital Background Accent */}
+            <svg
+              aria-hidden="true"
+              className="absolute -top-6 -right-6 w-24 h-24 text-[#d4af37]/10 group-hover:text-[#d4af37]/20 transition-all pointer-events-none stroke-current"
+              viewBox="0 0 100 100"
+              fill="none"
+            >
+              <circle cx="80" cy="20" r="40" strokeWidth="1.5" strokeDasharray="4 4" />
+              <circle cx="80" cy="20" r="60" strokeWidth="1" opacity="0.6" />
+            </svg>
+
+            <div className="relative z-10 flex items-center justify-between text-zinc-400 mb-3">
               <span className="text-xs font-semibold uppercase tracking-wider text-zinc-400">
                 Active Goals
               </span>
-              <Target className="w-4 h-4 text-[#d4af37]" />
+              <div className="w-8 h-8 rounded-xl bg-zinc-900/80 border border-white/[0.08] flex items-center justify-center text-[#d4af37] group-hover:border-[#d4af37]/30 transition-colors">
+                <Target className="w-4 h-4" />
+              </div>
             </div>
-            <div>
-              <div className="text-3xl sm:text-4xl font-bold text-zinc-100 font-mono tracking-tight">
+
+            <div className="relative z-10">
+              <div className="text-3xl sm:text-4xl font-extrabold text-zinc-100 font-mono tracking-tight">
                 {activeGoals.length}
               </div>
-              <p className="text-[11px] text-zinc-400 mt-1.5">
-                Out of {goals.length} total
-              </p>
+              <div className="flex items-center justify-between text-xs text-zinc-400 mt-1.5">
+                <span>Out of {goals.length} total</span>
+                <ArrowUpRight className="w-3.5 h-3.5 text-zinc-600 group-hover:text-[#d4af37] transition-colors" />
+              </div>
             </div>
-          </GlassCard>
+          </div>
         </Link>
 
         {/* Active Projects */}
-        <Link href="/app/projects" className="block focus-visible:outline-none">
-          <GlassCard
-            variant="interactive"
-            padding="md"
-            className="h-full flex flex-col justify-between"
-          >
-            <div className="flex items-center justify-between text-zinc-400 mb-3">
+        <Link href="/app/projects" className="block focus-visible:outline-none group">
+          <div className="h-full flex flex-col justify-between rounded-3xl bg-[rgba(16,16,22,0.85)] border border-white/[0.08] p-5 sm:p-6 shadow-xl shadow-black/40 backdrop-blur-xl relative overflow-hidden transition-all duration-200 hover:border-[#d4af37]/35 hover:shadow-2xl hover:shadow-[#d4af37]/5 hover:-translate-y-0.5">
+            {/* Subtle Orbital Background Accent */}
+            <svg
+              aria-hidden="true"
+              className="absolute -top-6 -right-6 w-24 h-24 text-[#d4af37]/10 group-hover:text-[#d4af37]/20 transition-all pointer-events-none stroke-current"
+              viewBox="0 0 100 100"
+              fill="none"
+            >
+              <circle cx="80" cy="20" r="40" strokeWidth="1.5" strokeDasharray="4 4" />
+              <circle cx="80" cy="20" r="60" strokeWidth="1" opacity="0.6" />
+            </svg>
+
+            <div className="relative z-10 flex items-center justify-between text-zinc-400 mb-3">
               <span className="text-xs font-semibold uppercase tracking-wider text-zinc-400">
                 Active Projects
               </span>
-              <FolderKanban className="w-4 h-4 text-[#d4af37]" />
+              <div className="w-8 h-8 rounded-xl bg-zinc-900/80 border border-white/[0.08] flex items-center justify-center text-[#d4af37] group-hover:border-[#d4af37]/30 transition-colors">
+                <FolderKanban className="w-4 h-4" />
+              </div>
             </div>
-            <div>
-              <div className="text-3xl sm:text-4xl font-bold text-zinc-100 font-mono tracking-tight">
+
+            <div className="relative z-10">
+              <div className="text-3xl sm:text-4xl font-extrabold text-zinc-100 font-mono tracking-tight">
                 {activeProjects.length}
               </div>
-              <p className="text-[11px] text-zinc-400 mt-1.5">
-                Out of {projects.length} total
-              </p>
+              <div className="flex items-center justify-between text-xs text-zinc-400 mt-1.5">
+                <span>Out of {projects.length} total</span>
+                <ArrowUpRight className="w-3.5 h-3.5 text-zinc-600 group-hover:text-[#d4af37] transition-colors" />
+              </div>
             </div>
-          </GlassCard>
+          </div>
         </Link>
 
         {/* Missed Commitments */}
-        <GlassCard
-          variant="default"
-          padding="md"
-          className="h-full flex flex-col justify-between"
-        >
-          <div className="flex items-center justify-between text-zinc-400 mb-3">
+        <div className="h-full flex flex-col justify-between rounded-3xl bg-[rgba(16,16,22,0.85)] border border-white/[0.08] p-5 sm:p-6 shadow-xl shadow-black/40 backdrop-blur-xl relative overflow-hidden group">
+          {/* Subtle Orbital Background Accent */}
+          <svg
+            aria-hidden="true"
+            className="absolute -top-6 -right-6 w-24 h-24 text-zinc-700/10 transition-all pointer-events-none stroke-current"
+            viewBox="0 0 100 100"
+            fill="none"
+          >
+            <circle cx="80" cy="20" r="40" strokeWidth="1.5" strokeDasharray="4 4" />
+            <circle cx="80" cy="20" r="60" strokeWidth="1" opacity="0.6" />
+          </svg>
+
+          <div className="relative z-10 flex items-center justify-between text-zinc-400 mb-3">
             <span className="text-xs font-semibold uppercase tracking-wider text-zinc-400">
               Missed Commitments
             </span>
-            <Clock className="w-4 h-4 text-zinc-500" />
+            <div className="w-8 h-8 rounded-xl bg-zinc-900/80 border border-white/[0.08] flex items-center justify-center text-zinc-500">
+              <Clock className="w-4 h-4" />
+            </div>
           </div>
-          <div>
-            <div className="text-3xl sm:text-4xl font-bold text-zinc-300 font-mono tracking-tight">
+
+          <div className="relative z-10">
+            <div className="text-3xl sm:text-4xl font-extrabold text-zinc-200 font-mono tracking-tight">
               {missedTasks.length}
             </div>
-            <p className="text-[11px] text-zinc-400 mt-1.5">
+            <p className="text-xs text-zinc-400 mt-1.5">
               Authoritative lifecycle
             </p>
           </div>
-        </GlassCard>
+        </div>
       </div>
 
       {/* 3. Command Center Featured Cards Grid (Visual North Star Trio) */}
@@ -303,7 +347,6 @@ export function OverviewView({
         goals={goals}
         tasks={tasksList}
       />
-
 
       {/* Accountability Intervention Modal */}
       {selectedIntervention && waiverUsage && (
