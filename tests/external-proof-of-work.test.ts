@@ -2,6 +2,7 @@ import assert from 'node:assert';
 import {
   evaluateProofOfWorkRule,
   isTimestampInWindow,
+  fetchGitHubActivitySummary,
 } from '../src/lib/integrations/proof-of-work';
 import { ExternalProofRuleResult } from '../src/types/domain';
 
@@ -334,8 +335,85 @@ async function runProofOfWorkTests() {
   assert.strictEqual(noAccountRes.code, 'NO_LINKED_ACCOUNT');
   console.log('✅ Missing account defense verified.');
 
+  // 8. GitHub Activity Summary & Contribution Heatmap Aggregation
+  console.log('\n8. Testing GitHub Activity Summary & Contribution Aggregation...');
+  const emptyUserRes = await fetchGitHubActivitySummary('');
+  assert.strictEqual(emptyUserRes.success, false, 'Empty username returns failure');
+
+  const summaryRes = await fetchGitHubActivitySummary('developer', undefined, 365, {
+    commits: async () => ({
+      success: true,
+      data: [
+        {
+          sha: 'sha-1',
+          authorLogin: 'developer',
+          authorDate: '2026-09-10T14:00:00Z',
+          message: 'feat: add contribution heatmap',
+          repository: 'pact/core',
+        },
+        {
+          sha: 'sha-2',
+          authorLogin: 'developer',
+          authorDate: '2026-09-10T16:30:00Z',
+          message: 'test: add heatmap unit tests',
+          repository: 'pact/core',
+        },
+        {
+          sha: 'sha-3',
+          authorLogin: 'developer',
+          authorDate: '2026-09-09T10:00:00Z',
+          message: 'docs: update integration runbook',
+          repository: 'pact/docs',
+        },
+      ],
+    }),
+    pullRequests: async () => ({
+      success: true,
+      data: [
+        {
+          id: 101,
+          number: 42,
+          title: 'Surface Real GitHub Activity',
+          authorLogin: 'developer',
+          createdAt: '2026-09-10T17:00:00Z',
+          htmlUrl: 'https://github.com/pact/core/pull/42',
+          repository: 'pact/core',
+        },
+      ],
+    }),
+  });
+
+  assert.strictEqual(summaryRes.success, true, 'Activity summary generated successfully');
+  assert.strictEqual(summaryRes.data?.username, 'developer');
+  assert.strictEqual(summaryRes.data?.totalCommits, 3, 'Total commits counted');
+  assert.strictEqual(summaryRes.data?.totalPRs, 1, 'Total PRs counted');
+  assert.strictEqual(summaryRes.data?.totalContributions, 4, 'Total contributions calculated');
+  assert.ok(
+    summaryRes.data && summaryRes.data.dailyContributions.length >= 365,
+    '365+ daily contribution buckets generated'
+  );
+
+  // Verify daily level calculation on 2026-09-10 (2 commits + 1 PR = 3 -> level 2)
+  const sep10 = summaryRes.data?.dailyContributions.find((d) => d.date === '2026-09-10');
+  assert.ok(sep10, '2026-09-10 found in daily contributions');
+  assert.strictEqual(sep10?.count, 3, '2026-09-10 count is 3');
+  assert.strictEqual(sep10?.commitCount, 2, '2026-09-10 commitCount is 2');
+  assert.strictEqual(sep10?.prCount, 1, '2026-09-10 prCount is 1');
+  assert.strictEqual(sep10?.level, 2, '2026-09-10 level is 2');
+
+  // Verify repository breakdown
+  const topRepos = summaryRes.data?.topRepositories || [];
+  assert.strictEqual(topRepos.length, 2, 'Two unique repositories identified');
+  assert.strictEqual(topRepos[0].name, 'pact/core', 'Top repo is pact/core');
+  assert.strictEqual(topRepos[0].totalCount, 3, 'pact/core has 3 contributions');
+  assert.strictEqual(topRepos[1].name, 'pact/docs', 'Second repo is pact/docs');
+
+  // Verify recent activities
+  assert.strictEqual(summaryRes.data?.recentActivities.length, 4, '4 recent activities recorded');
+  console.log('✅ GitHub Activity Summary, Streaks & Heatmap verified.');
+
   console.log('\n================================================================');
-  console.log('🎉 ALL 7 EXTERNAL PROOF-OF-WORK TEST SUITES PASSED CLEANLY');
+  console.log('🎉 ALL 8 EXTERNAL PROOF-OF-WORK TEST SUITES PASSED CLEANLY');
   console.log('================================================================\n');
 }
 

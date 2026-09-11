@@ -37,21 +37,8 @@ export default function DashboardLoading() {
         ))}
       </div>
 
-      {/* Timeline Widget Skeleton */}
+      {/* Timeline / Calendar Widget Skeleton */}
       <div className="rounded-3xl border border-white/[0.07] bg-[rgba(18,18,23,0.72)] p-6 sm:p-8 space-y-4 h-64" />
-
-      {/* Upcoming Commitments Skeleton */}
-      <div className="space-y-4">
-        <div className="w-48 h-6 rounded bg-zinc-800" />
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-          {[1, 2].map((i) => (
-            <div
-              key={i}
-              className="rounded-3xl border border-white/[0.07] bg-[rgba(18,18,23,0.72)] p-5 space-y-4 h-36"
-            />
-          ))}
-        </div>
-      </div>
     </PageContainer>
   );
 }

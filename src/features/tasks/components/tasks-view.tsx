@@ -1,13 +1,22 @@
 'use client';
 
 import React, { useMemo, useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { TaskWithParents } from '../data-access';
-import { deleteTaskAction, updateTaskAction, completeTaskAction } from '../actions';
+import {
+  deleteTaskAction,
+  updateTaskAction,
+  completeTaskAction,
+  bulkCompleteTasksAction,
+  bulkUpdateTaskStatusAction,
+  bulkDeleteTasksAction,
+  bulkRescheduleTasksAction,
+} from '../actions';
 import { TaskCard } from './task-card';
 import { TaskFormModal } from './task-form-modal';
 import { DeleteTaskModal } from './delete-task-modal';
 import { TaskPriority, TaskStatus } from '@/types/domain';
-import { Button, GlassCard, Alert } from '@/components/ui';
+import { Button, GlassCard, Alert, BulkActionToolbar } from '@/components/ui';
 import {
   Plus,
   Search,
@@ -20,8 +29,20 @@ import {
   Target,
   ShieldAlert,
   ArrowRight,
+  Archive,
+  Trash2,
+  Calendar,
+  Check,
 } from 'lucide-react';
 import Link from 'next/link';
+import { useUrlState } from '@/hooks/use-url-state';
+import { useSelection } from '@/hooks/use-selection';
+import {
+  type TasksUrlState,
+  DEFAULT_TASKS_URL_STATE,
+  parseTasksUrlState,
+  serializeTasksUrlState,
+} from '@/lib/url-state';
 
 export interface TasksViewProps {
   initialTasks: TaskWithParents[];
@@ -32,9 +53,8 @@ export interface TasksViewProps {
 
 /**
  * PACT Tasks & Commitments View
- * Phase 4F implementation compliant with Section 8 of docs/ACCOUNTABILITY_UX_SPEC.md.
- * Executive commitment cockpit with stats counters, status filters, rapid search,
- * and speed-first commitment management.
+ * Phase 6E implementation with deep-link URL state synchronization,
+ * multi-select batch operations, and authoritative bulk server actions.
  */
 export function TasksView({
   initialTasks,
@@ -42,10 +62,40 @@ export function TasksView({
   availableProjects,
   timezone = 'UTC',
 }: TasksViewProps) {
+  const router = useRouter();
   const [tasks, setTasks] = useState<TaskWithParents[]>(initialTasks);
-  const [activeTab, setActiveTab] = useState<'all' | TaskStatus>('all');
-  const [priorityFilter, setPriorityFilter] = useState<'all' | TaskPriority>('all');
-  const [searchQuery, setSearchQuery] = useState('');
+
+  // URL State Synchronization
+  const [urlState, setUrlState] = useUrlState<TasksUrlState>({
+    parse: parseTasksUrlState,
+    serialize: serializeTasksUrlState,
+    defaultValue: DEFAULT_TASKS_URL_STATE,
+    debounceMs: 250,
+  });
+
+  const activeTab = urlState.tab;
+  const priorityFilter = urlState.priority;
+  const searchQuery = urlState.q;
+
+  // Multi-Selection State
+  const {
+    selectedList,
+    count: selectedCount,
+    isSelected,
+    toggle: toggleSelect,
+    toggleAll,
+    clear: clearSelection,
+    isAllSelected,
+    isIndeterminate,
+  } = useSelection();
+
+  // Bulk operation processing state
+  const [isBulkProcessing, setIsBulkProcessing] = useState(false);
+  const [bulkProcessingLabel, setBulkProcessingLabel] = useState('');
+  const [bulkFeedback, setBulkFeedback] = useState<{
+    type: 'success' | 'warning' | 'danger';
+    message: string;
+  } | null>(null);
 
   // Modals state
   const [isFormModalOpen, setIsFormModalOpen] = useState(false);
@@ -54,6 +104,13 @@ export function TasksView({
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [taskToDelete, setTaskToDelete] = useState<TaskWithParents | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
+
+  // Bulk Delete Confirmation Modal
+  const [isBulkDeleteModalOpen, setIsBulkDeleteModalOpen] = useState(false);
+
+  // Bulk Reschedule Modal
+  const [isBulkRescheduleModalOpen, setIsBulkRescheduleModalOpen] = useState(false);
+  const [rescheduleDate, setRescheduleDate] = useState('');
 
   const [actionError, setActionError] = useState<string | null>(null);
 
@@ -115,6 +172,8 @@ export function TasksView({
     });
   }, [tasks, activeTab, priorityFilter, searchQuery]);
 
+  const visibleTaskIds = useMemo(() => filteredTasks.map((t) => t.id), [filteredTasks]);
+
   const handleOpenCreateModal = () => {
     setTaskToEdit(null);
     setIsFormModalOpen(true);
@@ -143,110 +202,290 @@ export function TasksView({
       setIsDeleteModalOpen(false);
       setTaskToDelete(null);
     } else {
-      setActionError(res.error || 'Failed to delete commitment.');
+      setActionError(res.error || 'Failed to delete task.');
     }
   };
 
   const handleStatusChange = async (taskId: string, newStatus: TaskStatus) => {
     setActionError(null);
+    if (newStatus === 'completed') {
+      const res = await completeTaskAction(taskId);
+      if (res.success && res.data) {
+        setTasks((prev) =>
+          prev.map((t) =>
+            t.id === taskId
+              ? { ...t, status: 'completed', completed_at: res.data?.completed_at || new Date().toISOString() }
+              : t
+          )
+        );
+      } else {
+        setActionError(res.error || 'Failed to complete task.');
+      }
+    } else {
+      const res = await updateTaskAction(taskId, { status: newStatus });
+      if (res.success && res.data) {
+        setTasks((prev) =>
+          prev.map((t) =>
+            t.id === taskId ? { ...t, status: newStatus, completed_at: null, missed_at: null } : t
+          )
+        );
+      } else {
+        setActionError(res.error || 'Failed to update task status.');
+      }
+    }
+  };
 
-    // Optimistic UI update
-    setTasks((prev) =>
-      prev.map((t) => (t.id === taskId ? { ...t, status: newStatus } : t))
-    );
+  // ==========================================================================
+  // Bulk Operations Handlers
+  // ==========================================================================
+  const handleBulkComplete = async () => {
+    if (selectedList.length === 0) return;
+    setIsBulkProcessing(true);
+    setBulkProcessingLabel(`Completing ${selectedList.length} commitments...`);
+    setBulkFeedback(null);
 
-    const res =
-      newStatus === 'completed'
-        ? await completeTaskAction(taskId)
-        : await updateTaskAction(taskId, { status: newStatus });
+    try {
+      const res = await bulkCompleteTasksAction({ taskIds: selectedList });
+      setIsBulkProcessing(false);
 
-    if (!res.success) {
-      setActionError(res.error || 'Failed to update commitment status.');
-      // Rollback optimistic update
-      setTasks(initialTasks);
+      if (res.success) {
+        const completedCount = res.succeeded.length;
+        const failedCount = res.failed.length;
+        const skippedCount = res.skipped.length;
+
+        if (failedCount > 0) {
+          setBulkFeedback({
+            type: 'warning',
+            message: `Completed ${completedCount} tasks. ${failedCount} could not be completed (${res.failed[0]?.reason || 'invariants not met'}).`,
+          });
+        } else {
+          setBulkFeedback({
+            type: 'success',
+            message: `Successfully completed ${completedCount} ${completedCount === 1 ? 'task' : 'tasks'}${skippedCount > 0 ? ` (${skippedCount} already completed)` : ''}.`,
+          });
+        }
+
+        const completedSet = new Set(res.succeeded);
+        setTasks((prev) =>
+          prev.map((t) => (completedSet.has(t.id) ? { ...t, status: 'completed', completed_at: new Date().toISOString() } : t))
+        );
+        clearSelection();
+        router.refresh();
+      } else {
+        setBulkFeedback({
+          type: 'danger',
+          message: res.error || 'Failed to complete selected tasks.',
+        });
+      }
+    } catch {
+      setIsBulkProcessing(false);
+      setBulkFeedback({
+        type: 'danger',
+        message: 'An unexpected error occurred during bulk completion.',
+      });
+    }
+  };
+
+  const handleBulkArchive = async () => {
+    if (selectedList.length === 0) return;
+    setIsBulkProcessing(true);
+    setBulkProcessingLabel(`Archiving ${selectedList.length} commitments...`);
+    setBulkFeedback(null);
+
+    try {
+      const res = await bulkUpdateTaskStatusAction({ taskIds: selectedList, status: 'archived' });
+      setIsBulkProcessing(false);
+
+      if (res.success) {
+        const archivedCount = res.succeeded.length;
+        const archivedSet = new Set(res.succeeded);
+
+        setTasks((prev) =>
+          prev.map((t) => (archivedSet.has(t.id) ? { ...t, status: 'archived' } : t))
+        );
+        clearSelection();
+        setBulkFeedback({
+          type: 'success',
+          message: `Archived ${archivedCount} ${archivedCount === 1 ? 'task' : 'tasks'}.`,
+        });
+        router.refresh();
+      } else {
+        setBulkFeedback({
+          type: 'danger',
+          message: res.error || 'Failed to archive selected tasks.',
+        });
+      }
+    } catch {
+      setIsBulkProcessing(false);
+      setBulkFeedback({
+        type: 'danger',
+        message: 'An unexpected error occurred during bulk archiving.',
+      });
+    }
+  };
+
+  const handleBulkConfirmDelete = async () => {
+    if (selectedList.length === 0) return;
+    setIsBulkProcessing(true);
+    setBulkProcessingLabel(`Deleting ${selectedList.length} commitments...`);
+    setBulkFeedback(null);
+
+    try {
+      const res = await bulkDeleteTasksAction({ taskIds: selectedList });
+      setIsBulkProcessing(false);
+      setIsBulkDeleteModalOpen(false);
+
+      if (res.success) {
+        const deletedSet = new Set(res.succeeded);
+        setTasks((prev) => prev.filter((t) => !deletedSet.has(t.id)));
+        clearSelection();
+        setBulkFeedback({
+          type: 'success',
+          message: `Deleted ${res.succeeded.length} ${res.succeeded.length === 1 ? 'task' : 'tasks'}.`,
+        });
+        router.refresh();
+      } else {
+        setBulkFeedback({
+          type: 'danger',
+          message: res.error || 'Failed to delete selected tasks.',
+        });
+      }
+    } catch {
+      setIsBulkProcessing(false);
+      setIsBulkDeleteModalOpen(false);
+      setBulkFeedback({
+        type: 'danger',
+        message: 'An unexpected error occurred during bulk deletion.',
+      });
+    }
+  };
+
+  const handleBulkConfirmReschedule = async () => {
+    if (selectedList.length === 0 || !rescheduleDate) return;
+    setIsBulkProcessing(true);
+    setBulkProcessingLabel(`Rescheduling ${selectedList.length} commitments...`);
+    setBulkFeedback(null);
+
+    try {
+      // Build ISO UTC timestamp from date input
+      const isoDeadline = new Date(`${rescheduleDate}T23:59:59Z`).toISOString();
+      const res = await bulkRescheduleTasksAction({
+        taskIds: selectedList,
+        deadline_at: isoDeadline,
+      });
+
+      setIsBulkProcessing(false);
+      setIsBulkRescheduleModalOpen(false);
+
+      if (res.success) {
+        const rescheduledSet = new Set(res.succeeded);
+        setTasks((prev) =>
+          prev.map((t) => (rescheduledSet.has(t.id) ? { ...t, deadline_at: isoDeadline } : t))
+        );
+        clearSelection();
+        setBulkFeedback({
+          type: 'success',
+          message: `Rescheduled ${res.succeeded.length} ${res.succeeded.length === 1 ? 'task' : 'tasks'} to ${rescheduleDate}.`,
+        });
+        router.refresh();
+      } else {
+        setBulkFeedback({
+          type: 'danger',
+          message: res.error || 'Failed to reschedule selected tasks.',
+        });
+      }
+    } catch {
+      setIsBulkProcessing(false);
+      setIsBulkRescheduleModalOpen(false);
+      setBulkFeedback({
+        type: 'danger',
+        message: 'An unexpected error occurred during bulk rescheduling.',
+      });
     }
   };
 
   return (
-    <div className="space-y-6 sm:space-y-8">
-      {/* 1. Executive Header & Stats Ribbon */}
-      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 border-b border-white/[0.08] pb-6">
+    <div className="space-y-6 pb-20">
+      {/* 1. Header & Actions */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-xl bg-zinc-900/80 border border-white/[0.08] flex items-center justify-center text-[#d4af37]">
-              <CheckSquare className="w-4 h-4" />
-            </div>
-            <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-zinc-100">
-              Tasks & Commitments
-            </h1>
-          </div>
-          <p className="text-xs sm:text-sm text-zinc-400 mt-1.5 leading-relaxed">
-            Turn intent into disciplined daily action. Every commitment represents a binding pact with yourself.
+          <h1 className="text-2xl font-bold tracking-tight text-white flex items-center gap-2.5">
+            <span>Commitments & Tasks</span>
+            <span className="text-xs font-mono px-2 py-0.5 rounded-full bg-zinc-800 text-zinc-400 border border-zinc-700">
+              {counts.all} active
+            </span>
+          </h1>
+          <p className="text-sm text-zinc-400 mt-1">
+            Deterministic execution cockpit. Every task is a binding commitment tied to your goals.
           </p>
         </div>
 
-        <div className="flex items-center gap-3 shrink-0">
+        <div className="flex items-center gap-3">
           <Button
             variant="primary"
-            size="md"
             icon={<Plus className="w-4 h-4 text-zinc-950" />}
             onClick={handleOpenCreateModal}
           >
-            New Commitment
+            Create Task
           </Button>
         </div>
       </div>
 
-      {/* Action Error Banner */}
+      {/* Action / Error Alerts */}
       {actionError && (
         <Alert
           variant="danger"
-          title="Action Rejected"
+          title="Operation Failed"
           onDismiss={() => setActionError(null)}
         >
           {actionError}
         </Alert>
       )}
 
-      {/* Accountability Intervention Notice */}
-      {activatedAccountabilityCount > 0 && (
-        <div
-          role="alert"
-          className="relative overflow-hidden rounded-2xl border border-amber-500/30 bg-gradient-to-r from-amber-950/40 via-[#16141a]/80 to-[#121217]/90 p-4 shadow-xl backdrop-blur-xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3"
+      {bulkFeedback && (
+        <Alert
+          variant={bulkFeedback.type}
+          title={bulkFeedback.type === 'success' ? 'Batch Operation Succeeded' : 'Batch Operation Notice'}
+          onDismiss={() => setBulkFeedback(null)}
         >
+          {bulkFeedback.message}
+        </Alert>
+      )}
+
+      {/* Activated Accountability Warning Banner */}
+      {activatedAccountabilityCount > 0 && (
+        <div className="p-4 rounded-2xl bg-red-950/20 border border-red-500/30 flex items-center justify-between gap-4 backdrop-blur-md">
           <div className="flex items-center gap-3">
-            <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-amber-500/15 border border-amber-500/30 text-[#d4af37]">
-              <ShieldAlert className="h-4 w-4" />
+            <div className="w-9 h-9 rounded-xl bg-red-500/20 border border-red-500/40 flex items-center justify-center text-red-400 shrink-0">
+              <ShieldAlert className="w-5 h-5" />
             </div>
             <div>
-              <p className="text-xs font-semibold text-zinc-100">
-                {activatedAccountabilityCount === 1
-                  ? '1 commitment has reached its deadline with active accountability.'
-                  : `${activatedAccountabilityCount} commitments have reached their deadlines with active accountability.`}
-              </p>
-              <p className="text-[11px] text-zinc-400">
-                Resolve through verified execution or disciplined weekly waiver.
+              <h4 className="text-sm font-semibold text-red-200">
+                {activatedAccountabilityCount} Activated Accountability Consequence
+                {activatedAccountabilityCount > 1 ? 's' : ''}
+              </h4>
+              <p className="text-xs text-red-300/80 mt-0.5">
+                Deadlines were missed and real-world stakes have been activated. Settle consequences in the Accountability ledger.
               </p>
             </div>
           </div>
           <Link href="/app/accountability">
-            <Button variant="primary" size="sm" className="whitespace-nowrap shadow-md shadow-[#d4af37]/10">
-              <span>Go to Accountability</span>
-              <ArrowRight className="h-3.5 w-3.5 ml-1.5" />
+            <Button variant="destructive" size="sm" icon={<ArrowRight className="w-3.5 h-3.5" />}>
+              Open Ledger
             </Button>
           </Link>
         </div>
       )}
 
-      {/* 2. Overview Stats Quick Bar */}
+      {/* 2. Executive Metric Counters */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
         <GlassCard variant="default" padding="sm" className="space-y-1">
           <div className="flex items-center justify-between text-zinc-400">
-            <span className="text-[11px] font-medium uppercase tracking-wider">Active</span>
-            <Clock className="w-3.5 h-3.5 text-[#d4af37]" />
+            <span className="text-[11px] font-medium uppercase tracking-wider">Pending</span>
+            <Clock className="w-3.5 h-3.5 text-zinc-400" />
           </div>
           <p className="text-xl sm:text-2xl font-bold font-mono text-zinc-100">
-            {counts.pending + counts.in_progress}
+            {counts.pending}
           </p>
         </GlassCard>
 
@@ -299,7 +538,7 @@ export function TasksView({
                 <button
                   key={tab.id}
                   type="button"
-                  onClick={() => setActiveTab(tab.id as 'all' | TaskStatus)}
+                  onClick={() => setUrlState((prev) => ({ ...prev, tab: tab.id as 'all' | TaskStatus }))}
                   className={`flex items-center gap-1.5 rounded-xl px-3 py-1.5 text-xs font-semibold whitespace-nowrap transition-all duration-150 cursor-pointer ${
                     isActive
                       ? 'bg-[#d4af37] text-zinc-950 shadow-md shadow-[#d4af37]/10'
@@ -321,14 +560,19 @@ export function TasksView({
             })}
           </div>
 
-          {/* Priority & Search */}
+          {/* Priority & Search & Multi-Select Toolbar */}
           <div className="flex items-center gap-2.5 flex-wrap">
             {/* Priority Filter */}
             <div className="relative flex items-center">
               <Filter className="w-3.5 h-3.5 text-zinc-400 absolute left-3 pointer-events-none" />
               <select
                 value={priorityFilter}
-                onChange={(e) => setPriorityFilter(e.target.value as TaskPriority | 'all')}
+                onChange={(e) =>
+                  setUrlState((prev) => ({
+                    ...prev,
+                    priority: e.target.value as TaskPriority | 'all',
+                  }))
+                }
                 className="rounded-xl border border-white/[0.08] bg-[rgba(18,18,23,0.85)] pl-8 pr-4 py-1.5 text-xs text-zinc-200 focus:border-[#d4af37] focus:outline-none transition-all cursor-pointer"
               >
                 <option value="all">All Priorities</option>
@@ -340,19 +584,24 @@ export function TasksView({
             </div>
 
             {/* Search Input */}
-            <div className="relative flex-1 min-w-[200px] sm:w-64">
+            <div className="relative flex-1 min-w-[180px] sm:w-60">
               <Search className="w-3.5 h-3.5 text-zinc-500 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
               <input
                 type="text"
                 value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
+                onChange={(e) =>
+                  setUrlState((prev) => ({
+                    ...prev,
+                    q: e.target.value,
+                  }))
+                }
                 placeholder="Search commitments..."
                 className="w-full rounded-xl border border-white/[0.08] bg-zinc-950/80 pl-9 pr-8 py-1.5 text-xs text-zinc-200 placeholder-zinc-500 focus:border-[#d4af37] focus:outline-none transition-all"
               />
               {searchQuery && (
                 <button
                   type="button"
-                  onClick={() => setSearchQuery('')}
+                  onClick={() => setUrlState((prev) => ({ ...prev, q: '' }))}
                   className="absolute right-2.5 top-1/2 -translate-y-1/2 text-zinc-400 hover:text-zinc-200 p-0.5 rounded cursor-pointer"
                   aria-label="Clear search"
                 >
@@ -360,6 +609,36 @@ export function TasksView({
                 </button>
               )}
             </div>
+
+            {/* Select All Visible Checkbox Button */}
+            {visibleTaskIds.length > 0 && (
+              <button
+                type="button"
+                onClick={() => toggleAll(visibleTaskIds)}
+                title={isAllSelected(visibleTaskIds) ? 'Deselect all visible' : 'Select all visible'}
+                className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl border text-xs font-medium transition-colors cursor-pointer ${
+                  isAllSelected(visibleTaskIds)
+                    ? 'bg-amber-400/15 border-amber-400/40 text-amber-300'
+                    : isIndeterminate(visibleTaskIds)
+                    ? 'bg-amber-400/10 border-amber-400/30 text-amber-300'
+                    : 'bg-zinc-900/80 border-white/[0.08] text-zinc-400 hover:text-zinc-200'
+                }`}
+              >
+                <div
+                  className={`w-3.5 h-3.5 rounded border flex items-center justify-center ${
+                    isAllSelected(visibleTaskIds)
+                      ? 'bg-amber-400 border-amber-400 text-zinc-950'
+                      : isIndeterminate(visibleTaskIds)
+                      ? 'bg-amber-400/50 border-amber-400 text-zinc-950'
+                      : 'border-white/30 bg-zinc-800'
+                  }`}
+                >
+                  {isAllSelected(visibleTaskIds) && <Check className="w-2.5 h-2.5 stroke-[3]" />}
+                  {isIndeterminate(visibleTaskIds) && <span className="w-1.5 h-1.5 bg-zinc-950 rounded-sm" />}
+                </div>
+                <span className="hidden sm:inline">Select All</span>
+              </button>
+            )}
           </div>
         </div>
       </div>
@@ -375,6 +654,8 @@ export function TasksView({
               onDelete={handleOpenDeleteModal}
               onStatusChange={handleStatusChange}
               timezone={timezone}
+              isSelected={isSelected(task.id)}
+              onToggleSelect={toggleSelect}
             />
           ))}
         </div>
@@ -402,9 +683,9 @@ export function TasksView({
                 variant="secondary"
                 size="sm"
                 onClick={() => {
-                  setSearchQuery('');
-                  setPriorityFilter('all');
-                  setActiveTab('all');
+                  setUrlState({
+                    ...DEFAULT_TASKS_URL_STATE,
+                  });
                 }}
               >
                 Reset Filters
@@ -423,7 +704,56 @@ export function TasksView({
         </GlassCard>
       )}
 
-      {/* 5. Modals */}
+      {/* 5. Floating Glassmorphic Bulk Action Toolbar */}
+      <BulkActionToolbar
+        selectedCount={selectedCount}
+        onClear={clearSelection}
+        isProcessing={isBulkProcessing}
+        processingLabel={bulkProcessingLabel}
+      >
+        <Button
+          variant="primary"
+          size="sm"
+          icon={<Check className="w-3.5 h-3.5 text-zinc-950" />}
+          onClick={handleBulkComplete}
+        >
+          Complete
+        </Button>
+
+        <Button
+          variant="secondary"
+          size="sm"
+          icon={<Calendar className="w-3.5 h-3.5" />}
+          onClick={() => {
+            const tomorrow = new Date();
+            tomorrow.setDate(tomorrow.getDate() + 1);
+            setRescheduleDate(tomorrow.toISOString().slice(0, 10));
+            setIsBulkRescheduleModalOpen(true);
+          }}
+        >
+          Reschedule
+        </Button>
+
+        <Button
+          variant="secondary"
+          size="sm"
+          icon={<Archive className="w-3.5 h-3.5" />}
+          onClick={handleBulkArchive}
+        >
+          Archive
+        </Button>
+
+        <Button
+          variant="destructive"
+          size="sm"
+          icon={<Trash2 className="w-3.5 h-3.5" />}
+          onClick={() => setIsBulkDeleteModalOpen(true)}
+        >
+          Delete
+        </Button>
+      </BulkActionToolbar>
+
+      {/* 6. Modals */}
       <TaskFormModal
         isOpen={isFormModalOpen}
         onClose={() => setIsFormModalOpen(false)}
@@ -441,6 +771,65 @@ export function TasksView({
         taskTitle={taskToDelete?.title || ''}
         isDeleting={isDeleting}
       />
+
+      {/* Bulk Delete Modal */}
+      <DeleteTaskModal
+        isOpen={isBulkDeleteModalOpen}
+        onClose={() => setIsBulkDeleteModalOpen(false)}
+        onConfirm={handleBulkConfirmDelete}
+        taskTitle={`${selectedCount} selected tasks`}
+        isDeleting={isBulkProcessing}
+      />
+
+      {/* Bulk Reschedule Modal */}
+      {isBulkRescheduleModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-200">
+          <GlassCard variant="default" padding="md" className="w-full max-w-sm space-y-4 text-white">
+            <div className="flex items-center justify-between">
+              <h3 className="text-base font-semibold">Reschedule {selectedCount} Tasks</h3>
+              <button
+                type="button"
+                onClick={() => setIsBulkRescheduleModalOpen(false)}
+                className="p-1 text-zinc-400 hover:text-white rounded"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+
+            <p className="text-xs text-zinc-400">
+              Select a new deadline date for all {selectedCount} selected tasks.
+            </p>
+
+            <div>
+              <label className="block text-xs font-medium text-zinc-300 mb-1">New Deadline Date</label>
+              <input
+                type="date"
+                value={rescheduleDate}
+                onChange={(e) => setRescheduleDate(e.target.value)}
+                className="w-full px-3 py-2 rounded-xl bg-zinc-900 border border-white/10 text-xs text-white focus:outline-none focus:border-amber-400"
+              />
+            </div>
+
+            <div className="flex items-center justify-end gap-2 pt-2">
+              <Button
+                variant="secondary"
+                size="sm"
+                onClick={() => setIsBulkRescheduleModalOpen(false)}
+              >
+                Cancel
+              </Button>
+              <Button
+                variant="primary"
+                size="sm"
+                onClick={handleBulkConfirmReschedule}
+                disabled={!rescheduleDate || isBulkProcessing}
+              >
+                Apply Deadline
+              </Button>
+            </div>
+          </GlassCard>
+        </div>
+      )}
     </div>
   );
 }

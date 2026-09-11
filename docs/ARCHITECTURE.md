@@ -1,128 +1,93 @@
 # PACT — Technical Architecture & System Design
 
-## 1. Proposed V0 Technology Stack [PROPOSED]
-
-The architecture is designed around type safety, server-authoritative logic, and high visual performance:
-
-| Layer | Technology | Status | Rationale |
-|---|---|---|---|
-| **Frontend Framework** | Next.js (App Router, React 19 / Server Components) | [PROPOSED] | Hybrid SSR/CSR, optimized bundle size, clean server/client boundaries. |
-| **Language** | TypeScript (Strict Mode) | [CONFIRMED] | End-to-end type safety across domain models, API routes, and UI components. |
-| **Styling** | Tailwind CSS v4 + Vanilla CSS Variables | [PROPOSED] | High-performance utility styling with custom design tokens. |
-| **Animations** | Framer Motion | [PROPOSED] | Smooth micro-interactions, layout transitions, and glassmorphism reveals. |
-| **Database** | PostgreSQL via Supabase | [PROPOSED] | Relational integrity, native Row-Level Security (RLS), JSONB support. |
-| **Authentication** | Supabase Auth | [PROPOSED] | Secure JWT session management, server-side token validation. |
-| **Validation** | Zod | [CONFIRMED] | Centralized, schema-driven input validation at server and client boundaries. |
-| **Deployment** | Vercel | [PROPOSED] | Optimized for Next.js server actions, edge routing, and automated CI/CD. |
+This document details the production architecture, technology stack, security boundaries, and execution models of the PACT Personal Operating System.
 
 ---
 
-## 2. Directory & Modular Architecture Structure [PROPOSED]
+## 1. Production Technology Stack
 
-PACT adopts a **feature-oriented architecture** with strict boundaries to ensure modularity as the project grows:
+| Layer | Technology | Status | Implementation Details |
+| :--- | :--- | :--- | :--- |
+| **Frontend Framework** | Next.js 16 (App Router) + React 19 | `IMPLEMENTED` | Hybrid Server/Client Components, Next.js Server Actions for mutations. |
+| **Language** | TypeScript (Strict Mode) | `IMPLEMENTED` | End-to-end type safety across domain models, actions, and UI contracts. |
+| **Styling** | Tailwind CSS v4 + Vanilla CSS Tokens | `IMPLEMENTED` | High-performance CSS engine with glassmorphism design tokens and gold accents. |
+| **Animations** | Framer Motion | `IMPLEMENTED` | GPU-accelerated transitions, modal reveals, and ambient OS core lighting. |
+| **Database & Auth** | PostgreSQL 15+ via Supabase | `IMPLEMENTED` | Row Level Security (RLS) on all tables, auth cookie sessions via `@supabase/ssr`. |
+| **Validation** | Zod (v4) | `IMPLEMENTED` | Schema validation on 100% of server actions and API route inputs. |
+| **Background Cron** | Vercel Cron & Supabase `pg_cron` | `IMPLEMENTED` | 1-minute automated deadline sweeping with timing-safe Bearer authentication. |
+| **Deployment** | Vercel / Cloud Edge | `IMPLEMENTED` | Edge caching, Serverless functions, and automated build pipelines. |
+
+---
+
+## 2. Directory & Modular Architecture
 
 ```
 src/
-├── app/                  # Next.js App Router (pages, layouts, API routes)
-│   ├── (auth)/           # Authentication layout group
-│   ├── (dashboard)/      # Main application dashboard layout group
-│   └── api/              # Secure server API endpoints / webhooks
-├── components/           # Core shared UI primitives (buttons, inputs, modals, cards)
-├── features/             # Isolated feature domain modules
-│   ├── auth/             # Authentication logic, hooks, components
-│   ├── dashboard/        # Overview widgets, metrics summary
-│   ├── tasks/            # Commitment management, task lifecycle logic
-│   ├── planner/          # Time-blocking grid, daily schedule
-│   ├── projects/         # Project containers, grouping logic
-│   ├── goals/            # Goal tracking, progress aggregation
-│   ├── accountability/   # Consequence security boundaries & lifecycle
-│   ├── finance/          # Expense tracking, category suggestions
-│   ├── analytics/        # Performance trends, follow-through ratios
-│   ├── integrations/     # GitHub, Codeforces, LeetCode sync connectors
-│   └── notifications/    # Alert triggers and delivery logic
-├── hooks/                # Global custom React hooks
-├── lib/                  # Shared utilities (supabase client, Zod schemas, date utils)
-├── services/             # Server-side business logic and data access repositories
-├── types/                # TypeScript interface and type definitions
-└── styles/               # Global CSS, design tokens, typography
+├── app/                              # Next.js App Router
+│   ├── (auth)/                       # Auth callbacks & redirects
+│   ├── (dashboard)/app/              # 14 Core OS modules
+│   │   ├── accountability/           # Consequence & Commitment management
+│   │   ├── analytics/                # Completion rates, streaks, velocity
+│   │   ├── calendar/                 # Bi-directional Google Calendar sync & schedule
+│   │   ├── finance/                  # Integer-cents transactions, recurring, budgets
+│   │   ├── focus/                    # Deep work sessions, timer engine, focus stats
+│   │   ├── goals/                    # Strategic high-level objectives
+│   │   ├── habits/                   # Recurring habits & daily routine templates
+│   │   ├── onboarding/               # Multi-step personalized user onboarding
+│   │   ├── planner/                  # Day/Week/Month time-blocking planner
+│   │   ├── projects/                 # Scoped initiatives & deliverables
+│   │   ├── review/                   # Structured Weekly Review & Sunday Planning Ritual
+│   │   ├── settings/                 # Profile, notification channels, data export
+│   │   └── tasks/                    # Task management & deadline tracking
+│   ├── api/                          # Route Handlers (/api/cron/sweep-deadlines, /api/user/export)
+│   ├── globals.css                   # Tailwind v4 theme, animations & design tokens
+│   ├── layout.tsx                    # Root HTML layout & font declarations
+│   └── page.tsx                      # Single-screen unified landing & auth entry
+├── components/                       # Shared glassmorphic UI components & icons
+├── features/                         # Feature-specific UI components and view models
+├── hooks/                            # Custom React hooks (useUrlState, useSelection)
+├── lib/                              # Pure domain engines, math, and business logic
+│   ├── accountability/               # Commitment state machines & consequence execution
+│   ├── analytics/                    # Velocity scoring & completion rate math
+│   ├── command-center/               # Registry, fuzzy ranking & entity search
+│   ├── export/                       # Data portability & secret sanitization
+│   ├── finance/                      # Integer-cents arithmetic & budget evaluation
+│   ├── focus/                        # Deep work timer calculations & sound synthesis
+│   ├── habits/                       # Habit recurrence loops & streak engines
+│   ├── integrations/                 # External proof connectors (GitHub, LeetCode, Codeforces)
+│   ├── notifications/                # Multi-channel notification dispatcher
+│   ├── supabase/                     # Server, client, and admin Supabase instances
+│   ├── url-state/                    # Deterministic URL parsers & serializers
+│   ├── validations/                  # Strict Zod domain validation schemas
+│   └── weekly-review/                # Metric aggregation & weekly boundary calculations
+└── types/                            # Domain TypeScript contracts
 ```
 
 ---
 
-## 3. Server vs. Client Boundary Rules [CONFIRMED]
+## 3. Server vs. Client Boundary Architecture
 
-To prevent security vulnerabilities and excessive client bundle sizes:
-1. **Server Components by Default**: Data fetching, DB queries, and security checks occur in React Server Components or Server Actions.
-2. **Client Components Only When Needed**: Interactive state, client event listeners, and animations (`"use client"`) are strictly isolated to leaf components.
-3. **No Direct DB Access from Client**: All database operations pass through Supabase client libraries enforced by RLS policies or server-side API routes.
-
----
-
-## 4. Timezone Strategy & Handling [CONFIRMED]
-
-Timezone is a **first-class domain concern** in PACT. Because PACT handles deadlines, daily time-blocking, recurring schedules, and midnight boundaries:
-
-### Core Rules
-1. **UTC Storage**: All timestamps (`created_at`, `updated_at`, `deadline_at`, `completed_at`) are stored in PostgreSQL as `TIMESTAMPTZ` (UTC).
-2. **Explicit User Timezone**: User timezone preference (e.g., `America/New_York`, `Asia/Kolkata`) is stored in `users/profiles`.
-3. **Server-Side Evaluation**: Deadline breaches and day boundary calculations are performed using the user's explicit timezone on trusted server infrastructure.
-4. **No Direct Browser Clock Trust**: Client-side `new Date()` is NEVER trusted for deadline decisions or lifecycle timestamping.
+1. **Server Actions for Mutations**: All mutations (create/update/delete) are performed through Next.js Server Actions with strict Zod validation.
+2. **Server Identity Verification**: Actions derive user identity solely from `supabase.auth.getUser()`. Client-submitted `user_id` fields are rejected.
+3. **Client Leaves**: Interactive controls, timer clocks, and drag-and-drop canvases are encapsulated in `"use client"` leaf components.
+4. **URL as State**: Filters, tabs, and dates are serialized directly to URL search params using `useUrlState`, enabling deep-linking and browser back/forward fidelity.
 
 ---
 
-## 5. Atomicity & State Operations [CONFIRMED]
+## 4. Timezone & Temporal Architecture
 
-Operations modifying security-sensitive state must execute atomically:
-- Task completion verification vs. deadline evaluation.
-- Consequence state activation.
-- Expense category assignments & transaction entries.
-- Account integration sync updates.
+Because PACT governs deadlines, day-level planning, and midnight habit resets:
 
-Database transactions or Supabase RPC stored procedures will be used to prevent partial state corruption.
-
----
-
-## 6. Authentication Architecture & OAuth Broker Flow [CONFIRMED]
-
-PACT employs **Supabase Auth** as the authoritative identity and session manager across all authentication channels:
-
-### Supported Authentication Methods
-1. **Email / Password**: Registration and login validated with Zod (`signUpSchema`, `signInSchema`) and authenticated via `supabase.auth.signUp()` and `supabase.auth.signInWithPassword()`.
-2. **Google OAuth 2.0**: Initiated via browser client `supabase.auth.signInWithOAuth({ provider: 'google' })`, brokered through Supabase Auth, and completed via server-side PKCE code exchange at `/auth/callback/route.ts`.
-
-### Unified Identity Model
-Regardless of authentication method (Email/Password or Google OAuth), identity converges into a single authenticated user model:
-- `auth.getUser()` verifies JWT and cookie session server-side.
-- PostgreSQL trigger `on_auth_user_created` automatically inserts a corresponding `public.profiles` row upon `auth.users` creation.
-- RLS policies filter data strictly by `auth.uid() = user_id`.
+1. **Storage in UTC**: All timestamps in PostgreSQL are stored as `TIMESTAMPTZ` (UTC).
+2. **Profile Timezone Anchor**: The user's IANA timezone (e.g. `America/New_York`, `Asia/Kolkata`) is fetched on login and stored in `profiles.timezone`.
+3. **Deterministic Math**: Calculations in `lib/time.ts` convert UTC timestamps to the user's localized day boundaries before calculating streaks or daily timeblocks.
+4. **No Direct Browser Clock Trust**: Critical status transitions (e.g., `mark_task_missed`) are evaluated server-side against authoritative server timestamps.
 
 ---
 
-## 7. Accountability & Consequence Engine Architecture [CONFIRMED]
+## 5. Security Architecture & Threat Boundary
 
-PACT introduces the **Accountability & Consequence Engine** as a foundational domain capability while preserving low-friction task creation (`Title` + `Deadline`).
-
-### Core Architectural Principles
-1. **Low-Friction Task Creation**: Users configure default accountability preferences once. Normal task creation (`Title` + `Deadline`) automatically inherits the preferred default consequence unless explicitly overridden or disabled.
-2. **User Ownership & Storage Isolation**: All consequence definitions, user preferences, and task commitments are owned strictly by the authenticated user (`user_id = auth.uid()`). Cross-user exposure and shared consequences are prohibited.
-3. **Commitment Snapshot Immutability**: When accountability is assigned to a task, a dedicated `task_accountability_commitments` record is created containing an immutable JSONB snapshot (`consequence_snapshot`) of the consequence (`title`, `consequence_type`, `action_statement`, `description`). Subsequent edits to reusable `consequence_definitions` or task metadata updates do NOT alter the committed snapshot. Direct client UPDATE or DELETE of commitment snapshots is blocked by database trigger `protect_accountability_commitment_immutability()`.
-4. **Deterministic Multi-Default Resolution**: Users can maintain multiple enabled default consequence definitions. The system resolves defaults deterministically by ordering enabled defaults by `(priority DESC, created_at ASC, id ASC)`. Explicit preference `default_consequence_id` serves as a primary override when active.
-5. **Integration with Authoritative Task Lifecycle**: The Accountability Engine acts as a reactive subscriber to task state transitions. When a task reaches a terminal state (`completed` or `missed`), the engine executes consequences only for missed tasks.
-6. **"PACT Never Assumes Fulfillment"**: An activated consequence cannot be resolved by client-side status flags or forged timestamps. An activated consequence remains activated until authoritatively fulfilled through a server-verified session, task completion, written reflection, or an authorized waiver. Direct client updates to `fulfilled` or `waived` are blocked by database triggers.
-7. **Explicit Verification Semantics**:
-   - **Timed Session (`timed_session`)**: Objectively verified via server-authoritative time (`now() - started_at >= required_duration_seconds`). Multi-tab, page-reload, and network-reconnect resilient. Requires valid activity evidence note (1–5000 chars).
-   - **Written Reflection (`written_reflection`)**: Enforces reflective accountability with strict validation: minimum 20 characters, maximum 5000 characters, whitespace-trimmed, and non-empty. Stored with full audit metadata.
-   - **Declaration (`declaration`)**: Explicitly modeled as a self-attestation (`is_self_declaration = true`, `verified_objectively = false`). PACT never misrepresents declarations as objective verification. Requires non-empty attestation statement (1–1000 chars).
-   - **Task-Completion Verification (`task_completion`)**: Verifies that another real PACT task owned by the user reaches authoritative `completed` status. Circular self-reference (a task fulfilling its own accountability) and cross-user task references are strictly prohibited.
-   - **Bounded Custom Verification (`custom`)**: Structured declarative rules without dynamic code, SQL execution, external webhooks, or unvetted automation.
-8. **Timezone-Aware Waiver System with Weekly Quotas**: Users may deliberately waive an activated consequence up to 3 times per calendar week (ISO week: Monday–Sunday) calculated using their configured IANA timezone (`profiles.timezone`). Quotas are enforced atomically via row locks on `profiles` and table-level triggers on `accountability_waivers`. The final user-facing confirmation word is intentionally deferred; the server validates internal token `CONFIRM_WAIVER_V1`.
-9. **Activated Consequence Persistence**: Activated consequences never auto-expire, auto-waive, or forgive after X days. An untouched activated consequence remains outstanding indefinitely until explicitly resolved via fulfillment or waiver.
-10. **State Machine Invariants**: Commitments follow strict, irreversible transitions: `committed → activated → (fulfilled | waived)`. Direct jumps (`committed → fulfilled`, `committed → waived`), transitions from terminal states (`fulfilled → *`, `waived → *`), and race conditions are blocked by database trigger `trg_enforce_commitment_status_transitions`.
-
-### Absolute Backend Safety Boundaries [CONFIRMED]
-The PACT backend enforces hard safety boundaries at the architecture level:
-- **NO Arbitrary Code Execution**: Consequence definitions and snapshots represent declarative instructions, never executable scripts, shell commands, or dynamic code blocks.
-- **NO External System Control**: PACT does not issue automated shell commands, external API destructive calls, or control un-vetted external systems.
-- **NO Automatic Financial Transfers**: Financial consequences are user-declared accountability records, NOT automated bank or payment processor transfers.
-- **NO Dangerous or Coercive Actions**: Physical harm, illegal acts, or coercive mechanics targeting third parties are strictly prohibited.
-- **NO Invasive Surveillance**: Verification validates process completion and server-authoritative elapsed time without device surveillance, camera monitoring, or invasive tracking.
+1. **Row Level Security (RLS)**: 100% of database tables enforce `auth.uid() = user_id`.
+2. **Consequence Confidentiality**: Unactivated consequence payloads remain encrypted/masked in the database to prevent client inspection prior to a deadline breach.
+3. **Data Portability**: Full account export (`/api/user/export`) generates sanitized RFC 4180 archives, stripping OAuth tokens and password hashes before compression.
+4. **Zero Float Financial Arithmetic**: Currency is handled strictly in integer cents (`amount_cents`) to eliminate IEEE 754 precision errors.

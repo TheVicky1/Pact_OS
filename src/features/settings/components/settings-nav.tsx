@@ -1,14 +1,16 @@
 'use client';
 
 import React from 'react';
-import { User, ShieldAlert, Key, Blocks, Bell } from 'lucide-react';
+import { User, ShieldAlert, Key, Blocks, Bell, Database, BookOpen } from 'lucide-react';
 
 export type SettingsTab =
   | 'profile'
+  | 'review'
   | 'accountability'
   | 'security'
   | 'integrations'
-  | 'notifications';
+  | 'notifications'
+  | 'data';
 
 export interface SettingsNavProps {
   activeTab: SettingsTab;
@@ -28,6 +30,12 @@ const TABS: TabItem[] = [
     label: 'Profile & Timezone',
     icon: User,
     description: 'Name, avatar & authoritative IANA timezone',
+  },
+  {
+    id: 'review',
+    label: 'Weekly Review Ritual',
+    icon: BookOpen,
+    description: 'Sunday review, outcome audit & next week plan',
   },
   {
     id: 'accountability',
@@ -53,7 +61,14 @@ const TABS: TabItem[] = [
     icon: Bell,
     description: 'Daily planning & deadline alert preferences',
   },
+  {
+    id: 'data',
+    label: 'Data & Privacy',
+    icon: Database,
+    description: 'Export structured JSON and CSV archives',
+  },
 ];
+
 
 export function SettingsNav({ activeTab, onSelectTab }: SettingsNavProps) {
   return (

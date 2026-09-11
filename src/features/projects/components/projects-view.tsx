@@ -9,6 +9,13 @@ import { ProjectFormModal } from './project-form-modal';
 import { DeleteProjectModal } from './delete-project-modal';
 import { archiveProjectAction } from '@/features/projects/actions';
 import { Plus, FolderKanban, Search, Layers } from 'lucide-react';
+import { useUrlState } from '@/hooks/use-url-state';
+import {
+  ProjectsUrlState,
+  DEFAULT_PROJECTS_URL_STATE,
+  parseProjectsUrlState,
+  serializeProjectsUrlState,
+} from '@/lib/url-state';
 
 interface ProjectsViewProps {
   initialProjects: ProjectWithGoal[];
@@ -28,9 +35,16 @@ const FILTER_TABS: { value: ProjectFilter; label: string }[] = [
 
 export function ProjectsView({ initialProjects, availableGoals, error }: ProjectsViewProps) {
   const router = useRouter();
-  const [searchQuery, setSearchQuery] = useState('');
-  const [activeFilter, setActiveFilter] = useState<ProjectFilter>('active');
-  const [goalFilter, setGoalFilter] = useState<string>('all');
+  const [urlState, setUrlState] = useUrlState<ProjectsUrlState>({
+    parse: parseProjectsUrlState,
+    serialize: serializeProjectsUrlState,
+    defaultValue: DEFAULT_PROJECTS_URL_STATE,
+    debounceMs: 250,
+  });
+
+  const activeFilter = urlState.status;
+  const goalFilter = urlState.goal;
+  const searchQuery = urlState.q;
 
   // Modal states
   const [isFormOpen, setIsFormOpen] = useState(false);
@@ -164,7 +178,7 @@ export function ProjectsView({ initialProjects, availableGoals, error }: Project
                 key={value}
                 role="tab"
                 aria-selected={isActive}
-                onClick={() => setActiveFilter(value)}
+                onClick={() => setUrlState((prev) => ({ ...prev, status: value }))}
                 className={`px-3 py-1.5 rounded-lg font-medium transition-colors cursor-pointer whitespace-nowrap ${
                   isActive
                     ? 'bg-zinc-800 text-zinc-100 border border-zinc-700/80 shadow-sm'
@@ -187,7 +201,7 @@ export function ProjectsView({ initialProjects, availableGoals, error }: Project
           {/* Goal association filter */}
           <select
             value={goalFilter}
-            onChange={(e) => setGoalFilter(e.target.value)}
+            onChange={(e) => setUrlState((prev) => ({ ...prev, goal: e.target.value }))}
             aria-label="Filter by goal association"
             className="bg-zinc-950/80 border border-zinc-800 rounded-xl px-3 py-1.5 text-xs text-zinc-100 focus:border-[#d4af37] focus:outline-none transition-colors cursor-pointer"
           >
@@ -209,7 +223,7 @@ export function ProjectsView({ initialProjects, availableGoals, error }: Project
             <input
               type="search"
               value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
+              onChange={(e) => setUrlState((prev) => ({ ...prev, q: e.target.value }))}
               placeholder="Search projects..."
               aria-label="Search projects"
               className="w-full bg-zinc-950/80 border border-zinc-800 rounded-xl pl-9 pr-3 py-1.5 text-xs text-zinc-100 placeholder-zinc-500 focus:border-[#d4af37] focus:outline-none transition-colors"
@@ -237,8 +251,9 @@ export function ProjectsView({ initialProjects, availableGoals, error }: Project
           searchQuery={searchQuery.trim()}
           onCreateProject={handleOpenCreate}
           onClearFilters={() => {
-            setSearchQuery('');
-            setGoalFilter('all');
+            setUrlState({
+              ...DEFAULT_PROJECTS_URL_STATE,
+            });
           }}
         />
       )}

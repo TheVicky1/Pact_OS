@@ -1,6 +1,6 @@
 import { createClient } from '@/lib/supabase/server';
 import { VerificationType, VerificationConfig, Task } from '@/types/domain';
-import { isValidIanaTimezone, utcToLocal, getIsoWeekAndYear } from '@/lib/time';
+import { isValidIanaTimezone, getIsoWeekAndYear } from '@/lib/time';
 
 export { getIsoWeekAndYear };
 
@@ -162,12 +162,13 @@ export async function getWeeklyWaiverUsage(timezone: string): Promise<WeeklyWaiv
   const localDateUtc = new Date(Date.UTC(localYear, localMonth, localDay));
   const currentDayOfWeek = (localDateUtc.getUTCDay() + 6) % 7; // Monday = 0, Sunday = 6
   const daysUntilNextMonday = 7 - currentDayOfWeek;
-  const nextMondayDate = new Date(Date.UTC(localYear, localMonth, localDay + daysUntilNextMonday));
-  const resetFormatted = utcToLocal(nextMondayDate.toISOString(), safeTz, {
+  const nextMondayDate = new Date(Date.UTC(localYear, localMonth, localDay + daysUntilNextMonday, 12, 0, 0));
+  const resetFormatted = new Intl.DateTimeFormat('en-US', {
+    timeZone: 'UTC',
     weekday: 'short',
     month: 'short',
     day: 'numeric',
-  });
+  }).format(nextMondayDate);
 
   if (!user) {
     return {

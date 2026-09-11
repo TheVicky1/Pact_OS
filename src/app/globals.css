@@ -170,6 +170,7 @@ button:focus-visible,
 
 /* Reduced Motion Override */
 @media (prefers-reduced-motion: reduce) {
+
   *,
   ::before,
   ::after {

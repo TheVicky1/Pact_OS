@@ -118,10 +118,10 @@ export function FinanceHeader({
           type="button"
           onClick={onAddIncome}
           disabled={isLoading}
-          className="px-3 py-2 rounded-xl bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 text-xs font-medium flex items-center gap-1.5 transition-colors"
+          className="px-3 py-2 rounded-xl bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 text-xs font-medium flex items-center gap-1.5 transition-colors cursor-pointer"
         >
           <Plus className="w-3.5 h-3.5" />
-          <span>+ Income</span>
+          <span>Income</span>
         </button>
 
         {/* Add Expense Primary Button */}
@@ -129,10 +129,10 @@ export function FinanceHeader({
           type="button"
           onClick={onAddExpense}
           disabled={isLoading}
-          className="px-4 py-2 rounded-xl bg-gradient-to-r from-amber-400 to-amber-500 text-zinc-950 hover:from-amber-300 hover:to-amber-400 text-xs font-bold flex items-center gap-1.5 shadow-lg shadow-amber-500/10 transition-all active:scale-95"
+          className="px-4 py-2 rounded-xl bg-gradient-to-r from-amber-400 to-amber-500 text-zinc-950 hover:from-amber-300 hover:to-amber-400 text-xs font-bold flex items-center gap-1.5 shadow-lg shadow-amber-500/10 transition-all active:scale-95 cursor-pointer"
         >
           <Plus className="w-4 h-4" />
-          <span>+ Expense</span>
+          <span>Expense</span>
         </button>
       </div>
     </header>

@@ -11,6 +11,13 @@ import {
 } from '@/lib/accountability/service';
 import { revalidatePath } from 'next/cache';
 import { z } from 'zod';
+import {
+  bulkCompleteTasksSchema,
+  bulkUpdateTaskStatusSchema,
+  bulkRescheduleTasksSchema,
+  bulkDeleteTasksSchema,
+  BulkOperationResult,
+} from '@/lib/validations/bulk';
 
 export interface TaskActionResult<T = Task> {
   success: boolean;
@@ -403,3 +410,424 @@ export async function deleteTaskAction(taskId: string): Promise<TaskActionResult
     return { success: false, error: 'An unexpected error occurred while deleting the task.' };
   }
 }
+
+/**
+ * Phase 6E: Authoritative bulk task completion action.
+ * Evaluates each task against domain lifecycle invariants and invokes complete_task RPC.
+ * Returns deterministic outcome report with partial failure accounting.
+ */
+export async function bulkCompleteTasksAction(
+  payload: unknown
+): Promise<BulkOperationResult> {
+  try {
+    const supabase = await createClient();
+    const { data: { user }, error: authError } = await supabase.auth.getUser();
+
+    if (authError || !user) {
+      return {
+        success: false,
+        total: 0,
+        succeeded: [],
+        failed: [],
+        skipped: [],
+        error: 'Authentication required for bulk operations.',
+      };
+    }
+
+    const validation = bulkCompleteTasksSchema.safeParse(payload);
+    if (!validation.success) {
+      return {
+        success: false,
+        total: 0,
+        succeeded: [],
+        failed: [],
+        skipped: [],
+        error: validation.error.issues[0]?.message || 'Invalid task selection.',
+      };
+    }
+
+    const { taskIds } = validation.data;
+    const succeeded: string[] = [];
+    const failed: Array<{ id: string; reason: string }> = [];
+    const skipped: string[] = [];
+
+    // Process each task authoritatively
+    for (const taskId of taskIds) {
+      try {
+        const { data: rpcRes, error } = await supabase.rpc('complete_task', { p_task_id: taskId });
+        if (error) {
+          failed.push({ id: taskId, reason: error.message || 'Database error' });
+          continue;
+        }
+
+        const res = rpcRes as { success: boolean; code?: string; error?: string };
+        if (res.success) {
+          succeeded.push(taskId);
+        } else {
+          if (res.code === 'ALREADY_COMPLETED') {
+            skipped.push(taskId);
+          } else {
+            failed.push({ id: taskId, reason: res.error || 'Failed to complete task' });
+          }
+        }
+      } catch (err: unknown) {
+        const msg = err instanceof Error ? err.message : 'Unknown execution error';
+        failed.push({ id: taskId, reason: msg });
+      }
+    }
+
+    if (succeeded.length > 0) {
+      revalidatePath('/app/tasks');
+      revalidatePath('/app/projects');
+      revalidatePath('/app/goals');
+      revalidatePath('/app/review');
+      revalidatePath('/app');
+    }
+
+    return {
+      success: succeeded.length > 0 || (skipped.length > 0 && failed.length === 0),
+      total: taskIds.length,
+      succeeded,
+      failed,
+      skipped,
+    };
+  } catch (err: unknown) {
+    const msg = err instanceof Error ? err.message : 'Unexpected bulk operation failure.';
+    return {
+      success: false,
+      total: 0,
+      succeeded: [],
+      failed: [],
+      skipped: [],
+      error: msg,
+    };
+  }
+}
+
+/**
+ * Phase 6E: Authoritative bulk task status update (pending | in_progress | archived).
+ */
+export async function bulkUpdateTaskStatusAction(
+  payload: unknown
+): Promise<BulkOperationResult> {
+  try {
+    const supabase = await createClient();
+    const { data: { user }, error: authError } = await supabase.auth.getUser();
+
+    if (authError || !user) {
+      return {
+        success: false,
+        total: 0,
+        succeeded: [],
+        failed: [],
+        skipped: [],
+        error: 'Authentication required for bulk operations.',
+      };
+    }
+
+    const validation = bulkUpdateTaskStatusSchema.safeParse(payload);
+    if (!validation.success) {
+      return {
+        success: false,
+        total: 0,
+        succeeded: [],
+        failed: [],
+        skipped: [],
+        error: validation.error.issues[0]?.message || 'Invalid bulk status update request.',
+      };
+    }
+
+    const { taskIds, status } = validation.data;
+
+    // Fetch existing tasks owned by user to enforce lifecycle rules
+    const { data: existingTasks, error: fetchError } = await supabase
+      .from('tasks')
+      .select('id, status')
+      .in('id', taskIds)
+      .eq('user_id', user.id);
+
+    if (fetchError || !existingTasks) {
+      return {
+        success: false,
+        total: taskIds.length,
+        succeeded: [],
+        failed: taskIds.map((id) => ({ id, reason: 'Failed to query task status' })),
+        skipped: [],
+        error: 'Database query failed.',
+      };
+    }
+
+    const foundIds = new Set(existingTasks.map((t) => t.id));
+    const failed: Array<{ id: string; reason: string }> = [];
+    const eligibleIds: string[] = [];
+
+    for (const taskId of taskIds) {
+      if (!foundIds.has(taskId)) {
+        failed.push({ id: taskId, reason: 'Task not found or access denied' });
+        continue;
+      }
+
+      const task = existingTasks.find((t) => t.id === taskId)!;
+      if (task.status === 'completed' || task.status === 'missed') {
+        failed.push({
+          id: taskId,
+          reason: `Cannot transition a '${task.status}' task via bulk status update.`,
+        });
+        continue;
+      }
+
+      eligibleIds.push(taskId);
+    }
+
+    if (eligibleIds.length > 0) {
+      const { error: updateError } = await supabase
+        .from('tasks')
+        .update({ status, updated_at: new Date().toISOString() })
+        .in('id', eligibleIds)
+        .eq('user_id', user.id);
+
+      if (updateError) {
+        return {
+          success: false,
+          total: taskIds.length,
+          succeeded: [],
+          failed: taskIds.map((id) => ({ id, reason: updateError.message })),
+          skipped: [],
+          error: 'Bulk update execution failed.',
+        };
+      }
+
+      revalidatePath('/app/tasks');
+      revalidatePath('/app/projects');
+      revalidatePath('/app/goals');
+      revalidatePath('/app');
+    }
+
+    return {
+      success: eligibleIds.length > 0,
+      total: taskIds.length,
+      succeeded: eligibleIds,
+      failed,
+      skipped: [],
+    };
+  } catch (err: unknown) {
+    const msg = err instanceof Error ? err.message : 'Unexpected bulk status update error.';
+    return {
+      success: false,
+      total: 0,
+      succeeded: [],
+      failed: [],
+      skipped: [],
+      error: msg,
+    };
+  }
+}
+
+/**
+ * Phase 6E: Authoritative bulk task rescheduling action.
+ */
+export async function bulkRescheduleTasksAction(
+  payload: unknown
+): Promise<BulkOperationResult> {
+  try {
+    const supabase = await createClient();
+    const { data: { user }, error: authError } = await supabase.auth.getUser();
+
+    if (authError || !user) {
+      return {
+        success: false,
+        total: 0,
+        succeeded: [],
+        failed: [],
+        skipped: [],
+        error: 'Authentication required for bulk operations.',
+      };
+    }
+
+    const validation = bulkRescheduleTasksSchema.safeParse(payload);
+    if (!validation.success) {
+      return {
+        success: false,
+        total: 0,
+        succeeded: [],
+        failed: [],
+        skipped: [],
+        error: validation.error.issues[0]?.message || 'Invalid bulk reschedule request.',
+      };
+    }
+
+    const { taskIds, deadline_at } = validation.data;
+
+    // Fetch existing tasks owned by user
+    const { data: existingTasks, error: fetchError } = await supabase
+      .from('tasks')
+      .select('id, status')
+      .in('id', taskIds)
+      .eq('user_id', user.id);
+
+    if (fetchError || !existingTasks) {
+      return {
+        success: false,
+        total: taskIds.length,
+        succeeded: [],
+        failed: taskIds.map((id) => ({ id, reason: 'Failed to query task status' })),
+        skipped: [],
+        error: 'Database query failed.',
+      };
+    }
+
+    const foundIds = new Set(existingTasks.map((t) => t.id));
+    const failed: Array<{ id: string; reason: string }> = [];
+    const eligibleIds: string[] = [];
+
+    for (const taskId of taskIds) {
+      if (!foundIds.has(taskId)) {
+        failed.push({ id: taskId, reason: 'Task not found or access denied' });
+        continue;
+      }
+
+      const task = existingTasks.find((t) => t.id === taskId)!;
+      if (task.status === 'completed' || task.status === 'missed') {
+        failed.push({
+          id: taskId,
+          reason: `Cannot reschedule a '${task.status}' task.`,
+        });
+        continue;
+      }
+
+      eligibleIds.push(taskId);
+    }
+
+    if (eligibleIds.length > 0) {
+      const { error: updateError } = await supabase
+        .from('tasks')
+        .update({ deadline_at, updated_at: new Date().toISOString() })
+        .in('id', eligibleIds)
+        .eq('user_id', user.id);
+
+      if (updateError) {
+        return {
+          success: false,
+          total: taskIds.length,
+          succeeded: [],
+          failed: taskIds.map((id) => ({ id, reason: updateError.message })),
+          skipped: [],
+          error: 'Bulk reschedule execution failed.',
+        };
+      }
+
+      revalidatePath('/app/tasks');
+      revalidatePath('/app/calendar');
+      revalidatePath('/app');
+    }
+
+    return {
+      success: eligibleIds.length > 0,
+      total: taskIds.length,
+      succeeded: eligibleIds,
+      failed,
+      skipped: [],
+    };
+  } catch (err: unknown) {
+    const msg = err instanceof Error ? err.message : 'Unexpected bulk reschedule error.';
+    return {
+      success: false,
+      total: 0,
+      succeeded: [],
+      failed: [],
+      skipped: [],
+      error: msg,
+    };
+  }
+}
+
+/**
+ * Phase 6E: Authoritative bulk task deletion action.
+ */
+export async function bulkDeleteTasksAction(
+  payload: unknown
+): Promise<BulkOperationResult> {
+  try {
+    const supabase = await createClient();
+    const { data: { user }, error: authError } = await supabase.auth.getUser();
+
+    if (authError || !user) {
+      return {
+        success: false,
+        total: 0,
+        succeeded: [],
+        failed: [],
+        skipped: [],
+        error: 'Authentication required for bulk operations.',
+      };
+    }
+
+    const validation = bulkDeleteTasksSchema.safeParse(payload);
+    if (!validation.success) {
+      return {
+        success: false,
+        total: 0,
+        succeeded: [],
+        failed: [],
+        skipped: [],
+        error: validation.error.issues[0]?.message || 'Invalid bulk delete request.',
+      };
+    }
+
+    const { taskIds } = validation.data;
+
+    const { data: deletedRows, error: deleteError } = await supabase
+      .from('tasks')
+      .delete()
+      .in('id', taskIds)
+      .eq('user_id', user.id)
+      .select('id');
+
+    if (deleteError) {
+      return {
+        success: false,
+        total: taskIds.length,
+        succeeded: [],
+        failed: taskIds.map((id) => ({ id, reason: deleteError.message })),
+        skipped: [],
+        error: 'Bulk delete execution failed.',
+      };
+    }
+
+    const deletedIds = (deletedRows || []).map((r) => r.id);
+    const deletedSet = new Set(deletedIds);
+    const failed: Array<{ id: string; reason: string }> = [];
+
+    for (const taskId of taskIds) {
+      if (!deletedSet.has(taskId)) {
+        failed.push({ id: taskId, reason: 'Task not found or access denied' });
+      }
+    }
+
+    if (deletedIds.length > 0) {
+      revalidatePath('/app/tasks');
+      revalidatePath('/app/projects');
+      revalidatePath('/app/goals');
+      revalidatePath('/app');
+    }
+
+    return {
+      success: deletedIds.length > 0,
+      total: taskIds.length,
+      succeeded: deletedIds,
+      failed,
+      skipped: [],
+    };
+  } catch (err: unknown) {
+    const msg = err instanceof Error ? err.message : 'Unexpected bulk delete error.';
+    return {
+      success: false,
+      total: 0,
+      succeeded: [],
+      failed: [],
+      skipped: [],
+      error: msg,
+    };
+  }
+}
+

@@ -1,104 +1,77 @@
 # PACT — Integration Architecture & External Connectors
 
-## 1. Optional Integrations Framework [CONFIRMED]
-
-PACT supports optional sync integration connectors for developer and problem-solving platforms:
-1. **GitHub**: Repository commits, pull request submissions, issue resolutions, contribution activity.
-2. **Codeforces**: Problem submission history, contest rating updates, solved difficulty metrics.
-3. **LeetCode**: Daily streak completion, total solved counts, problem category breakdown.
+This document specifies the architecture, credential lifecycle, rate-limiting, and verification strategies for PACT's external integrations.
 
 ---
 
-## 2. Core Architectural Guarantees [CONFIRMED]
+## 1. Supported Integration Connectors
 
-### Fully Modular & Optional
-- Connectors are strictly decoupled from core application state.
-- A user may connect **0, 1, 2, or all 3 integrations**.
-- The core PACT application must execute seamlessly without any active integration.
-
----
-
-## 3. Credential & Token Security Specification [PROPOSED]
-
-> [!CAUTION]
-> Third-party access tokens and OAuth secrets must **NEVER** be stored in plaintext in the database or exposed to the client frontend.
-
-### Security Lifecycle Breakdown [PROPOSED]
-
-| Lifecycle Dimension | Specification & Boundary Rules | Status |
-|---|---|---|
-| **Token Lifecycle** | Issued during OAuth consent flow; stored encrypted; used during background sync; revoked on disconnect. | [PROPOSED] |
-| **Storage Location** | `integration_accounts` table in PostgreSQL (Column: `encrypted_access_token`). | [PROPOSED] |
-| **Access Boundary** | Inaccessible via client API queries; readable only by server-side background sync jobs. | [CONFIRMED] |
-| **Encryption Boundary** | Encrypted prior to DB insert; decrypted in memory exclusively within serverless sync handlers. | [PROPOSED] |
-| **Key Management** | Key management strategy (e.g., Cloud KMS or environment-level master key) is marked [PROPOSED]. | [PROPOSED] |
-| **Key Rotation** | Key rotation protocol is marked [UNDECIDED] and will be formalized prior to integration build. | [UNDECIDED] |
-| **Revocation & Disconnect** | Server calls provider OAuth revocation API, then hard-deletes token row from DB. | [CONFIRMED] |
-| **Frontend Exposure** | Zero token bytes returned to client UI (UI receives connection status boolean only). | [CONFIRMED] |
-| **Logging Restrictions** | Tokens, secret keys, and authorization headers are strictly redacted from application logs. | [CONFIRMED] |
+| Connector | Status | Integration Type | Use Case & Scope |
+| :--- | :--- | :--- | :--- |
+| **Google Calendar** | `IMPLEMENTED` | OAuth 2.0 (Bi-directional) | Synchronize time-blocks, import external calendar events, detect schedule conflicts, and push task blocks. |
+| **GitHub** | `IMPLEMENTED` | REST API / Webhooks | Verify real commit activity, merged pull requests, and contribution counts for developer commitments. |
+| **LeetCode** | `IMPLEMENTED` | Public GraphQL API | Verify daily problem completions and submission counts without requiring user password storage. |
+| **Codeforces** | `IMPLEMENTED` | Official REST API | Verify contest participation, rating changes, and problem submissions against public handles. |
 
 ---
 
-## 4. Connector Interface Contract [PROPOSED]
+## 2. Core Integration Guarantees
 
-```typescript
-export interface IntegrationConnector<TData> {
-  id: 'github' | 'codeforces' | 'leetcode';
-  
-  connect(credentials: IntegrationAuthPayload): Promise<ConnectionResult>;
-  disconnect(userId: string, retentionPolicy: RetentionPolicy): Promise<void>;
-  
-  fetchLatestProgress(userId: string): Promise<TData>;
-  normalizeProgressData(rawData: TData): StandardizedProgressSignal;
-  
-  handleRateLimit(error: unknown): RateLimitBackoffStrategy;
-}
+1. **Fully Optional**: Users may connect 0, 1, or all integrations. The core operating system functionality is 100% independent of external connectors.
+2. **Fail-Safe Third-Party Fault Tolerance**: If an external provider API suffers an outage, network timeout, or HTTP 429/500 response, PACT marks the proof evaluation as `RETRY_PENDING`. **User commitments are never failed due to third-party outages.**
+3. **Zero Plaintext Token Exposure**: OAuth refresh and access tokens are encrypted before storage and strictly isolated to server-side background handlers. Client UIs receive only connection state booleans.
+
+---
+
+## 3. Connector Deep Dives
+
+### 3.1 Google Calendar Connector
+- **OAuth Scope**: `https://www.googleapis.com/auth/calendar.events`
+- **Token Storage**: `user_integrations` table with automated token refresh when access tokens expire.
+- **Bi-directional Sync**:
+  - PACT time-blocked tasks push to the user's selected PACT secondary calendar.
+  - External events pull into the `/app/planner` view to highlight scheduling conflicts.
+
+### 3.2 GitHub Proof Connector
+- **Proof Types**: `commit_count`, `merged_pr`, `repository_push`.
+- **Evaluation Mechanism**: Queries the GitHub REST API (`/users/{username}/events`) for events timestamped within the commitment start and deadline window.
+- **Validation**: Verifies author email or username against the verified user identity.
+
+### 3.3 LeetCode Proof Connector
+- **Proof Types**: `daily_problem_completion`, `submission_count`.
+- **Evaluation Mechanism**: Uses LeetCode's public GraphQL endpoint (`https://leetcode.com/graphql`) querying `recentSubmissionList` and `userProfileUserQuestionProgress`.
+- **Zero Credentials**: Requires only the public LeetCode username; no passwords or session cookies are requested.
+
+### 3.4 Codeforces Proof Connector
+- **Proof Types**: `problem_verdict_ok`, `contest_participation`.
+- **Evaluation Mechanism**: Queries official Codeforces API (`https://codeforces.com/api/user.status?handle={handle}`).
+- **Zero Credentials**: Validated against public user handle and submission timestamps.
+
+---
+
+## 4. Google OAuth Authentication Broker Flow
+
+PACT integrates Google OAuth for seamless single-sign-on using **Supabase Auth as the OAuth broker**:
+
 ```
-
----
-
-## 5. Sync Schedules & Disconnect Behavior [PROPOSED]
-
-### Synchronization Strategy
-- Executed asynchronously via background cron functions. Default interval: **Every 6 hours** (or manual refresh with 15-minute cooldown).
-
-### Disconnect Behavior
-1. Token revocation request sent to provider API.
-2. Credentials purged from `integration_accounts`.
-3. Historical metrics retained or purged based on user preference ("Keep metrics" vs. "Purge all").
-
----
-
-## 6. Google OAuth Provider Integration [CONFIRMED]
-
-### Overview
-PACT integrates Google OAuth as an authentication method using **Supabase Auth as the OAuth broker/provider**.
-
-### Provider Configuration Matrix
-- **Google Cloud Project Name**: `PACT`
-- **Google Cloud Project ID**: `pact-507905`
-- **OAuth Client Type**: Web application
-- **Local Authorized JavaScript Origin**: `http://localhost:3000`
-- **Google → Supabase Authorized Redirect URI**: `https://xptrzmftirlzhbmkdqvy.supabase.co/auth/v1/callback`
-- **Supabase → PACT Application Redirect URI**: `http://localhost:3000/auth/callback`
-
-### Architectural Sequence
-```
-PACT App Client UI (/login or /register)
-  ↓ [signInWithOAuth({ provider: 'google', redirectTo: '/auth/callback' })]
+PACT Client (/ -> UnifiedAuthCard)
+  │  1. Initiate OAuth (`supabase.auth.signInWithOAuth({ provider: 'google' })`)
+  ▼
 Supabase Auth Broker (https://xptrzmftirlzhbmkdqvy.supabase.co)
-  ↓ [Google OAuth 2.0 Authorization Endpoint]
-Google Cloud Authentication & Consent Screen
-  ↓ [Authorization Code Callback]
+  │  2. Redirect to Google Consent Screen
+  ▼
+Google Cloud Auth (Client ID configured in Supabase)
+  │  3. User consents -> Google returns code to Supabase
+  ▼
 Supabase Auth Server (/auth/v1/callback)
-  ↓ [PKCE Exchange & Session JWT Creation]
-PACT App Callback Route (/auth/callback?code=...)
-  ↓ [exchangeCodeForSession(code) & validateSafeRedirect()]
-Authenticated PACT Session Cookie -> Redirect to /app
+  │  4. PKCE code exchange -> Issues PACT JWT session
+  ▼
+PACT Callback Route (/auth/callback?code=...)
+  │  5. Validates redirect safety -> Sets HttpOnly session cookies
+  ▼
+Redirects Authenticated User to /app
 ```
 
-### Security Isolation Rules
-1. **Client Secret Isolation**: Google Client ID and Secret are configured exclusively inside the Supabase Dashboard. No Client Secret is present in frontend code or environment variables.
-2. **Open Redirect Protection**: `validateSafeRedirect()` validates the destination path, rejecting external or malformed URLs and enforcing relative path boundaries (`/app` or `/profile`).
-3. **Database Profile Convergence**: First-time Google OAuth sign-ins trigger `public.handle_new_user()` in PostgreSQL, populating `public.profiles` automatically without client-side privilege escalation.
-
+### Security & Sanitization
+- **Open Redirect Protection**: `validateSafeRedirect()` rejects external URLs, allowing only internal relative routes (`/app`, `/app/settings`).
+- **Profile Convergence**: Database trigger `on_auth_user_created` automatically creates the corresponding `public.profiles` row upon first login.

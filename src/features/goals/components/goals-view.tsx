@@ -8,6 +8,13 @@ import { GoalFormModal } from './goal-form-modal';
 import { DeleteGoalModal } from './delete-goal-modal';
 import { archiveGoalAction, updateGoalAction } from '@/features/goals/actions';
 import { Plus, Target, Search, Compass } from 'lucide-react';
+import { useUrlState } from '@/hooks/use-url-state';
+import {
+  GoalsUrlState,
+  DEFAULT_GOALS_URL_STATE,
+  parseGoalsUrlState,
+  serializeGoalsUrlState,
+} from '@/lib/url-state';
 
 interface GoalsViewProps {
   initialGoals: Goal[];
@@ -25,8 +32,15 @@ const FILTER_TABS: { value: GoalFilter; label: string }[] = [
 
 export function GoalsView({ initialGoals, error }: GoalsViewProps) {
   const router = useRouter();
-  const [searchQuery, setSearchQuery] = useState('');
-  const [activeFilter, setActiveFilter] = useState<GoalFilter>('active');
+  const [urlState, setUrlState] = useUrlState<GoalsUrlState>({
+    parse: parseGoalsUrlState,
+    serialize: serializeGoalsUrlState,
+    defaultValue: DEFAULT_GOALS_URL_STATE,
+    debounceMs: 250,
+  });
+
+  const activeFilter = urlState.status;
+  const searchQuery = urlState.q;
 
   // Modal states
   const [isFormOpen, setIsFormOpen] = useState(false);
@@ -151,7 +165,7 @@ export function GoalsView({ initialGoals, error }: GoalsViewProps) {
                 key={value}
                 role="tab"
                 aria-selected={isActive}
-                onClick={() => setActiveFilter(value)}
+                onClick={() => setUrlState((prev) => ({ ...prev, status: value }))}
                 className={`px-3 py-1.5 rounded-lg font-medium transition-colors cursor-pointer whitespace-nowrap focus-visible:outline-2 focus-visible:outline-[#d4af37] ${
                   isActive
                     ? 'bg-zinc-800 text-zinc-100 border border-zinc-700/80 shadow-sm'
@@ -178,7 +192,7 @@ export function GoalsView({ initialGoals, error }: GoalsViewProps) {
           <input
             type="search"
             value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
+            onChange={(e) => setUrlState((prev) => ({ ...prev, q: e.target.value }))}
             placeholder="Search goals..."
             aria-label="Search goals"
             className="w-full bg-zinc-950/80 border border-zinc-800 rounded-xl pl-9 pr-3 py-1.5 text-xs text-zinc-100 placeholder-zinc-500 focus:border-[#d4af37] focus:outline-none transition-colors"
@@ -207,8 +221,8 @@ export function GoalsView({ initialGoals, error }: GoalsViewProps) {
           filterLabel={activeFilter}
           searchQuery={searchQuery.trim()}
           onCreateGoal={handleOpenCreate}
-          onClearSearch={() => setSearchQuery('')}
-          onClearFilter={() => setActiveFilter('all')}
+          onClearSearch={() => setUrlState((prev) => ({ ...prev, q: '' }))}
+          onClearFilter={() => setUrlState((prev) => ({ ...prev, status: 'all' }))}
         />
       )}
 

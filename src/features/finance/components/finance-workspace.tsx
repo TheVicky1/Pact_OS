@@ -329,6 +329,7 @@ export function FinanceWorkspace({
         onAddTransaction={handleOpenAddTransaction}
         onEditTransaction={handleOpenEditTransaction}
         onDeleteTransaction={handleDeleteTransaction}
+        onRefresh={() => refreshMonthData(data.monthStr)}
         isDeletingId={deletingId}
       />
 

@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect, useCallback } from 'react';
+import Link from 'next/link';
 import {
   IntegrationStatus,
   IntegrationProviderId,
@@ -20,6 +21,7 @@ import {
   RefreshCw,
   AlertCircle,
   Unlink,
+  ArrowUpRight,
 } from 'lucide-react';
 import {
   getGoogleCalendarStatusAction,
@@ -452,7 +454,17 @@ export function IntegrationsSettingsCard({
                 </div>
               </div>
 
-              <div className="self-end sm:self-center shrink-0">
+              <div className="flex items-center gap-2 self-end sm:self-center shrink-0">
+                {isConnected && (item.id === 'github' || item.id === 'leetcode' || item.id === 'codeforces') && (
+                  <Link
+                    href={`/app/analytics?platform=${item.id}#proof-of-work`}
+                    className="px-3.5 py-2 rounded-xl text-xs font-semibold bg-[#d4af37]/10 hover:bg-[#d4af37]/20 text-[#e2c056] border border-[#d4af37]/30 transition-all flex items-center gap-1.5"
+                  >
+                    <span>View Activity</span>
+                    <ArrowUpRight className="w-3.5 h-3.5" />
+                  </Link>
+                )}
+
                 <button
                   type="button"
                   onClick={() => handleOpenProviderModal(item.id)}

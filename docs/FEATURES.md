@@ -1,62 +1,68 @@
-# PACT — Core Feature Inventory
+# PACT — Canonical Feature Inventory & Module Reference
 
-## 1. Core V0 Product Areas [CONFIRMED]
-
-The initial V0 product architecture encompasses 12 primary feature modules:
-
-| # | Core Area | Status | V0 Scope Description |
-|---|---|---|---|
-| 1 | **Authentication** | [CONFIRMED] | Secure identity management via Supabase Auth (Email/Password, OAuth optional). Strict server-enforceable session security. |
-| 2 | **Dashboard / Overview** | [CONFIRMED] | High-level situational command center providing daily context, progress metrics, timeline, and priority commitments. |
-| 3 | **Tasks / Commitments** | [CONFIRMED] | Authoritative commitment tracking with status, priority, scheduling, project/goal associations, and server-controlled lifecycle timestamps. |
-| 4 | **Planner** | [CONFIRMED] | Time-blocking and daily execution planner aligning tasks with specific time windows and timezone-aware daily boundaries. |
-| 5 | **Projects** | [CONFIRMED] | Organizational containers grouping related tasks and commitments toward specific deliverables or outcomes. |
-| 6 | **Goals** | [CONFIRMED] | Higher-level intentional targets containing or relating to multiple projects and measuring overall long-term direction. |
-| 7 | **Accountability / Consequences** | [CONFIRMED] | Systems for handling missed commitments. Backend engine complete (Milestones 1–5: definitions, commitments, immutability, activation, verification sessions, multi-modal fulfillment, state machine invariants, weekly waiver quotas). Consequences remain hidden during normal use. |
-| 8 | **Finance / Expense Tracking** | [CONFIRMED] | Personal expense logging with amount, description, category, default current date, and user-confirmed smart category suggestions. Strict privacy protection. |
-| 9 | **Analytics** | [CONFIRMED] | Progress tracking, follow-through ratios, trend visualizations, and historical productivity metrics. |
-| 10 | **Notifications** | [CONFIRMED] | Calm, non-intrusive reminder system for upcoming deadlines, plan reviews, and critical account events. |
-| 11 | **Integrations** | [PROPOSED] | Modular sync connectors for external platforms (GitHub, Codeforces, LeetCode). Fully optional. |
-| 12 | **Settings / Profile** | [CONFIRMED] | User profile management, timezone settings, notification preferences, integration management, and security settings. |
+This document provides the authoritative inventory of all 14 integrated product systems in PACT, detailing their capabilities, routes, and verified implementation status.
 
 ---
 
-## 2. Phase 3 Accountability Engine Status [BACKEND COMPLETE]
+## 1. Feature Module Matrix
 
-Phase 3 establishes the backend/domain foundation for PACT's core principle: *"Turn intent into discipline."*
-- **Milestone 1**: Domain foundation, user preferences, reusable consequence definitions, safety model, RLS.
-- **Milestone 2**: Automatic assignment, multi-default deterministic resolution, committed snapshot immutability.
-- **Milestone 3**: Authoritative consequence activation subscriber to `mark_task_missed`, atomic transactions, event log.
-- **Milestone 4**: Resolution & verification engine, server-authoritative timed sessions, evidence notes, weekly waiver quota.
-- **Milestone 5**: Edge cases & hardening, DB-level state machine invariants (`trg_enforce_commitment_status_transitions`), multi-modal fulfillment RPCs (`written_reflection`, `declaration`, `task_completion`), secondary waiver quota trigger (`trg_enforce_weekly_waiver_quota`), 103/103 real database adversarial checks passing.
-- *UI/UX Phase*: Deferred to upcoming UI milestone.
-
----
-
-## 2. Optional Integrations Breakdown [PROPOSED]
-
-PACT supports up to three initial external integrations:
-1. **GitHub**: Activity tracking, commit counts, PR contributions, issue resolutions.
-2. **Codeforces**: Problem submission sync, contest rating changes, solved count.
-3. **LeetCode**: Daily problem completion, submission history, contest metrics.
-
-### Integration Principles [CONFIRMED]
-- **Fully Optional**: A user may connect 0, 1, 2, or all 3 integrations.
-- **Zero Hard Dependency**: The core PACT application must function identically regardless of whether any integration is connected.
-- **Graceful Disconnection**: Disconnecting an integration must cleanly preserve or purge data based on user configuration, without breaking any core application state.
+| # | System / Module | Route | Implementation Status | Scope & Capabilities |
+|---|---|---|---|---|
+| 1 | **Authentication & Onboarding** | `/`, `/app/onboarding` | `IMPLEMENTED` | Unified single-screen landing page with email/password, Google OAuth, password reset, and a 4-step personalized onboarding setup wizard. |
+| 2 | **Command Center** | `/app` | `IMPLEMENTED` | Daily situational dashboard with unified search (`Cmd+K`), quick-capture palette, live cadence widget, active focus stats, and high-priority commitments. |
+| 3 | **Tasks & Backlog** | `/app/tasks` | `IMPLEMENTED` | Complete task management with priority matrix, estimated duration, scheduled times, deadline tracking, and bulk multi-select operations. |
+| 4 | **Planner** | `/app/planner` | `IMPLEMENTED` | Day, Week, and Month time-blocking views with drag-and-drop scheduling, timezone boundary enforcement, and calendar event conflict markers. |
+| 5 | **Goals** | `/app/goals` | `IMPLEMENTED` | Long-term strategic intentional targets with milestone progress bars, associated projects, and deadline indicators. |
+| 6 | **Projects** | `/app/projects` | `IMPLEMENTED` | Scoped initiatives and deliverable containers grouping associated tasks, tracking phase completion rates and deadlines. |
+| 7 | **Accountability & Consequences** | `/app/accountability` | `IMPLEMENTED` | Commitment contract engine binding tasks to confidential consequences, waiver quotas (max 2/week), written reflections, and resolution workflows. |
+| 8 | **Finance & Cash Flow** | `/app/finance` | `IMPLEMENTED` | Integer-cents transaction ledger (`amount_cents`), recurring expense rules, net cash flow calculation, and budget ceiling threshold alerts. |
+| 9 | **Focus Timer** | `/app/focus` | `IMPLEMENTED` | Deep work sessions with configurable intervals (Pomodoro/Flow), Web Audio synthesized chimes, task association, and session metrics. |
+| 10 | **Habits & Routines** | `/app/habits` | `IMPLEMENTED` | Recurring daily/weekly habit loops, morning/evening routine templates, daily completion logging, and active streak counters. |
+| 11 | **Weekly Review** | `/app/review` | `IMPLEMENTED` | 5-step interactive Sunday planning ritual: Celebrate Wins, Review Metrics, Process Incompletes, Calibrate Goals, and Commit Next Week. |
+| 12 | **Analytics & Scoring** | `/app/analytics` | `IMPLEMENTED` | Quantitative follow-through scoring, task completion velocity, weekly trend comparisons, and historical performance breakdowns. |
+| 13 | **Integrations** | `/app/integrations` | `IMPLEMENTED` | Connectors for Google Calendar (OAuth bi-directional sync), GitHub (commit activity), LeetCode (daily problems), and Codeforces (submissions). |
+| 14 | **Settings & Portability** | `/app/settings` | `IMPLEMENTED` | User profile management, timezone settings, notification dispatch preferences, and complete RFC 4180 ZIP/JSON/CSV account export. |
 
 ---
 
-## 3. V0 Scope vs Future Scope [CONFIRMED]
+## 2. Core System Deep Dives
 
-### Included in V0 Specifications
-- Full domain model for Goals, Projects, Tasks, Consequences, Expenses, Analytics.
-- Security architecture, Row-Level Security (RLS) definitions, and data-boundary rules.
-- Design system foundation and visual guidelines.
-- Technical architecture and API layer contracts.
+### 2.1 Accountability & Consequence Engine
+- **State Machine**: `DRAFT` ➔ `ACTIVE` ➔ `COMPLETED` / `BREACHED` ➔ `CONSEQUENCE_ACTIVATED` ➔ `RESOLVED` / `WAIVED`.
+- **Confidentiality**: Penalty details remain masked in database queries until activated by deadline breach.
+- **Autonomous Sweeping**: Handled by `/api/cron/sweep-deadlines` with timing-safe `CRON_SECRET` authorization.
+- **Fulfillment Modes**: Written reflection, public declaration, or completion of emergency backlog tasks.
 
-### Deferred to Future Phases [FUTURE]
-- Progressive Web App (PWA) offline sync capabilities.
-- Advanced automated AI expense category learning models.
-- Shared multi-user accountability circles or team commitments.
-- Custom webhooks for external third-party tools.
+### 2.2 External Proof-of-Work Verification
+- **GitHub**: Verifies real commit counts and merged PRs within commitment time windows.
+- **LeetCode**: Fetches public daily problem submissions via GraphQL.
+- **Codeforces**: Verifies problem verdicts and contest submissions via public REST APIs.
+- **Resilience**: Third-party outages or rate limits trigger a `RETRY_PENDING` state and never mark user commitments as failed.
+
+### 2.3 Financial Discipline
+- **Integer Cents Precision**: Eliminates IEEE 754 floating-point errors by storing and calculating all amounts as integer cents (`amount_cents`).
+- **Budget Envelopes**: Visual warnings trigger at 80% ceiling and breach alerts trigger at 100% of category limits.
+- **Recurrence Engine**: Automatically computes projected monthly fixed overhead and net cash savings.
+
+### 2.4 Deep Work Focus Timer
+- **Precision Timekeeping**: Web Worker background timer with timestamp differential arithmetic.
+- **Audio Chimes**: Pure synthesized Web Audio API tones (no external audio assets required).
+- **Session Attribution**: Focus sessions are linked to specific projects or tasks and aggregated into analytics.
+
+### 2.5 Habits & Daily Routines
+- **Routine Templates**: Structured stacks of daily habits (e.g., Morning Kickoff, Evening Wind-down).
+- **Streak Calculation**: Pure deterministic calculation handling rest days and timezone roll-overs.
+
+---
+
+## 3. Scope Boundaries & Future Directions
+
+### Current Scope (Certified)
+- Full relational domain model across all 14 core areas.
+- Server-authoritative mutations with zero-trust validation.
+- Responsive dark glassmorphic design system.
+
+### Future Scope (Planned)
+- Native mobile companion application (React Native / Expo).
+- Biometric WebAuthn passkey authentication.
+- Offline-first local synchronization (CRDT / SQLite).

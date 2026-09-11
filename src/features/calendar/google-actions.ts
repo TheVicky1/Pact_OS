@@ -84,8 +84,6 @@ export async function triggerGoogleCalendarSyncAction(
     });
 
     revalidatePath('/app');
-    revalidatePath('/app/calendar');
-    revalidatePath('/app/planner');
     revalidatePath('/app/settings');
 
     return {
@@ -139,9 +137,8 @@ export async function disconnectGoogleCalendarAction(): Promise<GoogleActionResu
       };
     }
 
+    revalidatePath('/app');
     revalidatePath('/app/settings');
-    revalidatePath('/app/calendar');
-    revalidatePath('/app/planner');
 
     return {
       success: true,

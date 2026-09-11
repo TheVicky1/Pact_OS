@@ -20,13 +20,14 @@ import { ActiveFocusCard } from './active-focus-card';
 import { FollowThroughWidget } from './follow-through-widget';
 import { DailyCadenceWidget } from './daily-cadence-widget';
 import { DailyCalendarWidget } from '@/features/calendar';
-import { UpcomingCommitmentsWidget } from './upcoming-commitments-widget';
-import { DomainSummaryWidgets } from './domain-summary-widgets';
 
 import { useRouter } from 'next/navigation';
 import { InterventionBanner } from '@/features/accountability/components/intervention-banner';
 import { InterventionModal } from '@/features/accountability/components/intervention-modal';
 import type { ActivatedCommitmentDetails, WeeklyWaiverUsage } from '@/features/accountability/data-access';
+import { SundayRitualBanner } from '@/features/weekly-review/components';
+import { isSundayRitualDay } from '@/lib/weekly-review/week';
+import { getLocalDateString } from '@/lib/time';
 
 interface OverviewViewProps {
   goals: Goal[];
@@ -108,13 +109,6 @@ export function OverviewView({
     return sorted[0] || null;
   }, [pendingTasks]);
 
-  // Top 4 upcoming commitments for Upcoming Commitments section
-  const upcomingTasks = useMemo(() => {
-    return [...pendingTasks]
-      .sort((a, b) => new Date(a.deadline_at).getTime() - new Date(b.deadline_at).getTime())
-      .slice(0, 4);
-  }, [pendingTasks]);
-
   // Authoritative Task Completion Action (preserving optimistic update & rollback)
   const handleCompleteTask = async (taskId: string) => {
     setCompletingTaskId(taskId);
@@ -135,6 +129,15 @@ export function OverviewView({
     }
   };
 
+  const isSunday = useMemo(() => {
+    try {
+      const localDate = getLocalDateString(new Date(), timezone);
+      return isSundayRitualDay(localDate, timezone);
+    } catch {
+      return false;
+    }
+  }, [timezone]);
+
   return (
     <div className="space-y-8 pb-12">
       {/* 0. Accountability Active Intervention Banner */}
@@ -142,6 +145,15 @@ export function OverviewView({
         <InterventionBanner
           activatedCount={activatedCommitments.length}
           onReview={() => setSelectedIntervention(activatedCommitments[0])}
+        />
+      )}
+
+      {/* 0.1 Sunday Weekly Review Ritual Banner */}
+      {isSunday && (
+        <SundayRitualBanner
+          isSunday={true}
+          isCompleted={false}
+          weekLabel="This Week"
         />
       )}
 
@@ -292,20 +304,6 @@ export function OverviewView({
         tasks={tasksList}
       />
 
-      {/* 5. Upcoming Commitments Section */}
-      <UpcomingCommitmentsWidget
-        tasks={upcomingTasks}
-        timezone={timezone}
-        onComplete={handleCompleteTask}
-        completingTaskId={completingTaskId}
-      />
-
-      {/* 6. Active Goals & Active Projects Split Grid */}
-      <DomainSummaryWidgets
-        goals={goals}
-        projects={projects}
-        tasks={tasksList}
-      />
 
       {/* Accountability Intervention Modal */}
       {selectedIntervention && waiverUsage && (

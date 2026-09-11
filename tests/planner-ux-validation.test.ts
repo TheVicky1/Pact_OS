@@ -175,8 +175,16 @@ assert.strictEqual(emptyDay.positionedEvents.length, 0);
 const emptyWeek = layoutVerticalEvents([], 'UTC', weekRange);
 assert.strictEqual(emptyWeek.length, 0);
 
-console.log('✅ Non-fabrication guarantees verified: 0 synthesized placeholder events.');
+// 6. Navigation Removal Verification
+console.log('6. Testing that nav-planner is removed from command center registry...');
+import { STATIC_NAVIGATION_COMMANDS } from '../src/lib/command-center/registry';
+assert.strictEqual(
+  STATIC_NAVIGATION_COMMANDS.find((c) => c.id === 'nav-planner'),
+  undefined,
+  'Command center must not expose removed nav-planner'
+);
+console.log('✅ nav-planner is confirmed absent from Command Center.');
 
 console.log('\n================================================================');
-console.log('🎉 ALL PHASE 4I-1 PLANNER UX UNIT TESTS PASSED CLEANLY');
+console.log('🎉 ALL PHASE 4I-1 PLANNER UX & CALENDAR UNIT TESTS PASSED CLEANLY');
 console.log('================================================================');

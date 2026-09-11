@@ -17,6 +17,7 @@ import {
   RotateCcw,
   Loader2,
   ShieldAlert,
+  Timer,
 } from 'lucide-react';
 import { utcToLocal } from '@/lib/time';
 import Link from 'next/link';
@@ -27,6 +28,8 @@ export interface TaskCardProps {
   onDelete: (task: TaskWithParents) => void;
   onStatusChange?: (taskId: string, newStatus: TaskStatus) => void;
   timezone?: string;
+  isSelected?: boolean;
+  onToggleSelect?: (taskId: string) => void;
 }
 
 /**
@@ -41,6 +44,8 @@ export function TaskCard({
   onDelete,
   onStatusChange,
   timezone = 'UTC',
+  isSelected = false,
+  onToggleSelect,
 }: TaskCardProps) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isHoveredLock, setIsHoveredLock] = useState(false);
@@ -173,7 +178,9 @@ export function TaskCard({
       variant="interactive"
       padding="sm"
       className={`group relative transition-all duration-200 ${
-        isCompleted
+        isSelected
+          ? 'border-amber-400/60 bg-amber-500/[0.08] shadow-[0_0_20px_rgba(212,175,55,0.12)]'
+          : isCompleted
           ? 'opacity-65 hover:opacity-90 bg-[rgba(18,18,23,0.4)]'
           : isMissed
           ? 'border-red-500/30 bg-red-950/10'
@@ -183,6 +190,25 @@ export function TaskCard({
       }`}
     >
       <div className="flex items-start gap-3">
+        {/* Multi-Select Checkbox */}
+        {onToggleSelect && (
+          <button
+            type="button"
+            onClick={(e) => {
+              e.stopPropagation();
+              onToggleSelect(task.id);
+            }}
+            aria-label={isSelected ? `Deselect task ${task.title}` : `Select task ${task.title}`}
+            className={`mt-1 shrink-0 w-4 h-4 rounded border flex items-center justify-center transition-all duration-150 cursor-pointer focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-amber-400 ${
+              isSelected
+                ? 'bg-amber-400 border-amber-400 text-zinc-950'
+                : 'border-white/20 bg-zinc-900/80 hover:border-amber-400/60 opacity-60 group-hover:opacity-100'
+            }`}
+          >
+            {isSelected && <Check className="w-3 h-3 stroke-[3]" />}
+          </button>
+        )}
+
         {/* Custom Circular Ring Checkbox */}
         <button
           type="button"
@@ -302,6 +328,17 @@ export function TaskCard({
                       Edit Commitment
                     </button>
 
+                    {!isCompleted && !isArchived && (
+                      <Link
+                        href={`/app/focus?taskId=${task.id}`}
+                        onClick={() => setIsMenuOpen(false)}
+                        className="flex w-full items-center gap-2 rounded-xl px-3 py-2 text-xs font-medium text-[#e2c056] hover:bg-[#d4af37]/10 transition-colors cursor-pointer"
+                      >
+                        <Timer className="h-3.5 w-3.5 text-[#d4af37]" />
+                        Focus Timer
+                      </Link>
+                    )}
+
                     {onStatusChange && !isCompleted && !isArchived && (
                       <button
                         type="button"
@@ -315,7 +352,7 @@ export function TaskCard({
                         className="flex w-full items-center gap-2 rounded-xl px-3 py-2 text-xs font-medium text-amber-300 hover:bg-amber-500/10 transition-colors cursor-pointer"
                       >
                         <Play className="h-3.5 w-3.5" />
-                        {isInProgress ? 'Mark Pending' : 'Start Focus'}
+                        {isInProgress ? 'Mark Pending' : 'Mark In Progress'}
                       </button>
                     )}
 

@@ -20,7 +20,7 @@ export default async function DashboardLayout({
   const { fullName, timezone } = await getUserProfileInfo(supabase, user.id, user.user_metadata);
 
   return (
-    <AppShell userName={fullName} timezone={timezone}>
+    <AppShell userName={fullName} userEmail={user.email} timezone={timezone}>
       {children}
     </AppShell>
   );

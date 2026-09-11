@@ -6,6 +6,7 @@ import { usePathname } from 'next/navigation';
 import { PactLogo } from '@/components/brand/pact-logo';
 import { signOutAction } from '@/features/auth/actions';
 import { NotificationPopover } from '@/components/ui/notification-popover';
+import { UserProfileDropdown } from '@/components/ui/user-profile-dropdown';
 import {
   LayoutDashboard,
   Target,
@@ -15,9 +16,8 @@ import {
   Bell,
   Menu,
   X,
-  User,
   ShieldAlert,
-  Calendar as CalendarIcon,
+  Timer as TimerIcon,
   Wallet,
   TrendingUp,
   Settings as SettingsIcon,
@@ -26,6 +26,7 @@ import {
 export interface AppHeaderProps {
   timezone?: string;
   userName?: string;
+  userEmail?: string;
 }
 
 interface NavItem {
@@ -36,28 +37,26 @@ interface NavItem {
 }
 
 /**
- * PACT Application Header
- * Redesigned in Phase 4C with cinematic glass styling, subtle active underline indicator,
- * user identity pill, and accessible responsive drawer navigation.
+ * PACT Application Global Header & Navigation System
+ * Clean three-zone horizontal layout:
+ * [Logo] -> [Primary Navigation: 8 Core Modules] -> [Flexible Space] -> [Notifications, User Profile Dropdown]
+ * Full responsiveness across desktop, laptop, tablet, and mobile with zero visual collision.
  */
-export function AppHeader({ userName }: AppHeaderProps) {
+export function AppHeader({ userName, userEmail, timezone }: AppHeaderProps) {
   const pathname = usePathname();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isNotificationOpen, setIsNotificationOpen] = useState(false);
   const [unreadCount, setUnreadCount] = useState<number>(0);
 
   const isDashboardActive = pathname === '/app';
+  const isFocusActive = pathname === '/app/focus' || pathname.startsWith('/app/focus/');
   const isGoalsActive = pathname === '/app/goals' || pathname.startsWith('/app/goals/');
   const isProjectsActive = pathname === '/app/projects' || pathname.startsWith('/app/projects/');
   const isTasksActive = pathname === '/app/tasks' || pathname.startsWith('/app/tasks/');
-  const isAccountabilityActive = pathname === '/app/accountability' || pathname.startsWith('/app/accountability/');
+  const isAccountabilityActive =
+    pathname === '/app/accountability' || pathname.startsWith('/app/accountability/');
   const isFinanceActive = pathname === '/app/finance' || pathname.startsWith('/app/finance/');
   const isAnalyticsActive = pathname === '/app/analytics' || pathname.startsWith('/app/analytics/');
-  const isCalendarActive =
-    pathname === '/app/calendar' ||
-    pathname.startsWith('/app/calendar/') ||
-    pathname === '/app/planner' ||
-    pathname.startsWith('/app/planner/');
 
   const navItems: NavItem[] = [
     {
@@ -67,10 +66,10 @@ export function AppHeader({ userName }: AppHeaderProps) {
       isActive: isDashboardActive,
     },
     {
-      href: '/app/planner',
-      label: 'Planner',
-      icon: CalendarIcon,
-      isActive: isCalendarActive,
+      href: '/app/focus',
+      label: 'Focus',
+      icon: TimerIcon,
+      isActive: isFocusActive,
     },
     {
       href: '/app/goals',
@@ -125,46 +124,46 @@ export function AppHeader({ userName }: AppHeaderProps) {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [handleKeyDown]);
 
-  const userInitial = userName?.trim().charAt(0).toUpperCase() || null;
+  const userInitial = userName?.trim().charAt(0).toUpperCase() || 'U';
 
   return (
     <header className="sticky top-0 z-40 w-full border-b border-white/[0.06] bg-[#09090b]/85 backdrop-blur-xl transition-all">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-        {/* Left Section: Official Logo & Desktop Navigation */}
-        <div className="flex items-center gap-8 lg:gap-12">
+      <div className="max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4 sm:gap-6">
+        {/* Left Section: Brand Logo & Desktop Navigation */}
+        <div className="flex items-center gap-6 xl:gap-8 h-full shrink-0 min-w-0">
           <Link
             href="/app"
-            className="focus-visible:outline-none rounded-xl transition-opacity hover:opacity-90 flex-shrink-0"
+            className="focus-visible:outline-none rounded-xl transition-opacity hover:opacity-90 flex-shrink-0 flex items-center"
             aria-label="PACT Home"
           >
             <PactLogo size="sm" />
           </Link>
 
-          {/* Desktop Navigation */}
-          <nav aria-label="Main Navigation" className="hidden md:flex items-center gap-7 lg:gap-8">
+          {/* Desktop Navigation (Available on xl screens and above; tablet/laptop gracefully tiered) */}
+          <nav aria-label="Main Navigation" className="hidden xl:flex items-center gap-1 2xl:gap-2 h-full">
             {navItems.map((item) => (
               <Link
                 key={item.href}
                 href={item.href}
                 aria-current={item.isActive ? 'page' : undefined}
-                className={`relative py-2 text-sm font-medium transition-colors focus-visible:outline-none rounded-lg flex items-center gap-2 ${
+                className={`relative h-full flex items-center gap-1.5 px-2.5 2xl:px-3 text-[13px] 2xl:text-sm font-medium transition-colors focus-visible:outline-none rounded-lg group ${
                   item.isActive
                     ? 'text-zinc-100 font-semibold'
                     : 'text-zinc-400 hover:text-zinc-200'
                 }`}
               >
                 <item.icon
-                  className={`w-4 h-4 transition-colors ${
-                    item.isActive ? 'text-[#d4af37]' : 'text-zinc-400'
+                  className={`w-3.5 h-3.5 2xl:w-4 2xl:h-4 transition-colors shrink-0 ${
+                    item.isActive ? 'text-[#d4af37]' : 'text-zinc-400 group-hover:text-zinc-300'
                   }`}
                 />
-                <span>{item.label}</span>
+                <span className="truncate">{item.label}</span>
 
-                {/* Visual North Star Underline Indicator */}
+                {/* Underline Indicator anchored flush to header bottom border */}
                 {item.isActive && (
                   <span
                     aria-hidden="true"
-                    className="absolute -bottom-[19px] left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-[#d4af37] to-transparent rounded-full shadow-sm shadow-[#d4af37]/30"
+                    className="absolute bottom-0 inset-x-1 h-[2px] bg-gradient-to-r from-transparent via-[#d4af37] to-transparent rounded-full shadow-sm shadow-[#d4af37]/40"
                   />
                 )}
               </Link>
@@ -172,8 +171,8 @@ export function AppHeader({ userName }: AppHeaderProps) {
           </nav>
         </div>
 
-        {/* Right Section: Utilities & User Identity */}
-        <div className="flex items-center gap-3 sm:gap-4">
+        {/* Right Section: Notification Bell, User Account Profile Dropdown, Mobile Menu */}
+        <div className="flex items-center gap-2 sm:gap-3 shrink-0">
           {/* Notification Bell with Popover Center */}
           <div className="relative">
             <button
@@ -182,17 +181,17 @@ export function AppHeader({ userName }: AppHeaderProps) {
               aria-label={`Notifications${unreadCount > 0 ? ` (${unreadCount} unread)` : ''}`}
               aria-haspopup="dialog"
               aria-expanded={isNotificationOpen}
-              className={`relative p-2 rounded-full transition-colors focus-visible:outline-none cursor-pointer ${
+              className={`relative h-9 w-9 flex items-center justify-center rounded-xl border transition-colors focus-visible:outline-none cursor-pointer ${
                 isNotificationOpen
-                  ? 'bg-white/[0.1] text-zinc-100'
-                  : 'text-zinc-400 hover:text-zinc-100 hover:bg-white/[0.06]'
+                  ? 'bg-white/[0.1] text-zinc-100 border-white/[0.15]'
+                  : 'bg-zinc-900/40 hover:bg-zinc-800/80 text-zinc-400 hover:text-zinc-100 border-white/[0.06]'
               }`}
             >
               <Bell className="w-4 h-4" />
               {unreadCount > 0 && (
                 <span
                   data-testid="notification-unread-dot"
-                  className="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-[#d4af37] ring-2 ring-[#09090b] animate-pulse"
+                  className="absolute top-2 right-2 w-2 h-2 rounded-full bg-[#d4af37] ring-2 ring-[#09090b] animate-pulse"
                 />
               )}
             </button>
@@ -205,60 +204,29 @@ export function AppHeader({ userName }: AppHeaderProps) {
             />
           </div>
 
-          {/* User Profile Area */}
-          <div className="flex items-center gap-2.5 pl-2 border-l border-white/[0.06]">
-            {userName && (
-              <div className="hidden sm:flex items-center gap-2.5 bg-zinc-900/60 border border-white/[0.06] pl-1.5 pr-3 py-1 rounded-full text-xs text-zinc-200 shadow-sm">
-                {/* User Avatar Circle */}
-                <div className="w-6 h-6 rounded-full bg-gradient-to-br from-[#1e1e28] to-[#121217] border border-[#d4af37]/40 flex items-center justify-center font-semibold text-[11px] text-[#e2c056] shadow-sm">
-                  {userInitial ? userInitial : <User className="w-3 h-3 text-[#d4af37]" />}
-                </div>
-                <span className="font-medium truncate max-w-[130px] select-none">{userName}</span>
-              </div>
-            )}
+          {/* Authoritative User Account Profile Dropdown */}
+          <UserProfileDropdown
+            userName={userName}
+            userEmail={userEmail}
+            timezone={timezone}
+          />
 
-            {/* Settings Link */}
-            <Link
-              href="/app/settings"
-              aria-label="Settings and Preferences"
-              className={`p-2 rounded-xl border border-white/[0.06] transition-all focus-visible:outline-none cursor-pointer ${
-                pathname.startsWith('/app/settings')
-                  ? 'bg-[#121217] text-[#e2c056] border-[#d4af37]/40 shadow-sm'
-                  : 'bg-zinc-900/40 hover:bg-zinc-800/80 text-zinc-400 hover:text-zinc-100'
-              }`}
-            >
-              <SettingsIcon className="w-4 h-4" />
-            </Link>
-
-            {/* Sign Out Action */}
-            <form action={signOutAction} className="inline-flex">
-              <button
-                type="submit"
-                aria-label="Sign out"
-                className="inline-flex items-center gap-2 text-xs font-medium text-zinc-400 hover:text-zinc-100 bg-zinc-900/40 hover:bg-zinc-800/80 border border-white/[0.06] px-3 py-1.5 rounded-xl transition-all cursor-pointer focus-visible:outline-none"
-              >
-                <LogOut className="w-3.5 h-3.5 text-zinc-400" />
-                <span className="hidden sm:inline">Sign Out</span>
-              </button>
-            </form>
-          </div>
-
-          {/* Mobile Menu Toggle Button */}
+          {/* Mobile / Tablet Menu Toggle Button */}
           <button
             type="button"
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            className="md:hidden p-2 text-zinc-400 hover:text-zinc-100 hover:bg-white/[0.06] rounded-xl focus-visible:outline-none cursor-pointer transition-colors"
+            className="xl:hidden h-9 w-9 flex items-center justify-center text-zinc-400 hover:text-zinc-100 bg-zinc-900/40 hover:bg-zinc-800/80 border border-white/[0.06] rounded-xl focus-visible:outline-none cursor-pointer transition-colors"
             aria-label={isMobileMenuOpen ? 'Close navigation menu' : 'Open navigation menu'}
             aria-expanded={isMobileMenuOpen}
           >
-            {isMobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+            {isMobileMenuOpen ? <X className="w-4 h-4" /> : <Menu className="w-4 h-4" />}
           </button>
         </div>
       </div>
 
-      {/* Mobile Navigation Drawer */}
+      {/* Responsive Mobile / Tablet Navigation Drawer */}
       {isMobileMenuOpen && (
-        <div className="md:hidden border-t border-white/[0.08] bg-[#09090b]/95 backdrop-blur-2xl px-4 py-4 space-y-3 animate-in slide-in-from-top-2 duration-150">
+        <div className="xl:hidden border-t border-white/[0.08] bg-[#09090b]/95 backdrop-blur-2xl px-4 py-4 space-y-3 animate-in slide-in-from-top-2 duration-150">
           <nav aria-label="Mobile Navigation" className="flex flex-col space-y-1">
             {navItems.map((item) => (
               <Link
@@ -294,22 +262,36 @@ export function AppHeader({ userName }: AppHeaderProps) {
               }`}
             >
               <SettingsIcon
-                className={`w-4 h-4 ${pathname.startsWith('/app/settings') ? 'text-[#d4af37]' : 'text-zinc-400'}`}
+                className={`w-4 h-4 ${
+                  pathname.startsWith('/app/settings') ? 'text-[#d4af37]' : 'text-zinc-400'
+                }`}
               />
               <span>Settings & Preferences</span>
             </Link>
           </nav>
 
-          {userName && (
-            <div className="pt-3 border-t border-white/[0.08] flex items-center justify-between px-2 text-xs text-zinc-400">
-              <div className="flex items-center gap-2">
-                <div className="w-5 h-5 rounded-full bg-zinc-800 border border-[#d4af37]/30 flex items-center justify-center font-medium text-[10px] text-[#e2c056]">
-                  {userInitial || 'U'}
-                </div>
-                <span className="text-zinc-300 font-medium truncate max-w-[180px]">{userName}</span>
+          {/* User Info & Mobile Sign Out in Drawer */}
+          <div className="pt-3 border-t border-white/[0.08] flex items-center justify-between px-2 text-xs text-zinc-400">
+            <div className="flex items-center gap-2 min-w-0">
+              <div className="w-6 h-6 rounded-full bg-zinc-800 border border-[#d4af37]/30 flex items-center justify-center font-medium text-[11px] text-[#e2c056] shrink-0">
+                {userInitial}
+              </div>
+              <div className="min-w-0">
+                <p className="text-zinc-200 font-medium truncate max-w-[150px]">{userName || 'User'}</p>
+                {userEmail && <p className="text-[10px] text-zinc-400 truncate max-w-[150px]">{userEmail}</p>}
               </div>
             </div>
-          )}
+
+            <form action={signOutAction} className="inline-flex">
+              <button
+                type="submit"
+                className="inline-flex items-center gap-1.5 text-xs text-rose-400 hover:text-rose-300 transition-colors p-1.5 rounded-lg hover:bg-rose-500/10 cursor-pointer"
+              >
+                <LogOut className="w-3.5 h-3.5" />
+                <span>Sign Out</span>
+              </button>
+            </form>
+          </div>
         </div>
       )}
     </header>

@@ -14,3 +14,6 @@ export * from './divider';
 export * from './app-header';
 export * from './page-container';
 export * from './app-shell';
+export * from './bulk-action-toolbar';
+export * from './user-profile-dropdown';
+
