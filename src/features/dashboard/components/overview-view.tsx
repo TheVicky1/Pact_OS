@@ -11,8 +11,9 @@ import {
   FolderKanban,
   CheckSquare,
   Clock,
+  ArrowUpRight,
 } from 'lucide-react';
-import { GlassCard, Alert } from '@/components/ui';
+import { Alert } from '@/components/ui';
 
 // Modular Phase 4E Dashboard Components
 import { DailyFocusHero } from './daily-focus-hero';
@@ -178,101 +179,147 @@ export function OverviewView({
         </Alert>
       )}
 
-      {/* 2. Metrics Summary Strip (Real Data Only) */}
+      {/* 2. Metrics Summary Strip (Four Primary Metric Cards) */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
-        {/* Pending Commitments */}
-        <Link href="/app/tasks" className="block focus-visible:outline-none">
-          <GlassCard
-            variant="interactive"
-            padding="md"
-            className="h-full flex flex-col justify-between"
-          >
-            <div className="flex items-center justify-between text-zinc-400 mb-3">
-              <span className="text-xs font-semibold uppercase tracking-wider text-zinc-400">
+        {/* 1. Pending Commitments */}
+        <Link href="/app/tasks" className="block focus-visible:outline-none group">
+          <div className="h-full flex flex-col justify-between rounded-3xl bg-[#0C0C0F] border border-white/[0.06] p-5 sm:p-6 shadow-xl shadow-black/60 relative overflow-hidden transition-all duration-200 hover:border-[#D4AF37]/30 hover:shadow-2xl hover:shadow-black/80 hover:-translate-y-0.5">
+            {/* Faint PACT Gold Geometry (8% opacity) */}
+            <svg
+              aria-hidden="true"
+              className="absolute -top-6 -right-6 w-24 h-24 text-[#D4AF37]/[0.08] group-hover:text-[#D4AF37]/[0.16] transition-colors pointer-events-none stroke-current"
+              viewBox="0 0 100 100"
+              fill="none"
+            >
+              <circle cx="80" cy="20" r="40" strokeWidth="1" strokeDasharray="3 3" />
+              <circle cx="80" cy="20" r="60" strokeWidth="1" opacity="0.6" />
+            </svg>
+
+            <div className="relative z-10 flex items-center justify-between text-[#8B8B92] mb-4">
+              <span className="text-[11px] font-semibold uppercase tracking-wider text-[#8B8B92]">
                 Pending Commitments
               </span>
-              <CheckSquare className="w-4 h-4 text-[#d4af37]" />
+              <div className="w-8 h-8 rounded-xl bg-[#101012] border border-white/[0.06] flex items-center justify-center text-[#D4AF37] group-hover:border-[#D4AF37]/25 transition-colors">
+                <CheckSquare className="w-4 h-4" />
+              </div>
             </div>
-            <div>
-              <div className="text-3xl sm:text-4xl font-bold text-zinc-100 font-mono tracking-tight">
+
+            <div className="relative z-10">
+              <div className="text-3xl sm:text-4xl font-extrabold text-[#F5F5F5] font-mono tracking-tight">
                 {pendingTasks.length}
               </div>
-              <p className="text-[11px] text-zinc-400 mt-1.5">
-                {completedTasks.length} completed
-              </p>
+              <div className="flex items-center justify-between text-xs text-[#71717A] mt-1.5">
+                <span>{completedTasks.length} completed</span>
+                <ArrowUpRight className="w-3.5 h-3.5 text-[#71717A] group-hover:text-[#D4AF37] transition-colors" />
+              </div>
             </div>
-          </GlassCard>
+          </div>
         </Link>
 
-        {/* Active Goals */}
-        <Link href="/app/goals" className="block focus-visible:outline-none">
-          <GlassCard
-            variant="interactive"
-            padding="md"
-            className="h-full flex flex-col justify-between"
-          >
-            <div className="flex items-center justify-between text-zinc-400 mb-3">
-              <span className="text-xs font-semibold uppercase tracking-wider text-zinc-400">
+        {/* 2. Active Goals */}
+        <Link href="/app/goals" className="block focus-visible:outline-none group">
+          <div className="h-full flex flex-col justify-between rounded-3xl bg-[#0C0C0F] border border-white/[0.06] p-5 sm:p-6 shadow-xl shadow-black/60 relative overflow-hidden transition-all duration-200 hover:border-[#D4AF37]/30 hover:shadow-2xl hover:shadow-black/80 hover:-translate-y-0.5">
+            {/* Faint PACT Gold Geometry (8% opacity) */}
+            <svg
+              aria-hidden="true"
+              className="absolute -top-6 -right-6 w-24 h-24 text-[#D4AF37]/[0.08] group-hover:text-[#D4AF37]/[0.16] transition-colors pointer-events-none stroke-current"
+              viewBox="0 0 100 100"
+              fill="none"
+            >
+              <circle cx="80" cy="20" r="40" strokeWidth="1" strokeDasharray="3 3" />
+              <circle cx="80" cy="20" r="60" strokeWidth="1" opacity="0.6" />
+            </svg>
+
+            <div className="relative z-10 flex items-center justify-between text-[#8B8B92] mb-4">
+              <span className="text-[11px] font-semibold uppercase tracking-wider text-[#8B8B92]">
                 Active Goals
               </span>
-              <Target className="w-4 h-4 text-[#d4af37]" />
+              <div className="w-8 h-8 rounded-xl bg-[#101012] border border-white/[0.06] flex items-center justify-center text-[#D4AF37] group-hover:border-[#D4AF37]/25 transition-colors">
+                <Target className="w-4 h-4" />
+              </div>
             </div>
-            <div>
-              <div className="text-3xl sm:text-4xl font-bold text-zinc-100 font-mono tracking-tight">
+
+            <div className="relative z-10">
+              <div className="text-3xl sm:text-4xl font-extrabold text-[#F5F5F5] font-mono tracking-tight">
                 {activeGoals.length}
               </div>
-              <p className="text-[11px] text-zinc-400 mt-1.5">
-                Out of {goals.length} total
-              </p>
+              <div className="flex items-center justify-between text-xs text-[#71717A] mt-1.5">
+                <span>Out of {goals.length} total</span>
+                <ArrowUpRight className="w-3.5 h-3.5 text-[#71717A] group-hover:text-[#D4AF37] transition-colors" />
+              </div>
             </div>
-          </GlassCard>
+          </div>
         </Link>
 
-        {/* Active Projects */}
-        <Link href="/app/projects" className="block focus-visible:outline-none">
-          <GlassCard
-            variant="interactive"
-            padding="md"
-            className="h-full flex flex-col justify-between"
-          >
-            <div className="flex items-center justify-between text-zinc-400 mb-3">
-              <span className="text-xs font-semibold uppercase tracking-wider text-zinc-400">
+        {/* 3. Active Projects */}
+        <Link href="/app/projects" className="block focus-visible:outline-none group">
+          <div className="h-full flex flex-col justify-between rounded-3xl bg-[#0C0C0F] border border-white/[0.06] p-5 sm:p-6 shadow-xl shadow-black/60 relative overflow-hidden transition-all duration-200 hover:border-[#D4AF37]/30 hover:shadow-2xl hover:shadow-black/80 hover:-translate-y-0.5">
+            {/* Faint PACT Gold Geometry (8% opacity) */}
+            <svg
+              aria-hidden="true"
+              className="absolute -top-6 -right-6 w-24 h-24 text-[#D4AF37]/[0.08] group-hover:text-[#D4AF37]/[0.16] transition-colors pointer-events-none stroke-current"
+              viewBox="0 0 100 100"
+              fill="none"
+            >
+              <circle cx="80" cy="20" r="40" strokeWidth="1" strokeDasharray="3 3" />
+              <circle cx="80" cy="20" r="60" strokeWidth="1" opacity="0.6" />
+            </svg>
+
+            <div className="relative z-10 flex items-center justify-between text-[#8B8B92] mb-4">
+              <span className="text-[11px] font-semibold uppercase tracking-wider text-[#8B8B92]">
                 Active Projects
               </span>
-              <FolderKanban className="w-4 h-4 text-[#d4af37]" />
+              <div className="w-8 h-8 rounded-xl bg-[#101012] border border-white/[0.06] flex items-center justify-center text-[#D4AF37] group-hover:border-[#D4AF37]/25 transition-colors">
+                <FolderKanban className="w-4 h-4" />
+              </div>
             </div>
-            <div>
-              <div className="text-3xl sm:text-4xl font-bold text-zinc-100 font-mono tracking-tight">
+
+            <div className="relative z-10">
+              <div className="text-3xl sm:text-4xl font-extrabold text-[#F5F5F5] font-mono tracking-tight">
                 {activeProjects.length}
               </div>
-              <p className="text-[11px] text-zinc-400 mt-1.5">
-                Out of {projects.length} total
-              </p>
+              <div className="flex items-center justify-between text-xs text-[#71717A] mt-1.5">
+                <span>Out of {projects.length} total</span>
+                <ArrowUpRight className="w-3.5 h-3.5 text-[#71717A] group-hover:text-[#D4AF37] transition-colors" />
+              </div>
             </div>
-          </GlassCard>
+          </div>
         </Link>
 
-        {/* Missed Commitments */}
-        <GlassCard
-          variant="default"
-          padding="md"
-          className="h-full flex flex-col justify-between"
-        >
-          <div className="flex items-center justify-between text-zinc-400 mb-3">
-            <span className="text-xs font-semibold uppercase tracking-wider text-zinc-400">
-              Missed Commitments
-            </span>
-            <Clock className="w-4 h-4 text-zinc-500" />
-          </div>
-          <div>
-            <div className="text-3xl sm:text-4xl font-bold text-zinc-300 font-mono tracking-tight">
-              {missedTasks.length}
+        {/* 4. Missed Commitments */}
+        <Link href="/app/tasks" className="block focus-visible:outline-none group">
+          <div className="h-full flex flex-col justify-between rounded-3xl bg-[#0C0C0F] border border-white/[0.06] p-5 sm:p-6 shadow-xl shadow-black/60 relative overflow-hidden transition-all duration-200 hover:border-[#D4AF37]/30 hover:shadow-2xl hover:shadow-black/80 hover:-translate-y-0.5">
+            {/* Faint PACT Gold Geometry (8% opacity) */}
+            <svg
+              aria-hidden="true"
+              className="absolute -top-6 -right-6 w-24 h-24 text-[#D4AF37]/[0.08] group-hover:text-[#D4AF37]/[0.16] transition-colors pointer-events-none stroke-current"
+              viewBox="0 0 100 100"
+              fill="none"
+            >
+              <circle cx="80" cy="20" r="40" strokeWidth="1" strokeDasharray="3 3" />
+              <circle cx="80" cy="20" r="60" strokeWidth="1" opacity="0.6" />
+            </svg>
+
+            <div className="relative z-10 flex items-center justify-between text-[#8B8B92] mb-4">
+              <span className="text-[11px] font-semibold uppercase tracking-wider text-[#8B8B92]">
+                Missed Commitments
+              </span>
+              <div className="w-8 h-8 rounded-xl bg-[#101012] border border-white/[0.06] flex items-center justify-center text-[#D4AF37] group-hover:border-[#D4AF37]/25 transition-colors">
+                <Clock className="w-4 h-4" />
+              </div>
             </div>
-            <p className="text-[11px] text-zinc-400 mt-1.5">
-              Authoritative lifecycle
-            </p>
+
+            <div className="relative z-10">
+              <div className="text-3xl sm:text-4xl font-extrabold text-[#F5F5F5] font-mono tracking-tight">
+                {missedTasks.length}
+              </div>
+              <div className="flex items-center justify-between text-xs text-[#71717A] mt-1.5">
+                <span>Authoritative lifecycle</span>
+                <ArrowUpRight className="w-3.5 h-3.5 text-[#71717A] group-hover:text-[#D4AF37] transition-colors" />
+              </div>
+            </div>
           </div>
-        </GlassCard>
+        </Link>
       </div>
 
       {/* 3. Command Center Featured Cards Grid (Visual North Star Trio) */}
@@ -303,7 +350,6 @@ export function OverviewView({
         goals={goals}
         tasks={tasksList}
       />
-
 
       {/* Accountability Intervention Modal */}
       {selectedIntervention && waiverUsage && (

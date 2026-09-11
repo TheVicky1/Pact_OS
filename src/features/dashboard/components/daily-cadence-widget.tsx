@@ -2,7 +2,6 @@
 
 import React, { useMemo } from 'react';
 import { TaskWithParents } from '@/features/tasks/data-access';
-import { GlassCard, Badge } from '@/components/ui';
 import { BarChart3 } from 'lucide-react';
 
 export interface DailyCadenceWidgetProps {
@@ -68,53 +67,51 @@ export function DailyCadenceWidget({ tasks, timezone }: DailyCadenceWidgetProps)
   }, [tasks, timezone]);
 
   return (
-    <GlassCard
-      variant="default"
-      padding="md"
-      className="h-full flex flex-col justify-between min-h-[190px] relative overflow-hidden"
-    >
+    <div className="h-full flex flex-col justify-between min-h-[220px] rounded-3xl bg-[#0C0C0F] border border-white/[0.06] p-5 sm:p-6 shadow-xl shadow-black/60 relative overflow-hidden transition-all duration-200 hover:border-[#D4AF37]/30 hover:shadow-2xl hover:shadow-black/80 hover:-translate-y-0.5 group cursor-default">
       {/* Header */}
-      <div className="flex items-center justify-between gap-2">
+      <div className="relative z-10 flex items-center justify-between gap-2">
         <div className="flex items-center gap-2">
-          <span className="text-xs font-semibold uppercase tracking-wider text-zinc-400">
+          <span className="text-[11px] font-semibold uppercase tracking-wider text-[#8B8B92]">
             24h Cadence
           </span>
-          <Badge variant="gold" size="sm">
+          <span className="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded-full bg-[#101012] border border-[#D4AF37]/30 text-[#D4AF37]">
             Peak: {peakLabel}
-          </Badge>
+          </span>
         </div>
-        <BarChart3 className="w-4 h-4 text-[#d4af37]" />
+        <div className="w-8 h-8 rounded-xl bg-[#101012] border border-white/[0.06] flex items-center justify-center text-[#D4AF37] group-hover:border-[#D4AF37]/25 transition-colors">
+          <BarChart3 className="w-4 h-4" />
+        </div>
       </div>
 
       {/* Histogram Bar Chart */}
-      <div className="my-auto py-3">
-        <div className="relative h-20 flex items-end justify-between gap-2 pt-4 px-1">
+      <div className="relative z-10 my-auto py-3">
+        <div className="relative h-24 flex items-end justify-between gap-2 pt-4 px-1">
           {/* Subtle threshold guideline */}
-          <div className="absolute inset-x-0 top-1/2 border-b border-dashed border-white/[0.12] pointer-events-none" />
+          <div className="absolute inset-x-0 top-1/2 border-b border-dashed border-white/[0.04] pointer-events-none" />
 
           {buckets.map((bucket) => {
-            const heightPercent = bucket.count > 0 ? Math.max((bucket.count / maxCount) * 100, 24) : 10;
+            const heightPercent = bucket.count > 0 ? Math.max((bucket.count / maxCount) * 100, 24) : 8;
             const isPeak = bucket.count === maxCount && maxCount > 0;
 
             return (
               <div
                 key={bucket.label}
-                className="flex-1 flex flex-col items-center gap-1.5 group cursor-default"
+                className="flex-1 flex flex-col items-center gap-2 group/bar cursor-default"
                 title={`${bucket.label} (${bucket.hourRange}): ${bucket.count} tasks`}
               >
                 <div className="w-full h-16 flex items-end justify-center">
                   <div
                     style={{ height: `${heightPercent}%` }}
-                    className={`w-full max-w-[24px] rounded-full transition-all duration-300 ${
+                    className={`w-full max-w-[22px] rounded-t-md transition-all duration-200 ${
                       isPeak
-                        ? 'bg-gradient-to-t from-[#aa820a] to-[#d4af37] shadow-lg shadow-[#d4af37]/20 border border-[#d4af37]/60'
+                        ? 'bg-gradient-to-t from-[#AA820A] to-[#D4AF37] shadow-md shadow-[#D4AF37]/20 border-t border-x border-[#E6C34A]/50'
                         : bucket.count > 0
-                        ? 'bg-zinc-700/80 hover:bg-zinc-600/90 border border-white/[0.08]'
-                        : 'bg-zinc-800/40'
+                        ? 'bg-zinc-700/60 group-hover/bar:bg-zinc-600/80 border-t border-x border-white/[0.08]'
+                        : 'bg-zinc-800/25'
                     }`}
                   />
                 </div>
-                <span className="text-[10px] text-zinc-400 font-mono tracking-tighter truncate max-w-[36px]">
+                <span className="text-[10px] text-[#71717A] font-mono tracking-tighter truncate max-w-[38px] group-hover/bar:text-[#E8E8E8] transition-colors">
                   {bucket.label}
                 </span>
               </div>
@@ -124,10 +121,10 @@ export function DailyCadenceWidget({ tasks, timezone }: DailyCadenceWidgetProps)
       </div>
 
       {/* Footer */}
-      <div className="pt-2 border-t border-white/[0.06] flex items-center justify-between text-[11px] text-zinc-400 font-mono">
+      <div className="relative z-10 pt-3 border-t border-white/[0.04] flex items-center justify-between text-xs text-[#71717A] font-mono">
         <span>Distribution across day</span>
         <span>{tasks.length} total</span>
       </div>
-    </GlassCard>
+    </div>
   );
 }
