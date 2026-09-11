@@ -11,52 +11,51 @@ export default function LandingPage() {
 
   return (
     <div className="min-h-screen lg:h-screen lg:overflow-hidden bg-[#060608] text-zinc-100 flex flex-col justify-between relative selection:bg-[#d4af37]/30 selection:text-white">
-      {/* 1. Atmospheric Ambient Background Lighting & Celestial Gold Arc */}
-      <div className="absolute inset-0 pointer-events-none overflow-hidden">
-        {/* Soft Radial Gold Diffusion Center-Left */}
-        <div className="absolute top-1/2 left-[28%] -translate-x-1/2 -translate-y-1/2 w-[650px] sm:w-[850px] h-[650px] sm:h-[850px] bg-gradient-to-tr from-[#d4af37]/12 via-[#aa820a]/06 to-transparent rounded-full blur-[130px]" />
 
-        {/* Living OS Core Background Sphere System */}
-        <div className="hidden lg:block absolute top-[16%] left-[24%] w-[540px] h-[540px] pointer-events-none select-none">
-          {/* Static Base Horizon Sphere / Dark OS Core */}
-          <div className="absolute inset-0 rounded-full border border-[#d4af37]/25 shadow-[0_0_90px_rgba(212,175,55,0.2),inset_0_0_70px_rgba(212,175,55,0.1)] opacity-75" />
-
-          {/* Smooth Continuous Orbital Travelling Highlight - Unrestricted Movement */}
-          <motion.div
-            animate={{ rotate: 360 }}
-            transition={{
-              duration: 12,
-              repeat: Infinity,
-              ease: 'linear',
-            }}
-            className="absolute inset-0 rounded-full will-change-transform"
-            style={{ transformOrigin: 'center center' }}
-          >
-            {/* Luminous Orbital Rim Glow & Highlight */}
-            <div className="absolute -right-7 top-[10%] w-[240px] h-[400px] bg-gradient-to-b from-[#fceabb]/40 via-[#d4af37]/22 to-transparent blur-[26px] -rotate-[18deg] rounded-full transform-gpu" />
-
-            {/* Bright Core Hotspot Light Orb */}
-            <div className="absolute -right-2 top-[28%] w-[90px] h-[150px] bg-gradient-to-b from-[#ffffff]/45 via-[#f5e0a3]/25 to-transparent blur-[16px] rounded-full transform-gpu" />
-          </motion.div>
+      {/* ========================================================================= */}
+      {/* 1. CRYSTAL-CLEAR ULTRA-HD GOLDEN SILK & 3D SPHERE BACKDROP                */}
+      {/* ========================================================================= */}
+      <div className="absolute inset-0 pointer-events-none overflow-hidden select-none">
+        {/* Core Volumetric Razor-Sharp Golden Silk Waves & 3D Sphere Background Image */}
+        <div className="absolute inset-0 w-full h-full">
+          <Image
+            src="/brand/pact-landing-bg.png"
+            alt="PACT Celestial Horizon"
+            fill
+            priority
+            unoptimized
+            className="object-cover object-center w-full h-full opacity-95 transition-opacity duration-700"
+          />
         </div>
 
-        {/* Ambient Top Vignette */}
-        <div className="absolute top-0 inset-x-0 h-32 bg-gradient-to-b from-black/80 to-transparent" />
-        {/* Ambient Bottom Vignette */}
-        <div className="absolute bottom-0 inset-x-0 h-32 bg-gradient-to-t from-black/90 to-transparent" />
+        {/* Ambient Warm Golden Atmospheric Glow */}
+        <div className="absolute inset-0 pointer-events-none">
+          {/* Subtle warm rim light boost on the central sphere */}
+          <div className="hidden lg:block absolute top-[28%] left-[54%] w-[380px] h-[380px] bg-gradient-to-tr from-transparent via-[#f5c037]/12 to-[#fff0bd]/15 rounded-full blur-[60px] pointer-events-none" />
+
+          {/* Golden loop halo behind the auth card */}
+          <div className="hidden lg:block absolute top-[20%] right-[8%] w-[480px] h-[520px] bg-[#d4af37]/10 rounded-full blur-[90px] pointer-events-none" />
+        </div>
+
+        {/* Top and Bottom Cinematic Edge Vignettes */}
+        <div className="absolute top-0 inset-x-0 h-32 bg-gradient-to-b from-[#060608]/90 via-[#060608]/40 to-transparent pointer-events-none" />
+        <div className="absolute bottom-0 inset-x-0 h-32 bg-gradient-to-t from-[#060608]/95 via-[#060608]/50 to-transparent pointer-events-none" />
       </div>
 
-      {/* Top Left Brand Anchor */}
-      <header className="relative z-10 w-full max-w-[1400px] mx-auto pt-6 sm:pt-7 lg:pt-8 px-5 sm:px-10 lg:px-14 flex items-center justify-start">
+      {/* ========================================================================= */}
+      {/* 2. TOP HEADER NAVIGATION                                                  */}
+      {/* ========================================================================= */}
+      <header className="relative z-10 w-full max-w-[1440px] mx-auto pt-6 sm:pt-7 lg:pt-8 px-6 sm:px-10 lg:px-14 flex items-center justify-start">
+        {/* Brand Anchor Left */}
         <div className="flex items-center gap-3.5 select-none">
           <div className="relative w-8 h-8 sm:w-[34px] sm:h-[34px] flex items-center justify-center flex-shrink-0">
-            <div className="absolute inset-0 rounded-full bg-[#d4af37]/25 blur-md pointer-events-none" />
+            <div className="absolute inset-0 rounded-full bg-[#d4af37]/30 blur-md pointer-events-none" />
             <Image
               src="/brand/pact-logo.png"
               alt="PACT"
               width={34}
               height={34}
-              className="relative z-10 w-full h-full object-contain drop-shadow-[0_1px_6px_rgba(212,175,55,0.25)]"
+              className="relative z-10 w-full h-full object-contain drop-shadow-[0_1px_8px_rgba(212,175,55,0.35)]"
               priority
             />
           </div>
@@ -66,29 +65,31 @@ export default function LandingPage() {
         </div>
       </header>
 
-      {/* Main Single-Screen Hero + Auth Grid Composition */}
-      <main className="relative z-10 w-full max-w-[1400px] mx-auto px-5 sm:px-10 lg:px-14 my-auto py-6 lg:py-0 grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
+      {/* ========================================================================= */}
+      {/* 3. MAIN HERO PHILOSOPHY + UNIFIED AUTH CARD GRID                         */}
+      {/* ========================================================================= */}
+      <main className="relative z-10 w-full max-w-[1440px] mx-auto px-6 sm:px-10 lg:px-14 my-auto py-6 lg:py-0 grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
         {/* Left Column: Hero Philosophy (7 cols on lg) */}
         <div className="lg:col-span-7 flex flex-col justify-center space-y-4 sm:space-y-6 relative">
           {/* Top Tag / Pill */}
           <div className="flex items-center gap-3">
-            <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-zinc-900/90 border border-white/[0.08] text-[10px] font-mono tracking-wider text-[#e2c056] shadow-sm">
+            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-zinc-950/80 backdrop-blur-md border border-white/[0.08] text-[10px] sm:text-[11px] font-mono tracking-wider text-[#e2c056] shadow-sm">
               <Sparkles className="w-3 h-3 text-[#d4af37]" />
               <span>PERSONAL OPERATING SYSTEM</span>
             </div>
           </div>
 
-          {/* Main Headline & Pillars Row */}
+          {/* Main Headline & Vertical Discipline Rail */}
           <div className="flex gap-4 sm:gap-7 items-start">
-            {/* Vertical Discipline Rail */}
-            <div className="hidden sm:flex flex-col items-center gap-2 text-[9px] font-mono tracking-[0.25em] text-zinc-500 uppercase select-none pt-1.5">
-              <span className="hover:text-amber-400/80 transition-colors">PLAN</span>
-              <div className="w-3.5 h-[1px] bg-zinc-800" />
-              <span className="hover:text-amber-400/80 transition-colors">TRACK</span>
-              <div className="w-3.5 h-[1px] bg-zinc-800" />
-              <span className="hover:text-amber-400/80 transition-colors">IMPROVE</span>
-              <div className="w-3.5 h-[1px] bg-zinc-800" />
-              <span className="hover:text-amber-400/80 transition-colors">REPEAT</span>
+            {/* Vertical Discipline Rail matching Image 1 */}
+            <div className="hidden sm:flex flex-col items-center gap-2.5 text-[11px] font-sans font-semibold tracking-[0.2em] text-white uppercase select-none pt-1">
+              <span className="hover:text-amber-300 transition-colors">PLAN</span>
+              <div className="w-4 h-[1px] bg-white/30" />
+              <span className="hover:text-amber-300 transition-colors">TRACK</span>
+              <div className="w-4 h-[1px] bg-white/30" />
+              <span className="hover:text-amber-300 transition-colors">IMPROVE</span>
+              <div className="w-4 h-[1px] bg-white/30" />
+              <span className="hover:text-amber-300 transition-colors">REPEAT</span>
             </div>
 
             {/* Core Hero Headline & Subtitle */}
@@ -100,15 +101,15 @@ export default function LandingPage() {
                 </span>
               </h1>
 
-              <p className="text-xs sm:text-sm text-zinc-400 font-normal leading-relaxed max-w-md">
+              <p className="text-xs sm:text-[14px] text-zinc-200 font-normal leading-relaxed max-w-md">
                 Plan. Track. Stay Accountable. Achieve what truly matters — with PACT. Transform fleeting intent into consistent, unbreakable daily execution.
               </p>
             </div>
           </div>
 
-          {/* Bottom Left: Refined Editorial Philosophy Quote */}
+          {/* Bottom Left: Editorial Philosophy Quote */}
           <div className="pt-0.5 max-w-sm space-y-1 pl-0.5 select-none">
-            <span className="text-amber-400/80 text-lg font-serif leading-none block">
+            <span className="text-amber-400/80 text-xl font-serif leading-none block">
               &ldquo;
             </span>
             <p className="text-xs text-zinc-300/90 italic font-light leading-relaxed">
@@ -126,17 +127,19 @@ export default function LandingPage() {
         </div>
       </main>
 
-      {/* Footer Ticker / Bottom Branding */}
-      <footer className="relative z-10 w-full max-w-[1400px] mx-auto pb-4 sm:pb-5 pt-2 px-5 sm:px-10 lg:px-14 flex flex-col sm:flex-row items-center justify-between gap-2 text-xs text-zinc-500">
-        <div className="flex items-center gap-3">
+      {/* ========================================================================= */}
+      {/* 4. FOOTER TICKER & EMBLEMATIC BRANDING                                    */}
+      {/* ========================================================================= */}
+      <footer className="relative z-10 w-full max-w-[1440px] mx-auto pb-4 sm:pb-5 pt-2 px-6 sm:px-10 lg:px-14 flex flex-col sm:flex-row items-center justify-between gap-2 text-xs">
+        <div className="flex items-center gap-3 font-sans font-medium text-[11px] tracking-[0.14em] text-white select-none">
           <span>PACT OS © 2026</span>
-          <span>•</span>
-          <span className="text-zinc-400">Turn Intent Into Discipline</span>
+          <span className="text-white/40">•</span>
+          <span>Turn Intent Into Discipline</span>
         </div>
 
         {/* Editorial Philosophy Rule */}
-        <div className="text-[10px] font-mono tracking-[0.3em] text-zinc-600 uppercase">
-          SMALL STEPS. BIGGER TOMORROWS.
+        <div className="font-sans font-medium text-[11px] tracking-[0.14em] text-white uppercase select-none">
+          SMALL STEPS, BIGGER TOMORROWS.
         </div>
       </footer>
     </div>

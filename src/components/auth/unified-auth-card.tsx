@@ -187,9 +187,8 @@ export function UnifiedAuthCard({
             <button
               type="button"
               onClick={() => switchMode('signin')}
-              className={`relative py-1.5 text-xs font-semibold rounded-lg transition-colors cursor-pointer z-10 ${
-                mode === 'signin' ? 'text-zinc-950 font-bold' : 'text-zinc-400 hover:text-zinc-200'
-              }`}
+              className={`relative py-1.5 text-xs font-semibold rounded-lg transition-colors cursor-pointer z-10 ${mode === 'signin' ? 'text-zinc-950 font-bold' : 'text-zinc-400 hover:text-zinc-200'
+                }`}
             >
               {mode === 'signin' && (
                 <motion.div
@@ -204,9 +203,8 @@ export function UnifiedAuthCard({
             <button
               type="button"
               onClick={() => switchMode('signup')}
-              className={`relative py-1.5 text-xs font-semibold rounded-lg transition-colors cursor-pointer z-10 ${
-                mode === 'signup' ? 'text-zinc-950 font-bold' : 'text-zinc-400 hover:text-zinc-200'
-              }`}
+              className={`relative py-1.5 text-xs font-semibold rounded-lg transition-colors cursor-pointer z-10 ${mode === 'signup' ? 'text-zinc-950 font-bold' : 'text-zinc-400 hover:text-zinc-200'
+                }`}
             >
               {mode === 'signup' && (
                 <motion.div
