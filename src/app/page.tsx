@@ -17,8 +17,8 @@ export default function LandingPage() {
 
         {/* Living OS Core Background Sphere System */}
         <div className="hidden lg:block absolute top-[16%] left-[24%] w-[540px] h-[540px] pointer-events-none">
-          {/* Static Base Horizon Sphere / Dark OS Core Ambient Depth */}
-          <div className="absolute inset-0 rounded-full border border-[#d4af37]/25 shadow-[0_0_90px_rgba(212,175,55,0.2),inset_0_0_70px_rgba(212,175,55,0.1)] opacity-75" />
+          {/* Static Base Horizon Sphere / Dark OS Core Ambient Depth (Borderless Organic Blend) */}
+          <div className="absolute inset-0 rounded-full shadow-[0_0_100px_rgba(212,175,55,0.12),inset_0_0_80px_rgba(212,175,55,0.08)] opacity-70" />
 
           {/* Strictly Clipped Circular Interior Container - Zero Exterior Spill */}
           <div className="absolute inset-0 rounded-full overflow-hidden [clip-path:circle(50%_at_50%_50%)] [isolation:isolate]">
@@ -30,9 +30,6 @@ export default function LandingPage() {
               <div className="absolute right-0 top-[26%] w-[80px] h-[140px] bg-gradient-to-b from-[#fff6db]/30 via-[#e2c056]/15 to-transparent blur-[18px] rounded-full transform-gpu" />
             </div>
           </div>
-
-          {/* Crisp Circular Overlap Ring */}
-          <div className="absolute inset-0 rounded-full border border-[#d4af37]/30 pointer-events-none" />
         </div>
 
         {/* Ambient Top Vignette */}
