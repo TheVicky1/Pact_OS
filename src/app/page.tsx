@@ -15,11 +15,25 @@ export default function LandingPage() {
         {/* Soft Radial Gold Diffusion Center-Left */}
         <div className="absolute top-1/2 left-[28%] -translate-x-1/2 -translate-y-1/2 w-[650px] sm:w-[850px] h-[650px] sm:h-[850px] bg-gradient-to-tr from-[#d4af37]/12 via-[#aa820a]/06 to-transparent rounded-full blur-[130px]" />
 
-        {/* Deep Atmospheric Horizon Eclipse Glow */}
-        <div className="hidden lg:block absolute top-[16%] left-[24%] w-[540px] h-[540px] rounded-full border border-[#d4af37]/25 shadow-[0_0_90px_rgba(212,175,55,0.2),inset_0_0_70px_rgba(212,175,55,0.1)] opacity-75" />
+        {/* Living OS Core Background Sphere System */}
+        <div className="hidden lg:block absolute top-[16%] left-[24%] w-[540px] h-[540px] pointer-events-none">
+          {/* Static Base Horizon Sphere / Dark OS Core Ambient Depth */}
+          <div className="absolute inset-0 rounded-full border border-[#d4af37]/25 shadow-[0_0_90px_rgba(212,175,55,0.2),inset_0_0_70px_rgba(212,175,55,0.1)] opacity-75" />
 
-        {/* Radiant Rim Light Highlight on the Celestial Horizon */}
-        <div className="hidden lg:block absolute top-[20%] left-[42%] w-[220px] h-[420px] bg-gradient-to-b from-[#f5e0a3]/35 via-[#d4af37]/20 to-transparent blur-[26px] -rotate-[18deg] rounded-full" />
+          {/* Strictly Clipped Circular Interior Container - Zero Exterior Spill */}
+          <div className="absolute inset-0 rounded-full overflow-hidden [clip-path:circle(50%_at_50%_50%)] [isolation:isolate]">
+            {/* Smooth Continuous Orbital Travelling Highlight (Clipped strictly inside) */}
+            <div className="absolute inset-0 rounded-full animate-sphere-orbit">
+              {/* Soft Ambient Rim Arc */}
+              <div className="absolute -right-5 top-[10%] w-[220px] h-[390px] bg-gradient-to-b from-[#f5e0a3]/30 via-[#d4af37]/18 to-transparent blur-[28px] -rotate-[18deg] rounded-full animate-sphere-glow transform-gpu" />
+              {/* Subtle Specular Hotspot Core */}
+              <div className="absolute right-0 top-[26%] w-[80px] h-[140px] bg-gradient-to-b from-[#fff6db]/30 via-[#e2c056]/15 to-transparent blur-[18px] rounded-full transform-gpu" />
+            </div>
+          </div>
+
+          {/* Crisp Circular Overlap Ring */}
+          <div className="absolute inset-0 rounded-full border border-[#d4af37]/30 pointer-events-none" />
+        </div>
 
         {/* Ambient Top Vignette */}
         <div className="absolute top-0 inset-x-0 h-32 bg-gradient-to-b from-black/80 to-transparent" />
