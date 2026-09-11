@@ -38,46 +38,46 @@ export interface DailyCalendarWidgetProps {
 
 const COLOR_MAP: Record<string, { bg: string; border: string; text: string; glow: string; dot: string }> = {
   gold: {
-    bg: 'bg-[#d4af37]/15',
-    border: 'border-[#d4af37]/50',
-    text: 'text-[#f5e0a3]',
-    glow: 'hover:border-[#d4af37]',
-    dot: 'bg-[#d4af37]',
+    bg: 'bg-[#D4AF37]/10',
+    border: 'border-[#D4AF37]/40',
+    text: 'text-[#E6C34A]',
+    glow: 'hover:border-[#D4AF37]',
+    dot: 'bg-[#D4AF37]',
   },
   blue: {
-    bg: 'bg-zinc-800/80',
-    border: 'border-white/[0.12]',
-    text: 'text-zinc-200',
-    glow: 'hover:border-[#d4af37]/40',
-    dot: 'bg-zinc-400',
+    bg: 'bg-[#151518]',
+    border: 'border-white/[0.08]',
+    text: 'text-[#E8E8E8]',
+    glow: 'hover:border-[#D4AF37]/30',
+    dot: 'bg-[#8B8B92]',
   },
   purple: {
-    bg: 'bg-zinc-800/60',
-    border: 'border-white/[0.10]',
-    text: 'text-zinc-300',
-    glow: 'hover:border-[#d4af37]/40',
-    dot: 'bg-zinc-500',
+    bg: 'bg-[#151518]',
+    border: 'border-white/[0.08]',
+    text: 'text-[#E8E8E8]',
+    glow: 'hover:border-[#D4AF37]/30',
+    dot: 'bg-[#8B8B92]',
   },
   emerald: {
-    bg: 'bg-emerald-950/40',
-    border: 'border-emerald-700/40',
-    text: 'text-emerald-300',
-    glow: 'hover:border-emerald-500/60',
-    dot: 'bg-emerald-400',
+    bg: 'bg-[#121815]',
+    border: 'border-emerald-900/40',
+    text: 'text-[#E8E8E8]',
+    glow: 'hover:border-emerald-700/50',
+    dot: 'bg-emerald-500',
   },
   amber: {
-    bg: 'bg-amber-950/40',
-    border: 'border-amber-700/40',
-    text: 'text-amber-300',
-    glow: 'hover:border-amber-500/60',
-    dot: 'bg-amber-400',
+    bg: 'bg-[#181512]',
+    border: 'border-[#F0B90B]/30',
+    text: 'text-[#E8E8E8]',
+    glow: 'hover:border-[#F0B90B]/50',
+    dot: 'bg-[#F0B90B]',
   },
   rose: {
-    bg: 'bg-rose-950/40',
-    border: 'border-rose-700/40',
-    text: 'text-rose-300',
-    glow: 'hover:border-rose-500/60',
-    dot: 'bg-rose-400',
+    bg: 'bg-[#181214]',
+    border: 'border-rose-950/50',
+    text: 'text-[#E8E8E8]',
+    glow: 'hover:border-rose-800/50',
+    dot: 'bg-rose-500',
   },
 };
 
@@ -209,24 +209,24 @@ export function DailyCalendarWidget({
   };
 
   return (
-    <div className="rounded-3xl bg-[rgba(16,16,22,0.85)] border border-white/[0.08] shadow-2xl shadow-black/50 backdrop-blur-2xl overflow-hidden">
+    <div className="rounded-3xl bg-[#0C0C0F] border border-white/[0.06] shadow-2xl shadow-black/80 overflow-hidden">
       {/* 1. Header — Visual & Structural Alignment */}
-      <div className="p-5 sm:p-6 border-b border-white/[0.08] flex flex-col md:flex-row md:items-center justify-between gap-4 bg-zinc-950/50">
+      <div className="p-5 sm:p-6 border-b border-white/[0.06] flex flex-col md:flex-row md:items-center justify-between gap-4 bg-[#070709]/80">
         <div className="flex items-center gap-3.5">
-          <div className="w-10 h-10 rounded-2xl bg-zinc-900/90 border border-white/[0.1] flex items-center justify-center text-[#d4af37] shadow-inner shrink-0">
+          <div className="w-10 h-10 rounded-2xl bg-[#101012] border border-white/[0.06] flex items-center justify-center text-[#D4AF37] shadow-inner shrink-0">
             <CalendarIcon className="w-5 h-5" />
           </div>
           <div>
             <div className="flex items-center gap-2">
-              <h2 className="text-base sm:text-lg font-bold tracking-tight text-zinc-100">
+              <h2 className="text-base sm:text-lg font-bold tracking-tight text-[#F5F5F5]">
                 Daily Calendar
               </h2>
-              <span className="text-zinc-600">|</span>
-              <span className="text-xs text-zinc-400 font-medium font-mono">
+              <span className="text-zinc-700">|</span>
+              <span className="text-xs text-[#8B8B92] font-medium font-mono">
                 {events.length} {events.length === 1 ? 'event' : 'events'}
               </span>
             </div>
-            <p className="text-xs text-zinc-400 mt-0.5">
+            <p className="text-xs text-[#71717A] mt-0.5">
               Your schedule for the day • {timezone}
             </p>
           </div>
@@ -235,11 +235,11 @@ export function DailyCalendarWidget({
         {/* Navigation & Actions */}
         <div className="flex items-center gap-2.5 flex-wrap sm:flex-nowrap">
           {/* Day Navigation */}
-          <div className="flex items-center rounded-2xl bg-zinc-900/90 border border-white/[0.08] p-1 shadow-sm">
+          <div className="flex items-center rounded-2xl bg-[#101012] border border-white/[0.06] p-1 shadow-sm">
             <button
               onClick={handlePrevDay}
               aria-label="Previous Day"
-              className="p-1.5 rounded-xl text-zinc-400 hover:text-zinc-100 hover:bg-white/[0.06] transition-colors"
+              className="p-1.5 rounded-xl text-[#8B8B92] hover:text-[#F5F5F5] hover:bg-white/[0.04] transition-colors"
             >
               <ChevronLeft className="w-4 h-4" />
             </button>
@@ -248,8 +248,8 @@ export function DailyCalendarWidget({
               onClick={handleToday}
               className={`px-3 py-1 text-xs font-semibold rounded-xl transition-colors ${
                 isToday
-                  ? 'bg-[#d4af37]/20 text-[#d4af37] border border-[#d4af37]/40 shadow-sm'
-                  : 'text-zinc-300 hover:text-white hover:bg-white/[0.06]'
+                  ? 'bg-[#18181D] text-[#D4AF37] border border-[#D4AF37]/35 shadow-sm'
+                  : 'text-[#8B8B92] hover:text-[#F5F5F5] hover:bg-white/[0.04]'
               }`}
             >
               Today
@@ -258,7 +258,7 @@ export function DailyCalendarWidget({
             <button
               onClick={handleNextDay}
               aria-label="Next Day"
-              className="p-1.5 rounded-xl text-zinc-400 hover:text-zinc-100 hover:bg-white/[0.06] transition-colors"
+              className="p-1.5 rounded-xl text-[#8B8B92] hover:text-[#F5F5F5] hover:bg-white/[0.04] transition-colors"
             >
               <ChevronRight className="w-4 h-4" />
             </button>
@@ -277,8 +277,8 @@ export function DailyCalendarWidget({
               aria-label="Select Date"
               className="absolute inset-0 opacity-0 cursor-pointer w-full h-full z-10"
             />
-            <div className="px-3.5 py-2 rounded-2xl bg-zinc-900/80 border border-white/[0.08] hover:border-white/20 text-xs font-semibold text-zinc-200 transition-colors flex items-center gap-2 pointer-events-none">
-              <CalendarIcon className="w-3.5 h-3.5 text-[#d4af37]" />
+            <div className="px-3.5 py-2 rounded-2xl bg-[#101012] border border-white/[0.06] hover:border-white/[0.12] text-xs font-semibold text-[#E8E8E8] transition-colors flex items-center gap-2 pointer-events-none">
+              <CalendarIcon className="w-3.5 h-3.5 text-[#D4AF37]" />
               <span>{dateHeader.formatted}</span>
             </div>
           </div>
@@ -288,8 +288,8 @@ export function DailyCalendarWidget({
             variant="primary"
             size="sm"
             onClick={handleOpenAddEvent}
-            icon={<Plus className="w-3.5 h-3.5" />}
-            className="shadow-lg shadow-[#d4af37]/15 border border-[#f5c037]/40 font-semibold shrink-0"
+            icon={<Plus className="w-3.5 h-3.5 text-[#090909]" />}
+            className="bg-[#D4AF37] hover:bg-[#E6C34A] text-[#090909] font-semibold border border-[#E6C34A]/40 shadow-md shadow-[#D4AF37]/15 shrink-0"
           >
             Add Event
           </Button>
@@ -298,14 +298,14 @@ export function DailyCalendarWidget({
 
       {/* 2. Empty State Secondary Banner */}
       {events.length === 0 && !isLoadingEvents && (
-        <div className="px-5 py-3 bg-zinc-900/40 border-b border-white/[0.04] flex items-center justify-between gap-4">
-          <div className="flex items-center gap-2 text-xs text-zinc-400">
-            <Sparkles className="w-3.5 h-3.5 text-[#d4af37]" />
+        <div className="px-5 py-3 bg-[#09090B] border-b border-white/[0.03] flex items-center justify-between gap-4">
+          <div className="flex items-center gap-2 text-xs text-[#8B8B92]">
+            <Sparkles className="w-3.5 h-3.5 text-[#D4AF37]" />
             <span>Your day is clear. Click any open slot on the timeline to schedule a block.</span>
           </div>
           <button
             onClick={handleOpenAddEvent}
-            className="text-xs font-semibold text-[#d4af37] hover:underline"
+            className="text-xs font-semibold text-[#D4AF37] hover:underline"
           >
             + Add Event
           </button>
@@ -316,7 +316,7 @@ export function DailyCalendarWidget({
       <div className="overflow-x-auto select-none focus:outline-none p-5 sm:p-6" tabIndex={0} aria-label="Daily Calendar Timeline">
         <div className="min-w-[820px] relative">
           {/* Horizontal Time Axis Header */}
-          <div className="relative h-9 border-b border-white/[0.08] bg-zinc-950/60 rounded-t-2xl overflow-hidden">
+          <div className="relative h-9 border-b border-white/[0.06] bg-[#070709] rounded-t-2xl overflow-hidden">
             {range.hoursList.map((slot, idx) => {
               const isFirst = idx === 0;
               const isLast = idx === range.hoursList.length - 1;
@@ -327,7 +327,7 @@ export function DailyCalendarWidget({
                   style={{ left: `${slot.offsetPercent}%` }}
                 >
                   <span
-                    className={`text-[11px] font-mono text-zinc-400 font-medium pt-1.5 ${
+                    className={`text-[11px] font-mono text-[#71717A] font-medium pt-1.5 ${
                       isFirst
                         ? 'translate-x-2'
                         : isLast
@@ -337,7 +337,7 @@ export function DailyCalendarWidget({
                   >
                     {slot.label}
                   </span>
-                  <div className="w-px h-2 bg-white/20" />
+                  <div className="w-px h-2 bg-white/[0.12]" />
                 </div>
               );
             })}
@@ -347,7 +347,7 @@ export function DailyCalendarWidget({
           <div
             ref={trackRef}
             onClick={handleTrackClick}
-            className="relative cursor-pointer bg-zinc-950/30 hover:bg-zinc-900/20 transition-colors border-x border-b border-white/[0.08] rounded-b-2xl overflow-hidden"
+            className="relative cursor-pointer bg-[#070709]/60 hover:bg-[#070709]/90 transition-colors border-x border-b border-white/[0.06] rounded-b-2xl overflow-hidden"
             style={{ minHeight: `${Math.max(150, totalHeightPx + 24)}px` }}
             title="Click any open time slot to create an event"
           >
@@ -362,7 +362,7 @@ export function DailyCalendarWidget({
                 <React.Fragment key={slot.hour}>
                   {/* Full hour guide line */}
                   <div
-                    className="absolute top-0 bottom-0 w-px border-r border-white/[0.05] pointer-events-none"
+                    className="absolute top-0 bottom-0 w-px border-r border-white/[0.04] pointer-events-none"
                     style={{ left: `${slot.offsetPercent}%` }}
                   />
                   {/* Half hour dashed guide line */}
@@ -383,14 +383,14 @@ export function DailyCalendarWidget({
                 style={{ left: `${currentOffsetPercent}%` }}
               >
                 {/* Top Badge with Dot and Time */}
-                <div className="absolute top-1 -translate-x-1/2 flex items-center gap-1 px-2 py-0.5 rounded-full bg-zinc-950/95 border border-[#d4af37]/60 shadow-lg">
-                  <div className="w-1.5 h-1.5 rounded-full bg-[#d4af37] animate-pulse" />
-                  <span className="text-[10px] font-mono font-bold text-[#d4af37]">
+                <div className="absolute top-1 -translate-x-1/2 flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-[#0C0C0F] border border-[#D4AF37]/50 shadow-lg">
+                  <div className="w-1.5 h-1.5 rounded-full bg-[#D4AF37] animate-pulse" />
+                  <span className="text-[10px] font-mono font-bold text-[#D4AF37]">
                     {currentTimeFormatted}
                   </span>
                 </div>
                 {/* Vertical gold guide line extending through the timeline */}
-                <div className="w-[2px] h-full bg-gradient-to-b from-[#d4af37] via-[#d4af37]/80 to-[#d4af37]/20 shadow-[0_0_8px_#d4af37]" />
+                <div className="w-[2px] h-full bg-gradient-to-b from-[#D4AF37] via-[#D4AF37]/70 to-transparent shadow-[0_0_8px_#D4AF37]" />
               </div>
             )}
 
@@ -434,32 +434,32 @@ export function DailyCalendarWidget({
                             {pe.event.title}
                           </h3>
                           {(pe.event.is_external || pe.event.google_event_id) && (
-                            <span className="inline-flex items-center gap-1 text-[9px] text-zinc-300 bg-zinc-900 border border-[#d4af37]/30 px-1.5 py-0.5 rounded shrink-0">
-                              <CalendarIcon className="w-2.5 h-2.5 text-[#d4af37]" />
+                            <span className="inline-flex items-center gap-1 text-[9px] text-[#A1A1AA] bg-[#101012] border border-white/[0.08] px-1.5 py-0.5 rounded shrink-0">
+                              <CalendarIcon className="w-2.5 h-2.5 text-[#D4AF37]" />
                               <span className="hidden md:inline">Google</span>
                             </span>
                           )}
-                          <span className="text-[10px] text-zinc-400 font-mono shrink-0 hidden sm:inline">
+                          <span className="text-[10px] text-[#71717A] font-mono shrink-0 hidden sm:inline">
                             {startStr} – {endStr}
                           </span>
                         </div>
                         {/* Linked Relation Badge */}
                         <div className="flex items-center gap-1.5 flex-wrap">
                           {pe.event.tasks && (
-                            <span className="inline-flex items-center gap-1 text-[10px] text-zinc-300 truncate">
-                              <CheckSquare className="w-2.5 h-2.5 text-[#d4af37] shrink-0" />
+                            <span className="inline-flex items-center gap-1 text-[10px] text-[#8B8B92] truncate">
+                              <CheckSquare className="w-2.5 h-2.5 text-[#D4AF37] shrink-0" />
                               <span className="truncate max-w-[150px]">{pe.event.tasks.title}</span>
                             </span>
                           )}
                           {pe.event.projects && !pe.event.tasks && (
-                            <span className="inline-flex items-center gap-1 text-[10px] text-zinc-300 truncate">
-                              <FolderKanban className="w-2.5 h-2.5 text-[#d4af37] shrink-0" />
+                            <span className="inline-flex items-center gap-1 text-[10px] text-[#8B8B92] truncate">
+                              <FolderKanban className="w-2.5 h-2.5 text-[#D4AF37] shrink-0" />
                               <span className="truncate max-w-[150px]">{pe.event.projects.title}</span>
                             </span>
                           )}
                           {pe.event.goals && !pe.event.tasks && !pe.event.projects && (
-                            <span className="inline-flex items-center gap-1 text-[10px] text-zinc-300 truncate">
-                              <Target className="w-2.5 h-2.5 text-[#d4af37] shrink-0" />
+                            <span className="inline-flex items-center gap-1 text-[10px] text-[#8B8B92] truncate">
+                              <Target className="w-2.5 h-2.5 text-[#D4AF37] shrink-0" />
                               <span className="truncate max-w-[150px]">{pe.event.goals.title}</span>
                             </span>
                           )}
@@ -468,7 +468,7 @@ export function DailyCalendarWidget({
                     </div>
 
                     {/* Compact time on small screens */}
-                    <span className="text-[10px] text-zinc-400 font-mono shrink-0 sm:hidden">
+                    <span className="text-[10px] text-[#71717A] font-mono shrink-0 sm:hidden">
                       {startStr}
                     </span>
                   </div>

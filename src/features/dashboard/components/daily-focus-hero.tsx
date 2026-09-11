@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useMemo } from 'react';
-import { GlassCard, Button, Badge } from '@/components/ui';
+import { Button } from '@/components/ui';
 import { ShieldCheck, Plus, Calendar, ArrowLeft, ArrowRight } from 'lucide-react';
 import Link from 'next/link';
 
@@ -16,8 +16,8 @@ export interface DailyFocusHeroProps {
 
 /**
  * PACT Daily Focus Hero & Date Horizon Ribbon
- * Luxury cinematic hero featuring the signature PACT dark planetary sphere
- * with warm golden rim lighting, atmospheric glow, and authoritative status.
+ * Luxury cinematic hero featuring the signature dark planetary sphere on the right 35%,
+ * warm golden rim lighting, crisp typography, and restrained ambient lighting.
  */
 export function DailyFocusHero({
   userName,
@@ -27,7 +27,7 @@ export function DailyFocusHero({
   urgentCount,
   timezone,
 }: DailyFocusHeroProps) {
-  // Get current local day and month in user's profile timezone
+  // Get current local day, month, and weekday in user's profile timezone
   const { dayNumber, monthAbbrev, weekdayName } = useMemo(() => {
     try {
       const now = new Date();
@@ -51,78 +51,66 @@ export function DailyFocusHero({
 
   return (
     <div className="space-y-4">
-      {/* Primary Hero Banner with Cinematic Planetary Sphere */}
-      <div className="relative rounded-3xl bg-[rgba(14,14,19,0.85)] border border-white/[0.09] p-6 sm:p-8 lg:p-10 shadow-2xl shadow-black/70 backdrop-blur-2xl overflow-hidden group">
-        {/* 1. Cinematic Atmospheric Gold Diffuse Glow */}
+      {/* Primary Hero Banner */}
+      <div className="relative rounded-[28px] bg-[#0C0C0F] border border-white/[0.06] p-6 sm:p-8 lg:p-10 shadow-2xl shadow-black/80 overflow-hidden group">
+        {/* 1. Cinematic Dark Planetary Sphere on the Right (Occupies ~35% of container) */}
         <div
           aria-hidden="true"
-          className="absolute -top-24 right-0 w-[420px] sm:w-[540px] h-[340px] sm:h-[420px] bg-gradient-to-bl from-[#d4af37]/20 via-[#aa820a]/8 to-transparent rounded-full blur-3xl pointer-events-none"
-        />
-
-        {/* 2. Planetary Sphere Element */}
-        <div
-          aria-hidden="true"
-          className="absolute -top-12 -right-12 sm:-top-8 sm:-right-8 lg:-top-6 lg:-right-6 w-64 sm:w-80 lg:w-96 h-64 sm:h-80 lg:h-96 pointer-events-none select-none z-0"
+          className="absolute -top-12 -right-12 sm:-top-16 sm:-right-16 lg:-top-20 lg:-right-16 w-[280px] sm:w-[380px] lg:w-[460px] h-[280px] sm:h-[380px] lg:h-[460px] pointer-events-none select-none z-0"
         >
-          {/* Subtle Outer Atmospheric Halo */}
-          <div className="absolute inset-0 rounded-full bg-gradient-to-tr from-transparent via-[#d4af37]/10 to-[#f5c037]/25 blur-xl transform scale-110" />
-
-          {/* Core Dark Obsidian Sphere Body with Realistic Shading */}
+          {/* Localized Soft Gold Atmospheric Glow Halo */}
           <div
-            className="absolute inset-0 rounded-full border border-white/[0.06] shadow-2xl shadow-black"
+            className="absolute top-2 right-2 sm:top-4 sm:right-4 w-48 sm:w-64 h-48 sm:h-64 rounded-full blur-3xl opacity-25"
             style={{
-              background:
-                'radial-gradient(circle at 72% 28%, #262422 0%, #16151a 30%, #0d0c10 65%, #070709 100%)',
+              background: 'radial-gradient(circle, rgba(212, 175, 55, 0.4) 0%, rgba(230, 195, 74, 0.12) 40%, transparent 70%)',
             }}
           />
 
-          {/* Golden Upper-Right Rim Light & Specular Crescent */}
+          {/* Core Dark Planetary Sphere Body */}
           <div
-            className="absolute inset-0 rounded-full"
+            className="absolute inset-4 sm:inset-6 rounded-full border border-white/[0.04]"
             style={{
-              background:
-                'radial-gradient(circle at 82% 18%, rgba(252, 234, 187, 0.85) 0%, rgba(212, 175, 55, 0.5) 18%, rgba(170, 130, 10, 0.18) 38%, transparent 68%)',
+              background: 'radial-gradient(circle at 74% 24%, #18181C 0%, #101013 32%, #0C0C0F 64%, #050506 100%)',
+              boxShadow: 'inset -2px 2px 14px 1px rgba(212, 175, 55, 0.45), inset -1px 1px 3px 0px rgba(255, 245, 220, 0.9), 0 10px 40px rgba(0,0,0,0.95)',
             }}
-          />
+          >
+            {/* Upper-Right Gold Crescent & Specular Highlight */}
+            <div
+              className="absolute inset-0 rounded-full"
+              style={{
+                background: 'radial-gradient(circle at 82% 18%, rgba(240, 185, 11, 0.5) 0%, rgba(212, 175, 55, 0.2) 20%, transparent 45%)',
+              }}
+            />
 
-          {/* Razor-thin Bright Gold Crescent Edge Line */}
-          <div
-            className="absolute inset-0 rounded-full"
-            style={{
-              boxShadow:
-                'inset -3px 3px 12px 1px rgba(212, 175, 55, 0.4), inset -1px 1px 3px 0px rgba(255, 240, 200, 0.8)',
-            }}
-          />
-
-          {/* Subtle Surface Texture / Latitudinal Contours */}
-          <div className="absolute inset-0 rounded-full opacity-20 mix-blend-overlay bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-white/20 via-transparent to-black/80" />
+            {/* Subtle Surface Texture Contours */}
+            <div
+              className="absolute inset-0 rounded-full opacity-15 mix-blend-overlay"
+              style={{
+                backgroundImage: 'radial-gradient(ellipse at 70% 30%, rgba(255, 255, 255, 0.18) 0%, transparent 60%)',
+              }}
+            />
+          </div>
         </div>
 
-        {/* 3. Hero Content */}
+        {/* 2. Hero Content */}
         <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6 lg:gap-8">
-          <div className="space-y-3.5 max-w-2xl">
-            {/* PACT Operating System Badge */}
-            <div className="flex items-center gap-2">
-              <Badge
-                variant="gold"
-                size="sm"
-                icon={<ShieldCheck className="w-3.5 h-3.5 text-[#d4af37]" />}
-                className="bg-[#181820]/90 border-[#d4af37]/30 text-zinc-200 shadow-sm"
-              >
-                PACT Personal Operating System
-              </Badge>
+          <div className="space-y-3.5 max-w-xl">
+            {/* Small Gold Outlined Badge */}
+            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#101012] border border-[#D4AF37]/35 text-[11px] font-medium tracking-wide text-[#E8E8E8] shadow-sm">
+              <ShieldCheck className="w-3.5 h-3.5 text-[#D4AF37]" />
+              <span>PACT Personal Operating System</span>
             </div>
 
-            {/* Cinematic Headline */}
-            <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold tracking-tight text-zinc-100">
+            {/* Large Bold Warm White Greeting */}
+            <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold tracking-tight text-[#F5F5F5]">
               {greeting},{' '}
-              <span className="text-gradient-gold drop-shadow-sm">
-                {userName || 'Committed User'}
+              <span className="text-[#F5F5F5] font-extrabold">
+                {userName || 'Vicky'}
               </span>
             </h1>
 
-            {/* Context Description */}
-            <p className="text-sm sm:text-base text-zinc-400 leading-relaxed max-w-xl">
+            {/* Supporting Copy in Muted Gray */}
+            <p className="text-sm sm:text-base text-[#8B8B92] leading-relaxed max-w-lg">
               {pendingCount > 0
                 ? `You have ${pendingCount} ${
                     pendingCount === 1 ? 'commitment' : 'commitments'
@@ -131,14 +119,14 @@ export function DailyFocusHero({
             </p>
           </div>
 
-          {/* Action Button */}
+          {/* New Commitment Button */}
           <div className="flex items-center gap-3 shrink-0">
             <Link href="/app/tasks">
               <Button
                 variant="primary"
                 size="md"
-                icon={<Plus className="w-4 h-4" />}
-                className="shadow-xl shadow-[#d4af37]/20 border border-[#f5c037]/50 font-semibold hover:brightness-105 active:scale-[0.98] transition-all"
+                icon={<Plus className="w-4 h-4 text-[#090909]" />}
+                className="bg-[#D4AF37] hover:bg-[#E6C34A] text-[#090909] font-semibold border border-[#E6C34A]/50 shadow-lg shadow-[#D4AF37]/15 transition-all duration-200"
               >
                 New Commitment
               </Button>
@@ -151,27 +139,27 @@ export function DailyFocusHero({
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 px-1">
         <div className="flex items-center gap-3.5">
           {/* Date Squircle */}
-          <div className="w-12 h-12 rounded-2xl bg-[#121217] border border-white/[0.1] flex flex-col items-center justify-center text-center shrink-0 shadow-md">
-            <span className="text-base font-extrabold text-zinc-100 leading-none">
+          <div className="w-12 h-12 rounded-2xl bg-[#0C0C0F] border border-white/[0.06] flex flex-col items-center justify-center text-center shrink-0 shadow-md">
+            <span className="text-base font-extrabold text-[#F5F5F5] leading-none">
               {dayNumber}
             </span>
-            <span className="text-[10px] uppercase font-bold tracking-wider text-[#d4af37] leading-tight mt-0.5">
+            <span className="text-[10px] uppercase font-bold tracking-wider text-[#D4AF37] leading-tight mt-0.5">
               {monthAbbrev}
             </span>
           </div>
 
           <div>
-            <div className="flex items-center gap-2 text-sm font-semibold text-zinc-200">
+            <div className="flex items-center gap-2 text-sm font-semibold text-[#E8E8E8]">
               <span>{weekdayName}&apos;s Commitments</span>
-              <span className="text-zinc-600">•</span>
-              <span className="text-xs font-mono font-medium text-zinc-400">
+              <span className="text-[#71717A]">•</span>
+              <span className="text-xs font-mono font-medium text-[#A1A1AA]">
                 {pendingCount} Pending
                 {urgentCount > 0 && (
-                  <span className="text-amber-400/90 ml-1">({urgentCount} Urgent)</span>
+                  <span className="text-[#D4AF37] ml-1">({urgentCount} Urgent)</span>
                 )}
               </span>
             </div>
-            <p className="text-xs text-zinc-400 mt-0.5">
+            <p className="text-xs text-[#71717A] mt-0.5">
               {completedCount > 0
                 ? `${completedCount} commitments fulfilled in this cycle.`
                 : 'Ready for disciplined execution today.'}
@@ -185,19 +173,19 @@ export function DailyFocusHero({
             type="button"
             disabled
             title="Viewing current active day"
-            className="w-8 h-8 rounded-xl border border-white/[0.06] bg-zinc-900/40 text-zinc-600 flex items-center justify-center cursor-not-allowed"
+            className="w-8 h-8 rounded-xl border border-white/[0.04] bg-[#0C0C0F] text-[#71717A] flex items-center justify-center cursor-not-allowed"
           >
             <ArrowLeft className="w-3.5 h-3.5" />
           </button>
-          <div className="text-[11px] font-mono text-zinc-300 px-2.5 py-1 rounded-lg bg-zinc-900/60 border border-white/[0.06] flex items-center gap-1.5">
-            <Calendar className="w-3 h-3 text-[#d4af37]" />
+          <div className="text-[11px] font-mono text-[#A1A1AA] px-2.5 py-1 rounded-lg bg-[#0C0C0F] border border-white/[0.04] flex items-center gap-1.5">
+            <Calendar className="w-3 h-3 text-[#D4AF37]" />
             <span>Today</span>
           </div>
           <button
             type="button"
             disabled
             title="Viewing current active day"
-            className="w-8 h-8 rounded-xl border border-white/[0.06] bg-zinc-900/40 text-zinc-600 flex items-center justify-center cursor-not-allowed"
+            className="w-8 h-8 rounded-xl border border-white/[0.04] bg-[#0C0C0F] text-[#71717A] flex items-center justify-center cursor-not-allowed"
           >
             <ArrowRight className="w-3.5 h-3.5" />
           </button>
