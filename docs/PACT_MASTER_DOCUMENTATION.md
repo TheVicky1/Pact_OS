@@ -180,16 +180,29 @@ If an external API experiences an outage, network timeout, or rate limit, the ve
 
 ---
 
-## 9. UI/UX System & Design Tokens
+## 9. UI/UX System & Luxury Design Architecture
 
-### 9.1 Aesthetic Foundation
-PACT is built with a bespoke **Dark Glassmorphic** theme using deep near-black surfaces, subtle specular borders, and restrained warm gold accents:
+### 9.1 Aesthetic Foundation & Visual Philosophy
+PACT is built upon a luxury **Dark Obsidian & PACT Gold** design language engineered for executive focus and disciplined execution:
+- **Canvas Base**: Deepest OLED Obsidian & Canvas Black (`#050505`, `#070707`, `#090909`).
+- **Surface Cards**: Rich solid surfaces (`#0C0C0F`, `#101012`, `#121214`) with ultra-fine specular hairline borders (`rgba(255, 255, 255, 0.06)`).
+- **Brand Gold Palette**: `#D4AF37` (Primary authoritative gold), `#E6C34A` (Active highlights), `#FFF7D6` (Specular crescent apex), `#AA820A` (Deep gold tracks).
+- **Typography Colors**: `#F5F5F5` (High-contrast headings & numerals), `#E8E8E8` (Body copy), `#8B8B92` (Secondary labels), `#71717A` (Muted timestamps).
 
-- **Canvas Base**: `#060608` / `#09090b`
-- **Surface Cards**: `rgba(18, 18, 23, 0.75)` with `backdrop-filter: blur(16px)`
-- **Brand Gold**: `#d4af37` (Primary), `#f5e0a3` (Specular highlight), `#aa820a` (Deep gold)
-- **Border Subtlety**: `rgba(255, 255, 255, 0.08)`
-- **Typography**: Inter / Geist Sans with high-contrast hierarchy and monospace accents for metric timestamps.
+### 9.2 3D Celestial Planetary Hero
+The Overview dashboard features a photorealistic 3D celestial planet sphere (`src/features/dashboard/components/daily-focus-hero.tsx`):
+- **Volumetric Multi-layer Radial Shading**: Transitions smoothly from `#1E1E26` to `#050507` across the sphere's surface, creating realistic 3D depth without artificial flat 2D circular borders.
+- **Rayleigh Atmospheric Back-Scatter**: Off-center radial glow creating the optical illusion of sunlight wrapping around a planetary limb.
+- **Razor-Thin Specular Gold Crescent**: Precision path along the upper-right circumference illuminated with a gradient from `#FFF7D6` through `#D4AF37` to `transparent`.
+- **Orbital Coordinate Grids**: Faint concentric orbital ellipses rendered in PACT Gold at 8–12% opacity.
+
+### 9.3 Unified Card Architecture & Geometry Tokens
+- **Primary Metric Cards**: 4 identical `#0C0C0F` cards (Pending Commitments, Active Goals, Active Projects, Missed Commitments) with faint 8% gold orbital corner geometry (`stroke="#D4AF37" strokeOpacity="0.08"`), high-contrast numerals (`#F5F5F5`), and micro-elevation hover states.
+- **Immediate Focus Card**: `#0C0C0F` surface with upper-right gold spotlight (`rgba(212,175,55,0.06)`), gold border accents, and high-visibility status pill.
+- **Daily Cadence & Follow-Through Widgets**: Dark progress tracks with `#D4AF37` fills and 24-hour activity distribution histograms with peak highlights.
+
+### 9.4 Non-Obstructive Tooltip Standards
+- Custom delay-gated tooltips (350ms activation, `z-50`, `pointer-events-none`) placed above trigger controls to ensure zero obstruction of surrounding date navigation or dashboard content. Native `title` attributes are strictly avoided.
 
 ---
 

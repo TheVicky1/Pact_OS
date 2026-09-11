@@ -9,7 +9,7 @@ This document provides the authoritative inventory of all 14 integrated product 
 | # | System / Module | Route | Implementation Status | Scope & Capabilities |
 |---|---|---|---|---|
 | 1 | **Authentication & Onboarding** | `/`, `/app/onboarding` | `IMPLEMENTED` | Unified single-screen landing page with email/password, Google OAuth, password reset, and a 4-step personalized onboarding setup wizard. |
-| 2 | **Command Center** | `/app` | `IMPLEMENTED` | Daily situational dashboard with unified search (`Cmd+K`), quick-capture palette, live cadence widget, active focus stats, and high-priority commitments. |
+| 2 | **Command Center & Overview Dashboard** | `/app` | `IMPLEMENTED` | Daily situational operating system featuring a photorealistic 3D celestial hero, 4 primary metric cards with 8% gold orbital geometry, Immediate Focus spotlight card, Follow-Through rate track, 24H activity cadence histogram, daily calendar with unclipped event modal, quick-capture palette, and universal search (`Cmd+K`). |
 | 3 | **Tasks & Backlog** | `/app/tasks` | `IMPLEMENTED` | Complete task management with priority matrix, estimated duration, scheduled times, deadline tracking, and bulk multi-select operations. |
 | 4 | **Planner** | `/app/planner` | `IMPLEMENTED` | Day, Week, and Month time-blocking views with drag-and-drop scheduling, timezone boundary enforcement, and calendar event conflict markers. |
 | 5 | **Goals** | `/app/goals` | `IMPLEMENTED` | Long-term strategic intentional targets with milestone progress bars, associated projects, and deadline indicators. |
@@ -27,7 +27,14 @@ This document provides the authoritative inventory of all 14 integrated product 
 
 ## 2. Core System Deep Dives
 
-### 2.1 Accountability & Consequence Engine
+### 2.1 Overview Dashboard & Command Center
+- **3D Celestial Hero**: Photorealistic 3D planet sphere with multi-layer SVG radial lighting (`#1E1E26` $\rightarrow$ `#050507`), Rayleigh back-scatter, razor-thin gold crescent specular highlight (`#FFF7D6`/`#D4AF37`), atmospheric corona, and active date navigation controls with 350ms delay-gated non-obstructive tooltips.
+- **Metric Cards Matrix**: 4 standardized `#0C0C0F` cards (Pending Commitments, Active Goals, Active Projects, Missed Commitments) with faint 8% gold orbital corner geometry, `#F5F5F5` numerals, `ArrowUpRight` indicators, and hover micro-elevation.
+- **Immediate Focus Spotlight**: Active commitment focus card with upper-right radial gold spotlight (`rgba(212,175,55,0.06)`), priority indicator, and status badge.
+- **Cadence & Follow-Through Widgets**: Linear follow-through completion progress track and 24-hour activity distribution histogram.
+- **Daily Calendar Integration**: Time-blocked schedule view with gold real-time indicator line and accessible, unclipped `z-50` centered event creation modal.
+
+### 2.2 Accountability & Consequence Engine
 - **State Machine**: `DRAFT` ➔ `ACTIVE` ➔ `COMPLETED` / `BREACHED` ➔ `CONSEQUENCE_ACTIVATED` ➔ `RESOLVED` / `WAIVED`.
 - **Confidentiality**: Penalty details remain masked in database queries until activated by deadline breach.
 - **Autonomous Sweeping**: Handled by `/api/cron/sweep-deadlines` with timing-safe `CRON_SECRET` authorization.
