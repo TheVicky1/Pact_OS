@@ -44,15 +44,17 @@ export async function updateSession(request: NextRequest) {
   const isAuthRoute = url.pathname.startsWith('/login') || url.pathname.startsWith('/register');
   const isProtectedRoute = url.pathname.startsWith('/app') || url.pathname.startsWith('/profile');
 
-  // 1. Unauthenticated user trying to access protected routes -> Redirect to login
+  // 1. Unauthenticated user trying to access protected routes -> Redirect to landing with signin mode
   if (!user && isProtectedRoute) {
-    url.pathname = '/login';
+    url.pathname = '/';
+    url.search = '?auth=signin';
     return NextResponse.redirect(url);
   }
 
-  // 2. Authenticated user trying to access login/register -> Redirect to protected app root
-  if (user && isAuthRoute) {
+  // 2. Authenticated user trying to access auth or landing -> Redirect to protected app root
+  if (user && (isAuthRoute || url.pathname === '/')) {
     url.pathname = '/app';
+    url.search = '';
     return NextResponse.redirect(url);
   }
 
