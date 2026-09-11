@@ -25,12 +25,12 @@ export interface EventModalProps {
 }
 
 const COLOR_OPTIONS: Array<{ value: CalendarColorTag; label: string; bg: string; border: string }> = [
-  { value: 'gold', label: 'Gold', bg: 'bg-[#d4af37]', border: 'border-[#d4af37]' },
-  { value: 'blue', label: 'Blue', bg: 'bg-blue-500', border: 'border-blue-500' },
-  { value: 'purple', label: 'Purple', bg: 'bg-purple-500', border: 'border-purple-500' },
-  { value: 'emerald', label: 'Emerald', bg: 'bg-emerald-500', border: 'border-emerald-500' },
-  { value: 'amber', label: 'Amber', bg: 'bg-amber-500', border: 'border-amber-500' },
-  { value: 'rose', label: 'Rose', bg: 'bg-rose-500', border: 'border-rose-500' },
+  { value: 'gold', label: 'Gold', bg: 'bg-[#D4AF37]', border: 'border-[#D4AF37]' },
+  { value: 'blue', label: 'Charcoal', bg: 'bg-zinc-500', border: 'border-zinc-500' },
+  { value: 'amber', label: 'Amber', bg: 'bg-[#F0B90B]', border: 'border-[#F0B90B]' },
+  { value: 'emerald', label: 'Emerald', bg: 'bg-emerald-600', border: 'border-emerald-600' },
+  { value: 'purple', label: 'Muted', bg: 'bg-zinc-600', border: 'border-zinc-600' },
+  { value: 'rose', label: 'Urgent', bg: 'bg-rose-600', border: 'border-rose-600' },
 ];
 
 export function EventModal(props: EventModalProps) {
@@ -155,10 +155,10 @@ function EventModalContent({
       isOpen={isOpen}
       onClose={onClose}
       title={eventToEdit ? 'Edit Calendar Event' : 'Add Calendar Event'}
-      description={`Plan your day in your profile timezone (${timezone}).`}
-      size="md"
+      description={`Schedule your day in your profile timezone (${timezone}).`}
+      size="lg"
     >
-      <form onSubmit={handleSubmit} className="space-y-4 pt-2">
+      <form onSubmit={handleSubmit} className="space-y-4 pt-1">
         {error && (
           <Alert variant="danger" title="Event Error">
             {error}
@@ -167,14 +167,14 @@ function EventModalContent({
 
         {/* Google Calendar Sync Indicator Banner */}
         {eventToEdit && (eventToEdit.is_external || eventToEdit.google_event_id) && (
-          <div className="p-3 rounded-xl bg-blue-500/10 border border-blue-500/20 text-xs text-blue-300 flex items-center justify-between">
+          <div className="p-3 rounded-2xl bg-[#101012] border border-[#D4AF37]/30 text-xs text-[#E8E8E8] flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <CalendarIcon className="w-4 h-4 text-blue-400" />
+              <CalendarIcon className="w-4 h-4 text-[#D4AF37]" />
               <span>
                 {eventToEdit.is_external ? 'Imported from Google Calendar' : 'Synchronized with Google Calendar'}
               </span>
             </div>
-            <span className="text-[11px] font-mono px-2 py-0.5 rounded bg-blue-500/20 text-blue-200">
+            <span className="text-[11px] font-mono px-2 py-0.5 rounded bg-[#18181D] text-[#D4AF37] border border-[#D4AF37]/30">
               Google Sync
             </span>
           </div>
@@ -185,47 +185,65 @@ function EventModalContent({
           <Input
             value={title}
             onChange={(e) => setTitle(e.target.value)}
-            placeholder="e.g. Deep Work: Algorithm Optimization"
+            placeholder="e.g. Deep Work: Architecture Strategy"
             required
             autoFocus
+            className="text-sm bg-[#101012] border-white/[0.08] focus:border-[#D4AF37]"
           />
         </FormField>
 
-        {/* Date, Start, End */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-          <FormField label="Date" required>
-            <Input
+        {/* Date, Start Time, End Time in Equal-Width Grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3.5">
+          <div className="space-y-1.5">
+            <label className="text-xs font-semibold text-[#E8E8E8] flex items-center gap-1.5">
+              <CalendarIcon className="w-3.5 h-3.5 text-[#D4AF37]" />
+              <span>Date</span>
+              <span className="text-rose-400">*</span>
+            </label>
+            <input
               type="date"
               value={date}
               onChange={(e) => setDate(e.target.value)}
               required
-              leftIcon={<CalendarIcon className="w-4 h-4 text-zinc-400" />}
+              className="w-full h-11 bg-[#101012] border border-white/[0.08] rounded-xl px-3 text-xs text-[#E8E8E8] focus:outline-none focus:border-[#D4AF37] focus:ring-1 focus:ring-[#D4AF37]"
             />
-          </FormField>
-          <FormField label="Start Time" required>
-            <Input
+          </div>
+
+          <div className="space-y-1.5">
+            <label className="text-xs font-semibold text-[#E8E8E8] flex items-center gap-1.5">
+              <Clock className="w-3.5 h-3.5 text-[#D4AF37]" />
+              <span>Start Time</span>
+              <span className="text-rose-400">*</span>
+            </label>
+            <input
               type="time"
               value={startTime}
               onChange={(e) => setStartTime(e.target.value)}
               required
-              leftIcon={<Clock className="w-4 h-4 text-[#d4af37]" />}
+              className="w-full h-11 bg-[#101012] border border-white/[0.08] rounded-xl px-3 text-xs text-[#E8E8E8] focus:outline-none focus:border-[#D4AF37] focus:ring-1 focus:ring-[#D4AF37]"
             />
-          </FormField>
-          <FormField label="End Time" required>
-            <Input
+          </div>
+
+          <div className="space-y-1.5">
+            <label className="text-xs font-semibold text-[#E8E8E8] flex items-center gap-1.5">
+              <Clock className="w-3.5 h-3.5 text-[#8B8B92]" />
+              <span>End Time</span>
+              <span className="text-rose-400">*</span>
+            </label>
+            <input
               type="time"
               value={endTime}
               onChange={(e) => setEndTime(e.target.value)}
               required
-              leftIcon={<Clock className="w-4 h-4 text-zinc-400" />}
+              className="w-full h-11 bg-[#101012] border border-white/[0.08] rounded-xl px-3 text-xs text-[#E8E8E8] focus:outline-none focus:border-[#D4AF37] focus:ring-1 focus:ring-[#D4AF37]"
             />
-          </FormField>
+          </div>
         </div>
 
         {/* Color Accent Picker */}
-        <div className="space-y-1.5">
-          <label className="text-xs font-semibold text-zinc-300 flex items-center gap-1.5">
-            <Tag className="w-3.5 h-3.5 text-[#d4af37]" />
+        <div className="space-y-1.5 pt-1">
+          <label className="text-xs font-semibold text-[#E8E8E8] flex items-center gap-1.5">
+            <Tag className="w-3.5 h-3.5 text-[#D4AF37]" />
             Color Tag
           </label>
           <div className="flex items-center gap-2 flex-wrap">
@@ -234,10 +252,10 @@ function EventModalContent({
                 key={c.value}
                 type="button"
                 onClick={() => setColorTag(c.value)}
-                className={`flex items-center gap-1.5 px-2.5 py-1 rounded-lg border text-xs transition-all ${
+                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl border text-xs transition-all ${
                   colorTag === c.value
-                    ? 'bg-zinc-800 border-[#d4af37] text-zinc-100 ring-1 ring-[#d4af37]/40'
-                    : 'bg-zinc-900/60 border-white/[0.08] text-zinc-400 hover:text-zinc-200'
+                    ? 'bg-[#18181D] border-[#D4AF37] text-[#F5F5F5] ring-1 ring-[#D4AF37]/50 shadow-sm'
+                    : 'bg-[#101012] border-white/[0.06] text-[#8B8B92] hover:text-[#E8E8E8]'
                 }`}
               >
                 <span className={`w-2.5 h-2.5 rounded-full ${c.bg}`} />
@@ -248,17 +266,17 @@ function EventModalContent({
         </div>
 
         {/* Optional Linkage: Project, Goal, Task */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 pt-1">
           {projects.length > 0 && (
-            <div className="space-y-1">
-              <label className="text-xs font-semibold text-zinc-300 flex items-center gap-1">
-                <FolderKanban className="w-3.5 h-3.5 text-[#d4af37]" />
+            <div className="space-y-1.5">
+              <label className="text-xs font-semibold text-[#E8E8E8] flex items-center gap-1.5">
+                <FolderKanban className="w-3.5 h-3.5 text-[#D4AF37]" />
                 Linked Project (Optional)
               </label>
               <select
                 value={projectId}
                 onChange={(e) => setProjectId(e.target.value)}
-                className="w-full bg-zinc-900 border border-white/[0.1] rounded-xl px-3 py-2 text-xs text-zinc-200 focus:outline-none focus:border-[#d4af37]"
+                className="w-full h-11 bg-[#101012] border border-white/[0.08] rounded-xl px-3 text-xs text-[#E8E8E8] focus:outline-none focus:border-[#D4AF37]"
               >
                 <option value="">None</option>
                 {projects.map((p) => (
@@ -271,15 +289,15 @@ function EventModalContent({
           )}
 
           {goals.length > 0 && (
-            <div className="space-y-1">
-              <label className="text-xs font-semibold text-zinc-300 flex items-center gap-1">
-                <Target className="w-3.5 h-3.5 text-[#d4af37]" />
+            <div className="space-y-1.5">
+              <label className="text-xs font-semibold text-[#E8E8E8] flex items-center gap-1.5">
+                <Target className="w-3.5 h-3.5 text-[#D4AF37]" />
                 Linked Goal (Optional)
               </label>
               <select
                 value={goalId}
                 onChange={(e) => setGoalId(e.target.value)}
-                className="w-full bg-zinc-900 border border-white/[0.1] rounded-xl px-3 py-2 text-xs text-zinc-200 focus:outline-none focus:border-[#d4af37]"
+                className="w-full h-11 bg-[#101012] border border-white/[0.08] rounded-xl px-3 text-xs text-[#E8E8E8] focus:outline-none focus:border-[#D4AF37]"
               >
                 <option value="">None</option>
                 {goals.map((g) => (
@@ -293,15 +311,15 @@ function EventModalContent({
         </div>
 
         {tasks.length > 0 && (
-          <div className="space-y-1">
-            <label className="text-xs font-semibold text-zinc-300 flex items-center gap-1">
-              <CheckSquare className="w-3.5 h-3.5 text-[#d4af37]" />
+          <div className="space-y-1.5 pt-1">
+            <label className="text-xs font-semibold text-[#E8E8E8] flex items-center gap-1.5">
+              <CheckSquare className="w-3.5 h-3.5 text-[#D4AF37]" />
               Linked Task / Commitment (Optional)
             </label>
             <select
               value={taskId}
               onChange={(e) => setTaskId(e.target.value)}
-              className="w-full bg-zinc-900 border border-white/[0.1] rounded-xl px-3 py-2 text-xs text-zinc-200 focus:outline-none focus:border-[#d4af37]"
+              className="w-full h-11 bg-[#101012] border border-white/[0.08] rounded-xl px-3 text-xs text-[#E8E8E8] focus:outline-none focus:border-[#D4AF37]"
             >
               <option value="">None</option>
               {tasks.map((t) => (
@@ -314,8 +332,8 @@ function EventModalContent({
         )}
 
         {/* Description */}
-        <div className="space-y-1">
-          <label className="text-xs font-semibold text-zinc-300">
+        <div className="space-y-1.5 pt-1">
+          <label className="text-xs font-semibold text-[#E8E8E8]">
             Description (Optional)
           </label>
           <textarea
@@ -323,12 +341,12 @@ function EventModalContent({
             onChange={(e) => setDescription(e.target.value)}
             rows={2}
             placeholder="Key objectives or notes for this scheduled block..."
-            className="w-full bg-zinc-900 border border-white/[0.1] rounded-xl px-3 py-2 text-xs text-zinc-200 placeholder:text-zinc-600 focus:outline-none focus:border-[#d4af37] resize-none"
+            className="w-full bg-[#101012] border border-white/[0.08] rounded-xl p-3 text-xs text-[#E8E8E8] placeholder:text-[#71717A] focus:outline-none focus:border-[#D4AF37] resize-none"
           />
         </div>
 
         {/* Actions */}
-        <div className="flex items-center justify-between pt-3 border-t border-white/[0.08]">
+        <div className="flex items-center justify-between pt-4 border-t border-white/[0.06]">
           {eventToEdit ? (
             <Button
               type="button"
@@ -344,11 +362,17 @@ function EventModalContent({
             <div />
           )}
 
-          <div className="flex items-center gap-2">
-            <Button type="button" variant="ghost" size="sm" onClick={onClose}>
+          <div className="flex items-center gap-2.5">
+            <Button type="button" variant="ghost" size="sm" onClick={onClose} className="text-[#8B8B92] hover:text-[#F5F5F5]">
               Cancel
             </Button>
-            <Button type="submit" variant="primary" size="sm" loading={isLoading}>
+            <Button
+              type="submit"
+              variant="primary"
+              size="sm"
+              loading={isLoading}
+              className="bg-[#D4AF37] hover:bg-[#E6C34A] text-[#090909] font-semibold"
+            >
               {eventToEdit ? 'Save Changes' : 'Schedule Event'}
             </Button>
           </div>
