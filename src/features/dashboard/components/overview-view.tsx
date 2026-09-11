@@ -287,36 +287,39 @@ export function OverviewView({
         </Link>
 
         {/* 4. Missed Commitments */}
-        <div className="h-full flex flex-col justify-between rounded-3xl bg-[#0C0C0F] border border-white/[0.06] p-5 sm:p-6 shadow-xl shadow-black/60 relative overflow-hidden group">
-          {/* Subtle Neutral Geometry */}
-          <svg
-            aria-hidden="true"
-            className="absolute -top-6 -right-6 w-24 h-24 text-white/[0.03] transition-colors pointer-events-none stroke-current"
-            viewBox="0 0 100 100"
-            fill="none"
-          >
-            <circle cx="80" cy="20" r="40" strokeWidth="1" strokeDasharray="3 3" />
-            <circle cx="80" cy="20" r="60" strokeWidth="1" opacity="0.6" />
-          </svg>
+        <Link href="/app/tasks" className="block focus-visible:outline-none group">
+          <div className="h-full flex flex-col justify-between rounded-3xl bg-[#0C0C0F] border border-white/[0.06] p-5 sm:p-6 shadow-xl shadow-black/60 relative overflow-hidden transition-all duration-200 hover:border-[#D4AF37]/30 hover:shadow-2xl hover:shadow-black/80 hover:-translate-y-0.5">
+            {/* Faint PACT Gold Geometry (8% opacity) */}
+            <svg
+              aria-hidden="true"
+              className="absolute -top-6 -right-6 w-24 h-24 text-[#D4AF37]/[0.08] group-hover:text-[#D4AF37]/[0.16] transition-colors pointer-events-none stroke-current"
+              viewBox="0 0 100 100"
+              fill="none"
+            >
+              <circle cx="80" cy="20" r="40" strokeWidth="1" strokeDasharray="3 3" />
+              <circle cx="80" cy="20" r="60" strokeWidth="1" opacity="0.6" />
+            </svg>
 
-          <div className="relative z-10 flex items-center justify-between text-[#8B8B92] mb-4">
-            <span className="text-[11px] font-semibold uppercase tracking-wider text-[#8B8B92]">
-              Missed Commitments
-            </span>
-            <div className="w-8 h-8 rounded-xl bg-[#101012] border border-white/[0.06] flex items-center justify-center text-[#71717A]">
-              <Clock className="w-4 h-4" />
+            <div className="relative z-10 flex items-center justify-between text-[#8B8B92] mb-4">
+              <span className="text-[11px] font-semibold uppercase tracking-wider text-[#8B8B92]">
+                Missed Commitments
+              </span>
+              <div className="w-8 h-8 rounded-xl bg-[#101012] border border-white/[0.06] flex items-center justify-center text-[#D4AF37] group-hover:border-[#D4AF37]/25 transition-colors">
+                <Clock className="w-4 h-4" />
+              </div>
+            </div>
+
+            <div className="relative z-10">
+              <div className="text-3xl sm:text-4xl font-extrabold text-[#F5F5F5] font-mono tracking-tight">
+                {missedTasks.length}
+              </div>
+              <div className="flex items-center justify-between text-xs text-[#71717A] mt-1.5">
+                <span>Authoritative lifecycle</span>
+                <ArrowUpRight className="w-3.5 h-3.5 text-[#71717A] group-hover:text-[#D4AF37] transition-colors" />
+              </div>
             </div>
           </div>
-
-          <div className="relative z-10">
-            <div className="text-3xl sm:text-4xl font-extrabold text-[#E8E8E8] font-mono tracking-tight">
-              {missedTasks.length}
-            </div>
-            <p className="text-xs text-[#71717A] mt-1.5">
-              Authoritative lifecycle
-            </p>
-          </div>
-        </div>
+        </Link>
       </div>
 
       {/* 3. Command Center Featured Cards Grid (Visual North Star Trio) */}
