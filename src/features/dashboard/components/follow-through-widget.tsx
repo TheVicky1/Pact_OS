@@ -26,7 +26,7 @@ export function FollowThroughWidget({
     : null;
 
   return (
-    <div className="h-full flex flex-col justify-between min-h-[220px] rounded-3xl bg-[#0C0C0F] border border-white/[0.06] p-5 sm:p-6 shadow-xl shadow-black/60 relative overflow-hidden transition-all duration-200 hover:border-[#D4AF37]/30 hover:shadow-2xl hover:shadow-black/80 group">
+    <div className="h-full flex flex-col justify-between min-h-[220px] rounded-3xl bg-[#0C0C0F] border border-white/[0.06] p-5 sm:p-6 shadow-xl shadow-black/60 relative overflow-hidden transition-all duration-200 hover:border-[#D4AF37]/30 hover:shadow-2xl hover:shadow-black/80 hover:-translate-y-0.5 group cursor-default">
       {/* Subtle Gold Ambient Backlight */}
       <div
         aria-hidden="true"

@@ -26,13 +26,13 @@ export function ActiveFocusCard({
 }: ActiveFocusCardProps) {
   if (!task) {
     return (
-      <div className="h-full flex flex-col justify-between min-h-[220px] rounded-3xl bg-[#0C0C0F] border border-white/[0.06] p-5 sm:p-6 shadow-xl shadow-black/60 relative overflow-hidden group">
+      <div className="h-full flex flex-col justify-between min-h-[220px] rounded-3xl bg-[#0C0C0F] border border-white/[0.06] p-5 sm:p-6 shadow-xl shadow-black/60 relative overflow-hidden transition-all duration-200 hover:border-[#D4AF37]/30 hover:shadow-2xl hover:shadow-black/80 hover:-translate-y-0.5 group cursor-default">
         {/* Soft Upper-Right Gold Glow */}
         <div
           aria-hidden="true"
-          className="absolute -top-10 -right-10 w-44 h-44 rounded-full blur-2xl opacity-15 pointer-events-none"
+          className="absolute -top-10 -right-10 w-44 h-44 rounded-full blur-2xl opacity-15 pointer-events-none group-hover:opacity-25 transition-opacity"
           style={{
-            background: 'radial-gradient(circle, rgba(212, 175, 55, 0.4) 0%, transparent 70%)',
+            background: 'radial-gradient(circle, rgba(212, 175, 55, 0.45) 0%, transparent 70%)',
           }}
         />
 
@@ -45,7 +45,7 @@ export function ActiveFocusCard({
               Clear
             </span>
           </div>
-          <div className="w-8 h-8 rounded-xl bg-[#101012] border border-white/[0.06] flex items-center justify-center text-[#D4AF37]">
+          <div className="w-8 h-8 rounded-xl bg-[#101012] border border-white/[0.06] flex items-center justify-center text-[#D4AF37] group-hover:border-[#D4AF37]/25 transition-colors">
             <Target className="w-4 h-4" />
           </div>
         </div>
@@ -76,11 +76,11 @@ export function ActiveFocusCard({
   });
 
   return (
-    <div className="h-full flex flex-col justify-between min-h-[220px] rounded-3xl bg-[#0C0C0F] border border-white/[0.06] p-5 sm:p-6 shadow-xl shadow-black/60 relative overflow-hidden transition-all duration-200 hover:border-[#D4AF37]/30 hover:shadow-2xl hover:shadow-black/80 group">
+    <div className="h-full flex flex-col justify-between min-h-[220px] rounded-3xl bg-[#0C0C0F] border border-white/[0.06] p-5 sm:p-6 shadow-xl shadow-black/60 relative overflow-hidden transition-all duration-200 hover:border-[#D4AF37]/30 hover:shadow-2xl hover:shadow-black/80 hover:-translate-y-0.5 group">
       {/* Soft Upper-Right Gold Glow */}
       <div
         aria-hidden="true"
-        className="absolute -top-10 -right-10 w-44 h-44 rounded-full blur-2xl opacity-20 pointer-events-none"
+        className="absolute -top-10 -right-10 w-44 h-44 rounded-full blur-2xl opacity-20 pointer-events-none group-hover:opacity-30 transition-opacity"
         style={{
           background: 'radial-gradient(circle, rgba(212, 175, 55, 0.45) 0%, transparent 70%)',
         }}
