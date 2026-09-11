@@ -28,20 +28,20 @@ export default function LandingPage() {
       </div>
 
       {/* Top Left Brand Anchor */}
-      <header className="relative z-10 w-full max-w-[1400px] mx-auto pt-5 sm:pt-6 lg:pt-7 px-5 sm:px-10 lg:px-14 flex items-center justify-start">
-        <div className="flex items-center gap-3 select-none">
-          <div className="relative w-7 h-7 flex items-center justify-center flex-shrink-0">
-            <div className="absolute inset-0 rounded-full bg-[#d4af37]/20 blur-md pointer-events-none" />
+      <header className="relative z-10 w-full max-w-[1400px] mx-auto pt-6 sm:pt-7 lg:pt-8 px-5 sm:px-10 lg:px-14 flex items-center justify-start">
+        <div className="flex items-center gap-3.5 select-none">
+          <div className="relative w-8 h-8 sm:w-[34px] sm:h-[34px] flex items-center justify-center flex-shrink-0">
+            <div className="absolute inset-0 rounded-full bg-[#d4af37]/25 blur-md pointer-events-none" />
             <Image
               src="/brand/pact-logo.png"
               alt="PACT"
-              width={28}
-              height={28}
-              className="relative z-10 object-contain drop-shadow-[0_1px_4px_rgba(0,0,0,0.5)]"
+              width={34}
+              height={34}
+              className="relative z-10 w-full h-full object-contain drop-shadow-[0_1px_6px_rgba(212,175,55,0.25)]"
               priority
             />
           </div>
-          <span className="text-xs sm:text-sm font-semibold tracking-[0.3em] text-white uppercase">
+          <span className="text-sm sm:text-[15px] font-semibold tracking-[0.32em] text-white uppercase translate-y-[0.5px]">
             P A C T
           </span>
         </div>
