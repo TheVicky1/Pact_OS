@@ -18,7 +18,7 @@ docs/
 ├── DEVELOPMENT.md                      # Local Setup, Development Workflow, Scripts & DB Migrations
 ├── GIT_WORKFLOW.md                     # Branching, Conventional Commits & Pre-Commit Rules
 ├── ROADMAP.md                          # Current Verified Status & Future Planned Milestones
-├── DESIGN_SYSTEM.md                    # Dark Glassmorphism, Gold Accents & UI Tokens
+├── DESIGN_SYSTEM.md                    # Luxury Obsidian Canvas, 3D Celestial Hero & PACT Gold Tokens
 ├── TESTING.md                          # 34-Suite Automated Test Matrix & Verification Runbook
 ├── USER_FLOWS.md                       # Core User Workflows & State Lifecycle Transitions
 ├── DECISIONS.md                        # Architecture Decision Records (ADRs)
@@ -48,7 +48,7 @@ docs/
 ### 3. Developer Guide & Operations
 - [**Development Guide**](./DEVELOPMENT.md): Local environment setup, database migrations, package scripts, and development workflows.
 - [**Git Workflow & Standards**](./GIT_WORKFLOW.md): Conventional Commit conventions, branch protection rules, and secret prevention hygiene.
-- [**Design System & UI Tokens**](./DESIGN_SYSTEM.md): Dark glassmorphism guidelines, gold color palette, spacing, and typography tokens.
+- [**Design System & UI Tokens**](./DESIGN_SYSTEM.md): Luxury Obsidian & Gold palette, 3D celestial planetary hero, card geometry, and typography tokens.
 - [**Testing & Verification Matrix**](./TESTING.md): 34-suite automated test matrix, execution runbooks, and quality gates.
 - [**Production Deployment Runbook**](./PRODUCTION_DEPLOYMENT_RUNBOOK.md): Cloud deployment checklist, environment variable matrix, and preflight audit.
 

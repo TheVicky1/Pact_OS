@@ -147,7 +147,7 @@ Comprehensive specifications, system architectures, and engineering runbooks are
 | 🧪 [**Testing Strategy**](./docs/TESTING.md) | 34-suite automated test matrix and verification runbooks |
 | 🌿 [**Git Workflow**](./docs/GIT_WORKFLOW.md) | Conventional Commits, branch hygiene, and pre-commit safety rules |
 | 🗺️ [**Product Roadmap**](./docs/ROADMAP.md) | Verified implementation status and future planned milestones |
-| 🎨 [**Design System**](./docs/DESIGN_SYSTEM.md) | Gold P monogram, dark glassmorphic UI, and design tokens |
+| 🎨 [**Design System**](./docs/DESIGN_SYSTEM.md) | Luxury Obsidian & Gold palette, 3D celestial planetary hero, and design tokens |
 | 🔄 [**User Flows**](./docs/USER_FLOWS.md) | Domain hierarchy flow, daily planning, and consequence lifecycle |
 | 🚀 [**Deployment Runbook**](./docs/PRODUCTION_DEPLOYMENT_RUNBOOK.md) | Production cloud deployment guide and environment configuration |
 | 📦 [**Historical Archive**](./docs/archive/README.md) | Preserved historical phase completion reports (Phases 4 through 6) |
