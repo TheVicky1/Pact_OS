@@ -4,12 +4,16 @@ import { getUserProfileInfo } from '@/lib/auth/profile';
 import { getLocalDateString } from '@/lib/time';
 import { getAnalyticsOverview } from '@/features/analytics/data-access';
 import { AnalyticsWorkspace } from '@/features/analytics';
-import { getGitHubActivitySummaryAction } from '@/features/integrations';
+import {
+  getGitHubActivitySummaryAction,
+  getLeetCodeActivitySummaryAction,
+  getCodeforcesActivitySummaryAction,
+} from '@/features/integrations';
 import { PageContainer } from '@/components/ui';
 
 export const metadata = {
   title: 'Analytics | PACT OS',
-  description: 'Factual progress analytics, commitment completion rates, goal and project tracking, and session measurements.',
+  description: 'Factual progress analytics, commitment completion rates, goal and project tracking, and external proof-of-work synchronization.',
 };
 
 export default async function AnalyticsPage() {
@@ -25,9 +29,11 @@ export default async function AnalyticsPage() {
   const { timezone } = await getUserProfileInfo(supabase, user.id, user.user_metadata);
   const todayStr = getLocalDateString(new Date(), timezone);
 
-  const [overviewRes, gitHubRes] = await Promise.all([
+  const [overviewRes, gitHubRes, leetCodeRes, codeforcesRes] = await Promise.all([
     getAnalyticsOverview('week', todayStr, timezone),
     getGitHubActivitySummaryAction(false),
+    getLeetCodeActivitySummaryAction(false),
+    getCodeforcesActivitySummaryAction(false),
   ]);
 
   const initialOverview = overviewRes.data;
@@ -68,6 +74,8 @@ export default async function AnalyticsPage() {
         initialData={initialOverview || fallbackData}
         userTimeZone={timezone}
         initialGitHubActivity={gitHubRes}
+        initialLeetCodeActivity={leetCodeRes}
+        initialCodeforcesActivity={codeforcesRes}
       />
     </PageContainer>
   );

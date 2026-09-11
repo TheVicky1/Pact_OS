@@ -18,6 +18,4 @@ export { AnalyticsSummaryCards } from './components/analytics-summary-cards';
 export { CommitmentActivityChart } from './components/commitment-activity-chart';
 export { GoalProgressCard } from './components/goal-progress-card';
 export { ProjectProgressCard } from './components/project-progress-card';
-export { AccountabilityOutcomesCard } from './components/accountability-outcomes-card';
-export { FactualInsightsCard } from './components/factual-insights-card';
 export { AnalyticsSkeleton } from './components/analytics-skeleton';
