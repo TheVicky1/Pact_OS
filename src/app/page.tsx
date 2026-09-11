@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import Image from 'next/image';
+import { motion } from 'framer-motion';
 import { UnifiedAuthCard, AuthMode } from '@/components/auth/unified-auth-card';
 import { Sparkles } from 'lucide-react';
 
@@ -16,20 +17,27 @@ export default function LandingPage() {
         <div className="absolute top-1/2 left-[28%] -translate-x-1/2 -translate-y-1/2 w-[650px] sm:w-[850px] h-[650px] sm:h-[850px] bg-gradient-to-tr from-[#d4af37]/12 via-[#aa820a]/06 to-transparent rounded-full blur-[130px]" />
 
         {/* Living OS Core Background Sphere System */}
-        <div className="hidden lg:block absolute top-[16%] left-[24%] w-[540px] h-[540px] pointer-events-none">
-          {/* Static Base Horizon Sphere / Dark OS Core Ambient Depth (Borderless Organic Blend) */}
-          <div className="absolute inset-0 rounded-full shadow-[0_0_100px_rgba(212,175,55,0.12),inset_0_0_80px_rgba(212,175,55,0.08)] opacity-70" />
+        <div className="hidden lg:block absolute top-[16%] left-[24%] w-[540px] h-[540px] pointer-events-none select-none">
+          {/* Static Base Horizon Sphere / Dark OS Core */}
+          <div className="absolute inset-0 rounded-full border border-[#d4af37]/25 shadow-[0_0_90px_rgba(212,175,55,0.2),inset_0_0_70px_rgba(212,175,55,0.1)] opacity-75" />
 
-          {/* Strictly Clipped Circular Interior Container - Zero Exterior Spill */}
-          <div className="absolute inset-0 rounded-full overflow-hidden [clip-path:circle(50%_at_50%_50%)] [isolation:isolate]">
-            {/* Smooth Continuous Orbital Travelling Highlight (Clipped strictly inside) */}
-            <div className="absolute inset-0 rounded-full animate-sphere-orbit">
-              {/* Soft Ambient Rim Arc */}
-              <div className="absolute -right-5 top-[10%] w-[220px] h-[390px] bg-gradient-to-b from-[#f5e0a3]/30 via-[#d4af37]/18 to-transparent blur-[28px] -rotate-[18deg] rounded-full animate-sphere-glow transform-gpu" />
-              {/* Subtle Specular Hotspot Core */}
-              <div className="absolute right-0 top-[26%] w-[80px] h-[140px] bg-gradient-to-b from-[#fff6db]/30 via-[#e2c056]/15 to-transparent blur-[18px] rounded-full transform-gpu" />
-            </div>
-          </div>
+          {/* Smooth Continuous Orbital Travelling Highlight - Unrestricted Movement */}
+          <motion.div
+            animate={{ rotate: 360 }}
+            transition={{
+              duration: 12,
+              repeat: Infinity,
+              ease: 'linear',
+            }}
+            className="absolute inset-0 rounded-full will-change-transform"
+            style={{ transformOrigin: 'center center' }}
+          >
+            {/* Luminous Orbital Rim Glow & Highlight */}
+            <div className="absolute -right-7 top-[10%] w-[240px] h-[400px] bg-gradient-to-b from-[#fceabb]/40 via-[#d4af37]/22 to-transparent blur-[26px] -rotate-[18deg] rounded-full transform-gpu" />
+
+            {/* Bright Core Hotspot Light Orb */}
+            <div className="absolute -right-2 top-[28%] w-[90px] h-[150px] bg-gradient-to-b from-[#ffffff]/45 via-[#f5e0a3]/25 to-transparent blur-[16px] rounded-full transform-gpu" />
+          </motion.div>
         </div>
 
         {/* Ambient Top Vignette */}

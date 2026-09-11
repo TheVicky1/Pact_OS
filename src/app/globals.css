@@ -168,48 +168,9 @@ button:focus-visible,
   outline-offset: 2px !important;
 }
 
-/* PACT Background OS Core Orbital Lighting */
-@keyframes sphere-orbit {
-  0% {
-    transform: rotate(0deg);
-  }
-  100% {
-    transform: rotate(360deg);
-  }
-}
-
-@keyframes sphere-highlight-glow {
-  0%, 100% {
-    opacity: 0.95;
-    filter: blur(28px);
-  }
-  25% {
-    opacity: 0.70;
-    filter: blur(32px);
-  }
-  50% {
-    opacity: 0.50;
-    filter: blur(34px);
-  }
-  75% {
-    opacity: 0.75;
-    filter: blur(30px);
-  }
-}
-
-.animate-sphere-orbit {
-  animation: sphere-orbit 16s linear infinite;
-  transform-origin: center center;
-  will-change: transform;
-}
-
-.animate-sphere-glow {
-  animation: sphere-highlight-glow 16s ease-in-out infinite;
-  will-change: opacity, filter;
-}
-
 /* Reduced Motion Override */
 @media (prefers-reduced-motion: reduce) {
+
   *,
   ::before,
   ::after {
@@ -219,13 +180,7 @@ button:focus-visible,
     scroll-behavior: auto !important;
   }
 
-  .animate-sphere-orbit,
-  .animate-sphere-glow {
-    animation: none !important;
-  }
-
   .glass-interactive:hover {
     transform: none !important;
   }
 }
-
