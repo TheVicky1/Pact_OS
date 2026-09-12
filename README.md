@@ -215,6 +215,7 @@ Contributions are warmly welcomed! We believe in building a transparent, support
 - 🤝 [**Code of Conduct**](CODE_OF_CONDUCT.md) — Community standards and participation guidelines.
 - 💬 [**Support Guide**](SUPPORT.md) — Where to ask questions, report bugs, and propose features.
 - 👥 [**Contributors**](CONTRIBUTORS.md) — Recognition of core maintainers and community contributors.
+- 📋 [**Changelog**](CHANGELOG.md) — Release notes, unreleased progress, and version lineage.
 - 🔒 [**Security Policy**](SECURITY.md) — Responsible disclosure of security vulnerabilities.
 
 ---
@@ -257,6 +258,7 @@ Comprehensive technical specifications, system architectures, and operational ru
 | 🧪 [**Testing Strategy**](docs/TESTING.md) | Automated test matrix and verification runbooks |
 | ⚙️ [**CI Pipeline**](docs/CI_PIPELINE.md) | GitHub Actions automated quality gates, secret scans & test matrix |
 | 🛡️ [**Dependency Security**](docs/DEPENDENCY_SECURITY.md) | Dependency health, supply-chain hygiene & vulnerability policy |
+| 📦 [**Release Management**](docs/RELEASE_MANAGEMENT.md) | Semantic Versioning policy, Keep a Changelog governance, and release checklists |
 | 🌿 [**Git Workflow**](docs/GIT_WORKFLOW.md) | Conventional Commits, branch hygiene, and pre-commit safety rules |
 | 🗺️ [**Product Roadmap**](docs/ROADMAP.md) | Verified implementation status and future planned milestones |
 | 🎨 [**Design System**](docs/DESIGN_SYSTEM.md) | Luxury Obsidian & Gold palette, 3D celestial planetary hero, and design tokens |

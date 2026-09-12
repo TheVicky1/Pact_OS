@@ -15,6 +15,7 @@ docs/
 ├── GITHUB_DISCUSSIONS.md               # 💬 Community Discussions, Categories & Contributor Engagement
 ├── GITHUB_LABELS.md                    # 🏷️ Canonical GitHub Issue Taxonomy & Label Dictionary
 ├── GITHUB_METADATA.md                  # 🌐 Canonical Repository Topics, Metadata & Discoverability
+├── RELEASE_MANAGEMENT.md               # 📦 Release Engineering, Semantic Versioning & Changelog Standards
 ├── TROUBLESHOOTING.md                  # 🔧 Practical Diagnostic Guide for Setup, Build & Git Roadblocks
 ├── PACT_MASTER_DOCUMENTATION.md        # 🌟 Comprehensive Central Product & Technical Specification
 ├── PRODUCT.md                          # Vision, Dual Taglines, Philosophy & User Personas
@@ -66,12 +67,14 @@ docs/
 - [**Support Guide**](../SUPPORT.md): How and where to ask for help, report bugs, or propose features.
 - [**Contributors**](../CONTRIBUTORS.md): Recognition of core maintainers and community contributors.
 - [**License**](../LICENSE): Official project MIT License.
+- [**Changelog**](../CHANGELOG.md): Historical release notes, unreleased progress, and version lineage.
 - [**Development Guide**](./DEVELOPMENT.md): Local environment setup, database migrations, package scripts, and development workflows.
 - [**Git Workflow & Standards**](./GIT_WORKFLOW.md): Conventional Commit conventions, branch protection rules, and secret prevention hygiene.
 - [**Design System & UI Tokens**](./DESIGN_SYSTEM.md): Luxury Obsidian & Gold palette, 3D celestial planetary hero, card geometry, and typography tokens.
 - [**Testing & Verification Matrix**](./TESTING.md): 34-suite automated test matrix, execution runbooks, and quality gates.
 - [**CI Pipeline & Quality Gates**](./CI_PIPELINE.md): GitHub Actions automated verification, test matrix, secret scans, and build checks.
 - [**Dependency Security & Auditing**](./DEPENDENCY_SECURITY.md): Dependency health, CVSS vulnerability gate policy, and Dependabot lifecycle.
+- [**Release Management & Versioning**](./RELEASE_MANAGEMENT.md): Semantic Versioning policy, Keep a Changelog governance, and release checklists.
 - [**Production Deployment Runbook**](./PRODUCTION_DEPLOYMENT_RUNBOOK.md): Cloud deployment checklist, environment variable matrix, and preflight audit.
 
 ### 4. Historical Development Archive

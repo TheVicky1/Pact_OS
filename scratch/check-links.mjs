@@ -35,7 +35,7 @@ const docsFiles = fs.readdirSync('docs')
   .filter(f => f.endsWith('.md'))
   .map(f => path.join('docs', f));
 
-const allFiles = ['README.md', 'CONTRIBUTING.md', 'SECURITY.md', 'SUPPORT.md', ...docsFiles];
+const allFiles = ['README.md', 'CHANGELOG.md', 'CONTRIBUTING.md', 'SECURITY.md', 'SUPPORT.md', ...docsFiles];
 
 let total = 0;
 let errors = [];
