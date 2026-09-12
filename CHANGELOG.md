@@ -10,6 +10,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- **Containerization & Deployment Readiness**: Added production multi-stage `Dockerfile`, `.dockerignore`, and `docker-compose.yml` for self-hosted and staging deployments.
+- **Operational Health & Readiness Endpoint**: Implemented safe `/api/health` HTTP GET/HEAD route with uptime probes and zero credential leakage guarantees.
+- **Release Automation Workflow**: Added `.github/workflows/release.yml` with automated release preflight audit and test verification.
+- **Privacy & Release Engineering Test Suites**: Added `tests/health-endpoint.test.ts`, `tests/release-engineering.test.ts`, and `tests/privacy-guarantees.test.ts`.
 - **Automated CI Quality Gates**: Complete 7-stage GitHub Actions pipeline enforcing clean installs, secret scanning, link integrity, ESLint, TypeScript, domain test matrix, and production Next.js builds ([#10](https://github.com/TheVicky1/Pact_OS/pull/10)).
 - **Supply-Chain & Dependency Security**: Weekly automated Dependabot updates, CVSS severity policy, and dedicated `dependency-audit.yml` workflow ([#11](https://github.com/TheVicky1/Pact_OS/pull/11)).
 - **Release Management & Versioning System**: Semantic versioning specification, Conventional Commit standards, Keep-a-Changelog foundation, and read-only release readiness checker (`scratch/release-check.mjs`).

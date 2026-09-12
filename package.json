@@ -32,7 +32,10 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "typecheck": "tsc --noEmit",
+    "test": "node scratch/run-tests.mjs",
+    "release:check": "node scratch/release-check.mjs"
   },
   "dependencies": {
     "@supabase/ssr": "^0.12.7",

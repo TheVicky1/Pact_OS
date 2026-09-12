@@ -84,10 +84,13 @@ Run the local verification suite prior to committing changes:
 npm run lint
 
 # Run TypeScript type check
-npx tsc --noEmit
+npm run typecheck
 
-# Run 35-suite automated domain and security test matrix
-node scratch/run-tests.mjs
+# Run automated domain, release, and security test matrix
+npm test
+
+# Run preflight release readiness audit
+npm run release:check
 
 # Run pre-commit secret scanner
 node scratch/secret-scan.mjs
@@ -99,7 +102,19 @@ node scratch/check-links.mjs
 npm run build
 ```
 
-> 💡 **Having setup issues?** Consult our [**Troubleshooting Guide**](docs/TROUBLESHOOTING.md) for solutions to common port, Node.js, and environment issues.
+### 🐳 Containerized & Staging Deployment
+
+PACT OS includes a multi-stage production `Dockerfile` and `docker-compose.yml` for self-hosted or staging environments:
+
+```bash
+# Build and start containerized PACT OS
+docker compose up -d --build
+
+# Verify operational readiness probe
+curl -I http://localhost:3000/api/health
+```
+
+> 💡 **Having setup issues?** Consult our [**Troubleshooting Guide**](docs/TROUBLESHOOTING.md) or [**Production Deployment Runbook**](docs/PRODUCTION_DEPLOYMENT_RUNBOOK.md) for detailed environment configuration.
 
 ---
 
