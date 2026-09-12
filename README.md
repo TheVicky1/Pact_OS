@@ -113,6 +113,17 @@ Contributions are warmly welcomed! PACT is designed to be one of the most welcom
 > We deliberately scope our beginner tasks into **tiny, single-file micro-contributions** (1–5 minutes of work) with exact file pointers and step-by-step guidance.
 > 👉 [**Browse Live Good First Issues**](https://github.com/TheVicky1/Pact_OS/issues?q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22) &nbsp;|&nbsp; 📖 [**Read the Beginner's Guide**](docs/CONTRIBUTING-BEGINNERS.md)
 
+### ⚡ 8-Step Contributor Quick Start
+
+1. **Pick an Issue**: Browse open [**Good First Issues**](https://github.com/TheVicky1/Pact_OS/issues?q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22).
+2. **Claim It**: Leave a comment (e.g., *"I'd like to work on this!"*) so we can assign it to you.
+3. **Fork & Clone**: Fork the repository and clone it to your machine (`git clone https://github.com/<your-username>/Pact_OS.git`).
+4. **Create a Branch**: Create a descriptive branch (`git checkout -b fix/issue-12-typo`).
+5. **Make the Change**: Edit the single specified file following the issue instructions.
+6. **Verify Locally**: Run `npm run lint`, `npx tsc --noEmit`, and `node scratch/run-tests.mjs`.
+7. **Open a Pull Request**: Push your branch and open a PR linking your issue (e.g., `Closes #12`).
+8. **Celebrate & Iterate**: Our automated CI and maintainer (@TheVicky1) will review and guide your PR to merge!
+
 ### For Complete Beginners
 
 Start with our step-by-step [**Beginner's Contribution Guide**](docs/CONTRIBUTING-BEGINNERS.md) for a comprehensive zero-to-PR walkthrough explaining Git forks, branch setup, making changes, and opening your first pull request.
@@ -293,6 +304,24 @@ Comprehensive technical specifications, system architectures, and operational ru
 | 🎨 [**Design System**](docs/DESIGN_SYSTEM.md) | Luxury Obsidian & Gold palette, 3D celestial planetary hero, and design tokens |
 | 🔄 [**User Flows**](docs/USER_FLOWS.md) | Domain hierarchy flow, daily planning, and consequence lifecycle |
 | 🚀 [**Deployment Runbook**](docs/PRODUCTION_DEPLOYMENT_RUNBOOK.md) | Production cloud deployment guide and environment configuration |
+
+---
+
+<div align="center">
+  <h2>Contributors & Community</h2>
+</div>
+
+PACT is built with care by an open-source community dedicated to personal mastery, high-integrity engineering, and intentional productivity.
+
+<div align="center">
+
+[![Contributors](https://img.shields.io/github/contributors/TheVicky1/Pact_OS?style=for-the-badge&color=d4af37)](https://github.com/TheVicky1/Pact_OS/graphs/contributors)
+
+*A huge thank you to everyone who has contributed to PACT OS!*
+
+👉 [**View all contributors on GitHub**](https://github.com/TheVicky1/Pact_OS/graphs/contributors)
+
+</div>
 
 ---
 

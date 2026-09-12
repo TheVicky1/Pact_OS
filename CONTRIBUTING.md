@@ -417,7 +417,11 @@ As a contributor to PACT, you agree to:
 
 ## 22. Contributor Recognition
 
-Every merged contribution matters! Contributors with accepted pull requests are permanently recognized in our [**Contributors Hall of Fame**](CONTRIBUTORS.md).
+Every merged contribution matters! Every developer who contributes code, tests, documentation, or design to PACT OS is permanently acknowledged:
+
+- 🏛️ Listed in our [**Contributors Hall of Fame**](CONTRIBUTORS.md).
+- 🌟 Recognized on the official [**GitHub Contributors Graph**](https://github.com/TheVicky1/Pact_OS/graphs/contributors).
+- 🚀 Acknowledged in release changelogs for key milestones.
 
 *(PACT is an open-source project and does not offer monetary compensation for contributions unless explicitly organized through official bounty programs).*
 

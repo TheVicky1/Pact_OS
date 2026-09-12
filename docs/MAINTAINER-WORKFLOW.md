@@ -98,3 +98,14 @@ If a contributor accidentally posts an API key, password, or `.env.local` conten
 1. **Immediate Redaction**: Edit the comment or PR description immediately to remove the sensitive string.
 2. **Notify Contributor**: Inform the contributor to rotate and revoke the exposed credential immediately.
 3. **Security Inquiries**: Direct all potential security vulnerability inquiries to [SECURITY.md](https://github.com/TheVicky1/Pact_OS/blob/main/SECURITY.md).
+
+---
+
+## 7. Contributor Recognition & First-Time PR Fast-Track
+
+To foster an encouraging, long-term contributor community:
+
+1. **Micro-PR Priority Review**: Give prompt priority review (target within 24–48 hours) to first-time contributors working on single-file Good First Issues.
+2. **First-Time PR Welcome**: First-time PR authors receive an automated, welcoming orientation comment via `.github/workflows/welcome-contributor.yml`.
+3. **Contributor Hall of Fame**: Upon merging a contributor's first PR, verify that their contribution is acknowledged in [CONTRIBUTORS.md](https://github.com/TheVicky1/Pact_OS/blob/main/CONTRIBUTORS.md) and on the [GitHub Contributors Graph](https://github.com/TheVicky1/Pact_OS/graphs/contributors).
+4. **Encouraging Next Steps**: When merging a beginner's PR, invite them to tackle another Good First Issue or explore feature discussions in [GitHub Discussions](https://github.com/TheVicky1/Pact_OS/discussions).
