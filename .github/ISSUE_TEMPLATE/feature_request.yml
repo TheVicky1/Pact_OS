@@ -1,0 +1,103 @@
+name: "✨ Feature Request"
+description: "Suggest a new product capability, enhancement, or workflow for PACT"
+title: "feat: "
+labels: ["type:feature"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you for proposing a new feature or enhancement for **PACT**!
+
+        PACT is designed around a core philosophy: **Turn Intent Into Discipline**. Features should reinforce intentional focus, accountability, and time-blocked execution.
+
+        > [!IMPORTANT]
+        > Before beginning any code implementation on a large feature, please wait for maintainer review and alignment on this issue. See [CONTRIBUTING.md](https://github.com/TheVicky1/Pact_OS/blob/main/CONTRIBUTING.md).
+
+  - type: dropdown
+    id: area
+    attributes:
+      label: "Target Subsystem / Area"
+      description: "Select the primary architectural area of PACT this feature will impact."
+      options:
+        - "area:dashboard (Main OS Overview & Metric Cards)"
+        - "area:planner (Daily Planner & Timeblocking)"
+        - "area:calendar (Calendar View & Google Sync)"
+        - "area:tasks (Task Lifecycle & Priority Filters)"
+        - "area:goals (OKR Hierarchy & Milestone Tracking)"
+        - "area:projects (Projects & Status Boards)"
+        - "area:accountability (Stakes, Commitments & Consequence Masking)"
+        - "area:focus (Deep Work Timer & Audio Synthesizer)"
+        - "area:habits (Habit Recurrence & Streak Engine)"
+        - "area:finance (Integer-Cents Transactions & Budgets)"
+        - "area:analytics (Velocity Scoring & Completion Trends)"
+        - "area:review (Weekly Review Rituals & Drafts)"
+        - "area:auth (Login, Registration, Cookies & Onboarding)"
+        - "area:integrations (GitHub, LeetCode, Codeforces, Google Calendar)"
+        - "area:settings (User Preferences & Profile Configuration)"
+        - "area:database (Supabase Migrations, PostgreSQL Triggers & RLS)"
+        - "area:testing (Automated Test Suites & Harnesses)"
+        - "area:documentation (Guides & Specifications)"
+        - "area:developer-experience (Local Setup & Dev Tooling)"
+        - "Other / Cross-Cutting"
+    validations:
+      required: true
+
+  - type: textarea
+    id: problem_statement
+    attributes:
+      label: "Problem Statement"
+      description: "What problem or friction are you experiencing? (e.g., 'I often struggle to stay focused during 90-minute blocks without subtle ambient acoustic masking.')"
+      placeholder: "Describe the specific problem or friction point..."
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposed_solution
+    attributes:
+      label: "Proposed Solution & User Workflow"
+      description: "Describe how the proposed feature should work from a user's perspective."
+      placeholder: "Explain the proposed behavior, user flow, and interaction model..."
+    validations:
+      required: true
+
+  - type: textarea
+    id: user_value
+    attributes:
+      label: "Value & Alignment"
+      description: "How does this feature align with PACT's core mission of turning intention into discipline?"
+      placeholder: "Explain why this feature adds meaningful value to PACT users..."
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives_considered
+    attributes:
+      label: "Alternatives Considered"
+      description: "Describe any alternative designs, existing workarounds, or libraries you considered."
+      placeholder: "Detail any alternative approaches..."
+    validations:
+      required: false
+
+  - type: dropdown
+    id: implementation_intent
+    attributes:
+      label: "Implementation Intent"
+      description: "Are you interested in submitting a pull request to implement this feature once approved?"
+      options:
+        - "Yes, I would like to implement this feature"
+        - "I would like to help with UI/UX design or testing"
+        - "No, I am only proposing the feature request for community pickup"
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: checklist
+    attributes:
+      label: "Contributor Confirmation"
+      options:
+        - label: "I have searched existing [GitHub Issues](https://github.com/TheVicky1/Pact_OS/issues) and [Roadmap](https://github.com/TheVicky1/Pact_OS/blob/main/docs/ROADMAP.md) to verify this is not a duplicate."
+          required: true
+        - label: "I understand that maintainers may request adjustments to maintain architectural and design coherence."
+          required: true
+        - label: "I have read and agree to follow PACT's [Contributing Guide](https://github.com/TheVicky1/Pact_OS/blob/main/CONTRIBUTING.md)."
+          required: true

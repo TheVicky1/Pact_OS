@@ -1,0 +1,90 @@
+name: "🌱 Documentation"
+description: "Suggest improvements, report typos, or clarify guides in PACT documentation"
+title: "docs: "
+labels: ["type:docs"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you for helping improve **PACT's** documentation!
+
+        Clear, accurate, and welcoming documentation is essential for our open-source community. No codebase knowledge is required to report or fix documentation issues.
+
+  - type: dropdown
+    id: document
+    attributes:
+      label: "Document Affected"
+      description: "Select the primary document where the issue occurs."
+      options:
+        - "README.md (Root Project Overview)"
+        - "CONTRIBUTING.md (Contribution Policy & Standards)"
+        - "docs/CONTRIBUTING-BEGINNERS.md (Beginner Zero-to-PR Walkthrough)"
+        - "docs/TROUBLESHOOTING.md (Diagnostic & Roadblock Guide)"
+        - "docs/GITHUB_LABELS.md (Issue Taxonomy & Label System)"
+        - "docs/DEVELOPMENT.md (Developer Guide & Local Setup)"
+        - "docs/GIT_WORKFLOW.md (Git & Secret Prevention Rules)"
+        - "docs/ARCHITECTURE.md (System Architecture & Tech Stack)"
+        - "docs/DATA_MODEL.md (Relational Database Schemas)"
+        - "docs/DESIGN_SYSTEM.md (Obsidian & Gold Design Tokens)"
+        - "docs/SECURITY.md (Technical Security Specification)"
+        - "docs/TESTING.md (34-Suite Automated Test Matrix)"
+        - "docs/INTEGRATIONS.md (External Proof Connectors)"
+        - "docs/PRODUCT.md (Vision, Taglines & Philosophy)"
+        - "docs/FEATURES.md (14 Core Product Modules Inventory)"
+        - "docs/ROADMAP.md (Implementation Status & Milestones)"
+        - "SUPPORT.md / CODE_OF_CONDUCT.md / SECURITY.md"
+        - "Other / Multiple Files"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: issue_type
+    attributes:
+      label: "Documentation Issue Type"
+      description: "What type of documentation issue is this?"
+      options:
+        - "Typo, grammatical mistake, or spelling error"
+        - "Broken relative link or dead external URL"
+        - "Outdated command or inaccurate setup instruction"
+        - "Unclear explanation or missing beginner context"
+        - "Missing guide or undocumented architectural feature"
+    validations:
+      required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: "Problem Description"
+      description: "Explain what is incorrect, confusing, or missing in the current documentation."
+      placeholder: "e.g., In docs/DEVELOPMENT.md line 21, the git clone URL had an outdated username placeholder..."
+    validations:
+      required: true
+
+  - type: textarea
+    id: suggested_fix
+    attributes:
+      label: "Suggested Correction"
+      description: "Provide the exact replacement text, code snippet, or updated explanation."
+      placeholder: "Provide the improved text or corrected code block..."
+    validations:
+      required: true
+
+  - type: dropdown
+    id: will_contribute
+    attributes:
+      label: "Would you like to submit a PR to fix this?"
+      options:
+        - "Yes, I would like to submit a pull request for this"
+        - "No, I am only reporting it for another contributor"
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: checklist
+    attributes:
+      label: "Contributor Confirmation"
+      options:
+        - label: "I confirm that no sensitive secrets or credentials are included in this issue."
+          required: true
+        - label: "I agree to follow PACT's [Code of Conduct](https://github.com/TheVicky1/Pact_OS/blob/main/CODE_OF_CONDUCT.md)."
+          required: true

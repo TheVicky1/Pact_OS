@@ -1,0 +1,141 @@
+name: "🌱 Good First Issue (Maintainer Curated)"
+description: "Maintainer-curated template to create a structured, beginner-friendly contribution"
+title: "[Good First Issue] "
+labels: ["good first issue", "difficulty:beginner"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ### 🏛️ Maintainer Template: Beginner Issue Creation
+
+        Use this template when authoring a **Good First Issue**. Every beginner task in PACT must provide crystal-clear guidance, explicit file pointers, and exact acceptance criteria.
+
+        > [!TIP]
+        > Remember: A first-time contributor should be able to open this issue and immediately know: **File → Change → Test → PR**.
+
+  - type: dropdown
+    id: estimated_time
+    attributes:
+      label: "Estimated Completion Time"
+      description: "How long should this task take for a first-time contributor?"
+      options:
+        - "time:<15m (< 15 minutes — Quick typo or single-line tweak)"
+        - "time:15-30m (15–30 minutes — Localized UI or test addition)"
+        - "time:30-60m (30–60 minutes — Component polish or validation rule)"
+        - "time:1-2h (1–2 hours — Small sub-feature or multi-file tweak)"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: area
+    attributes:
+      label: "Subsystem / Area"
+      description: "Select the architectural area of PACT."
+      options:
+        - "area:dashboard (Main OS Overview & Metric Cards)"
+        - "area:planner (Daily Planner & Timeblocking)"
+        - "area:calendar (Calendar View & Google Sync)"
+        - "area:tasks (Task Lifecycle & Priority Filters)"
+        - "area:goals (OKR Hierarchy & Milestone Tracking)"
+        - "area:projects (Projects & Status Boards)"
+        - "area:accountability (Stakes, Commitments & Consequence Masking)"
+        - "area:focus (Deep Work Timer & Audio Synthesizer)"
+        - "area:habits (Habit Recurrence & Streak Engine)"
+        - "area:finance (Integer-Cents Transactions & Budgets)"
+        - "area:analytics (Velocity Scoring & Completion Trends)"
+        - "area:review (Weekly Review Rituals & Drafts)"
+        - "area:auth (Login, Registration, Cookies & Onboarding)"
+        - "area:integrations (GitHub, LeetCode, Codeforces, Google Calendar)"
+        - "area:settings (User Preferences & Profile Configuration)"
+        - "area:database (Supabase Migrations, PostgreSQL Triggers & RLS)"
+        - "area:testing (Automated Test Suites & Harnesses)"
+        - "area:documentation (Guides & Specifications)"
+        - "area:developer-experience (Local Setup & Dev Tooling)"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: contribution_type
+    attributes:
+      label: "Contribution Type"
+      description: "Select the primary work type."
+      options:
+        - "type:docs (Documentation addition, fix, or typo)"
+        - "type:ui (UI polish, styling, or card ergonomics)"
+        - "type:a11y (Accessibility, focus visible, or ARIA labeling)"
+        - "type:test (Unit tests, mock data, or test matrix)"
+        - "type:bug (Localized bug fix)"
+        - "type:refactor (Small code cleanup or type improvement)"
+    validations:
+      required: true
+
+  - type: input
+    id: target_files
+    attributes:
+      label: "Exact File Location(s)"
+      description: "Provide the exact path(s) to the file(s) that need editing."
+      placeholder: "e.g., src/components/dashboard/velocity-card.tsx"
+    validations:
+      required: true
+
+  - type: textarea
+    id: why_it_matters
+    attributes:
+      label: "1. Why This Matters"
+      description: "Explain the context and user value of this change in simple terms."
+      placeholder: "Explain why this change makes PACT better..."
+    validations:
+      required: true
+
+  - type: textarea
+    id: step_by_step
+    attributes:
+      label: "2. Step-by-Step Instructions"
+      description: "Provide numbered, concrete steps for the contributor to complete the task."
+      placeholder: |
+        1. Open `src/components/dashboard/velocity-card.tsx`
+        2. Locate line XX where the hover transition is defined
+        3. Update the Tailwind border utility from `border-white/5` to `border-white/10 hover:border-gold/30`
+        4. Verify that the card scales cleanly on mobile viewports
+    validations:
+      required: true
+
+  - type: textarea
+    id: acceptance_criteria
+    attributes:
+      label: "3. Acceptance Criteria"
+      description: "List the exact criteria that must be satisfied for this PR to be approved."
+      placeholder: |
+        - [ ] The velocity card displays the updated hover border transition
+        - [ ] No regression in mobile layout spacing
+        - [ ] All TypeScript checks pass with 0 errors
+    validations:
+      required: true
+
+  - type: textarea
+    id: verification_commands
+    attributes:
+      label: "4. Testing & Verification Runbook"
+      description: "List the local commands the contributor should run before submitting."
+      value: |
+        ```bash
+        npm run lint
+        npx tsc --noEmit
+        node scratch/run-tests.mjs
+        node scratch/secret-scan.mjs
+        npm run build
+        ```
+    validations:
+      required: true
+
+  - type: textarea
+    id: beginner_tips
+    attributes:
+      label: "5. Notes & Helpful Resources for Beginners"
+      description: "Add any extra context, design system token pointers, or helpful links."
+      value: |
+        - 📖 Review the [Beginner's Contribution Guide](https://github.com/TheVicky1/Pact_OS/blob/main/docs/CONTRIBUTING-BEGINNERS.md) for a zero-to-PR walkthrough.
+        - 🎨 Review the [Design System](https://github.com/TheVicky1/Pact_OS/blob/main/docs/DESIGN_SYSTEM.md) for approved color tokens.
+        - 🔧 If you encounter setup issues, see the [Troubleshooting Guide](https://github.com/TheVicky1/Pact_OS/blob/main/docs/TROUBLESHOOTING.md).
+    validations:
+      required: false

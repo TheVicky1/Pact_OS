@@ -1,0 +1,123 @@
+name: "🐛 Bug Report"
+description: "Report a reproducible defect, broken state transition, or unexpected error in PACT"
+title: "fix: "
+labels: ["type:bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you for taking the time to report an issue in **PACT**!
+
+        > [!CAUTION]
+        > **ZERO SECRET POLICY**: Never post API keys, Supabase service-role tokens, OAuth secrets, database passwords, or `.env.local` contents. Please redact all sensitive credentials before submitting.
+        >
+        > For sensitive security vulnerabilities, please refer to our private disclosure process in [SECURITY.md](https://github.com/TheVicky1/Pact_OS/blob/main/SECURITY.md).
+
+  - type: dropdown
+    id: area
+    attributes:
+      label: "Affected Subsystem / Area"
+      description: "Select the primary architectural area of PACT where this bug occurs."
+      options:
+        - "area:dashboard (Main OS Overview & Metric Cards)"
+        - "area:planner (Daily Planner & Timeblocking)"
+        - "area:calendar (Calendar View & Google Sync)"
+        - "area:tasks (Task Lifecycle & Priority Filters)"
+        - "area:goals (OKR Hierarchy & Milestone Tracking)"
+        - "area:projects (Projects & Status Boards)"
+        - "area:accountability (Stakes, Commitments & Consequence Masking)"
+        - "area:focus (Deep Work Timer & Audio Synthesizer)"
+        - "area:habits (Habit Recurrence & Streak Engine)"
+        - "area:finance (Integer-Cents Transactions & Budgets)"
+        - "area:analytics (Velocity Scoring & Completion Trends)"
+        - "area:review (Weekly Review Rituals & Drafts)"
+        - "area:auth (Login, Registration, Cookies & Onboarding)"
+        - "area:integrations (GitHub, LeetCode, Codeforces, Google Calendar)"
+        - "area:settings (User Preferences & Profile Configuration)"
+        - "area:database (Supabase Migrations, PostgreSQL Triggers & RLS)"
+        - "area:testing (Automated Test Suites & Harnesses)"
+        - "area:documentation (Guides & Specifications)"
+        - "area:developer-experience (Local Setup & Dev Tooling)"
+        - "Other / Cross-Cutting"
+    validations:
+      required: true
+
+  - type: textarea
+    id: summary
+    attributes:
+      label: "Bug Summary"
+      description: "A clear and concise description of what the bug is."
+      placeholder: "e.g., When dragging a task onto the daily planner timeline across midnight, the end time calculates as negative minutes."
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproduction_steps
+    attributes:
+      label: "Steps to Reproduce"
+      description: "Provide numbered steps to reproduce the issue starting from a fresh environment."
+      placeholder: |
+        1. Navigate to '/app/planner'
+        2. Create a new timeblock starting at 23:30
+        3. Drag the bottom resize handle past 00:15
+        4. Observe the calculated duration
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected_behavior
+    attributes:
+      label: "Expected Behavior"
+      description: "What did you expect to happen?"
+      placeholder: "e.g., The timeblock duration should show 45 minutes and correctly handle the day rollover."
+    validations:
+      required: true
+
+  - type: textarea
+    id: actual_behavior
+    attributes:
+      label: "Actual Behavior"
+      description: "What actually happened?"
+      placeholder: "e.g., The timeline collapses and displays an invalid timestamp NaN:NaN."
+    validations:
+      required: true
+
+  - type: input
+    id: environment
+    attributes:
+      label: "Environment Details"
+      description: "Specify your operating system, Node.js version, and browser (e.g., Windows 11, Node v20.11, Chrome 124)."
+      placeholder: "OS: Windows 11, Node: v20.x, Browser: Chrome 124"
+    validations:
+      required: false
+
+  - type: textarea
+    id: logs_errors
+    attributes:
+      label: "Logs or Terminal Error Output"
+      description: "Paste relevant console errors or build outputs. Please ensure all secrets/tokens are redacted."
+      placeholder: "Paste console logs or terminal output here..."
+    validations:
+      required: false
+
+  - type: textarea
+    id: visual_evidence
+    attributes:
+      label: "Screenshots or Screen Recording"
+      description: "Drag and drop any screenshots or screen recordings demonstrating the bug."
+      placeholder: "Drag and drop images or videos here..."
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: checklist
+    attributes:
+      label: "Contributor Confirmation"
+      description: "Please confirm that you have completed the following pre-checks:"
+      options:
+        - label: "I have searched existing [GitHub Issues](https://github.com/TheVicky1/Pact_OS/issues) to ensure this is not a duplicate."
+          required: true
+        - label: "I confirm that no secrets, API keys, private tokens, or `.env.local` contents are included in this report."
+          required: true
+        - label: "I have read and agree to follow PACT's [Code of Conduct](https://github.com/TheVicky1/Pact_OS/blob/main/CODE_OF_CONDUCT.md)."
+          required: true

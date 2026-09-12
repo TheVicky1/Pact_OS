@@ -224,11 +224,12 @@ A high-quality pull request is focused, descriptive, and easy to review:
 
 ### PR Requirements
 1. **Single Responsibility**: Address one issue or logical change per PR. Avoid bundling unrelated fixes.
-2. **Clear Title & Summary**: Use Conventional Commit format for the PR title and clearly summarize what changed and why.
-3. **Issue Linking**: Reference the target issue (`Closes #...` or `Fixes #...`).
-4. **Validation Evidence**: Disclose which tests and validation scripts you ran locally.
-5. **Visual Proof**: For UI changes, include clear before-and-after screenshots or recordings.
-6. **PR Size Guidelines**:
+2. **Follow the PR Template**: Complete all applicable sections in PACT's standard [Pull Request Template](.github/PULL_REQUEST_TEMPLATE.md).
+3. **Clear Title & Summary**: Use Conventional Commit format for the PR title and clearly summarize what changed and why.
+4. **Issue Linking**: Reference the target issue (`Closes #...` or `Fixes #...`).
+5. **Validation Evidence**: Disclose which tests and validation scripts you ran locally.
+6. **Visual Proof**: For UI changes, include clear before-and-after screenshots or recordings.
+7. **PR Size Guidelines**:
    - **Preferred**: Small to medium PRs (< 300 lines of code change).
    - **Caution**: Large PRs (> 500 lines) take significantly longer to review and require prior maintainer alignment.
 
