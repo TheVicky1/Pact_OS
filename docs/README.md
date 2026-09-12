@@ -30,9 +30,10 @@ docs/
 ├── GIT_WORKFLOW.md                     # Branching, Conventional Commits & Pre-Commit Rules
 ├── ROADMAP.md                          # Current Verified Status & Future Planned Milestones
 ├── DESIGN_SYSTEM.md                    # Luxury Obsidian Canvas, 3D Celestial Hero & PACT Gold Tokens
-├── TESTING.md                          # 34-Suite Automated Test Matrix & Verification Runbook
+├── TESTING.md                          # 35-Suite Automated Test Matrix & Verification Runbook
 ├── USER_FLOWS.md                       # Core User Workflows & State Lifecycle Transitions
 ├── DECISIONS.md                        # Architecture Decision Records (ADRs)
+├── MAINTAINER-WORKFLOW.md              # Contributor Triage, PR Review & Claim Assignment Runbook
 ├── PRODUCTION_DEPLOYMENT_RUNBOOK.md    # Production Deployment, Environment Variables & Verification
 └── archive/                            # Historical Development Phase Reports (Phases 4-6)
     └── README.md                       # Archive Index
@@ -67,6 +68,7 @@ docs/
 - [**Troubleshooting Guide**](./TROUBLESHOOTING.md): Practical diagnostics for Node.js, environment variables, build, port, and Git issues.
 - [**Contributing Guide**](../CONTRIBUTING.md): Root guide for opening issues, branching, coding standards, and pull requests.
 - [**Code of Conduct**](../CODE_OF_CONDUCT.md): Community participation standards and enforcement guidelines.
+- [**Maintainer Operating Workflow**](./MAINTAINER-WORKFLOW.md): Contributor issue triage, PR review checklist, claim management, and release runbook.
 - [**Security Policy**](../SECURITY.md): Public vulnerability reporting procedure and supported versions.
 - [**Support Guide**](../SUPPORT.md): How and where to ask for help, report bugs, or propose features.
 - [**Contributors**](../CONTRIBUTORS.md): Recognition of core maintainers and community contributors.
@@ -75,7 +77,7 @@ docs/
 - [**Development Guide**](./DEVELOPMENT.md): Local environment setup, database migrations, package scripts, and development workflows.
 - [**Git Workflow & Standards**](./GIT_WORKFLOW.md): Conventional Commit conventions, branch protection rules, and secret prevention hygiene.
 - [**Design System & UI Tokens**](./DESIGN_SYSTEM.md): Luxury Obsidian & Gold palette, 3D celestial planetary hero, card geometry, and typography tokens.
-- [**Testing & Verification Matrix**](./TESTING.md): 34-suite automated test matrix, execution runbooks, and quality gates.
+- [**Testing & Verification Matrix**](./TESTING.md): 35-suite automated test matrix, execution runbooks, and quality gates.
 - [**CI Pipeline & Quality Gates**](./CI_PIPELINE.md): GitHub Actions automated verification, test matrix, secret scans, and build checks.
 - [**Dependency Security & Auditing**](./DEPENDENCY_SECURITY.md): Dependency health, CVSS vulnerability gate policy, and Dependabot lifecycle.
 - [**Release Management & Versioning**](./RELEASE_MANAGEMENT.md): Semantic Versioning policy, Keep a Changelog governance, and release checklists.
