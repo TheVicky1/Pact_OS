@@ -1,269 +1,451 @@
 # Contributing to PACT
 
-Thank you for your interest in contributing to **PACT**! 
+Thank you for your interest in contributing to **PACT**!
 
-PACT is an open-source **Personal Operating System (OS)** engineered to turn intention into discipline. We are building a high-integrity, production-grade system that unifies time-blocked planning, strategic goals, projects, deep work focus, financial discipline, and unbreakable accountability contracts.
+PACT is an open-source **Personal Operating System (OS)** engineered to turn intent into discipline. We are building a high-integrity, production-grade system that unifies time-blocked planning, strategic goals, projects, deep work focus, financial discipline, and unbreakable accountability contracts.
 
-We warmly welcome contributions from everyone—whether you are a first-time open-source contributor, a beginner developer, an experienced engineer, a technical writer, or a UI/UX designer. Every meaningful contribution helps make PACT a better tool for everyone.
+We warmly welcome contributions from everyone—whether you are a first-time open-source contributor, a student, a frontend or backend developer, a TypeScript specialist, a UI/UX designer, an accessibility advocate, a technical writer, a tester, a security researcher, or an experienced software engineer.
 
-> 💡 **First time contributing to open source?**  
-> Check out our step-by-step [**Beginner's Contribution Guide**](docs/CONTRIBUTING-BEGINNERS.md) for a zero-to-PR walkthrough, then return here for standard contributor standards.
+Every meaningful contribution helps make PACT more reliable, accessible, and empowering for everyone.
+
+> [!TIP]
+> **First time contributing to open source?**  
+> Check out our step-by-step [**Beginner's Contribution Guide**](docs/CONTRIBUTING-BEGINNERS.md) for a zero-to-PR onboarding tutorial. If you encounter any environment or Git hiccups, consult our [**Troubleshooting Guide**](docs/TROUBLESHOOTING.md).
 
 ---
 
 ## Table of Contents
 
-1. [Before You Start](#before-you-start)
-2. [Types of Contributions](#types-of-contributions)
-3. [Development Environment Setup](#development-environment-setup)
-4. [Branching Strategy](#branching-strategy)
-5. [Commit Message Conventions](#commit-message-conventions)
-6. [Submitting a Pull Request](#submitting-a-pull-request)
-7. [Code Quality & Standards](#code-quality--standards)
-8. [UI/UX Contribution Standards](#uiux-contribution-standards)
-9. [Documentation Contributions](#documentation-contributions)
-10. [Testing & Validation](#testing--validation)
-11. [Security Guidelines](#security-guidelines)
-12. [Code of Conduct](#code-of-conduct)
-13. [Getting Help](#getting-help)
-14. [Contributor Recognition](#contributor-recognition)
-15. [Pre-Submission Checklist](#pre-submission-checklist)
+1. [Contribution Philosophy](#1-contribution-philosophy)
+2. [Who Can Contribute?](#2-who-can-contribute)
+3. [Contribution Taxonomy](#3-contribution-taxonomy)
+4. [Before Starting Work](#4-before-starting-work)
+5. [Issue Claiming & Assignment Policy](#5-issue-claiming--assignment-policy)
+6. [Branching Strategy](#6-branching-strategy)
+7. [Commit Message Conventions](#7-commit-message-conventions)
+8. [The Issue → Branch → PR Lifecycle](#8-the-issue--branch--pr-lifecycle)
+9. [Pull Request Policy](#9-pull-request-policy)
+10. [Engineering & Code Quality Standards](#10-engineering--code-quality-standards)
+11. [UI/UX & Visual Contribution Standards](#11-uiux--visual-contribution-standards)
+12. [Accessibility (a11y) Baseline](#12-accessibility-a11y-baseline)
+13. [Dependency Management Policy](#13-dependency-management-policy)
+14. [Database & Supabase Policy](#14-database--supabase-policy)
+15. [Documentation Standards](#15-documentation-standards)
+16. [Clean Working Tree & Generated Files](#16-clean-working-tree--generated-files)
+17. [Testing & Local Validation Protocol](#17-testing--local-validation-protocol)
+18. [Security Guidelines & Zero Secret Policy](#18-security-guidelines--zero-secret-policy)
+19. [Review Process & Collaboration](#19-review-process--collaboration)
+20. [Maintainer Rights & Project Governance](#20-maintainer-rights--project-governance)
+21. [Contributor Responsibilities](#21-contributor-responsibilities)
+22. [Contributor Recognition](#22-contributor-recognition)
+23. [Support & Help Channels](#23-support--help-channels)
+24. [Pre-Submission Checklist](#24-pre-submission-checklist)
 
 ---
 
-## Before You Start
+## 1. Contribution Philosophy
 
-To ensure a smooth and productive experience:
+PACT balances two core values:
 
-1. **Check Existing Issues**: Before starting work on any change, search the [GitHub Issues](https://github.com/TheVicky1/Pact_OS/issues) to verify that someone else is not already working on the same problem.
-2. **Look for Beginner-Friendly Issues**: If you are new to the repository, look for issues tagged with `good first issue` or `help wanted`.
-3. **Claim an Issue**: Leave a comment on the issue stating that you would like to work on it. A maintainer will confirm the assignment so you can proceed with confidence.
-4. **Avoid Large Unsolicited PRs**: If you plan to propose a major new feature or architectural refactor, open an issue first to discuss the concept with maintainers before writing code.
+1. **Beginner Accessibility**: Providing transparent, welcoming on-ramps and clear guidance so contributors of all experience levels can participate effectively.
+2. **Maintainer-Grade Engineering Discipline**: Upholding rigorous standards for type safety, security boundaries, domain math precision, and visual cohesion.
 
----
+We do not sacrifice engineering quality for beginner friendliness, nor do we make the contribution process unnecessarily complex.
 
-## Types of Contributions
-
-You do not need to be a full-stack engineer to contribute. We value all forms of contributions:
-
-- **Documentation**: Fixing typos, clarifying local setup guides, improving explanations, or writing walkthroughs.
-- **Beginner Fixes**: Small bug fixes, error message improvements, or simple UI alignment adjustments.
-- **UI/UX Polish**: Refining animations, improving layout responsiveness, or enhancing visual states within the PACT design language.
-- **Accessibility (a11y)**: Adding ARIA attributes, improving keyboard navigation, or verifying contrast ratios.
-- **Testing**: Adding unit tests, edge-case coverage, or state-machine validation.
-- **Core Engineering**: Enhancing domain engines, optimizing database interactions, or building new platform connectors.
-- **Bug Reports**: Finding reproducible bugs and documenting clear steps to reproduce them.
+### Core Principles
+- **Small & Focused**: A small, well-tested, high-quality contribution is always preferred over a large, unfocused pull request.
+- **Architectural Respect**: Respect existing system boundaries (e.g., server-authoritative authentication, integer-cents financial arithmetic, timezone-safe date math).
+- **Scope Discipline**: Solve the specific problem outlined in the issue. Avoid bundling unrelated formatting or incidental refactors.
 
 ---
 
-## Development Environment Setup
+## 2. Who Can Contribute?
 
-PACT is built with **Next.js 16 (React 19)**, **TypeScript**, **Tailwind CSS v4**, and **Supabase**.
+Coding is only one of many ways to contribute to PACT. We actively welcome:
 
-### Prerequisites
-
-- **Node.js**: `v20.x` or `v22.x` (LTS recommended)
-- **Package Manager**: `npm` (v10+)
-- **Git**: Installed and configured on your machine
-
-### Setup Steps
-
-1. **Fork the Repository**: Click the **Fork** button on GitHub to create your personal copy of the repository.
-2. **Clone Your Fork**:
-   ```bash
-   git clone https://github.com/<your-username>/Pact_OS.git
-   cd Pact_OS
-   ```
-3. **Configure Upstream Remote**:
-   ```bash
-   git remote add upstream https://github.com/TheVicky1/Pact_OS.git
-   ```
-4. **Install Dependencies**:
-   ```bash
-   npm install
-   ```
-5. **Configure Environment Variables**:
-   Copy the example environment file:
-   ```bash
-   cp .env.example .env.local
-   ```
-   *Note: For offline UI and domain development, the default mock/placeholder variables in `.env.example` allow local pages and the test suite to execute.*
-6. **Start the Development Server**:
-   ```bash
-   npm run dev
-   ```
-   Open [http://localhost:3000](http://localhost:3000) in your browser to view PACT.
+- **First-Time Contributors & Students**: Learn open-source practices with accessible beginner issues.
+- **Frontend & TypeScript Developers**: Refine React 19 components, custom hooks, and Tailwind CSS v4 styling.
+- **Backend & Database Engineers**: Optimize Supabase queries, PostgreSQL schemas, and Server Actions.
+- **UI/UX & Product Designers**: Polish micro-interactions, layout ergonomics, and visual hierarchy.
+- **Technical Writers**: Clarify setup instructions, fix inaccuracies, and expand architectural documentation.
+- **Quality Assurance & Testers**: Add unit tests, test edge cases, and discover reproducible defects.
+- **Accessibility Advocates**: Enhance keyboard navigation, ARIA semantics, screen reader support, and color contrast.
+- **Security Researchers**: Audit RLS policies, credential handling, and API endpoints (via [SECURITY.md](SECURITY.md)).
 
 ---
 
-## Branching Strategy
+## 3. Contribution Taxonomy
 
-Always create a dedicated feature branch for your work instead of working directly on `main`:
+To establish a clear shared vocabulary across issues and pull requests, PACT classifies contributions into ten distinct categories:
 
+| Type | Focus Area | Description |
+| :--- | :--- | :--- |
+| 🌱 **Documentation** | `docs` | Guides, API specs, setup tutorials, typos, and architecture diagrams. |
+| 🐛 **Bug Fix** | `fix` | Resolving reproducible functional defects and broken state transitions. |
+| 🎨 **UI/UX** | `ui` / `style` | Visual polish, layout ergonomics, animations, and design system fidelity. |
+| ♿ **Accessibility** | `a11y` | ARIA labeling, keyboard navigation, focus visible states, and contrast. |
+| 🧪 **Testing** | `test` | Unit tests, state-machine validation, edge cases, and test harness utilities. |
+| ⚡ **Performance** | `perf` | Bundle optimization, query efficiency, render optimizations, and latency reduction. |
+| 🧹 **Code Quality** | `refactor` | Non-functional refactoring, dead code pruning, and type safety hardening. |
+| 🔌 **Integrations** | `feat` / `fix` | External proof-of-work connectors (GitHub, LeetCode, Codeforces, Google Calendar). |
+| ✨ **Feature** | `feat` | New functionality aligned with the roadmap and approved by maintainers. |
+| 🔐 **Security** | `security` | Hardening RLS policies, input sanitization, and credential protection. |
+
+*(Note: Official GitHub issue and PR label automation will align with this vocabulary in upcoming project phases).*
+
+---
+
+## 4. Before Starting Work
+
+To prevent duplicate effort and ensure your time is spent effectively:
+
+1. **Search Existing Issues & PRs**: Check [GitHub Issues](https://github.com/TheVicky1/Pact_OS/issues) and [Pull Requests](https://github.com/TheVicky1/Pact_OS/pulls) to verify no one is already addressing the issue.
+2. **Read the Full Issue Description**: Review all acceptance criteria, technical context, and reproduction steps.
+3. **Ask for Clarification**: If requirements or edge cases are ambiguous, leave a comment on the issue before writing code.
+4. **Align on Substantial Changes**: Do not start large feature additions or major architectural refactors without prior discussion and maintainer alignment.
+
+---
+
+## 5. Issue Claiming & Assignment Policy
+
+PACT uses a structured issue assignment workflow to keep progress transparent:
+
+### Current Manual Assignment Flow
+1. **Express Interest**: Comment on the relevant issue stating that you would like to work on it (e.g., *"I'd like to work on this issue. Please assign it to me."*).
+2. **Maintainer Confirmation**: A maintainer will assign the issue to you. Once assigned, you have exclusive ownership to work on that issue.
+3. **Single Issue at a Time**: To ensure opportunities remain open for all community members, please work on one issue at a time.
+4. **Communication & Handoff**: If you encounter unexpected roadblocks or can no longer continue, post a brief comment so maintainers can reopen the issue for another contributor.
+5. **Inactive Work**: Assignments represent active, ongoing progress. If an assigned issue receives no updates or activity, maintainers reserve the right to unassign and reopen the issue.
+
+> [!NOTE]
+> **Evolution of Issue Assignment**: In a future infrastructure phase (Phase 14), PACT plans to introduce automated issue claiming and stale assignment management. Until then, all assignments and check-ins are handled manually by project maintainers.
+
+---
+
+## 6. Branching Strategy
+
+All contributors must work on dedicated topic branches created from the latest `upstream/main`. Never commit directly to `main`.
+
+### Branch Workflow
 ```bash
-# Ensure your local main is in sync with upstream
+# 1. Synchronize local main with upstream
 git checkout main
 git pull upstream main
 
-# Create a new topic branch
-git checkout -b <branch-type>/<short-description>
+# 2. Create a focused topic branch
+git checkout -b <prefix>/<short-description>
 ```
 
-### Branch Naming Conventions
+### Branch Naming Prefixes
+Choose a branch prefix matching your contribution category:
 
-- `feat/add-focus-preset` (New features or enhancements)
-- `fix/calendar-modal-overflow` (Bug fixes)
-- `docs/update-troubleshooting-guide` (Documentation changes)
-- `ui/refine-metric-card-hover` (UI/UX visual adjustments)
-- `test/add-finance-edge-cases` (Testing improvements)
-- `refactor/clean-date-helpers` (Non-functional code cleanup)
+- `feat/focus-session-sound-toggle` (New features or enhancements)
+- `fix/calendar-timezone-rollover` (Bug fixes)
+- `docs/contributor-policy-update` (Documentation improvements)
+- `ui/dashboard-metric-hover-polish` (UI visual styling & ergonomics)
+- `a11y/modal-focus-trap-enhancement` (Accessibility improvements)
+- `test/finance-cents-overflow-matrix` (Automated testing additions)
+- `refactor/clean-date-helpers` (Code quality & structural refactoring)
+- `perf/bundle-tree-shaking` (Performance optimizations)
+
+Keep each branch dedicated to a single logical change.
 
 ---
 
-## Commit Message Conventions
+## 7. Commit Message Conventions
 
-We follow a clean, consistent commit convention based on Conventional Commits:
+PACT enforces **Conventional Commits** (`type(scope): description`) to ensure clean history, readable change logs, and automated release compatibility.
 
+### Format
 ```
 <type>(<scope>): <short description in present tense>
 ```
 
+### Allowed Commit Types
+- `feat`: A new feature or product capability
+- `fix`: A bug fix
+- `docs`: Documentation-only changes
+- `ui` / `style`: Visual styling, layout, or cosmetic adjustments
+- `refactor`: Code changes that neither fix a bug nor add a feature
+- `test`: Adding or correcting tests
+- `perf`: Performance improvements
+- `chore`: Maintenance tasks, repo config, or tooling updates
+- `security`: Security patches or RLS policy hardening
+
+### Common Repository Scopes
+`auth`, `planner`, `tasks`, `habits`, `focus`, `finance`, `accountability`, `reviews`, `integrations`, `ui`, `a11y`, `docs`, `security`, `config`.
+
 ### Examples
-
-- `feat(focus): add audio chime toggle to session settings`
+- `feat(focus): add audio chime toggle to session preferences`
 - `fix(planner): resolve timezone offset calculation during midnight rollover`
-- `docs(readme): clarify local environment prerequisites`
-- `ui(dashboard): improve hover elevation on metric cards`
-- `test(accountability): add unit tests for grace period expiration`
+- `docs(contributing): formalize contribution policy and standards`
+- `ui(dashboard): refine card border contrast and hover transitions`
+- `test(accountability): add unit tests for grace period penalty resolution`
+- `security(rls): harden profile table update policy`
+
+### Anti-Patterns to Avoid
+❌ `git commit -m "update"`  
+❌ `git commit -m "fixes and stuff"`  
+❌ `git commit -m "WIP"`  
+❌ `git commit -m "asdf final"`  
+
+Write concise, descriptive messages explaining **what** changed and **why**.
 
 ---
 
-## Submitting a Pull Request
+## 8. The Issue → Branch → PR Lifecycle
 
-When you are ready to submit your contribution:
+Every contribution follows a structured eight-step lifecycle:
 
-1. **Push Your Branch**:
-   ```bash
-   git push -u origin <your-branch-name>
-   ```
-2. **Open a Pull Request**: Navigate to the [PACT repository](https://github.com/TheVicky1/Pact_OS) on GitHub and click **Compare & pull request**.
-3. **Provide a Clear Title & Description**:
-   - Summarize **what** changed and **why**.
-   - Reference the related issue (e.g., `Closes #12` or `Fixes #45`).
-   - Describe the manual or automated testing performed.
-   - For UI changes, attach before/after screenshots or a short recording.
-4. **Keep PRs Focused**: Avoid mixing unrelated changes into a single pull request. Smaller, focused PRs are reviewed and merged much faster.
+```
+┌──────────────┐     ┌──────────────┐     ┌──────────────────┐     ┌──────────────────┐
+│   1. ISSUE   │ ──> │  2. BRANCH   │ ──> │ 3. IMPLEMENTATION│ ──> │  4. VALIDATION   │
+│ Find & Claim │     │ Topic Branch │     │ Clean Code / Doc │     │ Lint, TSC, Tests │
+└──────────────┘     └──────────────┘     └──────────────────┘     └──────────────────┘
+                                                                             │
+┌──────────────┐     ┌──────────────┐     ┌──────────────────┐               ▼
+│   8. MERGE   │ <── │  7. REVIEW   │ <── │ 6. PULL REQUEST  │ <── ┌──────────────────┐
+│   Ship It!   │     │ Maintainers  │     │ Describe & Link  │     │ 5. COMMIT & PUSH │
+└──────────────┘     └──────────────┘     └──────────────────┘     │   Conventional   │
+                                                                   └──────────────────┘
+```
 
----
-
-## Code Quality & Standards
-
-- **TypeScript**: Strict type checking is enabled. Avoid using `any`; define explicit interfaces or use existing types from `src/types/`.
-- **Server Boundaries**: Follow the server-authoritative pattern. User identity and critical state transitions must be verified on the server.
-- **Component Design**: Keep React components focused, modular, and readable.
-- **Dependencies**: Avoid adding heavy external libraries when a clean, lightweight native implementation is possible.
-- **Linting**: Ensure code adheres to ESLint rules without suppressing warnings unnecessarily.
+### Linking Issues in Pull Requests
+Always link the relevant issue in your PR description using standard GitHub keywords:
+- `Closes #123` (for new features or completed tasks)
+- `Fixes #123` (for bug fixes)
+- `Related to #123` (for partial progress or related discussions)
 
 ---
 
-## UI/UX Contribution Standards
+## 9. Pull Request Policy
 
-PACT features a distinctive, disciplined visual identity:
+A high-quality pull request is focused, descriptive, and easy to review:
 
-- **Color Palette**: Strictly adhere to the approved luxury palette:
-  - **Canvas**: Deep Obsidian Black (`#050505`, `#070707`, `#090909`).
-  - **Surfaces**: Solid luxury card surfaces (`#0C0C0F`, `#101012`) with subtle borders (`rgba(255, 255, 255, 0.06)`).
-  - **Accent**: Restrained PACT Gold (`#D4AF37`, `#E6C34A`).
-  - **Text**: Crisp Warm White (`#F5F5F5`) for headings and numerals; neutral zinc for secondary copy.
-  - *Do NOT introduce arbitrary neon colors or unapproved color schemes.*
-- **Responsive Layouts**: Verify that UI components scale cleanly across desktop, tablet, and mobile breakpoints.
-- **Accessibility**: Ensure high text contrast ratios (WCAG AA) and proper focus visible states.
-
----
-
-## Documentation Contributions
-
-Clear documentation is as important as code. When writing or updating documentation:
-
-- Use clear, professional, and accessible language.
-- Ensure all markdown formatting, tables, and code blocks render correctly.
-- Verify that all relative links and file paths are valid.
-- Avoid obsolete instructions or undocumented assumptions.
+### PR Requirements
+1. **Single Responsibility**: Address one issue or logical change per PR. Avoid bundling unrelated fixes.
+2. **Clear Title & Summary**: Use Conventional Commit format for the PR title and clearly summarize what changed and why.
+3. **Issue Linking**: Reference the target issue (`Closes #...` or `Fixes #...`).
+4. **Validation Evidence**: Disclose which tests and validation scripts you ran locally.
+5. **Visual Proof**: For UI changes, include clear before-and-after screenshots or recordings.
+6. **PR Size Guidelines**:
+   - **Preferred**: Small to medium PRs (< 300 lines of code change).
+   - **Caution**: Large PRs (> 500 lines) take significantly longer to review and require prior maintainer alignment.
 
 ---
 
-## Testing & Validation
+## 10. Engineering & Code Quality Standards
 
-Before opening a pull request, run the following verification steps locally:
+PACT maintains high standards for TypeScript correctness and architectural integrity. When writing application code:
 
-1. **Lint Check**:
-   ```bash
-   npm run lint
-   ```
-2. **Type Check**:
-   ```bash
-   npx tsc --noEmit
-   ```
-3. **Domain Test Suite**:
-   ```bash
-   node scratch/run-tests.mjs
-   ```
-4. **Secret Scan**:
-   ```bash
-   node scratch/secret-scan.mjs
-   ```
-5. **Production Build**:
-   ```bash
-   npm run build
-   ```
+- **Strict TypeScript**: Never use `any`. Define explicit domain interfaces or reuse existing types from `src/types/`.
+- **Server-Authoritative Security**: User identity and state transitions must be verified on the server via `supabase.auth.getUser()`. Never trust client-supplied `user_id` values.
+- **Input Validation**: All Server Action mutations must validate payload boundaries using Zod schemas (`src/lib/validations/`).
+- **Financial Arithmetic**: Never use floating-point numbers for currency. All monetary amounts must be calculated and stored in integer cents (`amount_cents`).
+- **Timezone Safety**: Use `src/lib/time.ts` utilities for date and calendar math to respect the user's profile timezone.
+- **Fail-Safe Integration Calls**: External API requests (GitHub, LeetCode, Codeforces) must catch errors gracefully and transition to retry states rather than crashing the application.
+- **Component Modularity**: Keep React components focused, reusable, and cleanly separated between UI presentation and domain logic.
 
-All checks must pass with zero errors.
+For deeper technical specifics, review:
+- [**Architecture Guide**](docs/ARCHITECTURE.md)
+- [**Data Model Specification**](docs/DATA_MODEL.md)
+- [**Development Guide**](docs/DEVELOPMENT.md)
 
 ---
 
-## Security Guidelines
+## 11. UI/UX & Visual Contribution Standards
 
-Security is foundational to PACT:
+PACT features a distinctive luxury aesthetic characterized by deep obsidian surfaces, celestial motifs, and restrained metallic gold accents.
 
-- **Never Commit Secrets**: Never commit API keys, service role tokens, database credentials, or `.env.local` files.
-- **Responsible Disclosure**: If you discover a potential security vulnerability, do NOT open a public GitHub issue. Please follow our disclosure process outlined in [SECURITY.md](SECURITY.md).
+### Visual Palette & Tokens
+- **Canvas**: Deep Obsidian Black (`#050505`, `#070707`, `#090909`).
+- **Surfaces**: Solid luxury card surfaces (`#0C0C0F`, `#101012`) with subtle borders (`rgba(255, 255, 255, 0.06)`).
+- **Accent**: Restrained PACT Gold (`#D4AF37`, `#E6C34A`) used intentionally for primary CTAs, active states, and streak highlights.
+- **Typography**: Crisp Warm White (`#F5F5F5`) for headings and prominent numerals; Zinc secondary (`#8B8B92`, `#71717A`) for labels and body copy.
 
----
+### Design Rules
+- ❌ **No Random Accent Colors**: Do NOT introduce arbitrary purple, blue, cyan, or neon gradients unless explicitly authorized by a design system update.
+- 📐 **Card Geometry**: Standardize on `rounded-2xl` for primary containers and `rounded-xl` for interactive elements.
+- 🔍 **Visual Verification**: Always verify that UI changes adapt gracefully across mobile (`375px`), tablet (`768px`), and desktop (`1280px+`) viewports.
 
-## Code of Conduct
-
-All contributors and community members are expected to adhere to our [Code of Conduct](CODE_OF_CONDUCT.md). Please treat fellow contributors with respect, kindness, and empathy.
-
----
-
-## Getting Help
-
-If you have questions, need clarification on an issue, or run into technical roadblocks:
-
-- Consult our [**Troubleshooting Guide**](docs/TROUBLESHOOTING.md) for solutions to common setup, build, or test issues.
-- Consult [SUPPORT.md](SUPPORT.md) for available help channels.
-- Check our existing documentation in [`docs/`](docs/README.md).
-- Leave a comment directly on the relevant GitHub issue.
+Refer to [**Design System & UI Tokens**](docs/DESIGN_SYSTEM.md) for full token definitions.
 
 ---
 
-## Contributor Recognition
+## 12. Accessibility (a11y) Baseline
 
-We appreciate every contribution! Contributors with accepted pull requests are recognized in [CONTRIBUTORS.md](CONTRIBUTORS.md).
+PACT is committed to building an accessible operating system. All interface contributions must adhere to these baseline practices:
+
+- **Semantic Elements**: Use proper HTML5 semantic tags (`<main>`, `<nav>`, `<section>`, `<article>`, `<button>`, `<input>`).
+- **Keyboard Navigation**: Ensure all interactive controls are reachable and operable via the `Tab`, `Enter`, and `Space` keys.
+- **Visible Focus States**: Preserve and enhance distinct `focus-visible` styling on all focusable elements.
+- **Color Contrast**: Maintain minimum WCAG AA contrast ratios (4.5:1 for normal text, 3:1 for large text and UI components).
+- **Accessible Labeling**: Provide descriptive `aria-label` or `aria-labelledby` attributes for icon-only buttons.
+- **Media & Images**: Provide meaningful `alt` text for informational images; use empty `alt=""` for purely decorative graphics.
+- **No Color-Only Cues**: Never use color alone to communicate state, warnings, or errors (pair color with text or icons).
 
 ---
 
-## Pre-Submission Checklist
+## 13. Dependency Management Policy
+
+PACT maintains a lean, secure, and performant dependency tree.
+
+### Criteria Before Proposing New Dependencies
+Before adding any package to `package.json`, ask:
+1. **Necessity**: Can this problem be cleanly solved using modern native Web APIs, React 19 features, or existing utilities?
+2. **Maintenance**: Is the library actively maintained, well-documented, and backed by a healthy community?
+3. **Bundle Impact**: Does the package bloat client-side bundle size?
+4. **License Compatibility**: Is the license compatible with PACT's MIT License?
+5. **Security Risk**: Does the library introduce excessive transitive dependencies or known vulnerabilities?
+
+Maintainers reserve the right to decline PRs that introduce unnecessary heavy dependencies.
+
+---
+
+## 14. Database & Supabase Policy
+
+Database schemas, constraints, and Row Level Security (RLS) policies are critical to PACT's data integrity:
+
+- **Ordered Migrations**: All schema modifications must be committed as sequentially numbered SQL files in `supabase/migrations/`.
+- **Zero-Trust RLS**: Every table must have RLS enabled with explicit `SELECT`, `INSERT`, `UPDATE`, and `DELETE` policies tied to `auth.uid()`.
+- **No Destructive Operations**: Migrations must avoid destructive `DROP TABLE` or column removals on active production data without backward-compatible transition phases.
+- **Lifecycle Triggers**: State transition constraints (e.g., deadline sweeping, penalty waiving) should be enforced via database triggers and audited.
+
+Reference [**Data Model Documentation**](docs/DATA_MODEL.md) and [**Security Guide**](docs/SECURITY.md) before proposing database modifications.
+
+---
+
+## 15. Documentation Standards
+
+High-quality documentation is treated with the same importance as production code:
+
+- **Accuracy**: Ensure instructions, paths, and commands reflect current, verified repository behavior.
+- **Truthful Infrastructure**: Never document future automated tools, unreleased bots, or non-existent CI checks as currently available.
+- **Code Examples**: Provide complete, copy-pasteable code examples where applicable.
+- **Cross-Reference Hygiene**: When adding or renaming documentation files, update all relevant references in [**`docs/README.md`**](docs/README.md) and the root [**`README.md`**](README.md).
+
+---
+
+## 16. Clean Working Tree & Generated Files
+
+To keep PR diffs clean and prevent accidental leaks:
+
+- **Never Commit Environment Files**: `.env`, `.env.local`, and `.env.production` must remain untracked.
+- **No Build Artifacts**: Ensure `.next/`, `out/`, `dist/`, and coverage outputs are never committed.
+- **No Editor Noise**: Avoid committing personal IDE configs (`.vscode/`, `.idea/`) unless intentionally updating shared workspace settings.
+- **Lockfile Hygiene**: Avoid unnecessary `package-lock.json` churn caused by unrelated npm commands. Only modify lockfiles when package dependencies are intentionally added or updated.
+
+---
+
+## 17. Testing & Local Validation Protocol
+
+Before opening a pull request, execute the full local validation suite:
+
+```bash
+# 1. Code style & linting check
+npm run lint
+
+# 2. Strict TypeScript type check
+npx tsc --noEmit
+
+# 3. Automated 34-suite domain test matrix
+node scratch/run-tests.mjs
+
+# 4. Zero-secret leak audit
+node scratch/secret-scan.mjs
+
+# 5. Production build verification
+npm run build
+```
+
+> [!IMPORTANT]
+> Documentation-only pull requests do not require running the full production build, but contributors should always ensure markdown formatting and relative links are verified. Disclose what validation was performed in your PR summary.
+
+---
+
+## 18. Security Guidelines & Zero Secret Policy
+
+> [!CAUTION]
+> **ZERO SECRET POLICY**: API keys, OAuth client secrets, database passwords, private keys, service role tokens, and live credentials must **NEVER** be committed to Git.
+
+- Run `node scratch/secret-scan.mjs` before committing changes.
+- If you accidentally commit a secret, **revoke the credential immediately** at the provider dashboard and notify maintainers.
+- **Vulnerability Disclosure**: If you discover a security vulnerability, please report it privately according to our [**Security Policy**](SECURITY.md). Do **not** open a public issue.
+
+---
+
+## 19. Review Process & Collaboration
+
+Code review at PACT is a constructive, collaborative learning process:
+
+1. **Submission**: You open a pull request adhering to the guidelines above.
+2. **Maintainer Review**: A maintainer will review your code for functionality, architecture alignment, security, and styling.
+3. **Feedback & Iteration**: Requested changes are a normal part of open-source development. Maintainers will explain the reasoning behind requested adjustments.
+4. **Updating Your PR**: Push additional commits to your topic branch to address feedback; the PR updates automatically.
+5. **Approval & Merge**: Once all checks pass and approvals are granted, a maintainer will merge your contribution.
+
+---
+
+## 20. Maintainer Rights & Project Governance
+
+To ensure the long-term health, security, and architectural coherence of PACT, maintainers retain the responsibility and authority to:
+
+- Request technical or visual adjustments before merging.
+- Close duplicate, spam, or out-of-scope issues and PRs.
+- Redirect discussions to appropriate forums or issues.
+- Reassign or reopen inactive issues where work has stalled.
+- Adjust issue labels, milestones, and project board priorities.
+- Determine release timing and architectural roadmap progression.
+
+All governance actions will be conducted respectfully and transparently in accordance with our community standards.
+
+---
+
+## 21. Contributor Responsibilities
+
+As a contributor to PACT, you agree to:
+
+- Communicate respectfully and adhere to our [**Code of Conduct**](CODE_OF_CONDUCT.md).
+- Keep pull requests focused on their stated objective.
+- Test your changes locally before requesting review.
+- Respond constructively to review feedback and questions.
+- Promptly communicate if you are unable to finish an assigned issue.
+- Safeguard credentials and protect user privacy.
+
+---
+
+## 22. Contributor Recognition
+
+Every merged contribution matters! Contributors with accepted pull requests are permanently recognized in our [**Contributors Hall of Fame**](CONTRIBUTORS.md).
+
+*(PACT is an open-source project and does not offer monetary compensation for contributions unless explicitly organized through official bounty programs).*
+
+---
+
+## 23. Support & Help Channels
+
+Need assistance, clarification, or guidance during your contribution journey?
+
+- 📖 **Beginner Guide**: [docs/CONTRIBUTING-BEGINNERS.md](docs/CONTRIBUTING-BEGINNERS.md)
+- 🔧 **Troubleshooting**: [docs/TROUBLESHOOTING.md](docs/TROUBLESHOOTING.md)
+- 💬 **Support Channels**: [SUPPORT.md](SUPPORT.md)
+- 📚 **Full Documentation**: [docs/README.md](docs/README.md)
+- 🛡️ **Security Inquiries**: [SECURITY.md](SECURITY.md)
+
+---
+
+## 24. Pre-Submission Checklist
 
 Before submitting your pull request, please verify:
 
-- [ ] I have read and followed this Contributing Guide.
+- [ ] I have read and followed this [**Contributing Guide**](CONTRIBUTING.md).
 - [ ] My branch is created from and up to date with `upstream/main`.
-- [ ] My code adheres to the project's TypeScript and styling standards.
-- [ ] For UI changes, I have tested responsiveness and included screenshots.
+- [ ] My code adheres to TypeScript strictness and domain architecture rules.
+- [ ] For UI changes, I have adhered to the luxury Obsidian/Gold design system and tested responsiveness.
 - [ ] `npm run lint` passes with 0 errors.
 - [ ] `npx tsc --noEmit` passes with 0 errors.
-- [ ] `node scratch/run-tests.mjs` passes all test suites.
+- [ ] `node scratch/run-tests.mjs` passes all 34 domain test suites.
 - [ ] `node scratch/secret-scan.mjs` confirms 0 committed secrets.
 - [ ] `npm run build` succeeds without build failures.
-- [ ] My pull request references the issue it addresses.
+- [ ] My pull request references the issue it addresses (e.g., `Closes #123` or `Fixes #123`).
+- [ ] I have included screenshots or screen recordings for any visual changes.

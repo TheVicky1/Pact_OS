@@ -17,11 +17,14 @@ This document provides a comprehensive guide for developers contributing to the 
 
 ### 2.1 Clone and Install Dependencies
 ```bash
-# 1. Clone repository
-git clone https://github.com/your-username/pact-os.git
-cd pact-os
+# 1. Clone repository fork
+git clone https://github.com/<your-username>/Pact_OS.git
+cd Pact_OS
 
-# 2. Install dependencies
+# 2. Add upstream remote
+git remote add upstream https://github.com/TheVicky1/Pact_OS.git
+
+# 3. Install dependencies
 npm install
 ```
 
