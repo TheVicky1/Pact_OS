@@ -349,7 +349,7 @@ npm run lint
 # 2. Strict TypeScript type check
 npx tsc --noEmit
 
-# 3. Automated 34-suite domain test matrix
+# 3. Automated 35-suite domain test matrix
 node scratch/run-tests.mjs
 
 # 4. Zero-secret leak audit
