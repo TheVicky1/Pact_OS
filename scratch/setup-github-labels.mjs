@@ -133,9 +133,21 @@ function githubApiRequest(method, path, token, data = null) {
   });
 }
 
+function getToken() {
+  if (process.env.GITHUB_TOKEN) return process.env.GITHUB_TOKEN;
+  if (process.env.GH_TOKEN) return process.env.GH_TOKEN;
+  try {
+    const out = execSync('git credential fill', { input: 'protocol=https\nhost=github.com\n\n', encoding: 'utf8', stdio: ['pipe', 'pipe', 'ignore'] });
+    const line = out.split('\n').find(l => l.startsWith('password='));
+    return line ? line.slice(9).trim() : null;
+  } catch {
+    return null;
+  }
+}
+
 async function main() {
   const isDryRun = process.argv.includes('--dry-run');
-  const token = process.env.GITHUB_TOKEN || process.env.GH_TOKEN;
+  const token = isDryRun ? null : getToken();
 
   console.log('='.repeat(70));
   console.log('🏛️  PACT — GITHUB LABEL PROVISIONING & SYNCHRONIZATION');
