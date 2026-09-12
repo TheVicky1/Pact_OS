@@ -1,3 +1,5 @@
+<div id="top"></div>
+
 <div align="center">
 
 <img src="./public/brand/pact-logo.png" alt="PACT Monogram Logo" width="88" height="88" />
@@ -7,39 +9,139 @@
 **A System for Keeping Promises to Yourself.**  
 *Turn Intent Into Discipline.*
 
+<br />
+
 [![CI](https://github.com/TheVicky1/Pact_OS/actions/workflows/ci.yml/badge.svg)](https://github.com/TheVicky1/Pact_OS/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-d4af37.svg?style=for-the-badge)](LICENSE)
 [![Next.js](https://img.shields.io/badge/Next.js-16.3-050505.svg?style=for-the-badge&logo=next.js&logoColor=white)](https://nextjs.org/)
 [![React](https://img.shields.io/badge/React-19.2-050505.svg?style=for-the-badge&logo=react&logoColor=61DAFB)](https://react.dev/)
-[![TypeScript](https://img.shields.io/badge/TypeScript-5.0-050505.svg?style=for-the-badge&logo=typescript&logoColor=3178C6)](https://www.typescriptlang.org/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.9-050505.svg?style=for-the-badge&logo=typescript&logoColor=3178C6)](https://www.typescriptlang.org/)
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-v4-050505.svg?style=for-the-badge&logo=tailwindcss&logoColor=38BDF8)](https://tailwindcss.com/)
 [![Supabase](https://img.shields.io/badge/Supabase-PostgreSQL-050505.svg?style=for-the-badge&logo=supabase&logoColor=3ECF8E)](https://supabase.com/)
 
 <br />
 
-**PACT** is an open-source **Personal Operating System (OS)** engineered to bridge the critical gap between intention and execution. Rather than acting as a passive to-do list, PACT provides an active governance system unifying time-blocked planning, strategic goals, deep work focus, financial cash flow, and unbreakable accountability contracts.
-
-[Quick Start](#-quick-start) · [Core Features](#-core-features) · [Contributing](#-contributing) · [Architecture](#-architecture) · [Documentation](#-documentation)
+[About](#about) · [Quick Start](#quick-start) · [Contributing](#contributing) · [Core Features](#core-features) · [Architecture](#architecture) · [Documentation](#documentation)
 
 </div>
 
 ---
 
-## 🧭 Why PACT Exists
+<div align="center">
+  <h2>About</h2>
+</div>
 
-Most productivity software suffers from **passive accumulation**: tasks, goals, and habits are created with high enthusiasm, but abandoned without consequence when friction occurs.
+Most productivity tools suffer from **passive accumulation**—tasks, habits, and aspirational goals are recorded with enthusiasm, then quietly neglected when friction strikes.
 
 **Intent is easy. Execution is difficult.**
 
-PACT is engineered around four foundational principles:
-1. **Unbreakable Accountability**: Commitments are tied to explicit deadlines, verified proofs, and enforceable consequences.
-2. **Temporal Truth**: Time-blocked planning with bi-directional Google Calendar synchronization ensures realistic daily capacity.
-3. **Objective Proof Verification**: Automated proof-of-work connectors validate engineering and problem-solving activity via external platforms (GitHub, LeetCode, Codeforces).
-4. **Holistic Governance**: Single unified operational system for tasks, strategic goals, scoped projects, recurring routines, deep work focus sessions, and integer-cents financial cash flow.
+**PACT** is an open-source **Personal Operating System (OS)** engineered to bridge the critical divide between intention and action. Rather than functioning as a passive checklist, PACT provides an active governance system unifying time-blocked planning, strategic milestone tracking, deep work focus sessions, integer-cents financial cash flow, and unbreakable accountability contracts.
+
+### Foundational Principles
+
+1. **Unbreakable Accountability**: Commitments are bound to explicit deadlines, confidential consequences, and strict resolution workflows.
+2. **Temporal Truth**: Time-blocked planning with bi-directional Google Calendar synchronization guarantees realistic daily execution capacity.
+3. **Objective Proof Verification**: Automated external connectors validate technical proof-of-work via GitHub, LeetCode, and Codeforces.
+4. **Holistic Governance**: Single unified operational system for tasks, strategic goals, scoped projects, recurring routines, deep work focus, and financial cash flow.
 
 ---
 
-## ✨ Core Features
+<div align="center">
+  <h2>Quick Start</h2>
+</div>
+
+### Prerequisites
+
+- **Node.js**: `v20.x` (LTS recommended)
+- **Package Manager**: `npm` (v10+)
+- **Git**: Installed and configured
+
+### Local Setup
+
+```bash
+# 1. Clone your fork or the repository
+git clone https://github.com/TheVicky1/Pact_OS.git
+cd Pact_OS
+
+# 2. Install reproducible dependencies
+npm ci
+
+# 3. Configure local environment variables
+cp .env.example .env.local
+
+# 4. Start local development server
+npm run dev
+```
+
+Open [http://localhost:3000](http://localhost:3000) in your browser to access PACT.
+
+### Validation & Quality Gates
+
+Run the local verification suite prior to committing changes:
+
+```bash
+# Run ESLint check
+npm run lint
+
+# Run TypeScript type check
+npx tsc --noEmit
+
+# Run 35-suite automated domain and security test matrix
+node scratch/run-tests.mjs
+
+# Run pre-commit secret scanner
+node scratch/secret-scan.mjs
+
+# Run documentation link verification
+node scratch/check-links.mjs
+
+# Run production build compilation
+npm run build
+```
+
+> 💡 **Having setup issues?** Consult our [**Troubleshooting Guide**](docs/TROUBLESHOOTING.md) for solutions to common port, Node.js, and environment issues.
+
+---
+
+<div align="center">
+  <h2>Contributing</h2>
+</div>
+
+Contributions are warmly welcomed! We believe in building a transparent, supportive, and beginner-friendly open-source community.
+
+### For Complete Beginners
+
+Start with our step-by-step [**Beginner's Contribution Guide**](docs/CONTRIBUTING-BEGINNERS.md) for a comprehensive zero-to-PR walkthrough explaining Git forks, branch setup, making changes, and opening your first pull request.
+
+Explore our curated issues:
+- 🎯 [**Curated Beginner Issues Factory**](docs/GITHUB_BEGINNER_ISSUES.md) — 40 structured, self-contained Good First Issues across all PACT modules.
+- 💬 [**Community Discussions**](docs/GITHUB_DISCUSSIONS.md) — Ask questions, share ideas, and connect with other contributors.
+
+### Not a Beginner?
+
+All contributions are welcome! Whether you are optimizing SQL queries, refining accessibility, expanding test coverage, or implementing integrations:
+1. Review the canonical [**CONTRIBUTING.md**](CONTRIBUTING.md) developer guidelines.
+2. Ensure your changes adhere to [**Conventional Commits**](docs/GIT_WORKFLOW.md).
+3. Validate that all quality gates pass locally before opening a Pull Request.
+
+### Contributor Reference
+
+| Resource | Purpose |
+| :--- | :--- |
+| 📖 [**Contributing Guide**](CONTRIBUTING.md) | Standard developer workflow, code style, and PR standards |
+| 🌱 [**Beginner's Guide**](docs/CONTRIBUTING-BEGINNERS.md) | Step-by-step zero-to-PR walkthrough for first-time contributors |
+| 🎯 [**Beginner Issues Factory**](docs/GITHUB_BEGINNER_ISSUES.md) | 40 curated, actionable Good First Issues |
+| 💬 [**Discussions Guide**](docs/GITHUB_DISCUSSIONS.md) | Categories, idea lifecycles, and community forum guidelines |
+| 🏷️ [**Label Taxonomy**](docs/GITHUB_LABELS.md) | Official issue classification system and difficulty tiers |
+| ⚙️ [**CI Pipeline**](docs/CI_PIPELINE.md) | GitHub Actions quality gates and verification requirements |
+| 🤝 [**Code of Conduct**](CODE_OF_CONDUCT.md) | Community standards and participation expectations |
+| 🔒 [**Security Policy**](SECURITY.md) | Responsible disclosure of security vulnerabilities |
+
+---
+
+<div align="center">
+  <h2>Core Features</h2>
+</div>
 
 PACT is composed of 14 integrated systems operating under a cohesive, responsive interface:
 
@@ -62,33 +164,24 @@ PACT is composed of 14 integrated systems operating under a cohesive, responsive
 
 ---
 
-## 🎨 Visual Identity & Design Philosophy
+<div align="center">
+  <h2>Visual Identity & Design Philosophy</h2>
+</div>
 
 PACT features a distinctive luxury visual language designed for calm, executive focus:
-- **Obsidian Canvas Foundation**: Deepest OLED Obsidian (`#050505`, `#070707`, `#090909`) with zero light glare.
-- **Solid Luxury Surfaces**: Rich, disciplined card surfaces (`#0C0C0F`, `#101012`) with ultra-fine specular hairline borders (`rgba(255, 255, 255, 0.06)`).
-- **Restrained PACT Gold**: Warm gold accents (`#D4AF37`, `#E6C34A`) applied with strict surgical intent for active markers, progress tracks, and specular crescent rims.
-- **3D Celestial Planetary Hero**: Photorealistic 3D planet sphere with volumetric SVG radial lighting, Rayleigh atmospheric back-scatter, and razor-thin gold crescent highlight.
+
+- **Obsidian Canvas Foundation**: Deep OLED Obsidian (`#050505`, `#070707`, `#090909`) eliminating interface fatigue.
+- **Solid Luxury Surfaces**: Rich card surfaces (`#0C0C0F`, `#101012`) with ultra-fine specular hairline borders (`rgba(255, 255, 255, 0.06)`).
+- **Restrained PACT Gold**: Warm gold accents (`#D4AF37`, `#E6C34A`) applied with surgical discipline for active states, progress indicators, and specular crescent highlights.
+- **3D Celestial Planetary Hero**: Volumetric SVG radial illumination, Rayleigh atmospheric back-scatter, and razor-thin gold crescent lighting.
 
 > For complete guidelines, typography scales, and token values, see the [Design System Specification](docs/DESIGN_SYSTEM.md).
 
 ---
 
-## 🛠️ Technology Stack
-
-PACT is built with modern, production-grade web technologies:
-
-- **Frontend Core**: [Next.js 16](https://nextjs.org/) (App Router, React Server Components, Server Actions) & [React 19](https://react.dev/)
-- **Language**: [TypeScript 5](https://www.typescriptlang.org/) (Strict Mode)
-- **Styling**: [Tailwind CSS v4](https://tailwindcss.com/) & Vanilla CSS Design Tokens
-- **Motion & Icons**: [Framer Motion](https://www.framer.com/motion/) & [Lucide React](https://lucide.dev/)
-- **Database & Auth**: [Supabase](https://supabase.com/) PostgreSQL with Row Level Security (RLS) & SSR Cookie Authentication (`@supabase/ssr`)
-- **Validation**: [Zod](https://zod.dev/) Schemas for all Server Actions and API boundaries
-- **Audio Engine**: Native Web Audio API synthesis (zero external audio assets required)
-
----
-
-## 🏛️ Architecture
+<div align="center">
+  <h2>Architecture</h2>
+</div>
 
 PACT enforces a strict database-first, server-authoritative architecture:
 
@@ -99,7 +192,7 @@ PACT enforces a strict database-first, server-authoritative architecture:
 |  - Accessible Dialogs       - URL State Sync (useUrlState)  |
 +-------------------------------------------------------------+
                                |
-                 Server Actions & API Routes
+                  Server Actions & API Routes
                                |
 +-------------------------------------------------------------+
 |              Domain Business Logic (src/lib/)               |
@@ -108,7 +201,7 @@ PACT enforces a strict database-first, server-authoritative architecture:
 |  - External Proof Sweeper    - Analytics Matrix             |
 +-------------------------------------------------------------+
                                |
-                 Supabase SSR Database Client
+                  Supabase SSR Database Client
                                |
 +-------------------------------------------------------------+
 |                 Database Layer (PostgreSQL)                 |
@@ -122,121 +215,48 @@ PACT enforces a strict database-first, server-authoritative architecture:
 
 ---
 
-## 🚀 Quick Start
+<div align="center">
+  <h2>Project Structure</h2>
+</div>
 
-### Prerequisites
-- **Node.js**: `v20.x` or `v22.x` (LTS recommended)
-- **Package Manager**: `npm` (v10+)
-- **Git**: Installed and configured
-
-### Local Setup
-
-```bash
-# 1. Clone your fork or the repository
-git clone https://github.com/TheVicky1/Pact_OS.git
-cd Pact_OS
-
-# 2. Install dependencies
-npm install
-
-# 3. Configure local environment variables
-cp .env.example .env.local
-
-# 4. Start local development server
-npm run dev
-```
-
-Open [http://localhost:3000](http://localhost:3000) in your browser to start using PACT.
-
-### Verification & Testing
-
-Run the local validation suite before committing changes:
-
-```bash
-# Run ESLint check
-npm run lint
-
-# Run TypeScript type check
-npx tsc --noEmit
-
-# Run 34-suite domain and security test matrix
-node scratch/run-tests.mjs
-
-# Run pre-commit secret scanner
-node scratch/secret-scan.mjs
-
-# Run production build verification
-npm run build
-```
-
-> 💡 **Having setup issues?** Consult our [**Troubleshooting Guide**](docs/TROUBLESHOOTING.md) for solutions to common port, Node.js, and environment issues.
-
----
-
-## 📂 Project Structure
-
-```
+```text
 Pact_OS/
+├── .github/                   # Workflows (CI, audit), issue templates, Dependabot config
 ├── src/
 │   ├── app/                   # Next.js 16 App Router pages & API routes
-│   │   ├── (auth)/            # Unified landing & authentication screens
-│   │   ├── app/               # Authenticated Core OS routes (planner, goals, etc.)
+│   │   ├── (auth)/            # Landing, login, and registration screens
+│   │   ├── app/               # Authenticated Core OS routes (planner, goals, tasks, etc.)
 │   │   └── api/               # Cron sweeper & data export API endpoints
 │   ├── components/            # Reusable UI primitives (buttons, modals, cards)
 │   ├── features/              # Feature modules (dashboard, calendar, habits, review)
 │   ├── hooks/                 # Custom React hooks (useUrlState, useSelection)
-│   ├── lib/                   # Core domain business logic and engines
-│   └── types/                 # TypeScript domain contracts
-├── supabase/                  # PostgreSQL schema migrations and RLS policies
+│   ├── lib/                   # Core domain business logic and calculation engines
+│   └── types/                 # TypeScript domain schemas and contracts
+├── supabase/                  # PostgreSQL schema migrations and RLS security policies
 ├── tests/                     # Automated domain and security test suites
 ├── docs/                      # Comprehensive technical & product documentation
-└── scratch/                   # Test runner and secret scanning utilities
+└── scratch/                   # Test runner, secret scanner, and validation scripts
 ```
 
 ---
 
-## 🌱 Contributing
+<div align="center">
+  <h2>Technology Stack</h2>
+</div>
 
-Contributions are warmly welcomed! We believe in building a transparent, supportive, and beginner-friendly open-source community.
-
-> ### 🌱 New to Open Source?
-> You do not need to be an expert to contribute. We value all contributions—whether fixing a typo in documentation, improving UI accessibility, adding unit tests, or reporting a bug.
->
-> Start with our step-by-step [**Beginner's Contribution Guide**](docs/CONTRIBUTING-BEGINNERS.md) for a complete zero-to-PR walkthrough, or consult [**CONTRIBUTING.md**](CONTRIBUTING.md) for standard developer guidelines.
-
-### Contribution Resources
-- 🌱 [**Beginner's Guide**](docs/CONTRIBUTING-BEGINNERS.md) — Step-by-step walkthrough for first-time contributors.
-- 🎯 [**Beginner Issues Factory**](docs/GITHUB_BEGINNER_ISSUES.md) — 40 curated, actionable good-first-issues.
-- 🏭 [**Issue Factory Architecture**](docs/GITHUB_ISSUE_FACTORY.md) — 15-part issue specification and discovery guidelines.
-- 💬 [**Community Discussions Guide**](docs/GITHUB_DISCUSSIONS.md) — Category guidelines, ideas lifecycle, and contributor journey.
-- 📖 [**Contributing Guide**](CONTRIBUTING.md) — Workflow, code standards, and PR guidelines.
-- 🏷️ [**Label Taxonomy**](docs/GITHUB_LABELS.md) — Official issue classification system and difficulty tiers.
-- 🤖 [**Automation & Bot Architecture**](docs/GITHUB_AUTOMATION.md) — Event-driven triage bot and contributor lifecycle engine.
-- 🌐 [**Metadata & Topics**](docs/GITHUB_METADATA.md) — Canonical repository topics, description, and discoverability rules.
-- 🔧 [**Troubleshooting Guide**](docs/TROUBLESHOOTING.md) — Diagnostics for environment, build, and Git issues.
-- 🤝 [**Code of Conduct**](CODE_OF_CONDUCT.md) — Community standards and participation guidelines.
-- 💬 [**Support Guide**](SUPPORT.md) — Where to ask questions, report bugs, and propose features.
-- 👥 [**Contributors**](CONTRIBUTORS.md) — Recognition of core maintainers and community contributors.
-- 📋 [**Changelog**](CHANGELOG.md) — Release notes, unreleased progress, and version lineage.
-- 🔒 [**Security Policy**](SECURITY.md) — Responsible disclosure of security vulnerabilities.
+- **Frontend Framework**: [Next.js 16](https://nextjs.org/) (App Router, React Server Components, Server Actions) & [React 19](https://react.dev/)
+- **Language**: [TypeScript 5](https://www.typescriptlang.org/) (Strict Mode)
+- **Styling**: [Tailwind CSS v4](https://tailwindcss.com/) & Vanilla CSS Design Tokens
+- **Motion & Icons**: [Framer Motion](https://www.framer.com/motion/) & [Lucide React](https://lucide.dev/)
+- **Database & Auth**: [Supabase](https://supabase.com/) PostgreSQL with Row Level Security (RLS) & SSR Cookie Auth (`@supabase/ssr`)
+- **Data Validation**: [Zod](https://zod.dev/) Schemas for all Server Actions and API payloads
+- **Audio Engine**: Native Web Audio API synthesis (zero external audio dependencies)
 
 ---
 
-## 🗺️ Product Roadmap
-
-- [x] **14 Core Product Systems**: Complete domain model, UI, and Server Actions.
-- [x] **Autonomous Deadline Sweeper**: Production cron sweeper with timing-safe authorization.
-- [x] **External Proof-of-Work Connectors**: GitHub, LeetCode, and Codeforces verification.
-- [x] **Open Source Foundation**: MIT License, Contributing Guide, Code of Conduct, and Security Policy.
-- [ ] **Open Source Contributor Automation**: Issue templates, PR templates, and CI/CD pipelines. *(In Progress)*
-- [ ] **Native Mobile Companion**: React Native / Expo application for on-the-go quick capture. *(Planned)*
-- [ ] **Biometric WebAuthn Passkeys**: Passwordless biometric authentication. *(Planned)*
-
-> For the full product roadmap, see [docs/ROADMAP.md](docs/ROADMAP.md).
-
----
-
-## 📚 Documentation Directory
+<div align="center">
+  <h2>Documentation</h2>
+</div>
 
 Comprehensive technical specifications, system architectures, and operational runbooks are maintained in [`docs/`](docs/README.md):
 
@@ -271,6 +291,18 @@ Comprehensive technical specifications, system architectures, and operational ru
 
 ---
 
-## 📄 License
+<div align="center">
+  <h2>License</h2>
+</div>
 
 PACT is open-source software licensed under the [MIT License](LICENSE).
+
+---
+
+<div align="center">
+
+**Plan. Track. Improve. Repeat.**
+
+[⬆ Back to top](#top)
+
+</div>
