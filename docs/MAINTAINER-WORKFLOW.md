@@ -109,3 +109,17 @@ To foster an encouraging, long-term contributor community:
 2. **First-Time PR Welcome**: First-time PR authors receive an automated, welcoming orientation comment via `.github/workflows/welcome-contributor.yml`.
 3. **Contributor Hall of Fame**: Upon merging a contributor's first PR, verify that their contribution is acknowledged in [CONTRIBUTORS.md](https://github.com/TheVicky1/Pact_OS/blob/main/CONTRIBUTORS.md) and on the [GitHub Contributors Graph](https://github.com/TheVicky1/Pact_OS/graphs/contributors).
 4. **Encouraging Next Steps**: When merging a beginner's PR, invite them to tackle another Good First Issue or explore feature discussions in [GitHub Discussions](https://github.com/TheVicky1/Pact_OS/discussions).
+
+---
+
+## 8. Evidence-Based Issue Batch Release Policy
+
+To prevent issue flooding and maintain a high standard of contributor engagement, new batches of Good First Issues (such as Batch 4) remain strictly in reserve in `docs/GITHUB_BEGINNER_ISSUES.md` until explicit evidence-based triggers are met.
+
+### Batch 4 Release Trigger Criteria (All 4 Required):
+1. **Active Inventory Depletion**: Available unassigned `good first issue` count drops below **10** (out of the 30 active issues).
+2. **External PR Completion**: At least **5 unique external pull requests** have been successfully reviewed, approved, and merged into `main`.
+3. **Maintainer Capacity**: Maintainer review turnaround SLA has consistently stayed under 48 hours for active pull requests.
+4. **Zero Stale Blockers**: Less than **20%** of open issues have stalled or inactive claims.
+
+Maintainers should run `node scratch/inspect-community-intake.mjs` to evaluate intake metrics prior to releasing any future batch.

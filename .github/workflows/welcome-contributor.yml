@@ -45,9 +45,19 @@ jobs:
 
             *Thank you for helping make PACT better! Plan. Track. Improve. Repeat.* 🏛️✨`;
 
-            await github.rest.issues.createComment({
+            // Check if already commented to prevent duplicate welcome messages on re-runs
+            const { data: existingComments } = await github.rest.issues.listComments({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              issue_number: context.payload.pull_request.number,
-              body: commentBody
+              issue_number: context.payload.pull_request.number
             });
+
+            const alreadyWelcomed = existingComments.some(c => c.body && c.body.includes('Welcome to PACT OS'));
+            if (!alreadyWelcomed) {
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.payload.pull_request.number,
+                body: commentBody
+              });
+            }

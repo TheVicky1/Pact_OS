@@ -1199,7 +1199,7 @@
         "help wanted"
       ],
       "labelsMatch": true,
-      "bodyMatch": false,
+      "bodyMatch": true,
       "assignees": [],
       "commentCount": 1,
       "comments": [
