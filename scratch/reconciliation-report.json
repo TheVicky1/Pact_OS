@@ -27,7 +27,7 @@
       "site_admin": false
     },
     "html_url": "https://github.com/TheVicky1/Pact_OS",
-    "description": null,
+    "description": "Personal Productivity & Accountability OS — Turn Intent Into Discipline with server-authoritative commitments, time-blocked planning, and proof-of-work verification.",
     "fork": false,
     "url": "https://api.github.com/repos/TheVicky1/Pact_OS",
     "forks_url": "https://api.github.com/repos/TheVicky1/Pact_OS/forks",
@@ -67,13 +67,13 @@
     "releases_url": "https://api.github.com/repos/TheVicky1/Pact_OS/releases{/id}",
     "deployments_url": "https://api.github.com/repos/TheVicky1/Pact_OS/deployments",
     "created_at": "2026-09-06T09:35:44Z",
-    "updated_at": "2026-09-12T17:42:10Z",
+    "updated_at": "2026-09-12T18:03:54Z",
     "pushed_at": "2026-09-12T17:42:05Z",
     "git_url": "git://github.com/TheVicky1/Pact_OS.git",
     "ssh_url": "git@github.com:TheVicky1/Pact_OS.git",
     "clone_url": "https://github.com/TheVicky1/Pact_OS.git",
     "svn_url": "https://github.com/TheVicky1/Pact_OS",
-    "homepage": null,
+    "homepage": "https://github.com/TheVicky1/Pact_OS",
     "size": 9634,
     "stargazers_count": 0,
     "watchers_count": 0,
@@ -88,7 +88,7 @@
     "mirror_url": null,
     "archived": false,
     "disabled": false,
-    "open_issues_count": 20,
+    "open_issues_count": 30,
     "license": {
       "key": "mit",
       "name": "MIT License",
@@ -101,10 +101,25 @@
     "web_commit_signoff_required": false,
     "has_pull_requests": true,
     "pull_request_creation_policy": "all",
-    "topics": [],
+    "topics": [
+      "accountability",
+      "discipline",
+      "good-first-issue",
+      "nextjs",
+      "open-source",
+      "personal-operating-system",
+      "personal-productivity",
+      "postgresql",
+      "productivity",
+      "react",
+      "supabase",
+      "tailwindcss",
+      "time-blocking",
+      "typescript"
+    ],
     "visibility": "public",
     "forks": 0,
-    "open_issues": 20,
+    "open_issues": 30,
     "watchers": 0,
     "default_branch": "main",
     "permissions": {
@@ -806,6 +821,366 @@
       "comments": [],
       "createdAt": "2026-09-12T17:44:55Z",
       "updatedAt": "2026-09-12T17:44:55Z"
+    },
+    {
+      "number": 34,
+      "title": "docs: add Supabase RLS recursion troubleshooting note",
+      "state": "open",
+      "slug": "docs-troubleshooting-rls-recursion",
+      "batch": "Batch 3",
+      "canonicalFound": true,
+      "canonicalCatalogNumber": 8,
+      "canonicalSlug": "docs-troubleshooting-rls-recursion",
+      "canonicalTitle": "docs: add Supabase RLS recursion troubleshooting note",
+      "titleMatch": true,
+      "liveLabels": [
+        "help wanted",
+        "good first issue",
+        "type:docs",
+        "difficulty:beginner",
+        "area:documentation"
+      ],
+      "canonicalLabels": [
+        "type:docs",
+        "difficulty:beginner",
+        "area:documentation",
+        "good first issue",
+        "help wanted"
+      ],
+      "labelsMatch": true,
+      "bodyMatch": true,
+      "assignees": [],
+      "commentCount": 0,
+      "comments": [],
+      "createdAt": "2026-09-12T18:18:20Z",
+      "updatedAt": "2026-09-12T18:18:20Z"
+    },
+    {
+      "number": 35,
+      "title": "ui: refine category badge opacity in transaction list",
+      "state": "open",
+      "slug": "ui-finance-category-badge-opacity",
+      "batch": "Batch 3",
+      "canonicalFound": true,
+      "canonicalCatalogNumber": 13,
+      "canonicalSlug": "ui-finance-category-badge-opacity",
+      "canonicalTitle": "ui: refine category badge opacity in transaction list",
+      "titleMatch": true,
+      "liveLabels": [
+        "help wanted",
+        "good first issue",
+        "type:ui",
+        "difficulty:beginner",
+        "area:finance"
+      ],
+      "canonicalLabels": [
+        "type:ui",
+        "difficulty:beginner",
+        "area:finance",
+        "good first issue",
+        "help wanted"
+      ],
+      "labelsMatch": true,
+      "bodyMatch": true,
+      "assignees": [],
+      "commentCount": 0,
+      "comments": [],
+      "createdAt": "2026-09-12T18:18:21Z",
+      "updatedAt": "2026-09-12T18:18:21Z"
+    },
+    {
+      "number": 36,
+      "title": "ui: add subtle icon glow in streak summary card",
+      "state": "open",
+      "slug": "ui-streak-summary-pulse-glow",
+      "batch": "Batch 3",
+      "canonicalFound": true,
+      "canonicalCatalogNumber": 14,
+      "canonicalSlug": "ui-streak-summary-pulse-glow",
+      "canonicalTitle": "ui: add subtle icon glow in streak summary card",
+      "titleMatch": true,
+      "liveLabels": [
+        "help wanted",
+        "good first issue",
+        "type:ui",
+        "difficulty:beginner",
+        "area:habits"
+      ],
+      "canonicalLabels": [
+        "type:ui",
+        "difficulty:beginner",
+        "area:habits",
+        "good first issue",
+        "help wanted"
+      ],
+      "labelsMatch": true,
+      "bodyMatch": true,
+      "assignees": [],
+      "commentCount": 1,
+      "comments": [
+        {
+          "user": "hopebeatz123-ux",
+          "body": "### ⚡ Automated Resolution Proposal\n\nTo fix the issue described and add the subtle icon glow to the streak summary card in the Pact OS repository, follow these steps:\n\n1. Open your code editor and navigate to the file `src/features/habits/components/streak-summary-card.tsx`.\n2. Locate the `div` element that contains the Top Streak card icon container. This element should be around line 55 in the file.\n3. Add the following CSS class to the existing class list within the `div` element: `shadow-sm shadow-amber-500/20`.\n4. Save the file and ensure that the formatting remains correct.\n\nHere's an example of what the updated CSS class should look like:\n\n```jsx\n<div className=\"flex flex-col items-center p-4 rounded-lg bg-white shadow-md\">\n  <!-- Rest of the code -->\n  <div className=\"flex items-center justify-center w-12 h-12 rounded-full bg-amber-500/20 text-white font-bold text-lg\">\n    <!-- Top Streak card icon -->\n  </div>\n</div>\n```\n\nAfter making this change, the Top Streak card icon container will have a subtle amber shadow/glow effect, as described in the issue.\n\nPlease make sure to replace the existing CSS code within the `div` element with the updated code snippet provided above. This solution ensures that the glow effect is added without causing any layout shifts or unintended styling changes. \n\n---\n**Direct EVM Payout Wallet (USDC/ETH/USDT):** `0x52513A733D4b52282F2b4f5A91D965D38b64f3BB`",
+          "created_at": "2026-09-12T18:18:47Z"
+        }
+      ],
+      "createdAt": "2026-09-12T18:18:22Z",
+      "updatedAt": "2026-09-12T18:18:47Z"
+    },
+    {
+      "number": 37,
+      "title": "ui: improve mobile padding in task form modal",
+      "state": "open",
+      "slug": "ui-task-form-modal-mobile-padding",
+      "batch": "Batch 3",
+      "canonicalFound": true,
+      "canonicalCatalogNumber": 15,
+      "canonicalSlug": "ui-task-form-modal-mobile-padding",
+      "canonicalTitle": "ui: improve mobile padding in task form modal",
+      "titleMatch": true,
+      "liveLabels": [
+        "help wanted",
+        "good first issue",
+        "type:ui",
+        "difficulty:beginner",
+        "area:tasks"
+      ],
+      "canonicalLabels": [
+        "type:ui",
+        "difficulty:beginner",
+        "area:tasks",
+        "good first issue",
+        "help wanted"
+      ],
+      "labelsMatch": true,
+      "bodyMatch": true,
+      "assignees": [],
+      "commentCount": 1,
+      "comments": [
+        {
+          "user": "hopebeatz123-ux",
+          "body": "### ⚡ Automated Resolution Proposal\n\nCertainly, I'll assist you with updating the padding for the mobile view in the `task-form-modal.tsx` file. Here's a step-by-step guide with the acceptance criteria included for verification:\n\n### Steps:\n\n1. Open your code editor and navigate to `src/features/tasks/components/task-form-modal.tsx`.\n2. Locate the `<FormBody>` component. It should contain the form content.\n3. Update the padding classes within the `<FormBody>` component to `p-4 sm:p-6`. This will adjust the padding for small screens (`sm` stands for small media query).\n4. Ensure that the modal action buttons remain visible and not covered by the increased padding. You can adjust their position if needed.\n\n### Acceptance Criteria:\n\n1. **Modal padding adjusts cleanly with `p-4 sm:p-6`**: After applying the updated padding classes, the padding should change smoothly for both desktop and mobile views.\n2. **All form fields and action buttons remain fully functional**: Ensure that none of the form fields or action buttons are affected by the padding change, and they continue to work as expected.\n\nHere's an example of the updated `<FormBody>` component:\n\n```tsx\nimport React, { useState } from 'react';\nimport { Form, Input, Button } from '@ui5/webcomponents-react';\n\nconst TaskFormModal: React.FC<TaskFormModalProps> = ({ onSubmit, onCancel }) => {\n  const [task, setTask] = useState({\n    title: '',\n    description: '',\n  });\n\n  const handleSubmit = () => {\n    onSubmit(task);\n    onCancel();\n  };\n\n  return (\n    <Form>\n      <Form.Item label=\"Title\">\n        <Input value={task.title} onChange={(e) => setTask({ ...task, title: e.target.value })} />\n      </Form.Item>\n      <Form.Item label=\"Description\">\n        <Input value={task.description} onChange={(e) => setTask({ ...task, description: e.target.value })} />\n      </Form.Item>\n      <Button type=\"primary\" onClick={handleSubmit}>\n        Save Task\n      </Button>\n      <Button onClick={onCancel}>Cancel</Button>\n    </Form>\n  );\n};\n\nexport default TaskFormModal;\n```\n\n\n---\n**Direct EVM Payout Wallet (USDC/ETH/USDT):** `0x52513A733D4b52282F2b4f5A91D965D38b64f3BB`",
+          "created_at": "2026-09-12T18:18:52Z"
+        }
+      ],
+      "createdAt": "2026-09-12T18:18:22Z",
+      "updatedAt": "2026-09-12T18:18:52Z"
+    },
+    {
+      "number": 38,
+      "title": "ui: refine skeleton loading card borders in analytics workspace",
+      "state": "open",
+      "slug": "ui-analytics-skeleton-shimmer",
+      "batch": "Batch 3",
+      "canonicalFound": true,
+      "canonicalCatalogNumber": 16,
+      "canonicalSlug": "ui-analytics-skeleton-shimmer",
+      "canonicalTitle": "ui: refine skeleton loading card borders in analytics workspace",
+      "titleMatch": true,
+      "liveLabels": [
+        "help wanted",
+        "good first issue",
+        "type:ui",
+        "difficulty:beginner",
+        "area:analytics"
+      ],
+      "canonicalLabels": [
+        "type:ui",
+        "difficulty:beginner",
+        "area:analytics",
+        "good first issue",
+        "help wanted"
+      ],
+      "labelsMatch": true,
+      "bodyMatch": true,
+      "assignees": [],
+      "commentCount": 1,
+      "comments": [
+        {
+          "user": "hopebeatz123-ux",
+          "body": "### ⚡ Automated Resolution Proposal\n\nCertainly! I will guide you through fixing the issue step by step. We will update the border class in the `analytics-skeleton.tsx` file to ensure consistency with the production card border styling.\n\nFollow these steps:\n\n1. Open your code editor and navigate to the `src/features/analytics/components/analytics-skeleton.tsx` file.\n2. Locate the section where the summary cards skeleton map is defined, which should be around line 24. You'll see something like this:\n\n```javascript\nconst skeletonSummaryCards = {\n  // ...\n  'summary-card-border-white-0.08': 'border-white/[0.08]',\n  // ...\n};\n```\n\n3. Update the `summary-card-border-white-0.08` key's value from `border-white/[0.08]` to `border-white/[0.06]`. Your updated section should look like this:\n\n```javascript\nconst skeletonSummaryCards = {\n  // ...\n  'summary-card-border-white-0.08': 'border-white/[0.06]',\n  // ...\n};\n```\n\n4. Save the file.\n\nNow, let's verify that the issue has been resolved. We'll check the border style and ensure there are no linter warnings.\n\n1. Open your terminal or command prompt and navigate to the project directory using the `cd` command.\n2. Run the `eslint` command to check for any linter warnings:\n\n```bash\neslint src/\n```\n\n3. If there are no linter warnings, you can consider the issue resolved. If there are warnings, fix them according to the linter's suggestions and run the command again until there are no more warnings.\n\nAfter following these steps, the summary cards' border style will be updated to `border-white/[0.06]`, and there should be no linter warnings. Let me know if you need further assistance! \n\n---\n**Direct EVM Payout Wallet (USDC/ETH/USDT):** `0x52513A733D4b52282F2b4f5A91D965D38b64f3BB`",
+          "created_at": "2026-09-12T18:18:42Z"
+        }
+      ],
+      "createdAt": "2026-09-12T18:18:23Z",
+      "updatedAt": "2026-09-12T18:18:42Z"
+    },
+    {
+      "number": 39,
+      "title": "test: add leap year unit test to habit streak test suite",
+      "state": "open",
+      "slug": "test-habit-streak-leap-year",
+      "batch": "Batch 3",
+      "canonicalFound": true,
+      "canonicalCatalogNumber": 24,
+      "canonicalSlug": "test-habit-streak-leap-year",
+      "canonicalTitle": "test: add leap year unit test to habit streak test suite",
+      "titleMatch": true,
+      "liveLabels": [
+        "help wanted",
+        "good first issue",
+        "type:test",
+        "difficulty:easy",
+        "area:testing"
+      ],
+      "canonicalLabels": [
+        "type:test",
+        "difficulty:easy",
+        "area:testing",
+        "good first issue",
+        "help wanted"
+      ],
+      "labelsMatch": true,
+      "bodyMatch": true,
+      "assignees": [],
+      "commentCount": 1,
+      "comments": [
+        {
+          "user": "hopebeatz123-ux",
+          "body": "### ⚡ Automated Resolution Proposal\n\nTo resolve the issue described, we can add a new test case to the `habits-routines.test.ts` file in the provided repository. Here's a step-by-step guide with the exact code snippets to add the leap year test case and ensure the test passes when running `npm test`:\n\n1. Open the `tests/habits-routines.test.ts` file in a code editor or IDE.\n2. Locate the section where the streak calculation tests are defined. If it's not already present, you can add it below the existing tests as follows:\n\n```typescript\ndescribe('Habit Routine: Streak Calculation', () => {\n  it('should calculate streak for 2024-02-28', () => {\n    // ... existing streak calculation test code ...\n  });\n\n  it('should calculate streak for 2024-02-29', () => {\n    // ... existing streak calculation test code ...\n  });\n\n  it('should calculate streak for 2024-03-01', () => {\n    // ... existing streak calculation test code ...\n  });\n\n  it('should calculate streak for 2024-02-28 -> 2024-02-29 -> 2024-03-01', () => {\n    // ... existing streak calculation test code ...\n  });\n\n  it('should calculate streak for 2024-02-28 -> 2024-02-29 -> 2024-03-01 (leap year)', () => {\n    // Add the leap year test case here\n  });\n});\n```\n\n3. Add the leap year test case inside the `it('should calculate streak for 2024-02-28 -> 2024-02-29 -> 2024-03-01 (leap year)', () => {})` block:\n\n```typescript\nit('should calculate streak for 2024-02-28 -> 2024-02-29 -> 2024-03-01 (leap year)', () => {\n  // Existing test code...\n\n  // Add the leap year test case\n  const date1 = new Date('2024-02-28');\n  const date2 = new Date('2024-02-29');\n  const date3 = new Date('2024-03-01');\n\n  const streak = habitRoutineService.calculateHabitStreak(date1, date2, date3);\n\n  expect(stre\n\n---\n**Direct EVM Payout Wallet (USDC/ETH/USDT):** `0x52513A733D4b52282F2b4f5A91D965D38b64f3BB`",
+          "created_at": "2026-09-12T18:18:33Z"
+        }
+      ],
+      "createdAt": "2026-09-12T18:18:24Z",
+      "updatedAt": "2026-09-12T18:18:33Z"
+    },
+    {
+      "number": 40,
+      "title": "test: add boundary check test for weekly review step progression",
+      "state": "open",
+      "slug": "test-weekly-review-step-boundaries",
+      "batch": "Batch 3",
+      "canonicalFound": true,
+      "canonicalCatalogNumber": 26,
+      "canonicalSlug": "test-weekly-review-step-boundaries",
+      "canonicalTitle": "test: add boundary check test for weekly review step progression",
+      "titleMatch": true,
+      "liveLabels": [
+        "help wanted",
+        "good first issue",
+        "type:test",
+        "difficulty:beginner",
+        "area:testing"
+      ],
+      "canonicalLabels": [
+        "type:test",
+        "difficulty:beginner",
+        "area:testing",
+        "good first issue",
+        "help wanted"
+      ],
+      "labelsMatch": true,
+      "bodyMatch": true,
+      "assignees": [],
+      "commentCount": 1,
+      "comments": [
+        {
+          "user": "hopebeatz123-ux",
+          "body": "### ⚡ Automated Resolution Proposal\n\nCertainly, I will guide you through adding the boundary test for weekly review step indices and ensure all unit tests pass.\n\nPlease follow these steps:\n\n1. Make sure you have Node.js and npm installed on your machine. You will need to install the dependencies of the project. Run the following command to install them:\n\n```bash\nnpm install\n```\n\n2. Open the terminal or command prompt and navigate to the project directory:\n\n```bash\ncd TheVicky1/Pact_OS\n```\n\n3. Create a new test file for the boundary test if it doesn't exist already. If it does, please skip to step 5. You can create a new file named `test_weekly_review_step_boundaries.test.ts` in the `tests` directory. If the file already exists, please use that file for the changes.\n\n4. Add the following code to the `test_weekly_review_step_boundaries.test.ts` file:\n\n```typescript\nimport { expect } from 'chai';\nimport { ReviewDraftService } from '../services/review-draft.service';\nimport { ReviewDraft } from '../models/review-draft.model';\n\ndescribe('Review Draft Service', () => {\n  let reviewDraftService: ReviewDraftService;\n  let reviewDraft: ReviewDraft;\n\n  beforeEach(() => {\n    reviewDraftService = new ReviewDraftService();\n    reviewDraft = new ReviewDraft();\n  });\n\n  it('should reject invalid step indices', () => {\n    reviewDraft.current_step = 0; // Step index 0 is invalid\n    reviewDraft.steps = [\n      { step: 1, description: 'Step 1' },\n      { step: 2, description: 'Step 2' },\n      { step: 3, description: 'Step 3' },\n      { step: 4, description: 'Step 4' },\n      { step: 5, description: 'Step 5' },\n    ];\n\n    reviewDraft.current_step = 6; // Step index 6 is invalid\n    reviewDraft.steps = [\n      { step: 1, description: 'Step 1' },\n      { step: 2, description: 'Step 2' },\n      { step: 3, description: 'Step 3' },\n      { step: 4, description: 'Step 4' },\n      { step: 5, description: 'Step 5' },\n     \n\n---\n**Direct EVM Payout Wallet (USDC/ETH/USDT):** `0x52513A733D4b52282F2b4f5A91D965D38b64f3BB`",
+          "created_at": "2026-09-12T18:18:38Z"
+        }
+      ],
+      "createdAt": "2026-09-12T18:18:24Z",
+      "updatedAt": "2026-09-12T18:18:38Z"
+    },
+    {
+      "number": 41,
+      "title": "test: add unit test for in-app notification filtering",
+      "state": "open",
+      "slug": "test-notification-channel-filter",
+      "batch": "Batch 3",
+      "canonicalFound": true,
+      "canonicalCatalogNumber": 27,
+      "canonicalSlug": "test-notification-channel-filter",
+      "canonicalTitle": "test: add unit test for in-app notification filtering",
+      "titleMatch": true,
+      "liveLabels": [
+        "help wanted",
+        "good first issue",
+        "type:test",
+        "difficulty:beginner",
+        "area:testing"
+      ],
+      "canonicalLabels": [
+        "type:test",
+        "difficulty:beginner",
+        "area:testing",
+        "good first issue",
+        "help wanted"
+      ],
+      "labelsMatch": true,
+      "bodyMatch": true,
+      "assignees": [],
+      "commentCount": 0,
+      "comments": [],
+      "createdAt": "2026-09-12T18:18:25Z",
+      "updatedAt": "2026-09-12T18:18:25Z"
+    },
+    {
+      "number": 42,
+      "title": "refactor: export modal motion transition variants in modal component",
+      "state": "open",
+      "slug": "refactor-modal-transition-variants",
+      "batch": "Batch 3",
+      "canonicalFound": true,
+      "canonicalCatalogNumber": 32,
+      "canonicalSlug": "refactor-modal-transition-variants",
+      "canonicalTitle": "refactor: export modal motion transition variants in modal component",
+      "titleMatch": true,
+      "liveLabels": [
+        "help wanted",
+        "good first issue",
+        "type:refactor",
+        "difficulty:beginner",
+        "area:ui"
+      ],
+      "canonicalLabels": [
+        "type:refactor",
+        "difficulty:beginner",
+        "area:ui",
+        "good first issue",
+        "help wanted"
+      ],
+      "labelsMatch": true,
+      "bodyMatch": true,
+      "assignees": [],
+      "commentCount": 0,
+      "comments": [],
+      "createdAt": "2026-09-12T18:18:26Z",
+      "updatedAt": "2026-09-12T18:18:26Z"
+    },
+    {
+      "number": 43,
+      "title": "fix: clamp negative budget remaining balance to zero in budget engine",
+      "state": "open",
+      "slug": "fix-finance-negative-budget-remaining",
+      "batch": "Batch 3",
+      "canonicalFound": true,
+      "canonicalCatalogNumber": 33,
+      "canonicalSlug": "fix-finance-negative-budget-remaining",
+      "canonicalTitle": "fix: clamp negative budget remaining balance to zero in budget engine",
+      "titleMatch": true,
+      "liveLabels": [
+        "help wanted",
+        "good first issue",
+        "type:bug",
+        "difficulty:easy",
+        "area:finance"
+      ],
+      "canonicalLabels": [
+        "type:bug",
+        "difficulty:easy",
+        "area:finance",
+        "good first issue",
+        "help wanted"
+      ],
+      "labelsMatch": true,
+      "bodyMatch": true,
+      "assignees": [],
+      "commentCount": 0,
+      "comments": [],
+      "createdAt": "2026-09-12T18:18:26Z",
+      "updatedAt": "2026-09-12T18:18:26Z"
     }
   ],
   "catalog": [
@@ -910,16 +1285,16 @@
     {
       "catalogNumber": 8,
       "slug": "docs-troubleshooting-rls-recursion",
-      "title": "docs: add troubleshooting steps for Supabase RLS recursion errors",
+      "title": "docs: add Supabase RLS recursion troubleshooting note",
       "labels": [
         "type:docs",
         "difficulty:beginner",
-        "time:15-30m",
         "area:documentation",
-        "good first issue"
+        "good first issue",
+        "help wanted"
       ],
-      "targetFile": "`docs/TROUBLESHOOTING.md` & `docs/SECURITY.md`",
-      "body": "<!-- PACT-BEGINNER-ISSUE: docs-troubleshooting-rls-recursion -->\n## 🎯 What needs to be done\nAdd a troubleshooting entry in `docs/TROUBLESHOOTING.md` addressing PostgreSQL error `42P17 (infinite recursion detected in policy for relation)`.\n\n## Why this matters\nContributors writing new RLS policies may inadvertently query the same table inside a subquery. Documenting the fix (`SECURITY DEFINER` functions or separate lookup tables) prevents confusion.\n\n## 📍 Where to work\n- `docs/TROUBLESHOOTING.md` (Add to Section 9: Supabase & Database Issues)"
+      "targetFile": "`docs/TROUBLESHOOTING.md`",
+      "body": "<!-- PACT-BEGINNER-ISSUE: docs-troubleshooting-rls-recursion -->\n## 🎯 What needs to be done\nAdd a troubleshooting note in `docs/TROUBLESHOOTING.md` under database / Supabase configuration explaining how to resolve PostgreSQL error `42P17 (infinite recursion detected in policy for relation)`.\n\n## Why this matters\nContributors writing new Row-Level Security (RLS) policies may accidentally query the same table inside a subquery. Documenting the fix (`SECURITY DEFINER` functions or direct column lookups) prevents confusion and onboarding friction.\n\n## 📍 Where to work\n`docs/TROUBLESHOOTING.md`\n\n## 🧭 Implementation guidance\n1. Open `docs/TROUBLESHOOTING.md`.\n2. Locate the database or Supabase troubleshooting section (or create subsection `3.3 Supabase RLS Policy Infinite Recursion (42P17)`).\n3. Add a concise problem explanation, cause, and recommended solution.\n4. Save the file.\n\n## ✅ Acceptance criteria\n- [ ] `docs/TROUBLESHOOTING.md` documents PostgreSQL error 42P17 and its resolution clearly.\n- [ ] Markdown link validation passes with 0 broken links.\n\n## 🧪 Verification"
     },
     {
       "catalogNumber": 9,
@@ -980,58 +1355,58 @@
     {
       "catalogNumber": 13,
       "slug": "ui-finance-category-badge-opacity",
-      "title": "ui: refine category badge color opacity in transaction list",
+      "title": "ui: refine category badge opacity in transaction list",
       "labels": [
         "type:ui",
         "difficulty:beginner",
-        "time:15-30m",
         "area:finance",
-        "good first issue"
+        "good first issue",
+        "help wanted"
       ],
       "targetFile": "`src/features/finance/components/transaction-list.tsx`",
-      "body": "<!-- PACT-BEGINNER-ISSUE: ui-finance-category-badge-opacity -->\n## 🎯 What needs to be done\nRefine the background opacity of category pills in the transaction table rows from `bg-white/[0.04]` to `bg-white/[0.06]` for optimal contrast.\n\n## Why this matters\nImproves readability of category tags (e.g., Housing, Food, Investment) against deep obsidian table backgrounds.\n\n## 📍 Where to work\n- `src/features/finance/components/transaction-list.tsx`"
+      "body": "<!-- PACT-BEGINNER-ISSUE: ui-finance-category-badge-opacity -->\n## 🎯 What needs to be done\nIn `src/features/finance/components/transaction-list.tsx`, refine the category badge background opacity tokens in `COLOR_MAP` from `bg-*-400/10` to `bg-*-400/15` for enhanced contrast against deep obsidian card backgrounds.\n\n## Why this matters\nSlightly higher badge background opacity enhances readability for category tags (e.g. Income, Food, Housing, Utilities) across light/dark ambient lighting.\n\n## 📍 Where to work\n`src/features/finance/components/transaction-list.tsx` (lines 48–57)\n\n## 🧭 Implementation guidance\n1. Open `src/features/finance/components/transaction-list.tsx`.\n2. Locate the `COLOR_MAP` object near line 48.\n3. Update the `bg` property in each color record to use `/15` instead of `/10`.\n4. Do not modify any logic or other components.\n\n## ✅ Acceptance criteria\n- [ ] `COLOR_MAP` background opacity tokens updated to `/15`.\n- [ ] ESLint and TypeScript checks pass.\n\n## 🧪 Verification"
     },
     {
       "catalogNumber": 14,
       "slug": "ui-streak-summary-pulse-glow",
-      "title": "ui: add pulse glow effect to streak summary highlight on overview",
+      "title": "ui: add subtle icon glow in streak summary card",
       "labels": [
         "type:ui",
         "difficulty:beginner",
-        "time:30-60m",
         "area:habits",
-        "good first issue"
+        "good first issue",
+        "help wanted"
       ],
       "targetFile": "`src/features/habits/components/streak-summary-card.tsx`",
-      "body": "<!-- PACT-BEGINNER-ISSUE: ui-streak-summary-pulse-glow -->\n## 🎯 What needs to be done\nAdd a subtle gold glow indicator next to active streak counts > 7 days in `streak-summary-card.tsx`.\n\n## Why this matters\nVisual feedback on streak milestones encourages momentum without gamifying or distracting from focused work.\n\n## 📍 Where to work\n- `src/features/habits/components/streak-summary-card.tsx`"
+      "body": "<!-- PACT-BEGINNER-ISSUE: ui-streak-summary-pulse-glow -->\n## 🎯 What needs to be done\nIn `src/features/habits/components/streak-summary-card.tsx`, add a subtle amber shadow/glow to the Top Streak Flame icon badge container.\n\n## Why this matters\nVisual feedback on top active streaks provides celebratory visual polish without distracting from focused daily execution.\n\n## 📍 Where to work\n`src/features/habits/components/streak-summary-card.tsx`\n\n## 🧭 Implementation guidance\n1. Open `src/features/habits/components/streak-summary-card.tsx`.\n2. Locate the Top Streak card icon container `div` (around line 55).\n3. Add `shadow-sm shadow-amber-500/20` to the class list.\n4. Save and verify formatting.\n\n## ✅ Acceptance criteria\n- [ ] Top Streak icon badge container includes `shadow-sm shadow-amber-500/20`.\n- [ ] No layout shift or unintended styling changes.\n\n## 🧪 Verification"
     },
     {
       "catalogNumber": 15,
       "slug": "ui-task-form-modal-mobile-padding",
-      "title": "ui: improve mobile bottom sheet padding in task form modal",
+      "title": "ui: improve mobile padding in task form modal",
       "labels": [
         "type:ui",
         "difficulty:beginner",
-        "time:15-30m",
         "area:tasks",
-        "good first issue"
+        "good first issue",
+        "help wanted"
       ],
       "targetFile": "`src/features/tasks/components/task-form-modal.tsx`",
-      "body": "<!-- PACT-BEGINNER-ISSUE: ui-task-form-modal-mobile-padding -->\n## 🎯 What needs to be done\nAdd safe-area bottom padding (`pb-8 sm:pb-6`) to the action buttons inside `task-form-modal.tsx`.\n\n## Why this matters\nPrevents the \"Save Task\" button from colliding with mobile navigation bars (e.g. iOS home indicator).\n\n## 📍 Where to work\n- `src/features/tasks/components/task-form-modal.tsx`"
+      "body": "<!-- PACT-BEGINNER-ISSUE: ui-task-form-modal-mobile-padding -->\n## 🎯 What needs to be done\nIn `src/features/tasks/components/task-form-modal.tsx`, update the form content container padding from `p-4` to `p-4 sm:p-6` to ensure comfortable touch targets on mobile while providing clean breathing room on desktop viewports.\n\n## Why this matters\nConsistent responsive padding prevents form controls and action buttons from feeling cramped on wide screens or colliding with mobile screen edges.\n\n## 📍 Where to work\n`src/features/tasks/components/task-form-modal.tsx`\n\n## 🧭 Implementation guidance\n1. Open `src/features/tasks/components/task-form-modal.tsx`.\n2. Find the form body container element.\n3. Update padding classes to `p-4 sm:p-6`.\n4. Ensure modal action buttons remain clearly visible.\n\n## ✅ Acceptance criteria\n- [ ] Modal padding adjusts cleanly with `p-4 sm:p-6`.\n- [ ] All form fields and action buttons remain fully functional.\n\n## 🧪 Verification"
     },
     {
       "catalogNumber": 16,
       "slug": "ui-analytics-skeleton-shimmer",
-      "title": "ui: polish skeleton loader shimmer animation in analytics workspace",
+      "title": "ui: refine skeleton loading card borders in analytics workspace",
       "labels": [
         "type:ui",
         "difficulty:beginner",
-        "time:15-30m",
         "area:analytics",
-        "good first issue"
+        "good first issue",
+        "help wanted"
       ],
       "targetFile": "`src/features/analytics/components/analytics-skeleton.tsx`",
-      "body": "<!-- PACT-BEGINNER-ISSUE: ui-analytics-skeleton-shimmer -->\n## 🎯 What needs to be done\nStandardize the placeholder shimmer gradient tokens in `analytics-skeleton.tsx` to match `src/components/ui/glass-card.tsx`.\n\n## Why this matters\nEnsures skeleton loading states appear smooth, uniform, and seamlessly integrated into the dark obsidian canvas.\n\n## 📍 Where to work\n- `src/features/analytics/components/analytics-skeleton.tsx`"
+      "body": "<!-- PACT-BEGINNER-ISSUE: ui-analytics-skeleton-shimmer -->\n## 🎯 What needs to be done\nIn `src/features/analytics/components/analytics-skeleton.tsx`, update the summary skeleton cards' border class from `border-white/[0.08]` to `border-white/[0.06]` to match production card border styling.\n\n## Why this matters\nConsistency in skeleton border tokens eliminates visual flicker when placeholder skeletons transition into loaded metric cards.\n\n## 📍 Where to work\n`src/features/analytics/components/analytics-skeleton.tsx`\n\n## 🧭 Implementation guidance\n1. Open `src/features/analytics/components/analytics-skeleton.tsx`.\n2. Locate the summary cards skeleton map around line 24.\n3. Update `border-white/[0.08]` to `border-white/[0.06]`.\n4. Save the file.\n\n## ✅ Acceptance criteria\n- [ ] Summary skeleton card border token matches production cards (`border-white/[0.06]`).\n- [ ] Linter passes with 0 warnings.\n\n## 🧪 Verification"
     },
     {
       "catalogNumber": 17,
@@ -1134,16 +1509,16 @@
     {
       "catalogNumber": 24,
       "slug": "test-habit-streak-leap-year",
-      "title": "test: add unit test verifying habit streak calculation on leap years",
+      "title": "test: add leap year unit test to habit streak test suite",
       "labels": [
         "type:test",
         "difficulty:easy",
-        "time:30-60m",
         "area:testing",
-        "good first issue"
+        "good first issue",
+        "help wanted"
       ],
-      "targetFile": "`tests/habits-routines.test.ts` & `src/lib/habits/streaks.ts`",
-      "body": "<!-- PACT-BEGINNER-ISSUE: test-habit-streak-leap-year -->\n## 🎯 What needs to be done\nAdd a unit test in `tests/habits-routines.test.ts` verifying that daily habit streaks calculate consecutively across Feb 28 -> Feb 29 -> Mar 1 in leap years.\n\n## Why this matters\nEnsures streak calculations do not break or reset due to date boundary quirks on leap days.\n\n## 📍 Where to work\n- `tests/habits-routines.test.ts`\n- `src/lib/habits/streaks.ts`"
+      "targetFile": "`tests/habits-routines.test.ts`",
+      "body": "<!-- PACT-BEGINNER-ISSUE: test-habit-streak-leap-year -->\n## 🎯 What needs to be done\nAdd a unit test in `tests/habits-routines.test.ts` verifying that daily habit streaks calculate consecutively across Feb 28 -> Feb 29 -> Mar 1 in leap years (e.g. 2024 or 2028).\n\n## Why this matters\nGuarantees that streak calculation engines and calendar day difference helpers do not break or reset due to leap year date boundaries.\n\n## 📍 Where to work\n`tests/habits-routines.test.ts`\n\n## 🧭 Implementation guidance\n1. Open `tests/habits-routines.test.ts`.\n2. Locate the streak calculation test block.\n3. Add a test case using sample dates across `2024-02-28`, `2024-02-29`, and `2024-03-01`.\n4. Assert that `calculateHabitStreak` computes a streak count of `3`.\n\n## ✅ Acceptance criteria\n- [ ] Leap year streak test case added to `tests/habits-routines.test.ts`.\n- [ ] Test passes when running `npm test`.\n\n## 🧪 Verification"
     },
     {
       "catalogNumber": 25,
@@ -1162,30 +1537,30 @@
     {
       "catalogNumber": 26,
       "slug": "test-weekly-review-step-boundaries",
-      "title": "test: add unit tests for weekly review step progression boundary checks",
+      "title": "test: add boundary check test for weekly review step progression",
       "labels": [
         "type:test",
         "difficulty:beginner",
-        "time:30-60m",
         "area:testing",
-        "good first issue"
+        "good first issue",
+        "help wanted"
       ],
-      "targetFile": "`tests/weekly-review.test.ts` & `src/lib/validations/weekly-review.ts`",
-      "body": "<!-- PACT-BEGINNER-ISSUE: test-weekly-review-step-boundaries -->\n## 🎯 What needs to be done\nAdd test cases in `tests/weekly-review.test.ts` verifying that step indices in review draft payloads must be integers between 1 and 5.\n\n## Why this matters\nValidates that invalid step values (e.g. step 0, step 6, or negative numbers) cannot corrupt review draft records.\n\n## 📍 Where to work\n- `tests/weekly-review.test.ts`"
+      "targetFile": "`tests/weekly-review.test.ts`",
+      "body": "<!-- PACT-BEGINNER-ISSUE: test-weekly-review-step-boundaries -->\n## 🎯 What needs to be done\nIn `tests/weekly-review.test.ts`, add a test case verifying that `saveReviewDraftSchema` rejects invalid step index values (e.g. `step: 0` or `step: 6`).\n\n## Why this matters\nEnsures user review drafts remain within the strict 5-step weekly review workflow boundaries.\n\n## 📍 Where to work\n`tests/weekly-review.test.ts`\n\n## 🧭 Implementation guidance\n1. Open `tests/weekly-review.test.ts`.\n2. Locate the schema validation test suite.\n3. Add assertions testing `saveReviewDraftSchema.safeParse` with `current_step: 0` and `current_step: 6` to verify rejection.\n4. Verify all tests pass.\n\n## ✅ Acceptance criteria\n- [ ] Boundary test added for weekly review draft step indices.\n- [ ] All unit tests pass with 0 failures.\n\n## 🧪 Verification"
     },
     {
       "catalogNumber": 27,
       "slug": "test-notification-channel-filter",
-      "title": "test: add unit tests for notification channel filter utility",
+      "title": "test: add unit test for in-app notification filtering",
       "labels": [
         "type:test",
         "difficulty:beginner",
-        "time:30-60m",
         "area:testing",
-        "good first issue"
+        "good first issue",
+        "help wanted"
       ],
-      "targetFile": "`tests/notifications.test.ts` & `src/lib/notifications/`",
-      "body": "<!-- PACT-BEGINNER-ISSUE: test-notification-channel-filter -->\n## 🎯 What needs to be done\nAdd unit tests verifying that in-app notification queries filter accurately by channel (`IN_APP`, `EMAIL`, `CRON`) and read status.\n\n## Why this matters\nEnsures user notification feeds accurately reflect selected channel filters.\n\n## 📍 Where to work\n- `tests/notifications.test.ts`"
+      "targetFile": "`tests/notifications.test.ts`",
+      "body": "<!-- PACT-BEGINNER-ISSUE: test-notification-channel-filter -->\n## 🎯 What needs to be done\nIn `tests/notifications.test.ts`, add a unit test asserting that notification delivery helpers handle empty recipient lists gracefully without throwing unhandled exceptions.\n\n## Why this matters\nEnsures resilient notification delivery when no channels are configured or available.\n\n## 📍 Where to work\n`tests/notifications.test.ts`\n\n## 🧭 Implementation guidance\n1. Open `tests/notifications.test.ts`.\n2. Add a test case testing `deliverInApp` or `dispatchNotification` with an empty or unconfigured state.\n3. Assert that it resolves safely with the expected fallback status.\n\n## ✅ Acceptance criteria\n- [ ] Unit test added in `tests/notifications.test.ts`.\n- [ ] Test passes when running `npm test`.\n\n## 🧪 Verification"
     },
     {
       "catalogNumber": 28,
@@ -1246,30 +1621,30 @@
     {
       "catalogNumber": 32,
       "slug": "refactor-modal-transition-variants",
-      "title": "refactor: export shared modal transition variants in components/ui/modal.tsx",
+      "title": "refactor: export modal motion transition variants in modal component",
       "labels": [
         "type:refactor",
         "difficulty:beginner",
-        "time:15-30m",
         "area:ui",
-        "good first issue"
+        "good first issue",
+        "help wanted"
       ],
       "targetFile": "`src/components/ui/modal.tsx`",
-      "body": "<!-- PACT-BEGINNER-ISSUE: refactor-modal-transition-variants -->\n## 🎯 What needs to be done\nExtract and export Framer Motion animation transition variants from `src/components/ui/modal.tsx` so custom dialogs can reuse standard backdrop and card spring animations.\n\n## Why this matters\nEnsures uniform modal entrance and exit easing curves across all modules.\n\n## 📍 Where to work\n- `src/components/ui/modal.tsx`"
+      "body": "<!-- PACT-BEGINNER-ISSUE: refactor-modal-transition-variants -->\n## 🎯 What needs to be done\nIn `src/components/ui/modal.tsx`, export the backdrop and modal card Framer Motion animation transition variants as named constants (`MODAL_BACKDROP_VARIANTS` and `MODAL_CONTENT_VARIANTS`).\n\n## Why this matters\nAllows custom dialogs and drawers across PACT to reuse identical easing curves and spring physics without code duplication.\n\n## 📍 Where to work\n`src/components/ui/modal.tsx`\n\n## 🧭 Implementation guidance\n1. Open `src/components/ui/modal.tsx`.\n2. Find the motion variant objects defined inside or above `Modal`.\n3. Add `export const` to make them reusable by other components.\n4. Verify TypeScript and ESLint pass.\n\n## ✅ Acceptance criteria\n- [ ] Modal transition variants exported as named constants.\n- [ ] TypeScript check passes with 0 errors.\n\n## 🧪 Verification"
     },
     {
       "catalogNumber": 33,
       "slug": "fix-finance-negative-budget-remaining",
-      "title": "fix: prevent negative budget remaining calculation on expense overage",
+      "title": "fix: clamp negative budget remaining balance to zero in budget engine",
       "labels": [
         "type:bug",
         "difficulty:easy",
-        "time:30-60m",
         "area:finance",
-        "good first issue"
+        "good first issue",
+        "help wanted"
       ],
-      "targetFile": "`src/features/finance/components/budget-discipline-card.tsx`",
-      "body": "<!-- PACT-BEGINNER-ISSUE: fix-finance-negative-budget-remaining -->\n## 🎯 What needs to be done\nUpdate `budget-discipline-card.tsx` so that when expenses exceed the allocated budget, the remaining amount displays with an explicit negative indicator and \"Over Budget\" badge instead of confusing zero-floor clamping.\n\n## Why this matters\nUsers need clear, honest visibility when a category budget has been exceeded.\n\n## 📍 Where to work\n- `src/features/finance/components/budget-discipline-card.tsx`\n- `src/lib/money.ts`"
+      "targetFile": "`src/lib/finance/budgets.ts`",
+      "body": "<!-- PACT-BEGINNER-ISSUE: fix-finance-negative-budget-remaining -->\n## 🎯 What needs to be done\nIn `src/lib/finance/budgets.ts`, wrap the remaining amount calculation in `Math.max(0, limitCents - spentCents)` inside `calculateBudgetStatus` so remaining budget balance never reports as a negative integer.\n\n## Why this matters\nWhen an expense exceeds a category budget, `remainingCents` should clamp cleanly to `0` while `isExceeded` flags the overage.\n\n## 📍 Where to work\n`src/lib/finance/budgets.ts` (inside `calculateBudgetStatus`)\n\n## 🧭 Implementation guidance\n1. Open `src/lib/finance/budgets.ts`.\n2. Locate `remainingCents: limitCents - spentCents`.\n3. Wrap with `Math.max(0, limitCents - spentCents)`.\n4. Run unit tests to verify.\n\n## ✅ Acceptance criteria\n- [ ] `remainingCents` is clamped to non-negative values.\n- [ ] Finance unit tests pass cleanly.\n\n## 🧪 Verification"
     },
     {
       "catalogNumber": 34,
@@ -1414,76 +1789,6 @@
       "body": "<!-- PACT-BEGINNER-ISSUE: docs-habit-recurrence-syntax -->\n## 🎯 What needs to be done\nDocument how habit frequency types (`DAILY`, `WEEKLY_DAYS`, `INTERVAL`) and recurrence bitmasks are stored in the database in `docs/DATA_MODEL.md`.\n\n## Why this matters\nUnderstanding the habit data model helps developers working on habit completion state machines and calendar integrations.\n\n## 📍 Where to work\n- `docs/DATA_MODEL.md`\n- `supabase/migrations/20260911080000_habits_and_routines_engine.sql`"
     },
     {
-      "catalogNumber": 8,
-      "slug": "docs-troubleshooting-rls-recursion",
-      "title": "docs: add troubleshooting steps for Supabase RLS recursion errors",
-      "labels": [
-        "type:docs",
-        "difficulty:beginner",
-        "time:15-30m",
-        "area:documentation",
-        "good first issue"
-      ],
-      "targetFile": "`docs/TROUBLESHOOTING.md` & `docs/SECURITY.md`",
-      "body": "<!-- PACT-BEGINNER-ISSUE: docs-troubleshooting-rls-recursion -->\n## 🎯 What needs to be done\nAdd a troubleshooting entry in `docs/TROUBLESHOOTING.md` addressing PostgreSQL error `42P17 (infinite recursion detected in policy for relation)`.\n\n## Why this matters\nContributors writing new RLS policies may inadvertently query the same table inside a subquery. Documenting the fix (`SECURITY DEFINER` functions or separate lookup tables) prevents confusion.\n\n## 📍 Where to work\n- `docs/TROUBLESHOOTING.md` (Add to Section 9: Supabase & Database Issues)"
-    },
-    {
-      "catalogNumber": 13,
-      "slug": "ui-finance-category-badge-opacity",
-      "title": "ui: refine category badge color opacity in transaction list",
-      "labels": [
-        "type:ui",
-        "difficulty:beginner",
-        "time:15-30m",
-        "area:finance",
-        "good first issue"
-      ],
-      "targetFile": "`src/features/finance/components/transaction-list.tsx`",
-      "body": "<!-- PACT-BEGINNER-ISSUE: ui-finance-category-badge-opacity -->\n## 🎯 What needs to be done\nRefine the background opacity of category pills in the transaction table rows from `bg-white/[0.04]` to `bg-white/[0.06]` for optimal contrast.\n\n## Why this matters\nImproves readability of category tags (e.g., Housing, Food, Investment) against deep obsidian table backgrounds.\n\n## 📍 Where to work\n- `src/features/finance/components/transaction-list.tsx`"
-    },
-    {
-      "catalogNumber": 14,
-      "slug": "ui-streak-summary-pulse-glow",
-      "title": "ui: add pulse glow effect to streak summary highlight on overview",
-      "labels": [
-        "type:ui",
-        "difficulty:beginner",
-        "time:30-60m",
-        "area:habits",
-        "good first issue"
-      ],
-      "targetFile": "`src/features/habits/components/streak-summary-card.tsx`",
-      "body": "<!-- PACT-BEGINNER-ISSUE: ui-streak-summary-pulse-glow -->\n## 🎯 What needs to be done\nAdd a subtle gold glow indicator next to active streak counts > 7 days in `streak-summary-card.tsx`.\n\n## Why this matters\nVisual feedback on streak milestones encourages momentum without gamifying or distracting from focused work.\n\n## 📍 Where to work\n- `src/features/habits/components/streak-summary-card.tsx`"
-    },
-    {
-      "catalogNumber": 15,
-      "slug": "ui-task-form-modal-mobile-padding",
-      "title": "ui: improve mobile bottom sheet padding in task form modal",
-      "labels": [
-        "type:ui",
-        "difficulty:beginner",
-        "time:15-30m",
-        "area:tasks",
-        "good first issue"
-      ],
-      "targetFile": "`src/features/tasks/components/task-form-modal.tsx`",
-      "body": "<!-- PACT-BEGINNER-ISSUE: ui-task-form-modal-mobile-padding -->\n## 🎯 What needs to be done\nAdd safe-area bottom padding (`pb-8 sm:pb-6`) to the action buttons inside `task-form-modal.tsx`.\n\n## Why this matters\nPrevents the \"Save Task\" button from colliding with mobile navigation bars (e.g. iOS home indicator).\n\n## 📍 Where to work\n- `src/features/tasks/components/task-form-modal.tsx`"
-    },
-    {
-      "catalogNumber": 16,
-      "slug": "ui-analytics-skeleton-shimmer",
-      "title": "ui: polish skeleton loader shimmer animation in analytics workspace",
-      "labels": [
-        "type:ui",
-        "difficulty:beginner",
-        "time:15-30m",
-        "area:analytics",
-        "good first issue"
-      ],
-      "targetFile": "`src/features/analytics/components/analytics-skeleton.tsx`",
-      "body": "<!-- PACT-BEGINNER-ISSUE: ui-analytics-skeleton-shimmer -->\n## 🎯 What needs to be done\nStandardize the placeholder shimmer gradient tokens in `analytics-skeleton.tsx` to match `src/components/ui/glass-card.tsx`.\n\n## Why this matters\nEnsures skeleton loading states appear smooth, uniform, and seamlessly integrated into the dark obsidian canvas.\n\n## 📍 Where to work\n- `src/features/analytics/components/analytics-skeleton.tsx`"
-    },
-    {
       "catalogNumber": 21,
       "slug": "a11y-focus-timer-aria-live",
       "title": "a11y: add aria-live polite region to focus timer countdown",
@@ -1496,48 +1801,6 @@
       ],
       "targetFile": "`src/features/focus/components/focus-timer-display.tsx`",
       "body": "<!-- PACT-BEGINNER-ISSUE: a11y-focus-timer-aria-live -->\n## 🎯 What needs to be done\nAdd an `aria-live=\"polite\"` region that announces session state transitions (e.g. \"Focus session started\", \"Focus session completed\") without announcing every second.\n\n## Why this matters\nAllows screen reader users to receive timely auditory announcements when work intervals begin or end.\n\n## 📍 Where to work\n- `src/features/focus/components/focus-timer-display.tsx`"
-    },
-    {
-      "catalogNumber": 24,
-      "slug": "test-habit-streak-leap-year",
-      "title": "test: add unit test verifying habit streak calculation on leap years",
-      "labels": [
-        "type:test",
-        "difficulty:easy",
-        "time:30-60m",
-        "area:testing",
-        "good first issue"
-      ],
-      "targetFile": "`tests/habits-routines.test.ts` & `src/lib/habits/streaks.ts`",
-      "body": "<!-- PACT-BEGINNER-ISSUE: test-habit-streak-leap-year -->\n## 🎯 What needs to be done\nAdd a unit test in `tests/habits-routines.test.ts` verifying that daily habit streaks calculate consecutively across Feb 28 -> Feb 29 -> Mar 1 in leap years.\n\n## Why this matters\nEnsures streak calculations do not break or reset due to date boundary quirks on leap days.\n\n## 📍 Where to work\n- `tests/habits-routines.test.ts`\n- `src/lib/habits/streaks.ts`"
-    },
-    {
-      "catalogNumber": 26,
-      "slug": "test-weekly-review-step-boundaries",
-      "title": "test: add unit tests for weekly review step progression boundary checks",
-      "labels": [
-        "type:test",
-        "difficulty:beginner",
-        "time:30-60m",
-        "area:testing",
-        "good first issue"
-      ],
-      "targetFile": "`tests/weekly-review.test.ts` & `src/lib/validations/weekly-review.ts`",
-      "body": "<!-- PACT-BEGINNER-ISSUE: test-weekly-review-step-boundaries -->\n## 🎯 What needs to be done\nAdd test cases in `tests/weekly-review.test.ts` verifying that step indices in review draft payloads must be integers between 1 and 5.\n\n## Why this matters\nValidates that invalid step values (e.g. step 0, step 6, or negative numbers) cannot corrupt review draft records.\n\n## 📍 Where to work\n- `tests/weekly-review.test.ts`"
-    },
-    {
-      "catalogNumber": 27,
-      "slug": "test-notification-channel-filter",
-      "title": "test: add unit tests for notification channel filter utility",
-      "labels": [
-        "type:test",
-        "difficulty:beginner",
-        "time:30-60m",
-        "area:testing",
-        "good first issue"
-      ],
-      "targetFile": "`tests/notifications.test.ts` & `src/lib/notifications/`",
-      "body": "<!-- PACT-BEGINNER-ISSUE: test-notification-channel-filter -->\n## 🎯 What needs to be done\nAdd unit tests verifying that in-app notification queries filter accurately by channel (`IN_APP`, `EMAIL`, `CRON`) and read status.\n\n## Why this matters\nEnsures user notification feeds accurately reflect selected channel filters.\n\n## 📍 Where to work\n- `tests/notifications.test.ts`"
     },
     {
       "catalogNumber": 30,
@@ -1566,34 +1829,6 @@
       ],
       "targetFile": "`src/lib/time.ts`",
       "body": "<!-- PACT-BEGINNER-ISSUE: refactor-date-string-helper-time -->\n## 🎯 What needs to be done\nExport a helper function `toISODateString(date: Date): string` in `src/lib/time.ts` that safely returns `YYYY-MM-DD` without UTC timezone shifting.\n\n## Why this matters\nPrevents subtle date offset bugs when converting `Date` objects to HTML date input format strings.\n\n## 📍 Where to work\n- `src/lib/time.ts`\n- `tests/temporal-engine.test.ts`"
-    },
-    {
-      "catalogNumber": 32,
-      "slug": "refactor-modal-transition-variants",
-      "title": "refactor: export shared modal transition variants in components/ui/modal.tsx",
-      "labels": [
-        "type:refactor",
-        "difficulty:beginner",
-        "time:15-30m",
-        "area:ui",
-        "good first issue"
-      ],
-      "targetFile": "`src/components/ui/modal.tsx`",
-      "body": "<!-- PACT-BEGINNER-ISSUE: refactor-modal-transition-variants -->\n## 🎯 What needs to be done\nExtract and export Framer Motion animation transition variants from `src/components/ui/modal.tsx` so custom dialogs can reuse standard backdrop and card spring animations.\n\n## Why this matters\nEnsures uniform modal entrance and exit easing curves across all modules.\n\n## 📍 Where to work\n- `src/components/ui/modal.tsx`"
-    },
-    {
-      "catalogNumber": 33,
-      "slug": "fix-finance-negative-budget-remaining",
-      "title": "fix: prevent negative budget remaining calculation on expense overage",
-      "labels": [
-        "type:bug",
-        "difficulty:easy",
-        "time:30-60m",
-        "area:finance",
-        "good first issue"
-      ],
-      "targetFile": "`src/features/finance/components/budget-discipline-card.tsx`",
-      "body": "<!-- PACT-BEGINNER-ISSUE: fix-finance-negative-budget-remaining -->\n## 🎯 What needs to be done\nUpdate `budget-discipline-card.tsx` so that when expenses exceed the allocated budget, the remaining amount displays with an explicit negative indicator and \"Over Budget\" badge instead of confusing zero-floor clamping.\n\n## Why this matters\nUsers need clear, honest visibility when a category budget has been exceeded.\n\n## 📍 Where to work\n- `src/features/finance/components/budget-discipline-card.tsx`\n- `src/lib/money.ts`"
     },
     {
       "catalogNumber": 34,

@@ -138,6 +138,19 @@ async function main() {
     'feat-codeforces-rating-tier-badge'
   ];
 
+  const BATCH_3_SLUGS = [
+    'docs-troubleshooting-rls-recursion',
+    'ui-finance-category-badge-opacity',
+    'ui-streak-summary-pulse-glow',
+    'ui-task-form-modal-mobile-padding',
+    'ui-analytics-skeleton-shimmer',
+    'test-habit-streak-leap-year',
+    'test-weekly-review-step-boundaries',
+    'test-notification-channel-filter',
+    'refactor-modal-transition-variants',
+    'fix-finance-negative-budget-remaining'
+  ];
+
   for (const iss of issues) {
     const slugMarkerMatch = iss.body ? iss.body.match(/<!--\s*PACT-BEGINNER-ISSUE:\s*([a-zA-Z0-9_-]+)\s*-->/) : null;
     const slug = slugMarkerMatch ? slugMarkerMatch[1] : null;
@@ -174,6 +187,7 @@ async function main() {
     let batch = 'UNKNOWN';
     if (BATCH_1_SLUGS.includes(slug)) batch = 'Batch 1';
     else if (BATCH_2_SLUGS.includes(slug)) batch = 'Batch 2';
+    else if (BATCH_3_SLUGS.includes(slug)) batch = 'Batch 3';
 
     reconciliationReport.push({
       number: iss.number,
