@@ -143,8 +143,15 @@ async function main() {
   const isBatch2 = args.includes('--batch=2') || args.includes('--batch-2');
   const isDryRun = args.includes('--dry-run');
 
+  const hasExplicitBatch = isBatch1 || isBatch2 || publishAll;
+  if (!hasExplicitBatch && !isDryRun) {
+    console.error('⚠️  SAFETY GUARD: Explicit batch selection required for live execution.');
+    console.error('Usage: node scratch/create-beginner-issues.mjs [--batch=1 | --batch=2 | --all] [--dry-run]');
+    process.exit(1);
+  }
+
   let targetSlugs = FIRST_BATCH_SLUGS;
-  let batchName = 'FIRST BATCH OF 10';
+  let batchName = 'FIRST BATCH OF 10 (DRY RUN DEFAULT)';
 
   if (isBatch2) {
     targetSlugs = SECOND_BATCH_SLUGS;

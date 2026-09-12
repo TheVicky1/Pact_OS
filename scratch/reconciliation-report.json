@@ -1,0 +1,1655 @@
+{
+  "repo": {
+    "id": 1358992893,
+    "node_id": "R_kgDOUQCV_Q",
+    "name": "Pact_OS",
+    "full_name": "TheVicky1/Pact_OS",
+    "private": false,
+    "owner": {
+      "login": "TheVicky1",
+      "id": 224829651,
+      "node_id": "U_kgDODWag0w",
+      "avatar_url": "https://avatars.githubusercontent.com/u/224829651?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/TheVicky1",
+      "html_url": "https://github.com/TheVicky1",
+      "followers_url": "https://api.github.com/users/TheVicky1/followers",
+      "following_url": "https://api.github.com/users/TheVicky1/following{/other_user}",
+      "gists_url": "https://api.github.com/users/TheVicky1/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/TheVicky1/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/TheVicky1/subscriptions",
+      "organizations_url": "https://api.github.com/users/TheVicky1/orgs",
+      "repos_url": "https://api.github.com/users/TheVicky1/repos",
+      "events_url": "https://api.github.com/users/TheVicky1/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/TheVicky1/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "html_url": "https://github.com/TheVicky1/Pact_OS",
+    "description": null,
+    "fork": false,
+    "url": "https://api.github.com/repos/TheVicky1/Pact_OS",
+    "forks_url": "https://api.github.com/repos/TheVicky1/Pact_OS/forks",
+    "keys_url": "https://api.github.com/repos/TheVicky1/Pact_OS/keys{/key_id}",
+    "collaborators_url": "https://api.github.com/repos/TheVicky1/Pact_OS/collaborators{/collaborator}",
+    "teams_url": "https://api.github.com/repos/TheVicky1/Pact_OS/teams",
+    "hooks_url": "https://api.github.com/repos/TheVicky1/Pact_OS/hooks",
+    "issue_events_url": "https://api.github.com/repos/TheVicky1/Pact_OS/issues/events{/number}",
+    "events_url": "https://api.github.com/repos/TheVicky1/Pact_OS/events",
+    "assignees_url": "https://api.github.com/repos/TheVicky1/Pact_OS/assignees{/user}",
+    "branches_url": "https://api.github.com/repos/TheVicky1/Pact_OS/branches{/branch}",
+    "tags_url": "https://api.github.com/repos/TheVicky1/Pact_OS/tags",
+    "blobs_url": "https://api.github.com/repos/TheVicky1/Pact_OS/git/blobs{/sha}",
+    "git_tags_url": "https://api.github.com/repos/TheVicky1/Pact_OS/git/tags{/sha}",
+    "git_refs_url": "https://api.github.com/repos/TheVicky1/Pact_OS/git/refs{/sha}",
+    "trees_url": "https://api.github.com/repos/TheVicky1/Pact_OS/git/trees{/sha}",
+    "statuses_url": "https://api.github.com/repos/TheVicky1/Pact_OS/statuses/{sha}",
+    "languages_url": "https://api.github.com/repos/TheVicky1/Pact_OS/languages",
+    "stargazers_url": "https://api.github.com/repos/TheVicky1/Pact_OS/stargazers",
+    "contributors_url": "https://api.github.com/repos/TheVicky1/Pact_OS/contributors",
+    "subscribers_url": "https://api.github.com/repos/TheVicky1/Pact_OS/subscribers",
+    "subscription_url": "https://api.github.com/repos/TheVicky1/Pact_OS/subscription",
+    "commits_url": "https://api.github.com/repos/TheVicky1/Pact_OS/commits{/sha}",
+    "git_commits_url": "https://api.github.com/repos/TheVicky1/Pact_OS/git/commits{/sha}",
+    "comments_url": "https://api.github.com/repos/TheVicky1/Pact_OS/comments{/number}",
+    "issue_comment_url": "https://api.github.com/repos/TheVicky1/Pact_OS/issues/comments{/number}",
+    "contents_url": "https://api.github.com/repos/TheVicky1/Pact_OS/contents/{+path}",
+    "compare_url": "https://api.github.com/repos/TheVicky1/Pact_OS/compare/{base}...{head}",
+    "merges_url": "https://api.github.com/repos/TheVicky1/Pact_OS/merges",
+    "archive_url": "https://api.github.com/repos/TheVicky1/Pact_OS/{archive_format}{/ref}",
+    "downloads_url": "https://api.github.com/repos/TheVicky1/Pact_OS/downloads",
+    "issues_url": "https://api.github.com/repos/TheVicky1/Pact_OS/issues{/number}",
+    "pulls_url": "https://api.github.com/repos/TheVicky1/Pact_OS/pulls{/number}",
+    "milestones_url": "https://api.github.com/repos/TheVicky1/Pact_OS/milestones{/number}",
+    "notifications_url": "https://api.github.com/repos/TheVicky1/Pact_OS/notifications{?since,all,participating}",
+    "labels_url": "https://api.github.com/repos/TheVicky1/Pact_OS/labels{/name}",
+    "releases_url": "https://api.github.com/repos/TheVicky1/Pact_OS/releases{/id}",
+    "deployments_url": "https://api.github.com/repos/TheVicky1/Pact_OS/deployments",
+    "created_at": "2026-09-06T09:35:44Z",
+    "updated_at": "2026-09-12T17:42:10Z",
+    "pushed_at": "2026-09-12T17:42:05Z",
+    "git_url": "git://github.com/TheVicky1/Pact_OS.git",
+    "ssh_url": "git@github.com:TheVicky1/Pact_OS.git",
+    "clone_url": "https://github.com/TheVicky1/Pact_OS.git",
+    "svn_url": "https://github.com/TheVicky1/Pact_OS",
+    "homepage": null,
+    "size": 9634,
+    "stargazers_count": 0,
+    "watchers_count": 0,
+    "language": "TypeScript",
+    "has_issues": true,
+    "has_projects": true,
+    "has_downloads": false,
+    "has_wiki": true,
+    "has_pages": false,
+    "has_discussions": false,
+    "forks_count": 0,
+    "mirror_url": null,
+    "archived": false,
+    "disabled": false,
+    "open_issues_count": 20,
+    "license": {
+      "key": "mit",
+      "name": "MIT License",
+      "spdx_id": "MIT",
+      "url": "https://api.github.com/licenses/mit",
+      "node_id": "MDc6TGljZW5zZTEz"
+    },
+    "allow_forking": true,
+    "is_template": false,
+    "web_commit_signoff_required": false,
+    "has_pull_requests": true,
+    "pull_request_creation_policy": "all",
+    "topics": [],
+    "visibility": "public",
+    "forks": 0,
+    "open_issues": 20,
+    "watchers": 0,
+    "default_branch": "main",
+    "permissions": {
+      "admin": true,
+      "maintain": true,
+      "push": true,
+      "triage": true,
+      "pull": true
+    },
+    "temp_clone_token": "",
+    "allow_squash_merge": true,
+    "allow_merge_commit": true,
+    "allow_rebase_merge": true,
+    "allow_auto_merge": false,
+    "delete_branch_on_merge": false,
+    "allow_update_branch": false,
+    "use_squash_pr_title_as_default": false,
+    "squash_merge_commit_message": "COMMIT_MESSAGES",
+    "squash_merge_commit_title": "COMMIT_OR_PR_TITLE",
+    "merge_commit_message": "PR_TITLE",
+    "merge_commit_title": "MERGE_MESSAGE",
+    "security_and_analysis": {
+      "secret_scanning": {
+        "status": "enabled"
+      },
+      "secret_scanning_push_protection": {
+        "status": "enabled"
+      },
+      "dependabot_security_updates": {
+        "status": "disabled"
+      },
+      "secret_scanning_non_provider_patterns": {
+        "status": "disabled"
+      },
+      "secret_scanning_validity_checks": {
+        "status": "disabled"
+      }
+    },
+    "network_count": 0,
+    "subscribers_count": 0
+  },
+  "report": [
+    {
+      "number": 12,
+      "title": "docs: add code examples for lib/money.ts integer-cents calculations",
+      "state": "open",
+      "slug": "docs-money-cents-examples",
+      "batch": "Batch 1",
+      "canonicalFound": true,
+      "canonicalCatalogNumber": 1,
+      "canonicalSlug": "docs-money-cents-examples",
+      "canonicalTitle": "docs: add code examples for lib/money.ts integer-cents calculations",
+      "titleMatch": true,
+      "liveLabels": [
+        "good first issue",
+        "type:docs",
+        "difficulty:beginner",
+        "time:15-30m",
+        "area:documentation"
+      ],
+      "canonicalLabels": [
+        "type:docs",
+        "difficulty:beginner",
+        "time:15-30m",
+        "area:documentation",
+        "good first issue"
+      ],
+      "labelsMatch": true,
+      "bodyMatch": true,
+      "assignees": [],
+      "commentCount": 0,
+      "comments": [],
+      "createdAt": "2026-09-12T11:30:44Z",
+      "updatedAt": "2026-09-12T11:30:44Z"
+    },
+    {
+      "number": 13,
+      "title": "docs: add quick-reference command table to developer guide",
+      "state": "open",
+      "slug": "docs-developer-commands-cheatsheet",
+      "batch": "Batch 1",
+      "canonicalFound": true,
+      "canonicalCatalogNumber": 6,
+      "canonicalSlug": "docs-developer-commands-cheatsheet",
+      "canonicalTitle": "docs: add quick-reference command table to developer guide",
+      "titleMatch": true,
+      "liveLabels": [
+        "good first issue",
+        "type:docs",
+        "difficulty:beginner",
+        "time:15-30m",
+        "area:documentation"
+      ],
+      "canonicalLabels": [
+        "type:docs",
+        "difficulty:beginner",
+        "time:15-30m",
+        "area:documentation",
+        "good first issue"
+      ],
+      "labelsMatch": true,
+      "bodyMatch": true,
+      "assignees": [],
+      "commentCount": 0,
+      "comments": [],
+      "createdAt": "2026-09-12T11:30:45Z",
+      "updatedAt": "2026-09-12T11:30:45Z"
+    },
+    {
+      "number": 14,
+      "title": "ui: improve responsive padding on finance summary cards",
+      "state": "open",
+      "slug": "ui-finance-summary-responsive-padding",
+      "batch": "Batch 1",
+      "canonicalFound": true,
+      "canonicalCatalogNumber": 11,
+      "canonicalSlug": "ui-finance-summary-responsive-padding",
+      "canonicalTitle": "ui: improve responsive padding on finance summary cards",
+      "titleMatch": true,
+      "liveLabels": [
+        "good first issue",
+        "type:ui",
+        "difficulty:beginner",
+        "time:15-30m",
+        "area:finance"
+      ],
+      "canonicalLabels": [
+        "type:ui",
+        "difficulty:beginner",
+        "time:15-30m",
+        "area:finance",
+        "good first issue"
+      ],
+      "labelsMatch": true,
+      "bodyMatch": true,
+      "assignees": [],
+      "commentCount": 0,
+      "comments": [],
+      "createdAt": "2026-09-12T11:30:46Z",
+      "updatedAt": "2026-09-12T11:30:46Z"
+    },
+    {
+      "number": 15,
+      "title": "ui: add subtle transition animation to habit routine toggle buttons",
+      "state": "open",
+      "slug": "ui-habits-routine-toggle-transition",
+      "batch": "Batch 1",
+      "canonicalFound": true,
+      "canonicalCatalogNumber": 12,
+      "canonicalSlug": "ui-habits-routine-toggle-transition",
+      "canonicalTitle": "ui: add subtle transition animation to habit routine toggle buttons",
+      "titleMatch": true,
+      "liveLabels": [
+        "good first issue",
+        "type:ui",
+        "difficulty:beginner",
+        "time:15-30m",
+        "area:habits"
+      ],
+      "canonicalLabels": [
+        "type:ui",
+        "difficulty:beginner",
+        "time:15-30m",
+        "area:habits",
+        "good first issue"
+      ],
+      "labelsMatch": true,
+      "bodyMatch": true,
+      "assignees": [],
+      "commentCount": 0,
+      "comments": [],
+      "createdAt": "2026-09-12T11:30:46Z",
+      "updatedAt": "2026-09-12T11:30:46Z"
+    },
+    {
+      "number": 16,
+      "title": "a11y: add aria-label and visible focus ring to notification popover close button",
+      "state": "open",
+      "slug": "a11y-notification-popover-close-button",
+      "batch": "Batch 1",
+      "canonicalFound": true,
+      "canonicalCatalogNumber": 17,
+      "canonicalSlug": "a11y-notification-popover-close-button",
+      "canonicalTitle": "a11y: add aria-label and visible focus ring to notification popover close button",
+      "titleMatch": true,
+      "liveLabels": [
+        "good first issue",
+        "type:a11y",
+        "difficulty:beginner",
+        "time:15-30m",
+        "area:dashboard"
+      ],
+      "canonicalLabels": [
+        "type:a11y",
+        "difficulty:beginner",
+        "time:15-30m",
+        "area:dashboard",
+        "good first issue"
+      ],
+      "labelsMatch": true,
+      "bodyMatch": true,
+      "assignees": [],
+      "commentCount": 0,
+      "comments": [],
+      "createdAt": "2026-09-12T11:30:47Z",
+      "updatedAt": "2026-09-12T11:30:47Z"
+    },
+    {
+      "number": 17,
+      "title": "a11y: ensure task priority icons include screen reader accessible text",
+      "state": "open",
+      "slug": "a11y-task-priority-sr-only",
+      "batch": "Batch 1",
+      "canonicalFound": true,
+      "canonicalCatalogNumber": 19,
+      "canonicalSlug": "a11y-task-priority-sr-only",
+      "canonicalTitle": "a11y: ensure task priority icons include screen reader accessible text",
+      "titleMatch": true,
+      "liveLabels": [
+        "good first issue",
+        "type:a11y",
+        "difficulty:beginner",
+        "time:15-30m",
+        "area:tasks"
+      ],
+      "canonicalLabels": [
+        "type:a11y",
+        "difficulty:beginner",
+        "time:15-30m",
+        "area:tasks",
+        "good first issue"
+      ],
+      "labelsMatch": true,
+      "bodyMatch": true,
+      "assignees": [],
+      "commentCount": 0,
+      "comments": [],
+      "createdAt": "2026-09-12T11:30:48Z",
+      "updatedAt": "2026-09-12T11:30:48Z"
+    },
+    {
+      "number": 18,
+      "title": "test: add unit tests for formatCentsToDollars edge cases (negative & zero values)",
+      "state": "open",
+      "slug": "test-money-cents-formatting-edge-cases",
+      "batch": "Batch 1",
+      "canonicalFound": true,
+      "canonicalCatalogNumber": 22,
+      "canonicalSlug": "test-money-cents-formatting-edge-cases",
+      "canonicalTitle": "test: add unit tests for formatCentsToDollars edge cases (negative & zero values)",
+      "titleMatch": true,
+      "liveLabels": [
+        "good first issue",
+        "type:test",
+        "difficulty:beginner",
+        "time:30-60m",
+        "area:testing"
+      ],
+      "canonicalLabels": [
+        "type:test",
+        "difficulty:beginner",
+        "time:30-60m",
+        "area:testing",
+        "good first issue"
+      ],
+      "labelsMatch": true,
+      "bodyMatch": true,
+      "assignees": [],
+      "commentCount": 0,
+      "comments": [],
+      "createdAt": "2026-09-12T11:30:48Z",
+      "updatedAt": "2026-09-12T11:30:48Z"
+    },
+    {
+      "number": 19,
+      "title": "test: add unit tests for task priority sorting comparator",
+      "state": "open",
+      "slug": "test-task-priority-sorting-comparator",
+      "batch": "Batch 1",
+      "canonicalFound": true,
+      "canonicalCatalogNumber": 23,
+      "canonicalSlug": "test-task-priority-sorting-comparator",
+      "canonicalTitle": "test: add unit tests for task priority sorting comparator",
+      "titleMatch": true,
+      "liveLabels": [
+        "good first issue",
+        "type:test",
+        "difficulty:beginner",
+        "time:30-60m",
+        "area:testing"
+      ],
+      "canonicalLabels": [
+        "type:test",
+        "difficulty:beginner",
+        "time:30-60m",
+        "area:testing",
+        "good first issue"
+      ],
+      "labelsMatch": true,
+      "bodyMatch": true,
+      "assignees": [],
+      "commentCount": 0,
+      "comments": [],
+      "createdAt": "2026-09-12T11:30:49Z",
+      "updatedAt": "2026-09-12T11:30:49Z"
+    },
+    {
+      "number": 20,
+      "title": "refactor: prune unused icon imports in integration cards",
+      "state": "open",
+      "slug": "refactor-unused-icon-imports-integrations",
+      "batch": "Batch 1",
+      "canonicalFound": true,
+      "canonicalCatalogNumber": 29,
+      "canonicalSlug": "refactor-unused-icon-imports-integrations",
+      "canonicalTitle": "refactor: prune unused icon imports in integration cards",
+      "titleMatch": true,
+      "liveLabels": [
+        "good first issue",
+        "type:refactor",
+        "difficulty:beginner",
+        "time:15-30m",
+        "area:integrations"
+      ],
+      "canonicalLabels": [
+        "type:refactor",
+        "difficulty:beginner",
+        "time:15-30m",
+        "area:integrations",
+        "good first issue"
+      ],
+      "labelsMatch": true,
+      "bodyMatch": true,
+      "assignees": [],
+      "commentCount": 0,
+      "comments": [],
+      "createdAt": "2026-09-12T11:30:50Z",
+      "updatedAt": "2026-09-12T11:30:50Z"
+    },
+    {
+      "number": 21,
+      "title": "fix: correct pluralization on zero tasks remaining in daily cadence widget",
+      "state": "open",
+      "slug": "fix-daily-cadence-zero-tasks-pluralization",
+      "batch": "Batch 1",
+      "canonicalFound": true,
+      "canonicalCatalogNumber": 35,
+      "canonicalSlug": "fix-daily-cadence-zero-tasks-pluralization",
+      "canonicalTitle": "fix: correct pluralization on zero tasks remaining in daily cadence widget",
+      "titleMatch": true,
+      "liveLabels": [
+        "good first issue",
+        "type:bug",
+        "difficulty:beginner",
+        "time:15-30m",
+        "area:dashboard"
+      ],
+      "canonicalLabels": [
+        "type:bug",
+        "difficulty:beginner",
+        "time:15-30m",
+        "area:dashboard",
+        "good first issue"
+      ],
+      "labelsMatch": true,
+      "bodyMatch": true,
+      "assignees": [],
+      "commentCount": 0,
+      "comments": [],
+      "createdAt": "2026-09-12T11:30:50Z",
+      "updatedAt": "2026-09-12T11:30:50Z"
+    },
+    {
+      "number": 24,
+      "title": "docs: document local timezone mocking in tests runbook",
+      "state": "open",
+      "slug": "docs-timezone-mocking-runbook",
+      "batch": "Batch 2",
+      "canonicalFound": true,
+      "canonicalCatalogNumber": 2,
+      "canonicalSlug": "docs-timezone-mocking-runbook",
+      "canonicalTitle": "docs: document local timezone mocking in tests runbook",
+      "titleMatch": true,
+      "liveLabels": [
+        "good first issue",
+        "type:docs",
+        "difficulty:beginner",
+        "time:15-30m",
+        "area:documentation"
+      ],
+      "canonicalLabels": [
+        "type:docs",
+        "difficulty:beginner",
+        "time:15-30m",
+        "area:documentation",
+        "good first issue"
+      ],
+      "labelsMatch": true,
+      "bodyMatch": true,
+      "assignees": [],
+      "commentCount": 0,
+      "comments": [],
+      "createdAt": "2026-09-12T17:44:49Z",
+      "updatedAt": "2026-09-12T17:44:49Z"
+    },
+    {
+      "number": 25,
+      "title": "docs: clarify focus timer ambient sound generation and Web Audio API",
+      "state": "open",
+      "slug": "docs-focus-audio-architecture",
+      "batch": "Batch 2",
+      "canonicalFound": true,
+      "canonicalCatalogNumber": 4,
+      "canonicalSlug": "docs-focus-audio-architecture",
+      "canonicalTitle": "docs: clarify focus timer ambient sound generation and Web Audio API",
+      "titleMatch": true,
+      "liveLabels": [
+        "good first issue",
+        "type:docs",
+        "difficulty:beginner",
+        "time:30-60m",
+        "area:documentation"
+      ],
+      "canonicalLabels": [
+        "type:docs",
+        "difficulty:beginner",
+        "time:30-60m",
+        "area:documentation",
+        "good first issue"
+      ],
+      "labelsMatch": true,
+      "bodyMatch": true,
+      "assignees": [],
+      "commentCount": 0,
+      "comments": [],
+      "createdAt": "2026-09-12T17:44:50Z",
+      "updatedAt": "2026-09-12T17:44:50Z"
+    },
+    {
+      "number": 26,
+      "title": "ui: enhance hover elevation and gold border on active focus card",
+      "state": "open",
+      "slug": "ui-active-focus-card-hover",
+      "batch": "Batch 2",
+      "canonicalFound": true,
+      "canonicalCatalogNumber": 9,
+      "canonicalSlug": "ui-active-focus-card-hover",
+      "canonicalTitle": "ui: enhance hover elevation and gold border on active focus card",
+      "titleMatch": true,
+      "liveLabels": [
+        "good first issue",
+        "type:ui",
+        "difficulty:beginner",
+        "time:15-30m",
+        "area:focus"
+      ],
+      "canonicalLabels": [
+        "type:ui",
+        "difficulty:beginner",
+        "time:15-30m",
+        "area:focus",
+        "good first issue"
+      ],
+      "labelsMatch": true,
+      "bodyMatch": true,
+      "assignees": [],
+      "commentCount": 0,
+      "comments": [],
+      "createdAt": "2026-09-12T17:44:51Z",
+      "updatedAt": "2026-09-12T17:44:51Z"
+    },
+    {
+      "number": 27,
+      "title": "ui: standardize empty state layout in goals view",
+      "state": "open",
+      "slug": "ui-goals-empty-state-polish",
+      "batch": "Batch 2",
+      "canonicalFound": true,
+      "canonicalCatalogNumber": 10,
+      "canonicalSlug": "ui-goals-empty-state-polish",
+      "canonicalTitle": "ui: standardize empty state layout in goals view",
+      "titleMatch": true,
+      "liveLabels": [
+        "good first issue",
+        "type:ui",
+        "difficulty:beginner",
+        "time:15-30m",
+        "area:goals"
+      ],
+      "canonicalLabels": [
+        "type:ui",
+        "difficulty:beginner",
+        "time:15-30m",
+        "area:goals",
+        "good first issue"
+      ],
+      "labelsMatch": true,
+      "bodyMatch": true,
+      "assignees": [],
+      "commentCount": 0,
+      "comments": [],
+      "createdAt": "2026-09-12T17:44:51Z",
+      "updatedAt": "2026-09-12T17:44:51Z"
+    },
+    {
+      "number": 28,
+      "title": "a11y: add keyboard Escape listener to command palette modal",
+      "state": "open",
+      "slug": "a11y-command-palette-escape-listener",
+      "batch": "Batch 2",
+      "canonicalFound": true,
+      "canonicalCatalogNumber": 18,
+      "canonicalSlug": "a11y-command-palette-escape-listener",
+      "canonicalTitle": "a11y: add keyboard Escape listener to command palette modal",
+      "titleMatch": true,
+      "liveLabels": [
+        "good first issue",
+        "type:a11y",
+        "difficulty:beginner",
+        "time:30-60m",
+        "area:dashboard"
+      ],
+      "canonicalLabels": [
+        "type:a11y",
+        "difficulty:beginner",
+        "time:30-60m",
+        "area:dashboard",
+        "good first issue"
+      ],
+      "labelsMatch": true,
+      "bodyMatch": true,
+      "assignees": [],
+      "commentCount": 0,
+      "comments": [],
+      "createdAt": "2026-09-12T17:44:52Z",
+      "updatedAt": "2026-09-12T17:44:52Z"
+    },
+    {
+      "number": 29,
+      "title": "a11y: add aria-expanded and aria-haspopup attributes to user profile dropdown",
+      "state": "open",
+      "slug": "a11y-user-profile-dropdown-aria",
+      "batch": "Batch 2",
+      "canonicalFound": true,
+      "canonicalCatalogNumber": 20,
+      "canonicalSlug": "a11y-user-profile-dropdown-aria",
+      "canonicalTitle": "a11y: add aria-expanded and aria-haspopup attributes to user profile dropdown",
+      "titleMatch": true,
+      "liveLabels": [
+        "good first issue",
+        "type:a11y",
+        "difficulty:beginner",
+        "time:15-30m",
+        "area:settings"
+      ],
+      "canonicalLabels": [
+        "type:a11y",
+        "difficulty:beginner",
+        "time:15-30m",
+        "area:settings",
+        "good first issue"
+      ],
+      "labelsMatch": true,
+      "bodyMatch": true,
+      "assignees": [],
+      "commentCount": 0,
+      "comments": [],
+      "createdAt": "2026-09-12T17:44:52Z",
+      "updatedAt": "2026-09-12T17:44:52Z"
+    },
+    {
+      "number": 30,
+      "title": "test: add boundary tests for focus session duration validator",
+      "state": "open",
+      "slug": "test-focus-duration-boundaries",
+      "batch": "Batch 2",
+      "canonicalFound": true,
+      "canonicalCatalogNumber": 25,
+      "canonicalSlug": "test-focus-duration-boundaries",
+      "canonicalTitle": "test: add boundary tests for focus session duration validator",
+      "titleMatch": true,
+      "liveLabels": [
+        "good first issue",
+        "type:test",
+        "difficulty:beginner",
+        "time:30-60m",
+        "area:testing"
+      ],
+      "canonicalLabels": [
+        "type:test",
+        "difficulty:beginner",
+        "time:30-60m",
+        "area:testing",
+        "good first issue"
+      ],
+      "labelsMatch": true,
+      "bodyMatch": true,
+      "assignees": [],
+      "commentCount": 0,
+      "comments": [],
+      "createdAt": "2026-09-12T17:44:53Z",
+      "updatedAt": "2026-09-12T17:44:53Z"
+    },
+    {
+      "number": 31,
+      "title": "chore: add npm run typecheck alias script in package.json",
+      "state": "open",
+      "slug": "dev-package-typecheck-script-alias",
+      "batch": "Batch 2",
+      "canonicalFound": true,
+      "canonicalCatalogNumber": 28,
+      "canonicalSlug": "dev-package-typecheck-script-alias",
+      "canonicalTitle": "chore: add npm run typecheck alias script in package.json",
+      "titleMatch": true,
+      "liveLabels": [
+        "good first issue",
+        "type:refactor",
+        "difficulty:beginner",
+        "time:15-30m",
+        "area:developer-experience"
+      ],
+      "canonicalLabels": [
+        "type:refactor",
+        "difficulty:beginner",
+        "time:15-30m",
+        "area:developer-experience",
+        "good first issue"
+      ],
+      "labelsMatch": true,
+      "bodyMatch": true,
+      "assignees": [],
+      "commentCount": 0,
+      "comments": [],
+      "createdAt": "2026-09-12T17:44:54Z",
+      "updatedAt": "2026-09-12T17:44:54Z"
+    },
+    {
+      "number": 32,
+      "title": "fix: prevent empty goal title submission in goal form modal",
+      "state": "open",
+      "slug": "fix-goals-form-empty-title-validation",
+      "batch": "Batch 2",
+      "canonicalFound": true,
+      "canonicalCatalogNumber": 36,
+      "canonicalSlug": "fix-goals-form-empty-title-validation",
+      "canonicalTitle": "fix: prevent empty goal title submission in goal form modal",
+      "titleMatch": true,
+      "liveLabels": [
+        "good first issue",
+        "type:bug",
+        "difficulty:beginner",
+        "time:15-30m",
+        "area:goals"
+      ],
+      "canonicalLabels": [
+        "type:bug",
+        "difficulty:beginner",
+        "time:15-30m",
+        "area:goals",
+        "good first issue"
+      ],
+      "labelsMatch": true,
+      "bodyMatch": true,
+      "assignees": [],
+      "commentCount": 0,
+      "comments": [],
+      "createdAt": "2026-09-12T17:44:54Z",
+      "updatedAt": "2026-09-12T17:44:54Z"
+    },
+    {
+      "number": 33,
+      "title": "feat: add Codeforces rating tier color badge helper",
+      "state": "open",
+      "slug": "feat-codeforces-rating-tier-badge",
+      "batch": "Batch 2",
+      "canonicalFound": true,
+      "canonicalCatalogNumber": 37,
+      "canonicalSlug": "feat-codeforces-rating-tier-badge",
+      "canonicalTitle": "feat: add Codeforces rating tier color badge helper",
+      "titleMatch": true,
+      "liveLabels": [
+        "good first issue",
+        "type:feature",
+        "difficulty:easy",
+        "time:30-60m",
+        "area:integrations"
+      ],
+      "canonicalLabels": [
+        "type:feature",
+        "difficulty:easy",
+        "time:30-60m",
+        "area:integrations",
+        "good first issue"
+      ],
+      "labelsMatch": true,
+      "bodyMatch": true,
+      "assignees": [],
+      "commentCount": 0,
+      "comments": [],
+      "createdAt": "2026-09-12T17:44:55Z",
+      "updatedAt": "2026-09-12T17:44:55Z"
+    }
+  ],
+  "catalog": [
+    {
+      "catalogNumber": 1,
+      "slug": "docs-money-cents-examples",
+      "title": "docs: add code examples for lib/money.ts integer-cents calculations",
+      "labels": [
+        "type:docs",
+        "difficulty:beginner",
+        "time:15-30m",
+        "area:documentation",
+        "good first issue"
+      ],
+      "targetFile": "`docs/DEVELOPMENT.md` & `src/lib/money.ts`",
+      "body": "<!-- PACT-BEGINNER-ISSUE: docs-money-cents-examples -->\n## 🎯 What needs to be done\nAdd clear, copy-pasteable TypeScript code examples in `docs/DEVELOPMENT.md` showing how to use PACT's integer-cents financial arithmetic utilities from `src/lib/money.ts`.\n\n## Why this matters\nPACT strictly forbids floating-point numbers for financial amounts (all currency is calculated in integer cents). New contributors need explicit examples in the developer guide to avoid common floating-point mistakes.\n\n## 📍 Where to work\n- `docs/DEVELOPMENT.md` (Section 7: Development Best Practices)\n- `src/lib/money.ts` (Reference existing exported functions: `formatCentsToDollars`, `dollarsToCents`, `sumCents`)\n\n## 🧭 Implementation guidance\n1. Open `docs/DEVELOPMENT.md` and navigate to Section 7 (\"Development Best Practices\").\n2. Under item 1 (\"Integer-Cents for Currency\"), add a fenced TypeScript code block showing:\n   - Converting dollars string/number to cents using `dollarsToCents`\n   - Formatting integer cents for UI display with `formatCentsToDollars`\n   - Summing multiple transactions safely\n3. Ensure the markdown renders cleanly without formatting issues.\n\n## ✅ Acceptance criteria\n- [ ] `docs/DEVELOPMENT.md` contains accurate TypeScript code examples for `src/lib/money.ts`.\n- [ ] Code examples use modern TypeScript syntax and import paths.\n- [ ] Markdown link validation passes with 0 broken links.\n\n## 🧪 Verification"
+    },
+    {
+      "catalogNumber": 2,
+      "slug": "docs-timezone-mocking-runbook",
+      "title": "docs: document local timezone mocking in tests runbook",
+      "labels": [
+        "type:docs",
+        "difficulty:beginner",
+        "time:15-30m",
+        "area:documentation",
+        "good first issue"
+      ],
+      "targetFile": "`docs/TESTING.md` & `src/lib/time.ts`",
+      "body": "<!-- PACT-BEGINNER-ISSUE: docs-timezone-mocking-runbook -->\n## 🎯 What needs to be done\nAdd a runbook section in `docs/TESTING.md` documenting how to use `TestClock` and `time.ts` utilities to mock dates, midnight boundaries, and specific IANA timezones in unit tests.\n\n## Why this matters\nPACT guarantees timezone safety across global timezones (e.g. `America/New_York`, `Asia/Kolkata`, `Europe/London`). Explaining how to test timezone-sensitive code helps contributors write robust unit tests.\n\n## 📍 Where to work\n- `docs/TESTING.md`\n- `tests/temporal-engine.test.ts` (Reference existing test patterns)\n\n## 🧭 Implementation guidance\n1. Open `docs/TESTING.md` and locate Section 3 (\"Test Authoring Patterns\").\n2. Add a sub-section titled \"Timezone & Clock Mocking\".\n3. Provide code snippets showing how `utcToLocal`, `localToUtc`, and injected timestamp parameters work in domain tests.\n\n## ✅ Acceptance criteria\n- [ ] `docs/TESTING.md` explains timezone mocking patterns clearly.\n- [ ] Examples reflect actual utilities in `src/lib/time.ts`."
+    },
+    {
+      "catalogNumber": 3,
+      "slug": "docs-integrations-payload-examples",
+      "title": "docs: add API payload examples to proof connector specification",
+      "labels": [
+        "type:docs",
+        "difficulty:beginner",
+        "time:30-60m",
+        "area:documentation",
+        "good first issue"
+      ],
+      "targetFile": "`docs/INTEGRATIONS.md` & `src/lib/integrations/proof-of-work/`",
+      "body": "<!-- PACT-BEGINNER-ISSUE: docs-integrations-payload-examples -->\n## 🎯 What needs to be done\nAdd sample JSON response payloads for GitHub PushEvents, LeetCode user profile submissions, and Codeforces user status queries in `docs/INTEGRATIONS.md`.\n\n## Why this matters\nContributors building or testing proof-of-work connectors need realistic mock payloads to test offline without needing live API tokens.\n\n## 📍 Where to work\n- `docs/INTEGRATIONS.md`\n- `src/lib/integrations/proof-of-work/github.ts`\n- `src/lib/integrations/proof-of-work/leetcode.ts`\n- `src/lib/integrations/proof-of-work/codeforces.ts`\n\n## 🧭 Implementation guidance\n1. Open `docs/INTEGRATIONS.md`.\n2. Under each platform section (GitHub, LeetCode, Codeforces), add a collapsible `<details>` block with sanitized sample JSON payloads.\n3. Ensure no real user credentials, tokens, or personal emails are present in sample data.\n\n## ✅ Acceptance criteria\n- [ ] Sanitized payload examples added for GitHub, LeetCode, and Codeforces.\n- [ ] `node scratch/secret-scan.mjs` passes with 0 secrets detected."
+    },
+    {
+      "catalogNumber": 4,
+      "slug": "docs-focus-audio-architecture",
+      "title": "docs: clarify focus timer ambient sound generation and Web Audio API",
+      "labels": [
+        "type:docs",
+        "difficulty:beginner",
+        "time:30-60m",
+        "area:documentation",
+        "good first issue"
+      ],
+      "targetFile": "`docs/ARCHITECTURE.md` & `src/lib/focus/sound.ts`",
+      "body": "<!-- PACT-BEGINNER-ISSUE: docs-focus-audio-architecture -->\n## 🎯 What needs to be done\nDocument PACT's offline Web Audio API ambient sound synthesizer in `docs/ARCHITECTURE.md`.\n\n## Why this matters\nPACT generates focus sounds (pink noise, white noise, brown noise, binaural waves) client-side using native browser audio nodes with zero external audio assets or network downloads. Documenting this highlights our privacy and offline-first design.\n\n## 📍 Where to work\n- `docs/ARCHITECTURE.md`\n- `src/lib/focus/sound.ts`\n\n## 🧭 Implementation guidance\n1. Open `docs/ARCHITECTURE.md` and add a sub-section under \"Domain Subsystems\" for the Focus & Deep Work Audio Engine.\n2. Explain how `AudioContext`, `BiquadFilterNode`, and noise buffer generators create soothing background soundscapes offline.\n\n## ✅ Acceptance criteria\n- [ ] `docs/ARCHITECTURE.md` accurately documents the Web Audio API synthesizer."
+    },
+    {
+      "catalogNumber": 5,
+      "slug": "docs-weekly-review-flow-diagram",
+      "title": "docs: document weekly review 5-step state machine in user flows",
+      "labels": [
+        "type:docs",
+        "difficulty:beginner",
+        "time:30-60m",
+        "area:documentation",
+        "good first issue"
+      ],
+      "targetFile": "`docs/USER_FLOWS.md` & `src/features/weekly-review/components/weekly-review-workspace.tsx`",
+      "body": "<!-- PACT-BEGINNER-ISSUE: docs-weekly-review-flow-diagram -->\n## 🎯 What needs to be done\nAdd a detailed walkthrough and ASCII flow diagram of the 5-step Sunday Weekly Review ritual in `docs/USER_FLOWS.md`.\n\n## Why this matters\nThe weekly review is a core ritual in PACT. Contributors should understand how drafts, step progression (1: Reflection -> 2: Cleanup -> 3: Planning -> 4: Commitments -> 5: Summary), and final commits transition in state.\n\n## 📍 Where to work\n- `docs/USER_FLOWS.md`\n- `src/features/weekly-review/components/weekly-review-workspace.tsx`\n\n## ✅ Acceptance criteria\n- [ ] `docs/USER_FLOWS.md` outlines all 5 stages of the review state machine."
+    },
+    {
+      "catalogNumber": 6,
+      "slug": "docs-developer-commands-cheatsheet",
+      "title": "docs: add quick-reference command table to developer guide",
+      "labels": [
+        "type:docs",
+        "difficulty:beginner",
+        "time:15-30m",
+        "area:documentation",
+        "good first issue"
+      ],
+      "targetFile": "`docs/DEVELOPMENT.md`",
+      "body": "<!-- PACT-BEGINNER-ISSUE: docs-developer-commands-cheatsheet -->\n## 🎯 What needs to be done\nAdd a clean Markdown table summarizing all key local developer commands at the top of `docs/DEVELOPMENT.md`.\n\n## Why this matters\nDevelopers frequently consult `docs/DEVELOPMENT.md` to find verification and test commands. A top-level summary table makes onboarding significantly faster.\n\n## 📍 Where to work\n- `docs/DEVELOPMENT.md`\n\n## 🧭 Implementation guidance\n1. Open `docs/DEVELOPMENT.md`.\n2. Add a table with columns: `Command`, `Description`, and `When to Run` covering:\n   - `npm run dev`\n   - `npm run lint`\n   - `npx tsc --noEmit`\n   - `node scratch/run-tests.mjs`\n   - `node scratch/secret-scan.mjs`\n   - `npm run build`\n\n## ✅ Acceptance criteria\n- [ ] Table is well-formatted and easy to scan."
+    },
+    {
+      "catalogNumber": 7,
+      "slug": "docs-habit-recurrence-syntax",
+      "title": "docs: document habit recurrence rule syntax in data model guide",
+      "labels": [
+        "type:docs",
+        "difficulty:beginner",
+        "time:30-60m",
+        "area:documentation",
+        "good first issue"
+      ],
+      "targetFile": "`docs/DATA_MODEL.md` & `src/lib/habits/`",
+      "body": "<!-- PACT-BEGINNER-ISSUE: docs-habit-recurrence-syntax -->\n## 🎯 What needs to be done\nDocument how habit frequency types (`DAILY`, `WEEKLY_DAYS`, `INTERVAL`) and recurrence bitmasks are stored in the database in `docs/DATA_MODEL.md`.\n\n## Why this matters\nUnderstanding the habit data model helps developers working on habit completion state machines and calendar integrations.\n\n## 📍 Where to work\n- `docs/DATA_MODEL.md`\n- `supabase/migrations/20260911080000_habits_and_routines_engine.sql`"
+    },
+    {
+      "catalogNumber": 8,
+      "slug": "docs-troubleshooting-rls-recursion",
+      "title": "docs: add troubleshooting steps for Supabase RLS recursion errors",
+      "labels": [
+        "type:docs",
+        "difficulty:beginner",
+        "time:15-30m",
+        "area:documentation",
+        "good first issue"
+      ],
+      "targetFile": "`docs/TROUBLESHOOTING.md` & `docs/SECURITY.md`",
+      "body": "<!-- PACT-BEGINNER-ISSUE: docs-troubleshooting-rls-recursion -->\n## 🎯 What needs to be done\nAdd a troubleshooting entry in `docs/TROUBLESHOOTING.md` addressing PostgreSQL error `42P17 (infinite recursion detected in policy for relation)`.\n\n## Why this matters\nContributors writing new RLS policies may inadvertently query the same table inside a subquery. Documenting the fix (`SECURITY DEFINER` functions or separate lookup tables) prevents confusion.\n\n## 📍 Where to work\n- `docs/TROUBLESHOOTING.md` (Add to Section 9: Supabase & Database Issues)"
+    },
+    {
+      "catalogNumber": 9,
+      "slug": "ui-active-focus-card-hover",
+      "title": "ui: enhance hover elevation and gold border on active focus card",
+      "labels": [
+        "type:ui",
+        "difficulty:beginner",
+        "time:15-30m",
+        "area:focus",
+        "good first issue"
+      ],
+      "targetFile": "`src/features/dashboard/components/active-focus-card.tsx`",
+      "body": "<!-- PACT-BEGINNER-ISSUE: ui-active-focus-card-hover -->\n## 🎯 What needs to be done\nAdd smooth hover elevation and a subtle gold border accent (`hover:border-gold/30 transition-all duration-200`) to the active focus session card on the dashboard overview.\n\n## Why this matters\nThe focus card is a primary interactive gateway on the dashboard. Polishing its hover state provides immediate visual feedback aligned with PACT's luxury aesthetic.\n\n## 📍 Where to work\n- `src/features/dashboard/components/active-focus-card.tsx`\n\n## 🧭 Implementation guidance\n1. Open `src/features/dashboard/components/active-focus-card.tsx`.\n2. Locate the root container `div` or `GlassCard`.\n3. Add `hover:border-gold/30 hover:shadow-[0_0_20px_rgba(212,175,55,0.08)] transition-all duration-200` to the class list.\n4. Verify that visual styling matches `docs/DESIGN_SYSTEM.md`.\n\n## ✅ Acceptance criteria\n- [ ] Active focus card responds with a subtle gold glow on desktop hover.\n- [ ] No layout shift occurs during hover.\n- [ ] TypeScript check and lint pass.\n\n## 🧪 Verification"
+    },
+    {
+      "catalogNumber": 10,
+      "slug": "ui-goals-empty-state-polish",
+      "title": "ui: standardize empty state layout in goals view",
+      "labels": [
+        "type:ui",
+        "difficulty:beginner",
+        "time:15-30m",
+        "area:goals",
+        "good first issue"
+      ],
+      "targetFile": "`src/features/goals/components/goals-view.tsx`",
+      "body": "<!-- PACT-BEGINNER-ISSUE: ui-goals-empty-state-polish -->\n## 🎯 What needs to be done\nStandardize vertical padding, icon container styling, and CTA button alignment in the zero-goals empty state within `goals-view.tsx`.\n\n## Why this matters\nConsistent empty states across all modules (Tasks, Goals, Projects, Habits) create a cohesive first-impression experience for new users.\n\n## 📍 Where to work\n- `src/features/goals/components/goals-view.tsx`\n- Reference `src/features/tasks/components/tasks-view.tsx` for standard empty-state layout tokens."
+    },
+    {
+      "catalogNumber": 11,
+      "slug": "ui-finance-summary-responsive-padding",
+      "title": "ui: improve responsive padding on finance summary cards",
+      "labels": [
+        "type:ui",
+        "difficulty:beginner",
+        "time:15-30m",
+        "area:finance",
+        "good first issue"
+      ],
+      "targetFile": "`src/features/finance/components/finance-summary-cards.tsx`",
+      "body": "<!-- PACT-BEGINNER-ISSUE: ui-finance-summary-responsive-padding -->\n## 🎯 What needs to be done\nOptimize mobile grid padding (`p-4 sm:p-6`) on the Income, Expense, and Net Cash Flow summary cards in `finance-summary-cards.tsx`.\n\n## Why this matters\nOn narrow mobile screens (375px), large numbers in integer-cents formatting can wrap awkwardly if card padding is too generous.\n\n## 📍 Where to work\n- `src/features/finance/components/finance-summary-cards.tsx`\n\n## ✅ Acceptance criteria\n- [ ] Finance summary numbers fit comfortably without text clipping on 375px mobile viewports."
+    },
+    {
+      "catalogNumber": 12,
+      "slug": "ui-habits-routine-toggle-transition",
+      "title": "ui: add subtle transition animation to habit routine toggle buttons",
+      "labels": [
+        "type:ui",
+        "difficulty:beginner",
+        "time:15-30m",
+        "area:habits",
+        "good first issue"
+      ],
+      "targetFile": "`src/features/habits/components/routine-card.tsx`",
+      "body": "<!-- PACT-BEGINNER-ISSUE: ui-habits-routine-toggle-transition -->\n## 🎯 What needs to be done\nAdd smooth color and scale transitions (`transition-all duration-150 active:scale-95`) to checkmark toggles in routine checklists.\n\n## Why this matters\nCompleting a routine item should feel rewarding and responsive. Adding tactile micro-interactions reinforces daily discipline.\n\n## 📍 Where to work\n- `src/features/habits/components/routine-card.tsx`"
+    },
+    {
+      "catalogNumber": 13,
+      "slug": "ui-finance-category-badge-opacity",
+      "title": "ui: refine category badge color opacity in transaction list",
+      "labels": [
+        "type:ui",
+        "difficulty:beginner",
+        "time:15-30m",
+        "area:finance",
+        "good first issue"
+      ],
+      "targetFile": "`src/features/finance/components/transaction-list.tsx`",
+      "body": "<!-- PACT-BEGINNER-ISSUE: ui-finance-category-badge-opacity -->\n## 🎯 What needs to be done\nRefine the background opacity of category pills in the transaction table rows from `bg-white/[0.04]` to `bg-white/[0.06]` for optimal contrast.\n\n## Why this matters\nImproves readability of category tags (e.g., Housing, Food, Investment) against deep obsidian table backgrounds.\n\n## 📍 Where to work\n- `src/features/finance/components/transaction-list.tsx`"
+    },
+    {
+      "catalogNumber": 14,
+      "slug": "ui-streak-summary-pulse-glow",
+      "title": "ui: add pulse glow effect to streak summary highlight on overview",
+      "labels": [
+        "type:ui",
+        "difficulty:beginner",
+        "time:30-60m",
+        "area:habits",
+        "good first issue"
+      ],
+      "targetFile": "`src/features/habits/components/streak-summary-card.tsx`",
+      "body": "<!-- PACT-BEGINNER-ISSUE: ui-streak-summary-pulse-glow -->\n## 🎯 What needs to be done\nAdd a subtle gold glow indicator next to active streak counts > 7 days in `streak-summary-card.tsx`.\n\n## Why this matters\nVisual feedback on streak milestones encourages momentum without gamifying or distracting from focused work.\n\n## 📍 Where to work\n- `src/features/habits/components/streak-summary-card.tsx`"
+    },
+    {
+      "catalogNumber": 15,
+      "slug": "ui-task-form-modal-mobile-padding",
+      "title": "ui: improve mobile bottom sheet padding in task form modal",
+      "labels": [
+        "type:ui",
+        "difficulty:beginner",
+        "time:15-30m",
+        "area:tasks",
+        "good first issue"
+      ],
+      "targetFile": "`src/features/tasks/components/task-form-modal.tsx`",
+      "body": "<!-- PACT-BEGINNER-ISSUE: ui-task-form-modal-mobile-padding -->\n## 🎯 What needs to be done\nAdd safe-area bottom padding (`pb-8 sm:pb-6`) to the action buttons inside `task-form-modal.tsx`.\n\n## Why this matters\nPrevents the \"Save Task\" button from colliding with mobile navigation bars (e.g. iOS home indicator).\n\n## 📍 Where to work\n- `src/features/tasks/components/task-form-modal.tsx`"
+    },
+    {
+      "catalogNumber": 16,
+      "slug": "ui-analytics-skeleton-shimmer",
+      "title": "ui: polish skeleton loader shimmer animation in analytics workspace",
+      "labels": [
+        "type:ui",
+        "difficulty:beginner",
+        "time:15-30m",
+        "area:analytics",
+        "good first issue"
+      ],
+      "targetFile": "`src/features/analytics/components/analytics-skeleton.tsx`",
+      "body": "<!-- PACT-BEGINNER-ISSUE: ui-analytics-skeleton-shimmer -->\n## 🎯 What needs to be done\nStandardize the placeholder shimmer gradient tokens in `analytics-skeleton.tsx` to match `src/components/ui/glass-card.tsx`.\n\n## Why this matters\nEnsures skeleton loading states appear smooth, uniform, and seamlessly integrated into the dark obsidian canvas.\n\n## 📍 Where to work\n- `src/features/analytics/components/analytics-skeleton.tsx`"
+    },
+    {
+      "catalogNumber": 17,
+      "slug": "a11y-notification-popover-close-button",
+      "title": "a11y: add aria-label and visible focus ring to notification popover close button",
+      "labels": [
+        "type:a11y",
+        "difficulty:beginner",
+        "time:15-30m",
+        "area:dashboard",
+        "good first issue"
+      ],
+      "targetFile": "`src/components/ui/notification-popover.tsx`",
+      "body": "<!-- PACT-BEGINNER-ISSUE: a11y-notification-popover-close-button -->\n## 🎯 What needs to be done\nAdd `aria-label=\"Close notification menu\"` and `focus-visible:ring-2 focus-visible:ring-gold/50` to the dismiss button in `notification-popover.tsx`.\n\n## Why this matters\nIcon-only buttons require explicit `aria-label` attributes so screen readers announce their function to assistive technology users.\n\n## 📍 Where to work\n- `src/components/ui/notification-popover.tsx`\n\n## ✅ Acceptance criteria\n- [ ] Close button has explicit `aria-label`.\n- [ ] Keyboard navigation displays a visible gold focus ring."
+    },
+    {
+      "catalogNumber": 18,
+      "slug": "a11y-command-palette-escape-listener",
+      "title": "a11y: add keyboard Escape listener to command palette modal",
+      "labels": [
+        "type:a11y",
+        "difficulty:beginner",
+        "time:30-60m",
+        "area:dashboard",
+        "good first issue"
+      ],
+      "targetFile": "`src/features/command-center/command-palette-modal.tsx`",
+      "body": "<!-- PACT-BEGINNER-ISSUE: a11y-command-palette-escape-listener -->\n## 🎯 What needs to be done\nEnsure the Command Palette modal (`Ctrl+K` / `Cmd+K`) listens for the `Escape` key event and gracefully closes the dialog, returning focus to the previous element.\n\n## Why this matters\nKeyboard accessibility requires that all modal dialogs can be dismissed with the standard `Escape` key.\n\n## 📍 Where to work\n- `src/features/command-center/command-palette-modal.tsx`"
+    },
+    {
+      "catalogNumber": 19,
+      "slug": "a11y-task-priority-sr-only",
+      "title": "a11y: ensure task priority icons include screen reader accessible text",
+      "labels": [
+        "type:a11y",
+        "difficulty:beginner",
+        "time:15-30m",
+        "area:tasks",
+        "good first issue"
+      ],
+      "targetFile": "`src/features/tasks/components/task-card.tsx`",
+      "body": "<!-- PACT-BEGINNER-ISSUE: a11y-task-priority-sr-only -->\n## 🎯 What needs to be done\nAdd a `<span className=\"sr-only\">Priority: {priority}</span>` element next to priority flame/flag icons in `task-card.tsx`.\n\n## Why this matters\nAssistive technologies cannot infer priority purely from SVG icon colors. Hidden screen reader text ensures equal access to urgency information.\n\n## 📍 Where to work\n- `src/features/tasks/components/task-card.tsx`"
+    },
+    {
+      "catalogNumber": 20,
+      "slug": "a11y-user-profile-dropdown-aria",
+      "title": "a11y: add aria-expanded and aria-haspopup attributes to user profile dropdown",
+      "labels": [
+        "type:a11y",
+        "difficulty:beginner",
+        "time:15-30m",
+        "area:settings",
+        "good first issue"
+      ],
+      "targetFile": "`src/components/ui/user-profile-dropdown.tsx`",
+      "body": "<!-- PACT-BEGINNER-ISSUE: a11y-user-profile-dropdown-aria -->\n## 🎯 What needs to be done\nAdd `aria-expanded={isOpen}` and `aria-haspopup=\"menu\"` to the user avatar trigger button in `user-profile-dropdown.tsx`.\n\n## Why this matters\nInforms screen readers whether the dropdown menu is currently open or collapsed.\n\n## 📍 Where to work\n- `src/components/ui/user-profile-dropdown.tsx`"
+    },
+    {
+      "catalogNumber": 21,
+      "slug": "a11y-focus-timer-aria-live",
+      "title": "a11y: add aria-live polite region to focus timer countdown",
+      "labels": [
+        "type:a11y",
+        "difficulty:easy",
+        "time:30-60m",
+        "area:focus",
+        "good first issue"
+      ],
+      "targetFile": "`src/features/focus/components/focus-timer-display.tsx`",
+      "body": "<!-- PACT-BEGINNER-ISSUE: a11y-focus-timer-aria-live -->\n## 🎯 What needs to be done\nAdd an `aria-live=\"polite\"` region that announces session state transitions (e.g. \"Focus session started\", \"Focus session completed\") without announcing every second.\n\n## Why this matters\nAllows screen reader users to receive timely auditory announcements when work intervals begin or end.\n\n## 📍 Where to work\n- `src/features/focus/components/focus-timer-display.tsx`"
+    },
+    {
+      "catalogNumber": 22,
+      "slug": "test-money-cents-formatting-edge-cases",
+      "title": "test: add unit tests for formatCentsToDollars edge cases (negative & zero values)",
+      "labels": [
+        "type:test",
+        "difficulty:beginner",
+        "time:30-60m",
+        "area:testing",
+        "good first issue"
+      ],
+      "targetFile": "`tests/finance-domain-validation.test.ts` & `src/lib/money.ts`",
+      "body": "<!-- PACT-BEGINNER-ISSUE: test-money-cents-formatting-edge-cases -->\n## 🎯 What needs to be done\nAdd unit tests in `tests/finance-domain-validation.test.ts` testing negative values (`-1050` -> `-$10.50`), zero cents (`0` -> `$0.00`), and large numbers in `src/lib/money.ts`.\n\n## Why this matters\nFinancial integrity is a top priority in PACT. Exhaustive unit testing on integer-cents conversion prevents rounding and formatting regressions.\n\n## 📍 Where to work\n- `tests/finance-domain-validation.test.ts`\n- `src/lib/money.ts`\n\n## ✅ Acceptance criteria\n- [ ] Unit tests added covering negative numbers, zero, and boundary values.\n- [ ] `node scratch/run-tests.mjs` executes cleanly with all tests passing."
+    },
+    {
+      "catalogNumber": 23,
+      "slug": "test-task-priority-sorting-comparator",
+      "title": "test: add unit tests for task priority sorting comparator",
+      "labels": [
+        "type:test",
+        "difficulty:beginner",
+        "time:30-60m",
+        "area:testing",
+        "good first issue"
+      ],
+      "targetFile": "`tests/tasks-validation.test.ts` & `src/lib/validations/domain.ts`",
+      "body": "<!-- PACT-BEGINNER-ISSUE: test-task-priority-sorting-comparator -->\n## 🎯 What needs to be done\nAdd unit test assertions verifying that tasks sort deterministically by priority rank (`HIGH` > `MEDIUM` > `LOW` > `NONE`) when deadlines are identical.\n\n## Why this matters\nPrevents sorting instability and inconsistent task ordering on the planner and task board.\n\n## 📍 Where to work\n- `tests/tasks-validation.test.ts`\n- `src/lib/validations/domain.ts`"
+    },
+    {
+      "catalogNumber": 24,
+      "slug": "test-habit-streak-leap-year",
+      "title": "test: add unit test verifying habit streak calculation on leap years",
+      "labels": [
+        "type:test",
+        "difficulty:easy",
+        "time:30-60m",
+        "area:testing",
+        "good first issue"
+      ],
+      "targetFile": "`tests/habits-routines.test.ts` & `src/lib/habits/streaks.ts`",
+      "body": "<!-- PACT-BEGINNER-ISSUE: test-habit-streak-leap-year -->\n## 🎯 What needs to be done\nAdd a unit test in `tests/habits-routines.test.ts` verifying that daily habit streaks calculate consecutively across Feb 28 -> Feb 29 -> Mar 1 in leap years.\n\n## Why this matters\nEnsures streak calculations do not break or reset due to date boundary quirks on leap days.\n\n## 📍 Where to work\n- `tests/habits-routines.test.ts`\n- `src/lib/habits/streaks.ts`"
+    },
+    {
+      "catalogNumber": 25,
+      "slug": "test-focus-duration-boundaries",
+      "title": "test: add boundary tests for focus session duration validator",
+      "labels": [
+        "type:test",
+        "difficulty:beginner",
+        "time:30-60m",
+        "area:testing",
+        "good first issue"
+      ],
+      "targetFile": "`tests/focus-engine.test.ts` & `src/lib/validations/focus.ts`",
+      "body": "<!-- PACT-BEGINNER-ISSUE: test-focus-duration-boundaries -->\n## 🎯 What needs to be done\nAdd unit tests asserting that focus session duration inputs `< 1` minute or `> 240` minutes are rejected with explicit Zod validation errors.\n\n## Why this matters\nHardens input validation against invalid session parameters before server action execution.\n\n## 📍 Where to work\n- `tests/focus-engine.test.ts`"
+    },
+    {
+      "catalogNumber": 26,
+      "slug": "test-weekly-review-step-boundaries",
+      "title": "test: add unit tests for weekly review step progression boundary checks",
+      "labels": [
+        "type:test",
+        "difficulty:beginner",
+        "time:30-60m",
+        "area:testing",
+        "good first issue"
+      ],
+      "targetFile": "`tests/weekly-review.test.ts` & `src/lib/validations/weekly-review.ts`",
+      "body": "<!-- PACT-BEGINNER-ISSUE: test-weekly-review-step-boundaries -->\n## 🎯 What needs to be done\nAdd test cases in `tests/weekly-review.test.ts` verifying that step indices in review draft payloads must be integers between 1 and 5.\n\n## Why this matters\nValidates that invalid step values (e.g. step 0, step 6, or negative numbers) cannot corrupt review draft records.\n\n## 📍 Where to work\n- `tests/weekly-review.test.ts`"
+    },
+    {
+      "catalogNumber": 27,
+      "slug": "test-notification-channel-filter",
+      "title": "test: add unit tests for notification channel filter utility",
+      "labels": [
+        "type:test",
+        "difficulty:beginner",
+        "time:30-60m",
+        "area:testing",
+        "good first issue"
+      ],
+      "targetFile": "`tests/notifications.test.ts` & `src/lib/notifications/`",
+      "body": "<!-- PACT-BEGINNER-ISSUE: test-notification-channel-filter -->\n## 🎯 What needs to be done\nAdd unit tests verifying that in-app notification queries filter accurately by channel (`IN_APP`, `EMAIL`, `CRON`) and read status.\n\n## Why this matters\nEnsures user notification feeds accurately reflect selected channel filters.\n\n## 📍 Where to work\n- `tests/notifications.test.ts`"
+    },
+    {
+      "catalogNumber": 28,
+      "slug": "dev-package-typecheck-script-alias",
+      "title": "chore: add npm run typecheck alias script in package.json",
+      "labels": [
+        "type:refactor",
+        "difficulty:beginner",
+        "time:15-30m",
+        "area:developer-experience",
+        "good first issue"
+      ],
+      "targetFile": "`package.json` & `docs/DEVELOPMENT.md`",
+      "body": "<!-- PACT-BEGINNER-ISSUE: dev-package-typecheck-script-alias -->\n## 🎯 What needs to be done\nAdd `\"typecheck\": \"tsc --noEmit\"` to `scripts` in `package.json` and document the alias in `docs/DEVELOPMENT.md`.\n\n## Why this matters\nMany developers intuitively type `npm run typecheck` to verify TypeScript types without emitting build files. Providing this standard alias improves contributor developer experience.\n\n## 📍 Where to work\n- `package.json`\n- `docs/DEVELOPMENT.md`\n\n## ✅ Acceptance criteria\n- [ ] `npm run typecheck` runs `tsc --noEmit` and exits with code 0."
+    },
+    {
+      "catalogNumber": 29,
+      "slug": "refactor-unused-icon-imports-integrations",
+      "title": "refactor: prune unused icon imports in integration cards",
+      "labels": [
+        "type:refactor",
+        "difficulty:beginner",
+        "time:15-30m",
+        "area:integrations",
+        "good first issue"
+      ],
+      "targetFile": "`src/features/integrations/components/codeforces-proof-of-work-card.tsx` & `src/features/integrations/components/leetcode-proof-of-work-card.tsx`",
+      "body": "<!-- PACT-BEGINNER-ISSUE: refactor-unused-icon-imports-integrations -->\n## 🎯 What needs to be done\nRemove unused icon imports (`Flame`, `ChevronRight`) in `codeforces-proof-of-work-card.tsx` and `leetcode-proof-of-work-card.tsx` to eliminate ESLint warnings.\n\n## Why this matters\nKeeps the codebase warning-free and reduces bundle overhead.\n\n## 📍 Where to work\n- `src/features/integrations/components/codeforces-proof-of-work-card.tsx`\n- `src/features/integrations/components/leetcode-proof-of-work-card.tsx`"
+    },
+    {
+      "catalogNumber": 30,
+      "slug": "refactor-currency-symbol-helper",
+      "title": "refactor: centralize currency symbol formatting in lib/money.ts",
+      "labels": [
+        "type:refactor",
+        "difficulty:beginner",
+        "time:30-60m",
+        "area:finance",
+        "good first issue"
+      ],
+      "targetFile": "`src/lib/money.ts`",
+      "body": "<!-- PACT-BEGINNER-ISSUE: refactor-currency-symbol-helper -->\n## 🎯 What needs to be done\nAdd an exported helper function `getCurrencySymbol(currencyCode: string): string` to `src/lib/money.ts` supporting standard ISO codes (`USD`, `EUR`, `GBP`, `INR`, `CAD`, `AUD`).\n\n## Why this matters\nAvoids hardcoding `$` across multiple finance components and centralizes currency symbol resolution.\n\n## 📍 Where to work\n- `src/lib/money.ts`\n- `tests/finance-domain-validation.test.ts`"
+    },
+    {
+      "catalogNumber": 31,
+      "slug": "refactor-date-string-helper-time",
+      "title": "refactor: export type-safe date string helper in lib/time.ts",
+      "labels": [
+        "type:refactor",
+        "difficulty:easy",
+        "time:30-60m",
+        "area:developer-experience",
+        "good first issue"
+      ],
+      "targetFile": "`src/lib/time.ts`",
+      "body": "<!-- PACT-BEGINNER-ISSUE: refactor-date-string-helper-time -->\n## 🎯 What needs to be done\nExport a helper function `toISODateString(date: Date): string` in `src/lib/time.ts` that safely returns `YYYY-MM-DD` without UTC timezone shifting.\n\n## Why this matters\nPrevents subtle date offset bugs when converting `Date` objects to HTML date input format strings.\n\n## 📍 Where to work\n- `src/lib/time.ts`\n- `tests/temporal-engine.test.ts`"
+    },
+    {
+      "catalogNumber": 32,
+      "slug": "refactor-modal-transition-variants",
+      "title": "refactor: export shared modal transition variants in components/ui/modal.tsx",
+      "labels": [
+        "type:refactor",
+        "difficulty:beginner",
+        "time:15-30m",
+        "area:ui",
+        "good first issue"
+      ],
+      "targetFile": "`src/components/ui/modal.tsx`",
+      "body": "<!-- PACT-BEGINNER-ISSUE: refactor-modal-transition-variants -->\n## 🎯 What needs to be done\nExtract and export Framer Motion animation transition variants from `src/components/ui/modal.tsx` so custom dialogs can reuse standard backdrop and card spring animations.\n\n## Why this matters\nEnsures uniform modal entrance and exit easing curves across all modules.\n\n## 📍 Where to work\n- `src/components/ui/modal.tsx`"
+    },
+    {
+      "catalogNumber": 33,
+      "slug": "fix-finance-negative-budget-remaining",
+      "title": "fix: prevent negative budget remaining calculation on expense overage",
+      "labels": [
+        "type:bug",
+        "difficulty:easy",
+        "time:30-60m",
+        "area:finance",
+        "good first issue"
+      ],
+      "targetFile": "`src/features/finance/components/budget-discipline-card.tsx`",
+      "body": "<!-- PACT-BEGINNER-ISSUE: fix-finance-negative-budget-remaining -->\n## 🎯 What needs to be done\nUpdate `budget-discipline-card.tsx` so that when expenses exceed the allocated budget, the remaining amount displays with an explicit negative indicator and \"Over Budget\" badge instead of confusing zero-floor clamping.\n\n## Why this matters\nUsers need clear, honest visibility when a category budget has been exceeded.\n\n## 📍 Where to work\n- `src/features/finance/components/budget-discipline-card.tsx`\n- `src/lib/money.ts`"
+    },
+    {
+      "catalogNumber": 34,
+      "slug": "fix-notification-popover-hydration-timestamp",
+      "title": "fix: resolve hydration warning on formatted relative timestamp in notification popover",
+      "labels": [
+        "type:bug",
+        "difficulty:easy",
+        "time:30-60m",
+        "area:dashboard",
+        "good first issue"
+      ],
+      "targetFile": "`src/components/ui/notification-popover.tsx`",
+      "body": "<!-- PACT-BEGINNER-ISSUE: fix-notification-popover-hydration-timestamp -->\n## 🎯 What needs to be done\nAdd a client-mounted guard or `suppressHydrationWarning` to relative timestamp text (\"5 minutes ago\") in `notification-popover.tsx` to prevent server/client timestamp mismatch warnings.\n\n## Why this matters\nRelative timestamps rendered on the server can differ by a few seconds from the client render, triggering benign React hydration warnings in development.\n\n## 📍 Where to work\n- `src/components/ui/notification-popover.tsx`"
+    },
+    {
+      "catalogNumber": 35,
+      "slug": "fix-daily-cadence-zero-tasks-pluralization",
+      "title": "fix: correct pluralization on zero tasks remaining in daily cadence widget",
+      "labels": [
+        "type:bug",
+        "difficulty:beginner",
+        "time:15-30m",
+        "area:dashboard",
+        "good first issue"
+      ],
+      "targetFile": "`src/features/dashboard/components/daily-cadence-widget.tsx`",
+      "body": "<!-- PACT-BEGINNER-ISSUE: fix-daily-cadence-zero-tasks-pluralization -->\n## 🎯 What needs to be done\nUpdate task count pluralization logic in `daily-cadence-widget.tsx` so \"0 tasks remaining\" and \"1 task remaining\" format with proper singular/plural grammar.\n\n## Why this matters\nImproves linguistic precision and polish on the primary overview dashboard.\n\n## 📍 Where to work\n- `src/features/dashboard/components/daily-cadence-widget.tsx`"
+    },
+    {
+      "catalogNumber": 36,
+      "slug": "fix-goals-form-empty-title-validation",
+      "title": "fix: prevent empty goal title submission in goal form modal",
+      "labels": [
+        "type:bug",
+        "difficulty:beginner",
+        "time:15-30m",
+        "area:goals",
+        "good first issue"
+      ],
+      "targetFile": "`src/features/goals/components/goal-form-modal.tsx`",
+      "body": "<!-- PACT-BEGINNER-ISSUE: fix-goals-form-empty-title-validation -->\n## 🎯 What needs to be done\nEnsure the goal title input in `goal-form-modal.tsx` trims leading and trailing whitespace, disabling the submit button if the resulting string is empty.\n\n## Why this matters\nPrevents accidental creation of blank or whitespace-only goals.\n\n## 📍 Where to work\n- `src/features/goals/components/goal-form-modal.tsx`"
+    },
+    {
+      "catalogNumber": 37,
+      "slug": "feat-codeforces-rating-tier-badge",
+      "title": "feat: add Codeforces rating tier color badge helper",
+      "labels": [
+        "type:feature",
+        "difficulty:easy",
+        "time:30-60m",
+        "area:integrations",
+        "good first issue"
+      ],
+      "targetFile": "`src/features/integrations/components/codeforces-proof-of-work-card.tsx`",
+      "body": "<!-- PACT-BEGINNER-ISSUE: feat-codeforces-rating-tier-badge -->\n## 🎯 What needs to be done\nAdd a helper function in `codeforces-proof-of-work-card.tsx` that maps Codeforces ranks (Newbie, Pupil, Specialist, Expert, Candidate Master) to standard PACT tag badge colors.\n\n## Why this matters\nProvides visual recognition for competitive programming achievements inside PACT's proof-of-work verification system.\n\n## 📍 Where to work\n- `src/features/integrations/components/codeforces-proof-of-work-card.tsx`"
+    },
+    {
+      "catalogNumber": 38,
+      "slug": "feat-settings-webhook-copy-button",
+      "title": "feat: add copy-to-clipboard button on integration webhook URL in settings",
+      "labels": [
+        "type:feature",
+        "difficulty:easy",
+        "time:30-60m",
+        "area:settings",
+        "good first issue"
+      ],
+      "targetFile": "`src/features/settings/components/integrations-settings-card.tsx`",
+      "body": "<!-- PACT-BEGINNER-ISSUE: feat-settings-webhook-copy-button -->\n## 🎯 What needs to be done\nAdd a \"Copy\" button with temporary checkmark feedback next to webhook endpoint URLs in `integrations-settings-card.tsx`.\n\n## Why this matters\nSimplifies setting up GitHub webhooks by allowing one-click copying of the receiving endpoint URL.\n\n## 📍 Where to work\n- `src/features/settings/components/integrations-settings-card.tsx`"
+    },
+    {
+      "catalogNumber": 39,
+      "slug": "feat-tasks-proof-verified-filter",
+      "title": "feat: add quick filter for proof-verified tasks in task list",
+      "labels": [
+        "type:feature",
+        "difficulty:easy",
+        "time:1-2h",
+        "area:tasks",
+        "good first issue"
+      ],
+      "targetFile": "`src/features/tasks/components/tasks-view.tsx`",
+      "body": "<!-- PACT-BEGINNER-ISSUE: feat-tasks-proof-verified-filter -->\n## 🎯 What needs to be done\nAdd a filter pill button in `tasks-view.tsx` allowing users to filter tasks that require external proof of work (GitHub / LeetCode / Codeforces).\n\n## Why this matters\nAllows developers and engineers to quickly view their coding and algorithmic tasks that link to automated proof verification.\n\n## 📍 Where to work\n- `src/features/tasks/components/tasks-view.tsx`"
+    },
+    {
+      "catalogNumber": 40,
+      "slug": "feat-settings-export-format-selector",
+      "title": "feat: add export data format selector (JSON / CSV) helper in data privacy settings",
+      "labels": [
+        "type:feature",
+        "difficulty:easy",
+        "time:30-60m",
+        "area:settings",
+        "good first issue"
+      ],
+      "targetFile": "`src/features/settings/components/data-privacy-settings-card.tsx`",
+      "body": "<!-- PACT-BEGINNER-ISSUE: feat-settings-export-format-selector -->\n## 🎯 What needs to be done\nAdd a format selection toggle (JSON or CSV) to the user data export card in `data-privacy-settings-card.tsx` that triggers the appropriate export download endpoint.\n\n## Why this matters\nEnhances data portability by giving users flexibility to export their life OS data in either JSON or spreadsheet-friendly CSV format.\n\n## 📍 Where to work\n- `src/features/settings/components/data-privacy-settings-card.tsx`"
+    }
+  ],
+  "unpublishedIssues": [
+    {
+      "catalogNumber": 3,
+      "slug": "docs-integrations-payload-examples",
+      "title": "docs: add API payload examples to proof connector specification",
+      "labels": [
+        "type:docs",
+        "difficulty:beginner",
+        "time:30-60m",
+        "area:documentation",
+        "good first issue"
+      ],
+      "targetFile": "`docs/INTEGRATIONS.md` & `src/lib/integrations/proof-of-work/`",
+      "body": "<!-- PACT-BEGINNER-ISSUE: docs-integrations-payload-examples -->\n## 🎯 What needs to be done\nAdd sample JSON response payloads for GitHub PushEvents, LeetCode user profile submissions, and Codeforces user status queries in `docs/INTEGRATIONS.md`.\n\n## Why this matters\nContributors building or testing proof-of-work connectors need realistic mock payloads to test offline without needing live API tokens.\n\n## 📍 Where to work\n- `docs/INTEGRATIONS.md`\n- `src/lib/integrations/proof-of-work/github.ts`\n- `src/lib/integrations/proof-of-work/leetcode.ts`\n- `src/lib/integrations/proof-of-work/codeforces.ts`\n\n## 🧭 Implementation guidance\n1. Open `docs/INTEGRATIONS.md`.\n2. Under each platform section (GitHub, LeetCode, Codeforces), add a collapsible `<details>` block with sanitized sample JSON payloads.\n3. Ensure no real user credentials, tokens, or personal emails are present in sample data.\n\n## ✅ Acceptance criteria\n- [ ] Sanitized payload examples added for GitHub, LeetCode, and Codeforces.\n- [ ] `node scratch/secret-scan.mjs` passes with 0 secrets detected."
+    },
+    {
+      "catalogNumber": 5,
+      "slug": "docs-weekly-review-flow-diagram",
+      "title": "docs: document weekly review 5-step state machine in user flows",
+      "labels": [
+        "type:docs",
+        "difficulty:beginner",
+        "time:30-60m",
+        "area:documentation",
+        "good first issue"
+      ],
+      "targetFile": "`docs/USER_FLOWS.md` & `src/features/weekly-review/components/weekly-review-workspace.tsx`",
+      "body": "<!-- PACT-BEGINNER-ISSUE: docs-weekly-review-flow-diagram -->\n## 🎯 What needs to be done\nAdd a detailed walkthrough and ASCII flow diagram of the 5-step Sunday Weekly Review ritual in `docs/USER_FLOWS.md`.\n\n## Why this matters\nThe weekly review is a core ritual in PACT. Contributors should understand how drafts, step progression (1: Reflection -> 2: Cleanup -> 3: Planning -> 4: Commitments -> 5: Summary), and final commits transition in state.\n\n## 📍 Where to work\n- `docs/USER_FLOWS.md`\n- `src/features/weekly-review/components/weekly-review-workspace.tsx`\n\n## ✅ Acceptance criteria\n- [ ] `docs/USER_FLOWS.md` outlines all 5 stages of the review state machine."
+    },
+    {
+      "catalogNumber": 7,
+      "slug": "docs-habit-recurrence-syntax",
+      "title": "docs: document habit recurrence rule syntax in data model guide",
+      "labels": [
+        "type:docs",
+        "difficulty:beginner",
+        "time:30-60m",
+        "area:documentation",
+        "good first issue"
+      ],
+      "targetFile": "`docs/DATA_MODEL.md` & `src/lib/habits/`",
+      "body": "<!-- PACT-BEGINNER-ISSUE: docs-habit-recurrence-syntax -->\n## 🎯 What needs to be done\nDocument how habit frequency types (`DAILY`, `WEEKLY_DAYS`, `INTERVAL`) and recurrence bitmasks are stored in the database in `docs/DATA_MODEL.md`.\n\n## Why this matters\nUnderstanding the habit data model helps developers working on habit completion state machines and calendar integrations.\n\n## 📍 Where to work\n- `docs/DATA_MODEL.md`\n- `supabase/migrations/20260911080000_habits_and_routines_engine.sql`"
+    },
+    {
+      "catalogNumber": 8,
+      "slug": "docs-troubleshooting-rls-recursion",
+      "title": "docs: add troubleshooting steps for Supabase RLS recursion errors",
+      "labels": [
+        "type:docs",
+        "difficulty:beginner",
+        "time:15-30m",
+        "area:documentation",
+        "good first issue"
+      ],
+      "targetFile": "`docs/TROUBLESHOOTING.md` & `docs/SECURITY.md`",
+      "body": "<!-- PACT-BEGINNER-ISSUE: docs-troubleshooting-rls-recursion -->\n## 🎯 What needs to be done\nAdd a troubleshooting entry in `docs/TROUBLESHOOTING.md` addressing PostgreSQL error `42P17 (infinite recursion detected in policy for relation)`.\n\n## Why this matters\nContributors writing new RLS policies may inadvertently query the same table inside a subquery. Documenting the fix (`SECURITY DEFINER` functions or separate lookup tables) prevents confusion.\n\n## 📍 Where to work\n- `docs/TROUBLESHOOTING.md` (Add to Section 9: Supabase & Database Issues)"
+    },
+    {
+      "catalogNumber": 13,
+      "slug": "ui-finance-category-badge-opacity",
+      "title": "ui: refine category badge color opacity in transaction list",
+      "labels": [
+        "type:ui",
+        "difficulty:beginner",
+        "time:15-30m",
+        "area:finance",
+        "good first issue"
+      ],
+      "targetFile": "`src/features/finance/components/transaction-list.tsx`",
+      "body": "<!-- PACT-BEGINNER-ISSUE: ui-finance-category-badge-opacity -->\n## 🎯 What needs to be done\nRefine the background opacity of category pills in the transaction table rows from `bg-white/[0.04]` to `bg-white/[0.06]` for optimal contrast.\n\n## Why this matters\nImproves readability of category tags (e.g., Housing, Food, Investment) against deep obsidian table backgrounds.\n\n## 📍 Where to work\n- `src/features/finance/components/transaction-list.tsx`"
+    },
+    {
+      "catalogNumber": 14,
+      "slug": "ui-streak-summary-pulse-glow",
+      "title": "ui: add pulse glow effect to streak summary highlight on overview",
+      "labels": [
+        "type:ui",
+        "difficulty:beginner",
+        "time:30-60m",
+        "area:habits",
+        "good first issue"
+      ],
+      "targetFile": "`src/features/habits/components/streak-summary-card.tsx`",
+      "body": "<!-- PACT-BEGINNER-ISSUE: ui-streak-summary-pulse-glow -->\n## 🎯 What needs to be done\nAdd a subtle gold glow indicator next to active streak counts > 7 days in `streak-summary-card.tsx`.\n\n## Why this matters\nVisual feedback on streak milestones encourages momentum without gamifying or distracting from focused work.\n\n## 📍 Where to work\n- `src/features/habits/components/streak-summary-card.tsx`"
+    },
+    {
+      "catalogNumber": 15,
+      "slug": "ui-task-form-modal-mobile-padding",
+      "title": "ui: improve mobile bottom sheet padding in task form modal",
+      "labels": [
+        "type:ui",
+        "difficulty:beginner",
+        "time:15-30m",
+        "area:tasks",
+        "good first issue"
+      ],
+      "targetFile": "`src/features/tasks/components/task-form-modal.tsx`",
+      "body": "<!-- PACT-BEGINNER-ISSUE: ui-task-form-modal-mobile-padding -->\n## 🎯 What needs to be done\nAdd safe-area bottom padding (`pb-8 sm:pb-6`) to the action buttons inside `task-form-modal.tsx`.\n\n## Why this matters\nPrevents the \"Save Task\" button from colliding with mobile navigation bars (e.g. iOS home indicator).\n\n## 📍 Where to work\n- `src/features/tasks/components/task-form-modal.tsx`"
+    },
+    {
+      "catalogNumber": 16,
+      "slug": "ui-analytics-skeleton-shimmer",
+      "title": "ui: polish skeleton loader shimmer animation in analytics workspace",
+      "labels": [
+        "type:ui",
+        "difficulty:beginner",
+        "time:15-30m",
+        "area:analytics",
+        "good first issue"
+      ],
+      "targetFile": "`src/features/analytics/components/analytics-skeleton.tsx`",
+      "body": "<!-- PACT-BEGINNER-ISSUE: ui-analytics-skeleton-shimmer -->\n## 🎯 What needs to be done\nStandardize the placeholder shimmer gradient tokens in `analytics-skeleton.tsx` to match `src/components/ui/glass-card.tsx`.\n\n## Why this matters\nEnsures skeleton loading states appear smooth, uniform, and seamlessly integrated into the dark obsidian canvas.\n\n## 📍 Where to work\n- `src/features/analytics/components/analytics-skeleton.tsx`"
+    },
+    {
+      "catalogNumber": 21,
+      "slug": "a11y-focus-timer-aria-live",
+      "title": "a11y: add aria-live polite region to focus timer countdown",
+      "labels": [
+        "type:a11y",
+        "difficulty:easy",
+        "time:30-60m",
+        "area:focus",
+        "good first issue"
+      ],
+      "targetFile": "`src/features/focus/components/focus-timer-display.tsx`",
+      "body": "<!-- PACT-BEGINNER-ISSUE: a11y-focus-timer-aria-live -->\n## 🎯 What needs to be done\nAdd an `aria-live=\"polite\"` region that announces session state transitions (e.g. \"Focus session started\", \"Focus session completed\") without announcing every second.\n\n## Why this matters\nAllows screen reader users to receive timely auditory announcements when work intervals begin or end.\n\n## 📍 Where to work\n- `src/features/focus/components/focus-timer-display.tsx`"
+    },
+    {
+      "catalogNumber": 24,
+      "slug": "test-habit-streak-leap-year",
+      "title": "test: add unit test verifying habit streak calculation on leap years",
+      "labels": [
+        "type:test",
+        "difficulty:easy",
+        "time:30-60m",
+        "area:testing",
+        "good first issue"
+      ],
+      "targetFile": "`tests/habits-routines.test.ts` & `src/lib/habits/streaks.ts`",
+      "body": "<!-- PACT-BEGINNER-ISSUE: test-habit-streak-leap-year -->\n## 🎯 What needs to be done\nAdd a unit test in `tests/habits-routines.test.ts` verifying that daily habit streaks calculate consecutively across Feb 28 -> Feb 29 -> Mar 1 in leap years.\n\n## Why this matters\nEnsures streak calculations do not break or reset due to date boundary quirks on leap days.\n\n## 📍 Where to work\n- `tests/habits-routines.test.ts`\n- `src/lib/habits/streaks.ts`"
+    },
+    {
+      "catalogNumber": 26,
+      "slug": "test-weekly-review-step-boundaries",
+      "title": "test: add unit tests for weekly review step progression boundary checks",
+      "labels": [
+        "type:test",
+        "difficulty:beginner",
+        "time:30-60m",
+        "area:testing",
+        "good first issue"
+      ],
+      "targetFile": "`tests/weekly-review.test.ts` & `src/lib/validations/weekly-review.ts`",
+      "body": "<!-- PACT-BEGINNER-ISSUE: test-weekly-review-step-boundaries -->\n## 🎯 What needs to be done\nAdd test cases in `tests/weekly-review.test.ts` verifying that step indices in review draft payloads must be integers between 1 and 5.\n\n## Why this matters\nValidates that invalid step values (e.g. step 0, step 6, or negative numbers) cannot corrupt review draft records.\n\n## 📍 Where to work\n- `tests/weekly-review.test.ts`"
+    },
+    {
+      "catalogNumber": 27,
+      "slug": "test-notification-channel-filter",
+      "title": "test: add unit tests for notification channel filter utility",
+      "labels": [
+        "type:test",
+        "difficulty:beginner",
+        "time:30-60m",
+        "area:testing",
+        "good first issue"
+      ],
+      "targetFile": "`tests/notifications.test.ts` & `src/lib/notifications/`",
+      "body": "<!-- PACT-BEGINNER-ISSUE: test-notification-channel-filter -->\n## 🎯 What needs to be done\nAdd unit tests verifying that in-app notification queries filter accurately by channel (`IN_APP`, `EMAIL`, `CRON`) and read status.\n\n## Why this matters\nEnsures user notification feeds accurately reflect selected channel filters.\n\n## 📍 Where to work\n- `tests/notifications.test.ts`"
+    },
+    {
+      "catalogNumber": 30,
+      "slug": "refactor-currency-symbol-helper",
+      "title": "refactor: centralize currency symbol formatting in lib/money.ts",
+      "labels": [
+        "type:refactor",
+        "difficulty:beginner",
+        "time:30-60m",
+        "area:finance",
+        "good first issue"
+      ],
+      "targetFile": "`src/lib/money.ts`",
+      "body": "<!-- PACT-BEGINNER-ISSUE: refactor-currency-symbol-helper -->\n## 🎯 What needs to be done\nAdd an exported helper function `getCurrencySymbol(currencyCode: string): string` to `src/lib/money.ts` supporting standard ISO codes (`USD`, `EUR`, `GBP`, `INR`, `CAD`, `AUD`).\n\n## Why this matters\nAvoids hardcoding `$` across multiple finance components and centralizes currency symbol resolution.\n\n## 📍 Where to work\n- `src/lib/money.ts`\n- `tests/finance-domain-validation.test.ts`"
+    },
+    {
+      "catalogNumber": 31,
+      "slug": "refactor-date-string-helper-time",
+      "title": "refactor: export type-safe date string helper in lib/time.ts",
+      "labels": [
+        "type:refactor",
+        "difficulty:easy",
+        "time:30-60m",
+        "area:developer-experience",
+        "good first issue"
+      ],
+      "targetFile": "`src/lib/time.ts`",
+      "body": "<!-- PACT-BEGINNER-ISSUE: refactor-date-string-helper-time -->\n## 🎯 What needs to be done\nExport a helper function `toISODateString(date: Date): string` in `src/lib/time.ts` that safely returns `YYYY-MM-DD` without UTC timezone shifting.\n\n## Why this matters\nPrevents subtle date offset bugs when converting `Date` objects to HTML date input format strings.\n\n## 📍 Where to work\n- `src/lib/time.ts`\n- `tests/temporal-engine.test.ts`"
+    },
+    {
+      "catalogNumber": 32,
+      "slug": "refactor-modal-transition-variants",
+      "title": "refactor: export shared modal transition variants in components/ui/modal.tsx",
+      "labels": [
+        "type:refactor",
+        "difficulty:beginner",
+        "time:15-30m",
+        "area:ui",
+        "good first issue"
+      ],
+      "targetFile": "`src/components/ui/modal.tsx`",
+      "body": "<!-- PACT-BEGINNER-ISSUE: refactor-modal-transition-variants -->\n## 🎯 What needs to be done\nExtract and export Framer Motion animation transition variants from `src/components/ui/modal.tsx` so custom dialogs can reuse standard backdrop and card spring animations.\n\n## Why this matters\nEnsures uniform modal entrance and exit easing curves across all modules.\n\n## 📍 Where to work\n- `src/components/ui/modal.tsx`"
+    },
+    {
+      "catalogNumber": 33,
+      "slug": "fix-finance-negative-budget-remaining",
+      "title": "fix: prevent negative budget remaining calculation on expense overage",
+      "labels": [
+        "type:bug",
+        "difficulty:easy",
+        "time:30-60m",
+        "area:finance",
+        "good first issue"
+      ],
+      "targetFile": "`src/features/finance/components/budget-discipline-card.tsx`",
+      "body": "<!-- PACT-BEGINNER-ISSUE: fix-finance-negative-budget-remaining -->\n## 🎯 What needs to be done\nUpdate `budget-discipline-card.tsx` so that when expenses exceed the allocated budget, the remaining amount displays with an explicit negative indicator and \"Over Budget\" badge instead of confusing zero-floor clamping.\n\n## Why this matters\nUsers need clear, honest visibility when a category budget has been exceeded.\n\n## 📍 Where to work\n- `src/features/finance/components/budget-discipline-card.tsx`\n- `src/lib/money.ts`"
+    },
+    {
+      "catalogNumber": 34,
+      "slug": "fix-notification-popover-hydration-timestamp",
+      "title": "fix: resolve hydration warning on formatted relative timestamp in notification popover",
+      "labels": [
+        "type:bug",
+        "difficulty:easy",
+        "time:30-60m",
+        "area:dashboard",
+        "good first issue"
+      ],
+      "targetFile": "`src/components/ui/notification-popover.tsx`",
+      "body": "<!-- PACT-BEGINNER-ISSUE: fix-notification-popover-hydration-timestamp -->\n## 🎯 What needs to be done\nAdd a client-mounted guard or `suppressHydrationWarning` to relative timestamp text (\"5 minutes ago\") in `notification-popover.tsx` to prevent server/client timestamp mismatch warnings.\n\n## Why this matters\nRelative timestamps rendered on the server can differ by a few seconds from the client render, triggering benign React hydration warnings in development.\n\n## 📍 Where to work\n- `src/components/ui/notification-popover.tsx`"
+    },
+    {
+      "catalogNumber": 38,
+      "slug": "feat-settings-webhook-copy-button",
+      "title": "feat: add copy-to-clipboard button on integration webhook URL in settings",
+      "labels": [
+        "type:feature",
+        "difficulty:easy",
+        "time:30-60m",
+        "area:settings",
+        "good first issue"
+      ],
+      "targetFile": "`src/features/settings/components/integrations-settings-card.tsx`",
+      "body": "<!-- PACT-BEGINNER-ISSUE: feat-settings-webhook-copy-button -->\n## 🎯 What needs to be done\nAdd a \"Copy\" button with temporary checkmark feedback next to webhook endpoint URLs in `integrations-settings-card.tsx`.\n\n## Why this matters\nSimplifies setting up GitHub webhooks by allowing one-click copying of the receiving endpoint URL.\n\n## 📍 Where to work\n- `src/features/settings/components/integrations-settings-card.tsx`"
+    },
+    {
+      "catalogNumber": 39,
+      "slug": "feat-tasks-proof-verified-filter",
+      "title": "feat: add quick filter for proof-verified tasks in task list",
+      "labels": [
+        "type:feature",
+        "difficulty:easy",
+        "time:1-2h",
+        "area:tasks",
+        "good first issue"
+      ],
+      "targetFile": "`src/features/tasks/components/tasks-view.tsx`",
+      "body": "<!-- PACT-BEGINNER-ISSUE: feat-tasks-proof-verified-filter -->\n## 🎯 What needs to be done\nAdd a filter pill button in `tasks-view.tsx` allowing users to filter tasks that require external proof of work (GitHub / LeetCode / Codeforces).\n\n## Why this matters\nAllows developers and engineers to quickly view their coding and algorithmic tasks that link to automated proof verification.\n\n## 📍 Where to work\n- `src/features/tasks/components/tasks-view.tsx`"
+    },
+    {
+      "catalogNumber": 40,
+      "slug": "feat-settings-export-format-selector",
+      "title": "feat: add export data format selector (JSON / CSV) helper in data privacy settings",
+      "labels": [
+        "type:feature",
+        "difficulty:easy",
+        "time:30-60m",
+        "area:settings",
+        "good first issue"
+      ],
+      "targetFile": "`src/features/settings/components/data-privacy-settings-card.tsx`",
+      "body": "<!-- PACT-BEGINNER-ISSUE: feat-settings-export-format-selector -->\n## 🎯 What needs to be done\nAdd a format selection toggle (JSON or CSV) to the user data export card in `data-privacy-settings-card.tsx` that triggers the appropriate export download endpoint.\n\n## Why this matters\nEnhances data portability by giving users flexibility to export their life OS data in either JSON or spreadsheet-friendly CSV format.\n\n## 📍 Where to work\n- `src/features/settings/components/data-privacy-settings-card.tsx`"
+    }
+  ]
+}
