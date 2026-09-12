@@ -4,7 +4,7 @@
 
 <img src="./public/brand/pact-logo.png" alt="PACT Monogram Logo" width="88" height="88" />
 
-# PACT — Personal Operating System
+# PACT - Personal Operating System
 
 **A System for Keeping Promises to Yourself.**  
 *Turn Intent Into Discipline.*
