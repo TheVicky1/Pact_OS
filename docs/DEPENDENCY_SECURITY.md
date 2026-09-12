@@ -1,6 +1,6 @@
 # PACT — Dependency Health, Security Auditing & Supply-Chain Policy
 
-This document establishes the canonical policy, verification tooling, and operational runbooks for **dependency management, vulnerability auditing, and supply-chain hygiene** in the PACT Personal Operating System.
+This document establishes the canonical policy, verification tooling, ecosystem compatibility matrix, and operational runbooks for **dependency management, vulnerability auditing, and supply-chain hygiene** in the PACT Personal Operating System.
 
 ---
 
@@ -9,32 +9,79 @@ This document establishes the canonical policy, verification tooling, and operat
 As a high-integrity Personal Operating System handling confidential commitments, financial transactions, and cryptographic proofs, PACT maintains a strict zero-trust stance toward external supply-chain dependencies:
 
 - **Minimal Surface Area**: Dependencies are introduced only when standard platform APIs and native JavaScript/TypeScript runtimes cannot achieve the architectural goal.
-- **Deterministic Reproducibility**: Builds must be 100% reproducible across local contributor workstations and remote CI environments via strict lockfile enforcement.
+- **Deterministic Reproducibility**: Builds must be 100% reproducible across local contributor workstations and remote CI environments via strict lockfile enforcement (`npm ci`).
+- **Ecosystem Coherence**: Meta-framework-bound dependencies (Next.js, ESLint, TypeScript, and React) must be upgraded as a coordinated ecosystem rather than independently across breaking major boundaries.
 - **Early Vulnerability Detection**: Automated scanners detect known Common Vulnerabilities and Exposures (CVEs) before code reaches production branches.
 - **Transparent Upgrade Lifecycle**: Dependency upgrades are treated as intentional architectural changes, never automated blindly without review.
 
 ---
 
-## 2. Dependency Architecture & Sources
+## 2. Verified Toolchain Baseline & Ecosystem Interdependence
+
+The PACT frontend and backend systems rely on a tightly coupled ecosystem centered around **Next.js 16 (Turbopack)** and **Node.js 20.x LTS**.
+
+```
+┌────────────────────────────────────────────────────────────────────────────────────────┐
+│                               NEXT.JS 16 ECOSYSTEM BASELINE                            │
+│                                                                                        │
+│   ┌─────────────────────┐             ┌─────────────────────┐                          │
+│   │   Next.js 16.3.4    │ ──────────> │   React / DOM 19    │                          │
+│   └──────────┬──────────┘             └─────────────────────┘                          │
+│              │                                                                         │
+│              ▼                                                                         │
+│   ┌─────────────────────┐                                                              │
+│   │ eslint-config-next  │ ── bundles ──> ┌──────────────────────────────────────────┐ │
+│   │       16.3.4        │                │ • typescript-eslint ^8.46.0               │ │
+│   └──────────┬──────────┘                │ • eslint-plugin-react ^7.37.0             │ │
+│              │                           │ • eslint-plugin-import ^2.32.0            │ │
+│              │                           │ • eslint-plugin-jsx-a11y ^6.10.0          │ │
+│              │                           └────────────────────┬─────────────────────┘ │
+│              │                                                │                        │
+│              ▼                                                ▼                        │
+│   ┌─────────────────────┐                      ┌─────────────────────┐                 │
+│   │    ESLint ^9.x      │                      │   TypeScript ^5.x   │                 │
+│   │  (Active: 9.39.5)   │                      │  (Active: 5.9.3)    │                 │
+│   └─────────────────────┘                      └─────────────────────┘                 │
+└────────────────────────────────────────────────────────────────────────────────────────┘
+```
+
+### Ecosystem Coupling Rules:
+
+1. **ESLint 9 vs. ESLint 10 Compatibility:**
+   - `eslint-config-next@16.3.4` depends on `eslint-plugin-react` (`peerDependencies.eslint: "^8 || ^9"`), `eslint-plugin-import` (`peerDependencies.eslint: "^8 || ^9"`), and `eslint-plugin-jsx-a11y` (`peerDependencies.eslint: "^8 || ^9"`).
+   - Furthermore, ESLint 10 removes legacy `context.getFilename()` APIs used internally by Next.js lint rules.
+   - **Policy:** ESLint MUST remain on `^9` until Next.js officially releases an ESLint 10-compatible version of `eslint-config-next`.
+
+2. **TypeScript 5 vs. TypeScript 7 Compatibility:**
+   - `eslint-config-next@16.3.4` and `typescript-eslint@8.x` restrict TypeScript peer compatibility to `typescript: ">=4.8.4 <6.1.0"`.
+   - TypeScript 7 is a breaking major upgrade unsupported by current AST parsers and Next.js Turbopack compiler plugins.
+   - **Policy:** TypeScript MUST remain on `^5` until upstream `typescript-eslint` and Next.js support TypeScript 7.
+
+3. **Node.js LTS Runtime vs. `@types/node`:**
+   - PACT targets **Node.js 20.x LTS** in CI (`.github/workflows/ci.yml`) and production hosting.
+   - Upgrading `@types/node` to `26.x` introduces unsupported type definitions and API signatures.
+   - **Policy:** `@types/node` MUST remain on `^20` to match the target runtime engine.
+
+---
+
+## 3. Dependency Architecture & Classification
 
 PACT tracks third-party packages exclusively through the official npm registry across two canonical manifests:
 
 ```
 Pact_OS/
 ├── package.json         # Declares direct production and development dependencies with semver ranges
-└── package-lock.json    # Exact dependency tree, resolved sub-dependencies, integrity hashes, and versions
+└── package-lock.json    # Exact dependency tree, resolved sub-dependencies, integrity hashes, and versions (lockfileVersion: 3)
 ```
 
-### Dependency Classification
-
-| Layer | Purpose | Key Dependencies | Invariant Rules |
+| Layer | Purpose | Packages | Security & Upgrade Policy |
 | :--- | :--- | :--- | :--- |
-| **Production Runtime** (`dependencies`) | Packages required for runtime execution in the user browser or server runtime. | `next`, `react`, `react-dom`, `@supabase/ssr`, `@supabase/supabase-js`, `zod`, `lucide-react`, `framer-motion` | Must have 0 high/critical vulnerabilities. Kept as minimal and lightweight as possible. |
-| **Development & Tooling** (`devDependencies`) | Packages used strictly during build, typechecking, linting, testing, and CI verification. | `typescript`, `tailwindcss`, `@tailwindcss/postcss`, `eslint`, `eslint-config-next`, `pg`, `@types/*` | Isolated from client bundles. Must pass automated security audits. |
+| **Production Runtime** (`dependencies`) | Required for runtime execution in the browser and Next.js server runtime. | `next`, `react`, `react-dom`, `@supabase/ssr`, `@supabase/supabase-js`, `zod`, `lucide-react`, `framer-motion` | 0 high/critical vulnerabilities. Minor/patch updates automatically grouped and validated. |
+| **Development & Tooling** (`devDependencies`) | Used strictly during build, typechecking, linting, testing, and CI verification. | `typescript`, `tailwindcss`, `@tailwindcss/postcss`, `eslint`, `eslint-config-next`, `pg`, `@types/*` | Isolated from client bundles. Major updates on framework-bound tools are governed by ecosystem readiness. |
 
 ---
 
-## 3. Local Audit & Health Commands
+## 4. Local Audit & Health Commands
 
 Contributors and maintainers can verify dependency health locally using the following canonical commands:
 
@@ -57,7 +104,7 @@ npm audit --json
 
 ---
 
-## 4. Vulnerability Severity & CI Quality Gate Policy
+## 5. Vulnerability Severity & CI Quality Gate Policy
 
 PACT evaluates dependency vulnerabilities according to CVSS severity ratings. Our automated CI quality gates enforce the following deterministic policy:
 
@@ -80,95 +127,111 @@ PACT evaluates dependency vulnerabilities according to CVSS severity ratings. Ou
 
 ---
 
-## 5. Dependabot Automated Update Strategy
+## 6. Dependabot Automated Update Strategy
 
 PACT uses GitHub Dependabot to provide continuous, non-intrusive monitoring of third-party package updates.
 
 ### Configuration (`.github/dependabot.yml`)
 
-- **Ecosystem**: `npm`
-- **Directory**: `/`
-- **Schedule**: Weekly on Monday at 06:00 UTC
-- **Target Branch**: `main`
-- **Open PR Limit**: 10
-- **Labels Applied**: `type:security`, `area:developer-experience`
+```yaml
+version: 2
+updates:
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "06:00"
+      timezone: "UTC"
+    open-pull-requests-limit: 10
+    target-branch: "main"
+    labels:
+      - "type:security"
+      - "area:developer-experience"
+    commit-message:
+      prefix: "chore"
+      prefix-development: "chore"
+      include: "scope"
+    ignore:
+      - dependency-name: "eslint"
+        update-types:
+          - "version-update:semver-major"
+      - dependency-name: "typescript"
+        update-types:
+          - "version-update:semver-major"
+      - dependency-name: "@types/node"
+        update-types:
+          - "version-update:semver-major"
+    groups:
+      production-dependencies:
+        dependency-type: "production"
+        update-types:
+          - "minor"
+          - "patch"
+      development-dependencies:
+        dependency-type: "development"
+        update-types:
+          - "minor"
+          - "patch"
+```
 
-### Grouping Strategy
-To avoid pull request notification fatigue while maintaining clear visibility into breaking changes:
-- **Grouped Minor & Patch Updates**: Compatible patch and minor updates are grouped into consolidated PRs for `production-dependencies` and `development-dependencies`.
-- **Isolated Major Updates**: Major version bumps (e.g., Next.js, React, TypeScript, Tailwind) generate standalone pull requests with individual changelogs for careful architectural review.
+### Governance Rationale
+1. **Grouped Minor & Patch Updates**: Compatible patch and minor updates are grouped into consolidated PRs for `production-dependencies` and `development-dependencies` to eliminate noise.
+2. **Explicit Major Ignore Rules**: Prevents Dependabot from opening recurring, un-mergeable PRs for `eslint@10`, `typescript@7`, and `@types/node@26` until maintainers intentionally unlock them after upstream meta-framework support is released.
+3. **Security Updates Unrestricted**: Security patches and vulnerability updates are never ignored and receive highest priority.
 
 ---
 
-## 6. Safe Dependency Update Workflow
+## 7. Dependabot PR Triage & Assessment Matrix
+
+| Dependabot PR | Target Package(s) | Update Type | Architectural Assessment & Resolution |
+| :--- | :--- | :--- | :--- |
+| **PR #6** | `@supabase/ssr`, `@supabase/supabase-js`, `lucide-react` | Minor / Patch Group | ✅ **Approved for Merge.** Compatible with Next.js 16 and all quality gates pass. |
+| **PR #7** | `@types/node` (20 → 26) | Semver Major | ❌ **Closed.** Node 26 types conflict with PACT's Node 20 LTS target runtime. |
+| **PR #8** | `eslint` (9.39.5 → 10.10.0) | Semver Major | ❌ **Closed.** Breaking change incompatible with `eslint-config-next@16.3.4`. Deferred. |
+| **PR #9** | `typescript` (5.9.3 → 7.0.2) | Semver Major | ❌ **Closed.** Incompatible with `typescript-eslint@8.x` peer constraint (`<6.1.0`). Deferred. |
+
+---
+
+## 8. Safe Dependency Update Workflow
 
 Maintainers and contributors must follow this 9-step workflow when updating dependencies or addressing security advisories:
 
-```mermaid
-graph TD
-    A[1. Inspect Advisory or Release] --> B[2. Identify Target Package & Direct/Transitive Role]
-    B --> C[3. Review Upstream Changelog & Breaking Changes]
-    C --> D[4. Update Specific Dependency in package.json]
-    D --> E[5. Run npm install & Inspect Lockfile Diff]
-    E --> F[6. Run Local Validation Suite]
-    F --> G[7. Verify Application Runtime & UI]
-    G --> H[8. Open Targeted PR with Clear Scope]
-    H --> I[9. CI Quality Gates Pass & Maintainer Merge]
 ```
-
-### Detailed Steps:
-1. **Inspect Advisory**: Review the CVE description, affected semver range, and CVSS severity score.
-2. **Identify Role**: Determine whether the affected package is a direct dependency or a transitive sub-dependency.
-3. **Review Changelog**: Read upstream release notes to identify breaking changes or migration requirements.
-4. **Update Minimal Package**: Update only the specific package version required. Do NOT run broad `npm update` commands.
-5. **Verify Lockfile**: Inspect `git diff package-lock.json` to ensure only the intended dependency tree was modified.
-6. **Execute Local Suite**:
-   ```bash
-   node scratch/check-dependency-health.mjs
-   npx eslint src/
-   npx tsc --noEmit
-   node scratch/run-tests.mjs
-   npm run build
-   ```
-7. **Verify Application UI**: Run `npm run dev` and smoke test related features.
-8. **Open Targeted PR**: Use the `chore(deps): ...` or `fix(security): ...` commit convention.
-9. **Merge**: Once CI quality gates pass and maintainer review is approved.
-
----
-
-## 7. Emergency Vulnerability Response Protocol
-
-In the event of an active zero-day exploit or critical CVSS 9.0+ advisory affecting a core production dependency:
-
-1. **Triage & Containment**: Project maintainers immediately verify exploitability within PACT's specific runtime configuration.
-2. **Private Development**: A security fix is authored in a private branch or fork to prevent premature public disclosure.
-3. **Upstream Mitigation**: If an upstream patch is not yet available, apply a safe local override or temporary functional fallback.
-4. **Fast-Track Review**: Run full CI regression gates (`.github/workflows/ci.yml` and `.github/workflows/dependency-audit.yml`).
-5. **Direct Main Merge & Advisory**: Merge the patch to `main` and publish a GitHub Security Advisory detailing the remediation.
-
----
-
-## 8. False Positives & Security Exception Protocol
-
-In rare scenarios where an upstream advisory is confirmed to be a false positive (e.g., vulnerable code path in a dev-only tool that is never executed in production or build time), maintainers may document an explicit temporary exception.
-
-### Exception Governance Rules
-- **No Casual Suppression**: Running `npm audit --fix --force` or blindly hiding warnings with `|| true` is strictly prohibited.
-- **Mandatory Documentation**: Every exception must be recorded in this section with the following template:
-
-```markdown
-### Exception Record Template
-- **Package**: `<package-name>`
-- **Advisory / CVE**: `<CVE-ID or GHSA-ID>`
-- **Severity**: `<Moderate / High>`
-- **Affected Version**: `<version>`
-- **Architectural Rationale**: `<Why this is non-exploitable in PACT>`
-- **Mitigation / Workaround**: `<Active defensive measure>`
-- **Review Expiration Date**: `<YYYY-MM-DD (Max 90 days)>`
-- **Approved By**: `<Maintainer GitHub handle>`
+┌────────────────────────────────────────┐
+│ 1. Inspect Advisory or Release Notes   │
+└──────────────────┬─────────────────────┘
+                   │
+                   ▼
+┌────────────────────────────────────────┐
+│ 2. Check Peer Dependency Constraints   │
+└──────────────────┬─────────────────────┘
+                   │
+                   ▼
+┌────────────────────────────────────────┐
+│ 3. Update Minimal Target in package.json
+└──────────────────┬─────────────────────┘
+                   │
+                   ▼
+┌────────────────────────────────────────┐
+│ 4. Run npm install & Check Lockfile Diff
+└──────────────────┬─────────────────────┘
+                   │
+                   ▼
+┌────────────────────────────────────────┐
+│ 5. Execute Local Verification Suite    │
+│    - node scratch/check-dependency-health.mjs
+│    - npx eslint src/                   │
+│    - npx tsc --noEmit                  │
+│    - node scratch/run-tests.mjs        │
+│    - npm run build                     │
+└──────────────────┬─────────────────────┘
+                   │
+                   ▼
+┌────────────────────────────────────────┐
+│ 6. Open PR, CI Passes & Maintainer Merge
+└────────────────────────────────────────┘
 ```
-
-*(Currently, PACT has **0 active exceptions**. The dependency tree is 100% clean of known advisories.)*
 
 ---
 
