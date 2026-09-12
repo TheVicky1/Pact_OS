@@ -342,4 +342,4 @@ Before opening an issue or asking for help, please gather the following informat
 | **Exact Error Message** | Full terminal error output or screenshot |
 | **Reproduction Steps** | 1. Cloned repo, 2. Ran `npm install`, 3. Ran `npm run dev` |
 
-Once gathered, please open an issue on the [PACT GitHub Issues page](https://github.com/TheVicky1/Pact_OS/issues) or consult [SUPPORT.md](SUPPORT.md).
+Once gathered, please open an issue on the [PACT GitHub Issues page](https://github.com/TheVicky1/Pact_OS/issues) or consult [SUPPORT.md](../SUPPORT.md).

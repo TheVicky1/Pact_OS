@@ -50,22 +50,24 @@ If you are new to GitHub and Git, here are the core terms you will encounter:
 
 ## 2. Before You Start
 
-1. **Check Existing Issues**: Visit the [GitHub Issues](https://github.com/TheVicky1/Pact_OS/issues) tab to see what needs work.
-2. **Avoid Duplicate Work**: Check if someone is already commenting on or working on an issue before starting.
-3. **Claim an Issue**: Leave a short comment on the issue (e.g., *"I'd like to work on this issue!"*). A maintainer will reply to confirm your assignment.
+1. **Check Existing Issues**: Visit the [GitHub Issues](https://github.com/TheVicky1/Pact_OS/issues) tab. Filter issues with the [`good first issue`](https://github.com/TheVicky1/Pact_OS/labels/good%20first%20issue) and `difficulty:beginner` labels (see our [**Label Taxonomy**](GITHUB_LABELS.md)).
+2. **Avoid Duplicate Work**: Check if someone is already commenting on or assigned to an issue before starting.
+3. **Claim an Issue**: Leave a short comment on the issue (e.g., *"I'd like to work on this issue. Please assign it to me."*). A maintainer will confirm your assignment.
 4. **Ask Questions**: If any requirement is unclear, ask directly inside the issue. It is always better to clarify early than to rewrite code later.
 
 ---
 
 ## 3. Choose Your First Contribution
 
-You do not have to write hundreds of lines of complex code. Here are great starting points:
+You do not have to write hundreds of lines of complex code. Look for these beginner-friendly labels:
 
-- 📖 **Documentation**: Fix typos, clarify setup instructions, or improve code comments.
-- 🎨 **UI Polish**: Improve responsive spacing, fix text overflow, or adjust hover transitions.
-- ♿ **Accessibility**: Add missing ARIA labels, improve keyboard focus indicators, or verify color contrast.
-- 🐛 **Bug Fixes**: Resolve small validation glitches or visual bugs.
-- 🧪 **Unit Tests**: Add tests covering edge cases in date helpers, financial math, or state machines.
+- 📖 **Documentation** (`type:docs`): Fix typos, clarify setup instructions, or improve code comments.
+- 🎨 **UI Polish** (`type:ui`): Improve responsive spacing, fix text overflow, or adjust hover transitions.
+- ♿ **Accessibility** (`type:a11y`): Add missing ARIA labels, improve keyboard focus indicators, or verify color contrast.
+- 🐛 **Bug Fixes** (`type:bug`): Resolve small validation glitches or visual bugs.
+- 🧪 **Unit Tests** (`type:test`): Add tests covering edge cases in date helpers, financial math, or state machines.
+
+> 💡 Check the [**GitHub Label Taxonomy**](GITHUB_LABELS.md) to understand estimated time badges (`time:<15m`, `time:15-30m`, etc.) so you can pick a task that fits your availability!
 
 ---
 

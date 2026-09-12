@@ -91,7 +91,7 @@ To establish a clear shared vocabulary across issues and pull requests, PACT cla
 | ✨ **Feature** | `feat` | New functionality aligned with the roadmap and approved by maintainers. |
 | 🔐 **Security** | `security` | Hardening RLS policies, input sanitization, and credential protection. |
 
-*(Note: Official GitHub issue and PR label automation will align with this vocabulary in upcoming project phases).*
+*(For complete label definitions, difficulty levels, and composition guidelines, consult our authoritative [**GitHub Label Taxonomy**](docs/GITHUB_LABELS.md)).*
 
 ---
 
@@ -427,6 +427,7 @@ Every merged contribution matters! Contributors with accepted pull requests are 
 Need assistance, clarification, or guidance during your contribution journey?
 
 - 📖 **Beginner Guide**: [docs/CONTRIBUTING-BEGINNERS.md](docs/CONTRIBUTING-BEGINNERS.md)
+- 🏷️ **Label Taxonomy**: [docs/GITHUB_LABELS.md](docs/GITHUB_LABELS.md)
 - 🔧 **Troubleshooting**: [docs/TROUBLESHOOTING.md](docs/TROUBLESHOOTING.md)
 - 💬 **Support Channels**: [SUPPORT.md](SUPPORT.md)
 - 📚 **Full Documentation**: [docs/README.md](docs/README.md)

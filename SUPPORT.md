@@ -41,7 +41,7 @@ If you have an idea for improving PACT or introducing a new capability:
 If you are new to open source or contributing to PACT for the first time:
 - Start with our [**Beginner's Contribution Guide**](docs/CONTRIBUTING-BEGINNERS.md) for a complete step-by-step walkthrough.
 - Check out [CONTRIBUTING.md](CONTRIBUTING.md) for standard contributor guidelines.
-- Look for issues labeled `good first issue` or `help wanted`.
+- Look for issues labeled `good first issue` or `help wanted` (see our [**GitHub Label Taxonomy**](docs/GITHUB_LABELS.md)).
 - If anything in the documentation or setup guide is confusing or incomplete, please let us know by opening an issue—improving contributor onboarding is a priority for us!
 
 ---

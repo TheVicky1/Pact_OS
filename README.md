@@ -206,6 +206,7 @@ Contributions are warmly welcomed! We believe in building a transparent, support
 ### Contribution Resources
 - 🌱 [**Beginner's Guide**](docs/CONTRIBUTING-BEGINNERS.md) — Step-by-step walkthrough for first-time contributors.
 - 📖 [**Contributing Guide**](CONTRIBUTING.md) — Workflow, code standards, and PR guidelines.
+- 🏷️ [**Label Taxonomy**](docs/GITHUB_LABELS.md) — Official issue classification system and difficulty tiers.
 - 🔧 [**Troubleshooting Guide**](docs/TROUBLESHOOTING.md) — Diagnostics for environment, build, and Git issues.
 - 🤝 [**Code of Conduct**](CODE_OF_CONDUCT.md) — Community standards and participation guidelines.
 - 💬 [**Support Guide**](SUPPORT.md) — Where to ask questions, report bugs, and propose features.
@@ -235,6 +236,7 @@ Comprehensive technical specifications, system architectures, and operational ru
 | Document | Purpose |
 | :--- | :--- |
 | 🌱 [**Beginner Contributing**](docs/CONTRIBUTING-BEGINNERS.md) | Step-by-step zero-to-PR guide for first-time contributors |
+| 🏷️ [**GitHub Labels**](docs/GITHUB_LABELS.md) | Canonical issue classification, difficulty levels & composition |
 | 🔧 [**Troubleshooting**](docs/TROUBLESHOOTING.md) | Practical fixes for common setup, build, and Git roadblocks |
 | 🌟 [**Master Documentation**](docs/PACT_MASTER_DOCUMENTATION.md) | Central comprehensive technical and product reference |
 | 📖 [**Product Vision**](docs/PRODUCT.md) | Vision, dual taglines, product philosophy, and core principles |
