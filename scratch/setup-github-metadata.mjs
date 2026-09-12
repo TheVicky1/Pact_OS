@@ -121,7 +121,7 @@ function githubRequest(path, method, data, token) {
 }
 
 async function runLiveProvisioning() {
-  const token = process.env.GITHUB_TOKEN;
+  const token = getToken();
   console.log('🚀 Connecting to GitHub API...');
 
   try {

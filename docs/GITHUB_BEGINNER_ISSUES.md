@@ -2,7 +2,65 @@
 
 This document contains the canonical catalog of **40 curated, actionable, and beginner-friendly issues** designed for first-time open-source contributors joining the PACT project.
 
-Every issue is fully specified with exact file pointers, step-by-step guidance, acceptance criteria, and local verification commands.
+---
+
+## ⚡ Phase 5G Micro-Contribution Standard
+
+Starting in Phase 5G, PACT OS adopts a **Micro-Contribution Philosophy**:
+
+1. **Single-File Scoping**: Every beginner task is strictly bounded to **one target file**.
+2. **1–5 Minute Implementation**: A contributor familiar with basic TypeScript / React can implement the change in minutes.
+3. **No Time Estimation Badges**: We deprecate `time:*` labels on new issues in favor of tightly-scoped acceptance criteria.
+4. **Self-Contained Verification**: Every issue provides the exact local command (e.g. `npm run lint` or `node --test tests/xyz.test.ts`) required to verify the change.
+5. **No Production Risk**: Zero complex architectural refactors, zero database migrations, and zero auth/session changes.
+
+---
+
+## 🔍 Audit & Classification Matrix of the 20 Unpublished Catalog Issues
+
+Below is the exhaustive classification of all 20 unpublished catalog issues from Phases 5B/5E, audited against the current repository state:
+
+| Catalog # | Canonical Slug | Original Title | Action | Classification Rational & Micro-Conversion Strategy |
+| :---: | :--- | :--- | :---: | :--- |
+| **#3** | `docs-integrations-payload-examples` | docs: add API payload examples to proof connector specification | **REDUCE** | Scoped down from full multi-provider spec to a single LeetCode JSON response example in `docs/INTEGRATIONS.md`. |
+| **#5** | `docs-weekly-review-flow-diagram` | docs: document weekly review 5-step state machine in user flows | **REDUCE** | Simplified to documenting the 5 state enum names in `docs/DEVELOPMENT.md`. |
+| **#7** | `docs-habit-recurrence-syntax` | docs: document habit recurrence rule syntax in data model guide | **KEEP** | Retained as concise documentation snippet for recurrence rules. |
+| **#8** | `docs-troubleshooting-rls-recursion` | docs: add troubleshooting steps for Supabase RLS recursion errors | **KEEP** | **Batch 3 Candidate #1**: High-leverage troubleshooting entry in `docs/TROUBLESHOOTING.md`. |
+| **#13** | `ui-finance-category-badge-opacity` | ui: refine category badge color opacity in transaction list | **KEEP** | **Batch 3 Candidate #2**: Single Tailwind class opacity tweak in `src/features/finance/components/transaction-list.tsx`. |
+| **#14** | `ui-streak-summary-pulse-glow` | ui: add pulse glow effect to streak summary highlight on overview | **REDUCE** | Simple CSS animation addition on overview card. |
+| **#15** | `ui-task-form-modal-mobile-padding` | ui: improve mobile bottom sheet padding in task form modal | **KEEP** | **Batch 3 Candidate #5**: Single Tailwind padding adjustment `pb-6 sm:pb-4` in `src/features/tasks/components/task-form-modal.tsx`. |
+| **#16** | `ui-analytics-skeleton-shimmer` | ui: polish skeleton loader shimmer animation in analytics workspace | **KEEP** | **Batch 3 Candidate #8**: Single hover border transition in `src/features/analytics/components/analytics-summary-cards.tsx`. |
+| **#21** | `a11y-focus-timer-aria-live` | a11y: add aria-live polite region to focus timer countdown | **REPLACE** | Timer display already contains `aria-live="polite"`; replaced with **Batch 3 Candidate #3**: `a11y-command-palette-results-label`. |
+| **#24** | `test-habit-streak-leap-year` | test: add unit test verifying habit streak calculation on leap years | **KEEP** | **Batch 3 Candidate #4**: Single leap-year test case in `tests/habits-routines.test.ts`. |
+| **#26** | `test-weekly-review-step-boundaries` | test: add unit tests for weekly review step progression boundary checks | **KEEP** | **Batch 3 Candidate #7**: Single step boundary test in `tests/weekly-review.test.ts`. |
+| **#27** | `test-notification-channel-filter` | test: add unit tests for notification channel filter utility | **KEEP** | Retained for future batches in `tests/notifications.test.ts`. |
+| **#30** | `refactor-currency-symbol-helper` | refactor: centralize currency symbol formatting in lib/money.ts | **REPLACE** | Replaced with **Batch 3 Candidate #10**: `test-money-sum-negative-cents`. |
+| **#31** | `refactor-date-string-helper-time` | refactor: export type-safe date string helper in lib/time.ts | **REPLACE** | Replaced with higher-leverage micro-docs task. |
+| **#32** | `refactor-modal-transition-variants` | refactor: export shared modal transition variants in components/ui/modal.tsx | **REDUCE** | Scoped to exporting existing framer-motion variants. |
+| **#33** | `fix-finance-negative-budget-remaining` | fix: prevent negative budget remaining calculation on expense overage | **KEEP** | **Batch 3 Candidate #9**: Clean 1-line `Math.max(0, ...)` clamp in `src/lib/validations/finance.ts`. |
+| **#34** | `fix-notification-popover-hydration-timestamp` | fix: resolve hydration warning on formatted relative timestamp in notification popover | **DROP** | Popover is already fully client-side hydrated. |
+| **#38** | `feat-settings-webhook-copy-button` | feat: add copy-to-clipboard button on integration webhook URL in settings | **REDUCE** | Simple copy button component addition. |
+| **#39** | `feat-tasks-proof-verified-filter` | feat: add quick filter for proof-verified tasks in task list | **REPLACE** | Too complex for micro-contribution standard. |
+| **#40** | `feat-settings-export-format-selector` | feat: add export data format selector (JSON / CSV) helper in data privacy settings | **REPLACE** | Export API already supports CSV/JSON endpoints. |
+
+---
+
+## 🎯 Batch 3 Candidate Set (10 Micro-Issues)
+
+The following 10 micro-issues constitute the candidate set for **Batch 3** (Dry-Run Prepared):
+
+| # | Slug | Title | Type | Area | Difficulty | Target File |
+| :-: | :--- | :--- | :--- | :--- | :--- | :--- |
+| 1 | `docs-troubleshooting-rls-recursion` | `docs: add troubleshooting steps for Supabase RLS recursion errors` | `type:docs` | `area:documentation` | `difficulty:beginner` | `docs/TROUBLESHOOTING.md` |
+| 2 | `ui-finance-category-badge-opacity` | `ui: refine category badge color opacity in transaction list` | `type:ui` | `area:finance` | `difficulty:beginner` | `src/features/finance/components/transaction-list.tsx` |
+| 3 | `ui-streak-summary-pulse-glow` | `ui: add pulse glow effect to streak summary highlight on overview` | `type:ui` | `area:habits` | `difficulty:beginner` | `src/features/habits/components/habit-overview.tsx` |
+| 4 | `ui-task-form-modal-mobile-padding` | `ui: improve mobile bottom sheet padding in task form modal` | `type:ui` | `area:tasks` | `difficulty:beginner` | `src/features/tasks/components/task-form-modal.tsx` |
+| 5 | `ui-analytics-skeleton-shimmer` | `ui: polish skeleton loader shimmer animation in analytics workspace` | `type:ui` | `area:analytics` | `difficulty:beginner` | `src/features/analytics/components/analytics-skeleton.tsx` |
+| 6 | `test-habit-streak-leap-year` | `test: add unit test verifying habit streak calculation on leap years` | `type:test` | `area:testing` | `difficulty:easy` | `tests/habits-routines.test.ts` |
+| 7 | `test-weekly-review-step-boundaries` | `test: add unit tests for weekly review step progression boundary checks` | `type:test` | `area:testing` | `difficulty:beginner` | `tests/weekly-review.test.ts` |
+| 8 | `test-notification-channel-filter` | `test: add unit tests for notification channel filter utility` | `type:test` | `area:testing` | `difficulty:beginner` | `tests/notifications.test.ts` |
+| 9 | `refactor-modal-transition-variants` | `refactor: export shared modal transition variants in components/ui/modal.tsx` | `type:refactor` | `area:ui` | `difficulty:beginner` | `src/components/ui/modal.tsx` |
+| 10 | `fix-finance-negative-budget-remaining` | `fix: prevent negative budget remaining calculation on expense overage` | `type:bug` | `area:finance` | `difficulty:easy` | `src/lib/validations/finance.ts` |
 
 ---
 

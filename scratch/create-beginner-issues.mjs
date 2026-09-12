@@ -117,6 +117,19 @@ export const SECOND_BATCH_SLUGS = [
   'feat-codeforces-rating-tier-badge'
 ];
 
+export const THIRD_BATCH_SLUGS = [
+  'docs-troubleshooting-rls-recursion',
+  'ui-finance-category-badge-opacity',
+  'ui-streak-summary-pulse-glow',
+  'ui-task-form-modal-mobile-padding',
+  'ui-analytics-skeleton-shimmer',
+  'test-habit-streak-leap-year',
+  'test-weekly-review-step-boundaries',
+  'test-notification-channel-filter',
+  'refactor-modal-transition-variants',
+  'fix-finance-negative-budget-remaining'
+];
+
 function getToken() {
   if (process.env.GITHUB_TOKEN) return process.env.GITHUB_TOKEN;
   if (process.env.GH_TOKEN) return process.env.GH_TOKEN;
@@ -141,19 +154,23 @@ async function main() {
   const publishAll = args.includes('--all');
   const isBatch1 = args.includes('--batch=1') || args.includes('--batch-1');
   const isBatch2 = args.includes('--batch=2') || args.includes('--batch-2');
+  const isBatch3 = args.includes('--batch=3') || args.includes('--batch-3');
   const isDryRun = args.includes('--dry-run');
 
-  const hasExplicitBatch = isBatch1 || isBatch2 || publishAll;
+  const hasExplicitBatch = isBatch1 || isBatch2 || isBatch3 || publishAll;
   if (!hasExplicitBatch && !isDryRun) {
     console.error('⚠️  SAFETY GUARD: Explicit batch selection required for live execution.');
-    console.error('Usage: node scratch/create-beginner-issues.mjs [--batch=1 | --batch=2 | --all] [--dry-run]');
+    console.error('Usage: node scratch/create-beginner-issues.mjs [--batch=1 | --batch=2 | --batch=3 | --all] [--dry-run]');
     process.exit(1);
   }
 
   let targetSlugs = FIRST_BATCH_SLUGS;
   let batchName = 'FIRST BATCH OF 10 (DRY RUN DEFAULT)';
 
-  if (isBatch2) {
+  if (isBatch3) {
+    targetSlugs = THIRD_BATCH_SLUGS;
+    batchName = 'THIRD BATCH OF 10 (MICRO-ISSUES)';
+  } else if (isBatch2) {
     targetSlugs = SECOND_BATCH_SLUGS;
     batchName = 'SECOND BATCH OF 10';
   } else if (isBatch1) {

@@ -35,7 +35,7 @@ Most productivity tools suffer from **passive accumulation**—tasks, habits, an
 
 **Intent is easy. Execution is difficult.**
 
-**PACT** is an open-source **Personal Operating System (OS)** engineered to bridge the critical divide between intention and action. Rather than functioning as a passive checklist, PACT provides an active governance system unifying time-blocked planning, strategic milestone tracking, deep work focus sessions, integer-cents financial cash flow, and unbreakable accountability contracts.
+**PACT** is an open-source **Personal Operating System (OS)** built with **Next.js 16**, **React 19**, **TypeScript 5**, **Tailwind CSS v4**, and **Supabase PostgreSQL** to bridge the critical divide between intention and action. Rather than functioning as a passive checklist, PACT provides an active governance system unifying time-blocked planning, strategic milestone tracking, deep work focus sessions, integer-cents financial cash flow, and unbreakable accountability contracts.
 
 ### Foundational Principles
 
@@ -107,14 +107,19 @@ npm run build
   <h2>Contributing</h2>
 </div>
 
-Contributions are warmly welcomed! We believe in building a transparent, supportive, and beginner-friendly open-source community.
+Contributions are warmly welcomed! PACT is designed to be one of the most welcoming and beginner-friendly open-source destinations on GitHub.
+
+> 🚀 **New to Open Source? Start with a Micro-Contribution!**
+> We deliberately scope our beginner tasks into **tiny, single-file micro-contributions** (1–5 minutes of work) with exact file pointers and step-by-step guidance.
+> 👉 [**Browse Live Good First Issues**](https://github.com/TheVicky1/Pact_OS/issues?q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22) &nbsp;|&nbsp; 📖 [**Read the Beginner's Guide**](docs/CONTRIBUTING-BEGINNERS.md)
 
 ### For Complete Beginners
 
 Start with our step-by-step [**Beginner's Contribution Guide**](docs/CONTRIBUTING-BEGINNERS.md) for a comprehensive zero-to-PR walkthrough explaining Git forks, branch setup, making changes, and opening your first pull request.
 
 Explore our curated issues:
-- 🎯 [**Curated Beginner Issues Factory**](docs/GITHUB_BEGINNER_ISSUES.md) — 40 structured, self-contained Good First Issues across all PACT modules.
+- 🎯 [**Live Good First Issues**](https://github.com/TheVicky1/Pact_OS/issues?q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22) — Filter active beginner-friendly tasks on GitHub.
+- 📋 [**Curated Beginner Issues Factory**](docs/GITHUB_BEGINNER_ISSUES.md) — Canonical catalog of structured, self-contained Good First Issues across all PACT modules.
 - 💬 [**Community Discussions**](docs/GITHUB_DISCUSSIONS.md) — Ask questions, share ideas, and connect with other contributors.
 
 ### Not a Beginner?
