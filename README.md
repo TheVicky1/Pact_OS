@@ -7,6 +7,7 @@
 **A System for Keeping Promises to Yourself.**  
 *Turn Intent Into Discipline.*
 
+[![CI](https://github.com/TheVicky1/Pact_OS/actions/workflows/ci.yml/badge.svg)](https://github.com/TheVicky1/Pact_OS/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-d4af37.svg?style=for-the-badge)](LICENSE)
 [![Next.js](https://img.shields.io/badge/Next.js-16.3-050505.svg?style=for-the-badge&logo=next.js&logoColor=white)](https://nextjs.org/)
 [![React](https://img.shields.io/badge/React-19.2-050505.svg?style=for-the-badge&logo=react&logoColor=61DAFB)](https://react.dev/)
@@ -254,6 +255,7 @@ Comprehensive technical specifications, system architectures, and operational ru
 | 🛡️ [**Threat Model**](docs/THREAT_MODEL.md) | Threat actor matrix, attack surfaces, and defense-in-depth mitigations |
 | 💻 [**Developer Guide**](docs/DEVELOPMENT.md) | Local environment setup, database migrations, and development commands |
 | 🧪 [**Testing Strategy**](docs/TESTING.md) | Automated test matrix and verification runbooks |
+| ⚙️ [**CI Pipeline**](docs/CI_PIPELINE.md) | GitHub Actions automated quality gates, secret scans & test matrix |
 | 🌿 [**Git Workflow**](docs/GIT_WORKFLOW.md) | Conventional Commits, branch hygiene, and pre-commit safety rules |
 | 🗺️ [**Product Roadmap**](docs/ROADMAP.md) | Verified implementation status and future planned milestones |
 | 🎨 [**Design System**](docs/DESIGN_SYSTEM.md) | Luxury Obsidian & Gold palette, 3D celestial planetary hero, and design tokens |

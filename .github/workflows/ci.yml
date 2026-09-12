@@ -1,0 +1,57 @@
+name: Continuous Integration
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  quality-gates:
+    name: Quality Gates & Verification
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [20.x]
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
+
+      - name: Clean install dependencies
+        run: npm ci
+
+      - name: 🔒 Zero-Secret Scan
+        run: node scratch/secret-scan.mjs
+
+      - name: 🔗 Markdown Relative Link Audit
+        run: node scratch/check-links.mjs
+
+      - name: 🧹 ESLint Code Quality
+        run: npx eslint src/
+
+      - name: 🏷️ TypeScript Strict Typecheck
+        run: npx tsc --noEmit
+
+      - name: 🧪 Run Domain & Security Test Matrix (35 Suites)
+        run: node scratch/run-tests.mjs
+
+      - name: 🏗️ Next.js Production Build
+        run: npm run build
+        env:
+          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL || 'https://dummy-pact-ci.supabase.co' }}
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'dummy-anon-key-for-ci-build' }}
