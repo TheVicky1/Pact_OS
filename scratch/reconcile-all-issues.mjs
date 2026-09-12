@@ -97,16 +97,21 @@ async function main() {
   console.log(`Topics: ${(repoRes.data.topics || []).join(', ')}`);
   console.log(`Description: ${repoRes.data.description}\n`);
 
-  // 2. Fetch all items (issues + PRs)
+  // 2. Fetch issues and PRs
   const issuesRes = await githubApi('/repos/TheVicky1/Pact_OS/issues?state=all&per_page=100', token);
+  const pullsRes = await githubApi('/repos/TheVicky1/Pact_OS/pulls?state=all&per_page=100', token);
   const allItems = issuesRes.data;
 
-  const pullRequests = allItems.filter(item => item.pull_request);
+  const pullRequests = Array.isArray(pullsRes.data) ? pullsRes.data : [];
   const issues = allItems.filter(item => !item.pull_request);
+
+  const openPRs = pullRequests.filter(p => p.state === 'open');
+  const mergedPRs = pullRequests.filter(p => p.merged_at != null);
+  const closedUnmergedPRs = pullRequests.filter(p => p.state === 'closed' && p.merged_at == null);
 
   console.log(`Total items fetched: ${allItems.length}`);
   console.log(`- Issues: ${issues.length} (${issues.filter(i => i.state === 'open').length} open, ${issues.filter(i => i.state === 'closed').length} closed)`);
-  console.log(`- PRs: ${pullRequests.length} (${pullRequests.filter(p => p.state === 'open').length} open, ${pullRequests.filter(p => p.state === 'closed').length} closed)\n`);
+  console.log(`- PRs: ${pullRequests.length} total (${openPRs.length} open, ${mergedPRs.length} merged, ${closedUnmergedPRs.length} closed unmerged)\n`);
 
   // 3. Inspect every issue in detail
   console.log('=== DETAILED ISSUE RECONCILIATION ===');
