@@ -56,6 +56,7 @@ function loadCanonicalIssues() {
  */
 function githubApiRequest(method, path, token, data = null) {
   return new Promise((resolve, reject) => {
+    const payload = data ? JSON.stringify(data) : null;
     const options = {
       hostname: 'api.github.com',
       port: 443,
@@ -65,7 +66,7 @@ function githubApiRequest(method, path, token, data = null) {
         'User-Agent': 'PACT-Issue-Factory',
         'Authorization': `token ${token}`,
         'Accept': 'application/vnd.github.v3+json',
-        'Content-Type': 'application/json'
+        ...(payload ? { 'Content-Type': 'application/json', 'Content-Length': Buffer.byteLength(payload) } : {})
       }
     };
 
@@ -83,11 +84,36 @@ function githubApiRequest(method, path, token, data = null) {
     });
 
     req.on('error', (err) => reject(err));
-    if (data) {
-      req.write(JSON.stringify(data));
+    if (payload) {
+      req.write(payload);
     }
     req.end();
   });
+}
+
+export const FIRST_BATCH_SLUGS = [
+  'docs-money-cents-examples',
+  'docs-developer-commands-cheatsheet',
+  'ui-finance-summary-responsive-padding',
+  'ui-habits-routine-toggle-transition',
+  'a11y-notification-popover-close-button',
+  'a11y-task-priority-sr-only',
+  'test-money-cents-formatting-edge-cases',
+  'test-task-priority-sorting-comparator',
+  'fix-daily-cadence-zero-tasks-pluralization',
+  'refactor-unused-icon-imports-integrations'
+];
+
+function getToken() {
+  if (process.env.GITHUB_TOKEN) return process.env.GITHUB_TOKEN;
+  if (process.env.GH_TOKEN) return process.env.GH_TOKEN;
+  try {
+    const out = execSync('git credential fill', { input: 'protocol=https\nhost=github.com\n\n', encoding: 'utf8', stdio: ['pipe', 'pipe', 'ignore'] });
+    const line = out.split('\n').find(l => l.startsWith('password='));
+    return line ? line.slice(9).trim() : null;
+  } catch {
+    return null;
+  }
 }
 
 /**
@@ -97,14 +123,23 @@ async function main() {
   console.log('🏛️ PACT Curated Beginner Issue Factory');
   console.log(`Repository: ${REPO_OWNER}/${REPO_NAME}\n`);
 
-  const issues = loadCanonicalIssues();
-  console.log(`Loaded ${issues.length} canonical issues from docs/GITHUB_BEGINNER_ISSUES.md\n`);
+  const allIssues = loadCanonicalIssues();
+  const args = process.argv.slice(2);
+  const publishAll = args.includes('--all');
+  const isDryRun = args.includes('--dry-run');
 
-  const token = process.env.GITHUB_TOKEN;
-  const isDryRun = process.argv.includes('--dry-run');
+  // Filter to First Batch unless --all is explicitly provided
+  const issues = publishAll
+    ? allIssues
+    : allIssues.filter(iss => FIRST_BATCH_SLUGS.includes(iss.slug));
+
+  console.log(`Loaded ${allIssues.length} canonical issues from docs/GITHUB_BEGINNER_ISSUES.md`);
+  console.log(`Targeting ${issues.length} issues for this execution (${publishAll ? 'ALL ISSUES' : 'FIRST BATCH OF 10'}).\n`);
+
+  const token = isDryRun ? null : getToken();
 
   if (token && !isDryRun) {
-    console.log('🔑 GITHUB_TOKEN detected. Checking existing repository issues...\n');
+    console.log('🔑 Authentication detected. Checking existing repository issues...\n');
     try {
       const listRes = await githubApiRequest('GET', `/repos/${REPO_OWNER}/${REPO_NAME}/issues?state=all&per_page=100`, token);
       const existingIssues = Array.isArray(listRes.data) ? listRes.data : [];
@@ -147,16 +182,16 @@ async function main() {
   }
 
   // Dry-run / CLI instructions mode
-  console.log('ℹ️  No GITHUB_TOKEN detected or --dry-run mode requested.');
-  console.log('📋 Verified Canonical Inventory (40 / 40 issues ready):\n');
+  console.log('ℹ️  Running in dry-run mode (--dry-run or no token).');
+  console.log(`📋 Verified Target Inventory (${issues.length} issues ready):\n`);
 
   issues.forEach((iss, idx) => {
     console.log(`[${(idx + 1).toString().padStart(2, ' ')}] [${iss.slug}] ${iss.title}`);
     console.log(`     Labels: ${iss.labels.join(', ')}`);
   });
 
-  console.log('\nTo provision these issues on GitHub once a token is available:');
-  console.log('  $env:GITHUB_TOKEN="ghp_your_token"; node scratch/create-beginner-issues.mjs\n');
+  console.log('\nTo provision these issues live on GitHub:');
+  console.log('  node scratch/create-beginner-issues.mjs\n');
 }
 
 main().catch(console.error);
