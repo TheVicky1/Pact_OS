@@ -1,286 +1,223 @@
 # PACT — GitHub Issue Label Taxonomy & Governance
 
-This document serves as the canonical specification and single source of truth for **PACT's GitHub Issue Label Taxonomy**.
+This document serves as the canonical specification and single source of truth for **PACT's GitHub Label Taxonomy & Merge Governance**.
 
 ---
 
 ## 1. Taxonomy Philosophy
 
-A well-structured issue classification system lowers cognitive friction for new contributors and enables efficient triage for maintainers. PACT’s label taxonomy is built around four fundamental questions:
+A well-structured issue classification system lowers cognitive friction for new contributors, facilitates GitHub issue search discovery, and enables deterministic triage automation.
+
+PACT’s label taxonomy is organized around **orthogonal dimensions**:
 
 ```
-┌─────────────────┐     ┌─────────────────┐     ┌─────────────────┐     ┌─────────────────┐
-│     1. WHAT     │     │  2. DIFFICULTY  │     │     3. TIME     │     │    4. WHERE     │
-│  is this issue? │ ──> │ is the task?    │ ──> │ will it take?   │ ──> │ does it belong? │
-│   `type:*`      │     │  `difficulty:*` │     │    `time:*`     │     │    `area:*`     │
-└─────────────────┘     └─────────────────┘     └─────────────────┘     └─────────────────┘
+┌─────────────────┐     ┌─────────────────┐     ┌─────────────────┐     ┌─────────────────┐     ┌─────────────────┐
+│     1. WHAT     │     │  2. IMPORTANCE  │     │  3. DIFFICULTY  │     │    4. WHERE     │     │   5. LIFECYCLE  │
+│  is this work?  │ ──> │ is the urgency? │ ──> │ is the scope?   │ ──> │ does it belong? │ ──> │ is the status?  │
+│    `type:*`     │     │  `priority:*`   │     │ `difficulty:*`  │     │    `area:*`     │     │   `status:*`    │
+└─────────────────┘     └─────────────────┘     └─────────────────┘     └─────────────────┘     └─────────────────┘
 ```
 
 ### Compositional Design (No Label Explosion)
-Instead of creating dozens of rigid compound labels (e.g., `frontend-beginner-15m-dashboard`), PACT **composes** orthogonal dimensions:
-- `type:ui` + `difficulty:beginner` + `time:15-30m` + `area:dashboard` + `good first issue`
+Instead of creating dozens of rigid compound labels (e.g., `frontend-beginner-urgent-dashboard-fix`), PACT **composes** orthogonal dimensions:
+- `type:bug` + `priority:high` + `difficulty:beginner` + `area:dashboard` + `status:ready` + `good first issue`
 
-This provides precise filtering across GitHub search without label clutter.
+This provides precise filtering across GitHub search without clutter.
 
 ---
 
-## 2. Canonical Label Categories
+## 2. Canonical Label Summary Matrix
 
-### Summary Matrix
-
-| Category | Prefix | Question Answered | Example Labels |
+| Dimension | Prefix / Name | Purpose | Example Canonical Labels |
 | :--- | :--- | :--- | :--- |
-| **Contribution Type** | `type:*` | *What type of work is required?* | `type:bug`, `type:feature`, `type:ui`, `type:docs` |
-| **Difficulty Level** | `difficulty:*` | *What expertise level is expected?* | `difficulty:beginner`, `difficulty:easy`, `difficulty:intermediate` |
-| **Estimated Time** | `time:*` | *How long will this task take?* | `time:<15m`, `time:15-30m`, `time:30-60m`, `time:1-2h` |
-| **Project Area** | `area:*` | *Which subsystem is affected?* | `area:dashboard`, `area:planner`, `area:finance`, `area:auth` |
-| **Community** | *(none)* | *Is this open for community pickup?* | `good first issue`, `help wanted`, `community` |
-| **Workflow Status** | `status:*` | *What is the issue's triage state?* | `status:blocked`, `status:needs-discussion`, `status:needs-review` |
+| **Type** | `type:*` | Nature of the work requested or delivered | `type:bug`, `type:feature`, `type:documentation`, `type:security`, `type:maintenance`, `type:question` |
+| **Priority** | `priority:*` | Triage severity and urgency | `priority:critical`, `priority:high`, `priority:medium`, `priority:low` |
+| **Difficulty** | `difficulty:*` | Contributor expertise level expected | `difficulty:beginner`, `difficulty:easy`, `difficulty:intermediate`, `difficulty:advanced` |
+| **Estimated Time** | `time:*` | Scoped implementation duration | `time:<15m`, `time:15-30m`, `time:30-60m`, `time:1-2h`, `time:2-4h`, `time:4h+` |
+| **Project Area** | `area:*` | Architectural subsystem affected | `area:ui`, `area:auth`, `area:planning`, `area:accountability`, `area:finance`, `area:github`, `area:supabase`, `area:testing`, `area:documentation`, `area:developer-experience` |
+| **Contributor** | *(community)* | Discovery tags for open-source contributors | `good first issue`, `help wanted`, `beginner friendly`, `hacktoberfest` |
+| **Status** | `status:*` | Issue & PR lifecycle progression | `status:triage`, `status:ready`, `status:in-progress`, `status:blocked`, `status:needs-review` |
 
 ---
 
-## 3. Label Dictionary
+## 3. Comprehensive Label Dictionary & Automation Eligibility
 
 ### Category A — Contribution Type (`type:*`)
 
 #### `type:bug`
 - **Color:** `#D73A4A` (Red)
 - **Purpose:** Something is broken, malfunctioning, failing validation, or producing incorrect results.
-- **When to use:** Broken state transitions, UI rendering errors, broken links, arithmetic bugs, crashes.
-- **When NOT to use:** New feature requests, cosmetic redesigns without defect, or refactoring.
-- **Example Issue:** `fix(planner): midnight rollover causes event overlap on timeline`
+- **When to Apply:** Broken state transitions, UI rendering glitches, link 404s, arithmetic discrepancies, unhandled crashes.
+- **When NOT to Apply:** New feature requests, cosmetic enhancements without defect, refactoring.
+- **Example:** `fix(planner): midnight rollover causes event overlap on timeline`
+- **Automation Eligibility:** Auto-applied by `.github/ISSUE_TEMPLATE/bug_report.yml`.
 
 #### `type:feature`
 - **Color:** `#A2EEEF` (Soft Cyan)
-- **Purpose:** Proposing a new user capability, domain engine expansion, or major product enhancement.
-- **When to use:** Adding a new focus session sound, supporting a new proof provider, or adding a dashboard metric.
-- **When NOT to use:** Fixing existing defects or non-functional refactoring.
-- **Example Issue:** `feat(focus): add binaural beat synthesizer presets`
+- **Purpose:** Proposing a new capability, user-facing workflow, or domain engine expansion.
+- **When to Apply:** Adding a focus session audio preset, supporting a new proof provider, adding an analytics view.
+- **When NOT to Apply:** Defect repairs or internal chore refactorings.
+- **Example:** `feat(focus): add binaural beat synthesizer presets`
+- **Automation Eligibility:** Auto-applied by `.github/ISSUE_TEMPLATE/feature_request.yml`.
 
-#### `type:docs`
+#### `type:documentation` (alias: `type:docs`)
 - **Color:** `#0075CA` (Blue)
-- **Purpose:** Documentation additions, corrections, architecture explanations, or guide updates.
-- **When to use:** README updates, contributor guide clarifications, troubleshooting steps, docstring typos.
-- **When NOT to use:** Changes that modify runtime application code (`src/**`).
-- **Example Issue:** `docs(contributing): clarify local Supabase CLI setup prerequisites`
-
-#### `type:ui`
-- **Color:** `#E99695` (Soft Pink)
-- **Purpose:** Visual styling, layout ergonomics, card geometry, micro-interactions, or design system tokens.
-- **When to use:** Adjusting card hover elevation, fixing mobile padding, aligning badges, or updating typography.
-- **When NOT to use:** Pure logic bugs with no visual element.
-- **Example Issue:** `ui(dashboard): refine metric card border contrast on mobile viewports`
-
-#### `type:a11y`
-- **Color:** `#1D76DB` (Ocean Blue)
-- **Purpose:** Accessibility improvements, keyboard navigation, ARIA labeling, and color contrast.
-- **When to use:** Adding missing `aria-label` to icon buttons, modal focus traps, screen reader landmarks.
-- **When NOT to use:** General visual design changes unrelated to accessibility standards.
-- **Example Issue:** `a11y(modal): add keyboard escape listener and focus trap to task modal`
-
-#### `type:test`
-- **Color:** `#BFDADC` (Pale Teal)
-- **Purpose:** Unit tests, integration tests, mock data fixtures, or test matrix improvements.
-- **When to use:** Adding test coverage for edge cases, testing state machine transitions, hardening test runners.
-- **When NOT to use:** Feature code changes where tests are merely supporting files.
-- **Example Issue:** `test(finance): add edge-case unit tests for zero-cent split allocations`
-
-#### `type:performance`
-- **Color:** `#D93F0B` (Rust Orange)
-- **Purpose:** Latency reduction, bundle optimization, database query optimization, or render efficiency.
-- **When to use:** Memoizing heavy components, optimizing Next.js dynamic imports, indexing slow queries.
-- **When NOT to use:** Minor refactors with no measurable performance impact.
-- **Example Issue:** `perf(calendar): virtualize month view grid for large event datasets`
-
-#### `type:refactor`
-- **Color:** `#E4E669` (Subtle Yellow)
-- **Purpose:** Internal code restructuring, dead code pruning, or type safety hardening without behavioral change.
-- **When to use:** Consolidating duplicate date math helpers, cleaning up obsolete types, modularizing handlers.
-- **When NOT to use:** Bug fixes (use `type:bug`) or visual changes (use `type:ui`).
-- **Example Issue:** `refactor(time): centralize ISO date parsing into lib/time.ts`
+- **Purpose:** Documentation additions, clarifications, architecture guides, docstrings, or typo fixes.
+- **When to Apply:** README updates, contributor onboarding clarifications, troubleshooting steps, API specifications.
+- **When NOT to Apply:** Changes modifying runtime TypeScript/React application logic in `src/**`.
+- **Example:** `docs(contributing): clarify local Supabase CLI setup prerequisites`
+- **Automation Eligibility:** Auto-applied by `.github/ISSUE_TEMPLATE/documentation.yml` or PR path matching `docs/**`, `*.md`.
 
 #### `type:security`
 - **Color:** `#B60205` (Deep Crimson)
-- **Purpose:** Security hardening, RLS policy audit, input sanitization, or vulnerability mitigation.
-- **When to use:** Strengthening Row Level Security policies, preventing XSS, tightening Zod validation schemas.
-- **When NOT to use:** Public reporting of active sensitive zero-day exploits (refer to [SECURITY.md](../SECURITY.md)).
-- **Example Issue:** `security(rls): add strict user ownership check on notification deletions`
+- **Purpose:** Security hardening, RLS policy audit, secret protection, vulnerability remediation, or dependency patch.
+- **When to Apply:** Row Level Security tightening, input validation schemas, Dependabot security PRs.
+- **When NOT to Apply:** Active exploitable vulnerability reports (submit privately per [SECURITY.md](../SECURITY.md)).
+- **Example:** `security(rls): add strict user ownership check on notification deletions`
+- **Automation Eligibility:** Auto-applied to Dependabot security alerts and PRs.
 
-#### `type:integration`
-- **Color:** `#5319E7` (Deep Indigo)
-- **Purpose:** External connectors and third-party APIs (Google Calendar, GitHub, LeetCode, Codeforces).
-- **When to use:** OAuth token refresh handling, webhook payload parsing, API rate-limit resilience.
-- **When NOT to use:** Internal domain engines that have no external API dependencies.
-- **Example Issue:** `feat(integrations): add LeetCode GraphQL submission streak verification`
+#### `type:maintenance`
+- **Color:** `#E4E669` (Subtle Gold)
+- **Purpose:** Repository upkeep, dependency upgrades, build script improvements, linter updates, cleanups.
+- **When to Apply:** Upgrading Next.js/React versions, pruning unused files, refactoring build helpers.
+- **When NOT to Apply:** User-facing bug fixes or net-new features.
+- **Example:** `chore(deps): bump production-dependencies (minor/patch)`
+- **Automation Eligibility:** Auto-applied to non-security Dependabot PRs and repository chore workflows.
+
+#### `type:question`
+- **Color:** `#D4C5F9` (Soft Purple)
+- **Purpose:** Support inquiries, usage questions, architectural clarification requests.
+- **When to Apply:** Questions about local development, domain logic rationale, or contribution guidance.
+- **When NOT to Apply:** Confirmed software bugs or actionable feature proposals (guide user to Discussions).
+- **Example:** `question: how does the integer-cents financial engine handle partial cent splits?`
+- **Automation Eligibility:** Auto-applied to GitHub Discussions Q&A or question issue templates.
 
 ---
 
-### Category B — Difficulty Level (`difficulty:*`)
+### Category B — Priority Dimension (`priority:*`)
 
-#### `difficulty:beginner`
+#### `priority:critical`
+- **Color:** `#B60205` (Deep Red)
+- **Purpose:** Production outage, active data loss, broken main build, severe security flaw.
+- **When to Apply:** Main branch CI fails, database migrations break startup, critical auth exploit.
+- **When NOT to Apply:** Non-blocking visual bugs or cosmetic improvements.
+- **Example:** `fix(auth): resolve infinite redirect loop on session expiration`
+- **Automation Eligibility:** Maintainer only.
+
+#### `priority:high`
+- **Color:** `#D93F0B` (Orange-Red)
+- **Purpose:** Major workflow blocker or high-impact defect affecting core productivity loops.
+- **When to Apply:** Task state changes failing silently, financial totals calculating incorrectly.
+- **When NOT to Apply:** Edge-case cosmetic issues.
+- **Example:** `fix(finance): prevent double ledger debit when network times out`
+- **Automation Eligibility:** Maintainer only.
+
+#### `priority:medium`
+- **Color:** `#FBCA04` (Amber Yellow)
+- **Purpose:** Standard defect or prioritized enhancement with a viable workaround.
+- **When to Apply:** Non-critical UI glitch, missing shortcut, optional filter issue.
+- **When NOT to Apply:** Critical security or core data loss bugs.
+- **Example:** `fix(ui): correct tooltip alignment on collapsed sidebar icons`
+- **Automation Eligibility:** Default priority assigned by triage bot if unassigned.
+
+#### `priority:low`
+- **Color:** `#0E8A16` (Green)
+- **Purpose:** Nice-to-have visual refinement, minor documentation polish, or low-urgency feature.
+- **When to Apply:** Typo corrections, subtle micro-animation timing, optional developer tooling.
+- **When NOT to Apply:** Any reproducible error in core domain calculations.
+- **Example:** `chore(docs): add syntax highlighting example to CONTRIBUTING.md`
+- **Automation Eligibility:** Maintainer or triage bot heuristics.
+
+---
+
+### Category C — Contributor & Community Labels
+
+#### `good first issue`
+- **Color:** `#7057FF` (GitHub Purple)
+- **Purpose:** Curated, self-contained issues specifically structured for first-time open-source contributors.
+- **When to Apply:** Scope is narrow, files are explicitly listed, acceptance criteria are deterministic, difficulty is beginner.
+- **When NOT to Apply:** Issues requiring deep architectural context, multi-package refactoring, or database migrations.
+- **Example:** `docs: fix relative markdown link in INTEGRATIONS.md`
+- **Automation Eligibility:** Auto-eligible for issues created via Issue Factory with `difficulty:beginner`.
+
+#### `help wanted`
+- **Color:** `#008672` (Teal)
+- **Purpose:** Explicit invitation for community members to claim and submit a solution.
+- **When to Apply:** Well-specified features, verified bug fixes, or documentation tasks ready for implementation.
+- **When NOT to Apply:** Issues still in discussion (`status:needs-discussion`) or blocked (`status:blocked`).
+- **Example:** `feat(calendar): implement ICS export format generator`
+- **Automation Eligibility:** Applied when status changes to `status:ready`.
+
+#### `beginner friendly`
 - **Color:** `#0E8A16` (Forest Green)
-- **Purpose:** Genuinely accessible tasks for first-time open-source contributors.
-- **When to use:** Narrow scope, explicit file paths, clear acceptance criteria, zero architectural ambiguity.
-- **When NOT to use:** Tasks requiring multi-system refactoring, database migrations, or security changes.
-- **Recommended companion:** `good first issue`
+- **Purpose:** Discoverability alias highlighting accessible, well-guided contribution opportunities.
+- **When to Apply:** Paired with `good first issue` to maximize discoverability across global open-source aggregators.
+- **When NOT to Apply:** Complex backend or concurrency tasks.
+- **Example:** `ui(tokens): standardize border-radius on modal action buttons`
+- **Automation Eligibility:** Auto-paired with `good first issue`.
 
-#### `difficulty:easy`
-- **Color:** `#7057FF` (Lavender Purple)
-- **Purpose:** Straightforward tasks requiring basic familiarity with React, TypeScript, or Tailwind CSS.
-- **When to use:** Single-component tweaks, localized helper functions, standard form field additions.
-- **When NOT to use:** Complex state machines or cross-cutting architectural modifications.
-
-#### `difficulty:intermediate`
-- **Color:** `#FBCA04` (Warm Amber)
-- **Purpose:** Tasks requiring solid understanding of PACT domain engines, Server Actions, or Supabase RLS.
-- **When to use:** Multi-file state transitions, new API routes, database schema additions, third-party API handlers.
-- **When NOT to use:** Trivial single-line changes or massive multi-week architectural redesigns.
-
-#### `difficulty:advanced`
-- **Color:** `#D93F0B` (Burnt Orange)
-- **Purpose:** Complex engineering tasks requiring deep domain knowledge, concurrency handling, or security auditing.
-- **When to use:** Autonomous cron sweeper changes, database migration sequencing, cryptographic consequence masking.
-- **When NOT to use:** Beginner onboarding tasks.
-
----
-
-### Category C — Estimated Time (`time:*`)
-
-| Label | Color | Target Duration | Contributor Experience |
-| :--- | :--- | :--- | :--- |
-| `time:<15m` | `#C5DEF5` | < 15 minutes | Quick typo, one-line CSS tweak, or docstring fix. Perfect for immediate first PRs. |
-| `time:15-30m` | `#BFD4F2` | 15–30 minutes | Localized UI component adjustment or adding an isolated unit test. |
-| `time:30-60m` | `#D4C5F9` | 30–60 minutes | Form validation refinement, new hook utility, or modal enhancement. |
-| `time:1-2h` | `#FEF2C0` | 1–2 hours | New domain calculation helper, multi-view responsive polish, or API route. |
-| `time:2-4h` | `#F9D0C4` | 2–4 hours | Full feature sub-component, integration connector enhancement, or RLS hardening. |
-| `time:4h+` | `#F8B4B4` | 4+ hours | Multi-phase subsystem work, major database migration, or architectural milestone. |
+#### `hacktoberfest`
+- **Color:** `#FF7518` (Pumpkin Orange)
+- **Purpose:** Community event participation label indicating quality open-source contributions are welcome.
+- **When to Apply:** Genuine quality tasks during seasonal open-source events.
+- **When NOT to Apply:** Spam issues, automated low-effort PRs, or closed internal sprints.
+- **Example:** `feat(themes): add high-contrast dark theme variant tokens`
+- **Automation Eligibility:** Event-activated by maintainers.
 
 ---
 
 ### Category D — Project Area (`area:*`)
 
-All area labels map directly to PACT’s verified architecture (`#333333` Charcoal Base):
-
-| Area Label | Architectural Subsystem | Key Directories & Files |
-| :--- | :--- | :--- |
-| `area:dashboard` | Main OS Overview & Metric Cards | `src/features/dashboard/`, `src/app/app/overview/` |
-| `area:planner` | Daily Planner & Timeblocking | `src/features/planner/`, `src/app/app/planner/` |
-| `area:calendar` | Calendar Engine & Google Sync UI | `src/features/calendar/`, `src/app/app/calendar/` |
-| `area:tasks` | Task Lifecycle & Priority Engine | `src/features/tasks/`, `src/app/app/tasks/` |
-| `area:goals` | OKR Hierarchy & Milestone Tracker | `src/features/goals/`, `src/app/app/goals/` |
-| `area:projects` | Project Workspaces & Status Boards | `src/features/projects/`, `src/app/app/projects/` |
-| `area:accountability` | Stakes, Referees & Penalties | `src/features/accountability/`, `src/lib/accountability/` |
-| `area:focus` | Deep Work Timer & Audio Synth | `src/features/focus/`, `src/lib/focus/` |
-| `area:habits` | Habit Recurrence & Streak Engine | `src/features/habits/`, `src/lib/habits/` |
-| `area:finance` | Integer-Cents Ledger & Budgets | `src/features/finance/`, `src/lib/finance/` |
-| `area:analytics` | Velocity Scoring & Visualizations | `src/features/analytics/`, `src/lib/analytics/` |
-| `area:review` | Weekly Review Rituals & Drafts | `src/features/review/`, `src/lib/weekly-review/` |
-| `area:auth` | Login, Registration & Onboarding | `src/components/auth/`, `src/app/(auth)/` |
-| `area:integrations` | External Proof Connectors | `src/lib/integrations/` (GitHub, LeetCode, Codeforces) |
-| `area:settings` | User Preferences & Profile Config | `src/app/app/settings/` |
-| `area:database` | PostgreSQL Migrations, Schema & RLS | `supabase/migrations/` |
-| `area:testing` | Automated 34-Suite Test Matrix | `tests/`, `scratch/run-tests.mjs` |
-| `area:documentation` | Guides, Specs & Contributor Docs | `docs/`, `README.md`, `CONTRIBUTING.md` |
-| `area:developer-experience` | Tooling, Dev Setup & Workflows | `package.json`, `scratch/`, scripts |
+| Area Label | Subsystem Covered | Primary Repository Paths | Automation Path Pattern |
+| :--- | :--- | :--- | :--- |
+| `area:ui` | Visual design system, buttons, cards, typography | `src/components/ui/`, `src/app/globals.css` | `src/components/ui/**` |
+| `area:auth` | Authentication, sessions, user onboarding | `src/components/auth/`, `src/app/(auth)/` | `src/**/auth/**` |
+| `area:planning` | Daily planner, timeline, energy blocks, calendar | `src/features/planner/`, `src/features/calendar/` | `src/features/planner/**` |
+| `area:accountability` | Stakes, referees, penalties, proof verification | `src/features/accountability/`, `src/lib/accountability/` | `src/features/accountability/**` |
+| `area:finance` | Ledger, integer-cents transactions, budgets | `src/features/finance/`, `src/lib/finance/` | `src/features/finance/**` |
+| `area:github` | Workflows, issue forms, PR templates, labels | `.github/**` | `.github/**` |
+| `area:supabase` | PostgreSQL schema, migrations, RLS policies | `supabase/**`, `src/lib/supabase/` | `supabase/**` |
+| `area:testing` | Unit tests, test matrix, validation scripts | `tests/**`, `scratch/run-tests.mjs` | `tests/**` |
+| `area:documentation` | Architecture docs, developer guides, README | `docs/**`, `*.md` | `docs/**`, `*.md` |
+| `area:developer-experience`| Tooling, scripts, linters, TypeScript configs | `package.json`, `scratch/**`, `tsconfig.json` | `scratch/**`, `*.config.*` |
 
 ---
 
-### Special Community Labels
+### Category E — Workflow Status (`status:*`)
 
-#### `good first issue`
-- **Color:** `#7057FF` (GitHub Official Purple)
-- **Purpose:** Highlighted by GitHub's global discoverability feed. Reserved exclusively for straightforward, well-documented beginner tasks.
-- **Rule:** MUST be paired with `difficulty:beginner`. Never place on complex or ambiguous tasks.
+#### `status:triage`
+- **Color:** `#6A737D` (Slate Gray)
+- **Purpose:** Newly submitted issue awaiting maintainer review, reproduction, or classification.
+- **When to Apply:** Automatically on issue creation.
+- **When NOT to Apply:** Once issue has been reviewed and verified.
+- **Automation Eligibility:** Auto-applied on all new issue submissions.
 
-#### `help wanted`
-- **Color:** `#008672` (Teal Green)
-- **Purpose:** Signals that maintainers are actively seeking community contributions for this issue.
+#### `status:ready`
+- **Color:** `#0E8A16` (Green)
+- **Purpose:** Fully specified, verified, and available for a contributor to claim and implement.
+- **When to Apply:** Acceptance criteria are clear and prerequisites are satisfied.
+- **When NOT to Apply:** While requirements are ambiguous or blocked.
+- **Automation Eligibility:** Applied upon maintainer approval or triage bot completion.
 
-#### `community`
-- **Color:** `#E11D48` (Rose Red)
-- **Purpose:** Community-driven initiatives, discussions, user experience feedback, or documentation crowdsourcing.
-
----
-
-### Optional Status Labels (`status:*`)
+#### `status:in-progress`
+- **Color:** `#FBCA04` (Amber)
+- **Purpose:** Actively assigned to a contributor or currently being implemented.
+- **When to Apply:** A contributor is assigned or an open draft PR links to the issue.
+- **When NOT to Apply:** Unassigned issues in the backlog.
+- **Automation Eligibility:** Auto-applied when an issue is assigned or PR linked.
 
 #### `status:blocked`
-- **Color:** `#6A737D` (Slate Gray)
-- **Purpose:** Work cannot proceed until an upstream dependency, PR, or external decision is resolved.
-
-#### `status:needs-discussion`
-- **Color:** `#6A737D` (Slate Gray)
-- **Purpose:** Core design, product direction, or technical approach requires discussion before code is written.
-
-#### `status:needs-review`
-- **Color:** `#6A737D` (Slate Gray)
-- **Purpose:** Pull request has been submitted and is awaiting maintainer code review.
+- **Color:** `#D73A4A` (Red)
+- **Purpose:** Work cannot proceed due to an upstream blocker, dependent PR, or external decision.
+- **When to Apply:** Awaiting a database migration, upstream Next.js release, or design decision.
+- **When NOT to Apply:** Issues ready for immediate implementation.
+- **Automation Eligibility:** Bot-applied when dependency conditions are unmet.
 
 ---
 
-## 4. Label Composition Guide
+## 4. Governance & Merge Rules
 
-Maintainers should compose labels to provide complete, unambiguous context for every issue:
-
-### Example 1: First-Time Contributor UI Polishing
-```
-type:ui
-difficulty:beginner
-time:15-30m
-area:dashboard
-good first issue
-```
-*Tells contributor: "A 20-minute visual UI tweak on the dashboard, ideal for first-time open-source contributors."*
-
-### Example 2: Quick Documentation Fix
-```
-type:docs
-difficulty:beginner
-time:<15m
-area:documentation
-good first issue
-community
-```
-*Tells contributor: "A super-fast documentation fix that takes under 15 minutes."*
-
-### Example 3: Accessibility Improvement
-```
-type:a11y
-difficulty:easy
-time:30-60m
-area:planner
-good first issue
-```
-*Tells contributor: "An accessibility fix on the daily planner keyboard controls taking under an hour."*
-
-### Example 4: Complex Backend Integration
-```
-type:integration
-difficulty:advanced
-time:4h+
-area:integrations
-help wanted
-```
-*Tells contributor: "An advanced integration feature requiring deep API knowledge and extensive testing."*
-
----
-
-## 5. Strict Labeling Rules & Governance
-
-1. **Rule 1 (Single Type):** Every standard issue must have exactly **1** `type:*` label.
-2. **Rule 2 (Single Difficulty):** Every actionable implementation issue must have exactly **1** `difficulty:*` label.
-3. **Rule 3 (Single Time Estimate):** Where estimation is feasible, assign exactly **1** `time:*` label.
-4. **Rule 4 (Single Primary Area):** Assign **1** primary `area:*` label (or at most 2 if cross-cutting).
-5. **Rule 5 (`good first issue` Discipline):** Only assign `good first issue` when paired with `difficulty:beginner` and accompanied by clear reproduction steps or exact file pointers.
-6. **Rule 6 (No Contradictions):** Never assign conflicting labels (e.g., `difficulty:beginner` + `difficulty:advanced`).
-
----
-
-## 6. Provisioning & Setup
-
-The canonical label taxonomy is provisioned idempotently using the maintenance script:
-```bash
-node scratch/setup-github-labels.mjs
-```
-
-Maintainers with repository admin access can run this script with `GITHUB_TOKEN` configured, or execute the generated GitHub CLI commands to create or sync all 45 canonical labels.
+1. **Orthogonal Composition:** Maintainers and bots must compose labels cleanly across dimensions (`type` + `area` + `difficulty` + `priority`).
+2. **Deterministic Triage:** Every issue entering the backlog must transition from `status:triage` to `status:ready` before assignment.
+3. **Good First Issue Integrity:** Never attach `good first issue` without `difficulty:beginner` and clear acceptance criteria.
+4. **Automated Synchronization:** Labels are synced using `node scratch/setup-github-labels.mjs`.
