@@ -45,7 +45,13 @@ docs/
 - [**Security & Threat Modeling**](./SECURITY.md): 28-point security checklist, zero-trust server boundaries, and confidential consequence masking.
 - [**Architecture Decision Records (ADRs)**](./DECISIONS.md): Durable technical choices, trade-offs, and design rationale.
 
-### 3. Developer Guide & Operations
+### 3. Developer Guide, Community & Operations
+- [**Contributing Guide**](../CONTRIBUTING.md): Root guide for opening issues, branching, coding standards, and pull requests.
+- [**Code of Conduct**](../CODE_OF_CONDUCT.md): Community participation standards and enforcement guidelines.
+- [**Security Policy**](../SECURITY.md): Public vulnerability reporting procedure and supported versions.
+- [**Support Guide**](../SUPPORT.md): How and where to ask for help, report bugs, or propose features.
+- [**Contributors**](../CONTRIBUTORS.md): Recognition of core maintainers and community contributors.
+- [**License**](../LICENSE): Official project MIT License.
 - [**Development Guide**](./DEVELOPMENT.md): Local environment setup, database migrations, package scripts, and development workflows.
 - [**Git Workflow & Standards**](./GIT_WORKFLOW.md): Conventional Commit conventions, branch protection rules, and secret prevention hygiene.
 - [**Design System & UI Tokens**](./DESIGN_SYSTEM.md): Luxury Obsidian & Gold palette, 3D celestial planetary hero, card geometry, and typography tokens.
