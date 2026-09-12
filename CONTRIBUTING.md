@@ -6,6 +6,9 @@ PACT is an open-source **Personal Operating System (OS)** engineered to turn int
 
 We warmly welcome contributions from everyone—whether you are a first-time open-source contributor, a beginner developer, an experienced engineer, a technical writer, or a UI/UX designer. Every meaningful contribution helps make PACT a better tool for everyone.
 
+> 💡 **First time contributing to open source?**  
+> Check out our step-by-step [**Beginner's Contribution Guide**](docs/CONTRIBUTING-BEGINNERS.md) for a zero-to-PR walkthrough, then return here for standard contributor standards.
+
 ---
 
 ## Table of Contents
@@ -237,6 +240,7 @@ All contributors and community members are expected to adhere to our [Code of Co
 
 If you have questions, need clarification on an issue, or run into technical roadblocks:
 
+- Consult our [**Troubleshooting Guide**](docs/TROUBLESHOOTING.md) for solutions to common setup, build, or test issues.
 - Consult [SUPPORT.md](SUPPORT.md) for available help channels.
 - Check our existing documentation in [`docs/`](docs/README.md).
 - Leave a comment directly on the relevant GitHub issue.

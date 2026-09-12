@@ -1,0 +1,345 @@
+# 🔧 PACT Troubleshooting Guide
+
+This guide provides practical solutions for common errors and setup roadblocks when developing or contributing to **PACT**.
+
+---
+
+## Quick Navigation
+
+1. [Node.js & npm Issues](#1-nodejs--npm-issues)
+2. [Development Server & Next.js Issues](#2-development-server--nextjs-issues)
+3. [Environment Variables & Configuration](#3-environment-variables--configuration)
+4. [Git & GitHub Issues](#4-git--github-issues)
+5. [TypeScript Type Checking Errors](#5-typescript-type-checking-errors)
+6. [ESLint Code Quality Errors](#6-eslint-code-quality-errors)
+7. [Test Runner Failures](#7-test-runner-failures)
+8. [Secret Scanner Warnings](#8-secret-scanner-warnings)
+9. [Production Build Failures](#9-production-build-failures)
+10. [Windows PowerShell & OS Tips](#10-windows-powershell--os-tips)
+11. [How to Request Support](#11-how-to-request-support)
+
+---
+
+## 1. Node.js & npm Issues
+
+### 1.1 Node.js Version Incompatibility
+
+**Symptoms**:
+Terminal displays syntax errors, `unsupported engine`, or errors regarding React 19 / Next.js 16 requirements.
+
+**Likely Causes**:
+You are running an older version of Node.js (e.g., Node 16.x or 18.x). PACT requires Node.js `v20.x` or `v22.x` LTS.
+
+**Try This**:
+1. Check your active Node.js version:
+   ```bash
+   node --version
+   ```
+2. If your version is lower than `v20.0.0`, download and install the current LTS release from [nodejs.org](https://nodejs.org/) or use a Node version manager (like `nvm` or `fnm`):
+   ```bash
+   # Using nvm (macOS/Linux) or nvm-windows:
+   nvm install 20
+   nvm use 20
+   ```
+
+---
+
+### 1.2 Dependency Installation Fails (`npm install`)
+
+**Symptoms**:
+`npm install` terminates with `EACCES`, `ERESOLVE`, or corrupted package cache errors.
+
+**Likely Causes**:
+Stale `node_modules` cache or lockfile desynchronization.
+
+**Try This**:
+Perform a clean installation:
+
+**macOS / Linux / Git Bash:**
+```bash
+rm -rf node_modules package-lock.json
+npm cache clean --force
+npm install
+```
+
+**Windows PowerShell:**
+```powershell
+Remove-Item -Recurse -Force node_modules, package-lock.json -ErrorAction SilentlyContinue
+npm cache clean --force
+npm install
+```
+
+---
+
+## 2. Development Server & Next.js Issues
+
+### 2.1 Port 3000 Is Already in Use (`EADDRINUSE`)
+
+**Symptoms**:
+`npm run dev` fails with `Error: listen EADDRINUSE: address already in use :::3000` or automatically switches to port 3001.
+
+**Likely Causes**:
+A previous instance of the Next.js server or another background application is already running on port 3000.
+
+**Try This**:
+- **Option A**: Run PACT on an alternative port:
+  ```bash
+  npm run dev -- -p 3001
+  ```
+- **Option B**: Terminate the process using port 3000:
+  - **Windows PowerShell**:
+    ```powershell
+    Get-Process -Id (Get-NetTCPConnection -LocalPort 3000).OwningProcess | Stop-Process -Force
+    ```
+  - **macOS / Linux**:
+    ```bash
+    kill -9 $(lsof -t -i:3000)
+    ```
+
+---
+
+### 2.2 Stale Build Cache or Inconsistent UI State
+
+**Symptoms**:
+Changes to styling or layout do not appear in the browser, or build fails with `ENOENT` inside `.next/`.
+
+**Likely Causes**:
+Next.js compilation cache in `.next/` has become stale.
+
+**Try This**:
+Clear the `.next` build folder and restart:
+
+**macOS / Linux / Git Bash:**
+```bash
+rm -rf .next
+npm run dev
+```
+
+**Windows PowerShell:**
+```powershell
+Remove-Item -Recurse -Force .next -ErrorAction SilentlyContinue
+npm run dev
+```
+
+---
+
+## 3. Environment Variables & Configuration
+
+### 3.1 Missing `.env.local` File
+
+**Symptoms**:
+Browser or terminal outputs warnings that environment variables like `NEXT_PUBLIC_APP_URL` or `NEXT_PUBLIC_SUPABASE_URL` are undefined.
+
+**Likely Causes**:
+The local environment template has not been copied into `.env.local`.
+
+**Try This**:
+Copy `.env.example` to `.env.local`:
+```bash
+# macOS / Linux / Git Bash / PowerShell:
+cp .env.example .env.local
+
+# Windows Command Prompt:
+copy .env.example .env.local
+```
+Restart `npm run dev`.
+
+---
+
+## 4. Git & GitHub Issues
+
+### 4.1 Permission Denied When Pushing (`403` / `Publickey`)
+
+**Symptoms**:
+`git push` fails with `Permission to TheVicky1/Pact_OS.git denied to <user>` or `Authentication failed`.
+
+**Likely Causes**:
+You are trying to push directly to the upstream repository (`TheVicky1/Pact_OS`) instead of your personal fork (`<your-username>/Pact_OS`).
+
+**Try This**:
+1. Verify your remotes:
+   ```bash
+   git remote -v
+   ```
+2. Ensure `origin` points to your personal fork URL:
+   ```bash
+   git remote set-url origin https://github.com/<your-username>/Pact_OS.git
+   ```
+3. Push to your fork:
+   ```bash
+   git push -u origin <your-branch-name>
+   ```
+
+---
+
+### 4.2 Branch Out of Sync With Upstream `main`
+
+**Symptoms**:
+Git warns about conflicts or your pull request shows hundreds of unrelated commits.
+
+**Likely Causes**:
+Your local branch was created from an outdated `main` branch.
+
+**Try This**:
+Sync with upstream and rebase your topic branch:
+```bash
+# 1. Fetch latest commits from upstream
+git fetch upstream
+
+# 2. Rebase your current branch on top of upstream main
+git rebase upstream/main
+```
+If merge conflicts appear, resolve them in VS Code, stage the resolved files (`git add .`), and continue (`git rebase --continue`).
+
+---
+
+## 5. TypeScript Type Checking Errors
+
+### 5.1 `npx tsc --noEmit` Reports Type Errors
+
+**Symptoms**:
+TypeScript compiler reports `TS2322`, `TS2339`, or `TS7006` errors.
+
+**Likely Causes**:
+- A component is receiving a prop that is not defined in its TypeScript interface.
+- A variable has an implicit `any` type.
+- An optional property is accessed without optional chaining (`?.`).
+
+**Try This**:
+1. Check the exact file and line number output by:
+   ```bash
+   npx tsc --noEmit
+   ```
+2. Open the file in your code editor and inspect the type signature.
+3. Import the canonical interfaces from `src/types/` rather than re-declaring ad-hoc types.
+4. Avoid casting with `as any`. Define explicit types or interfaces.
+
+---
+
+## 6. ESLint Code Quality Errors
+
+### 6.1 `npm run lint` Fails
+
+**Symptoms**:
+ESLint reports unused variables, missing React Hook dependencies, or unescaped HTML entities.
+
+**Likely Causes**:
+Code violates project linting rules configured in `eslint.config.mjs`.
+
+**Try This**:
+1. Run ESLint to inspect error locations:
+   ```bash
+   npm run lint
+   ```
+2. Common fixes:
+   - Remove unused variable imports or prefix them with an underscore (e.g., `_event`).
+   - Wrap dynamic dependencies in `useCallback` or add required dependencies to `useEffect` dependency arrays.
+   - Use standard typography replacements in JSX (`&apos;` instead of raw single quotes in text).
+
+---
+
+## 7. Test Runner Failures
+
+### 7.1 `node scratch/run-tests.mjs` Fails on a Specific Suite
+
+**Symptoms**:
+The test runner terminates with `✖ <suite-name>.test.ts FAILED`.
+
+**Likely Causes**:
+A domain validation rule, timestamp constraint, or state machine expectation was violated by your recent code modification.
+
+**Try This**:
+1. Run the test runner and note which suite failed:
+   ```bash
+   node scratch/run-tests.mjs
+   ```
+2. Open `tests/<failing-suite>.test.ts` to see the exact assertion that failed.
+3. Verify whether your change altered the expected return type or state machine transition.
+
+---
+
+## 8. Secret Scanner Warnings
+
+### 8.1 `node scratch/secret-scan.mjs` Detects a Secret
+
+**Symptoms**:
+The secret scanner reports: `✖ Secret Scan FAILED: Sensitive credentials detected`.
+
+**Likely Causes**:
+A real API key, private token, service role secret, or `.env.local` file was accidentally saved or referenced in tracked project files.
+
+**Try This**:
+1. **Do NOT disable or bypass the scanner.**
+2. Inspect the file reported by the scanner output.
+3. Replace the actual secret with a mock placeholder (e.g., `your-api-key-here`).
+4. Ensure your actual keys remain only in `.env.local`, which is ignored by Git.
+5. If a real private key was ever committed and pushed to a remote repository, **immediately revoke/rotate that key** in its respective provider dashboard (Supabase, Google Cloud, etc.).
+
+---
+
+## 9. Production Build Failures
+
+### 9.1 `npm run build` Fails
+
+**Symptoms**:
+`npm run build` terminates with static page generation errors or server module resolution errors.
+
+**Likely Causes**:
+- Browser-only APIs (like `window`, `document`, or `localStorage`) are accessed at the top level of a Server Component without a `'use client'` directive or `useEffect` guard.
+- A missing export on a route or page file.
+
+**Try This**:
+1. Check if the failing component uses client-only hooks (`useState`, `useEffect`) and ensure it has `'use client';` at the very first line of the file.
+2. Guard direct browser global access:
+   ```typescript
+   if (typeof window !== 'undefined') {
+     // Safe browser-only code
+   }
+   ```
+3. Re-run `npm run build` to verify that all routes build cleanly.
+
+---
+
+## 10. Windows PowerShell & OS Tips
+
+### 10.1 PowerShell Execution Policy Restriction
+
+**Symptoms**:
+Running `npm` or local scripts outputs: `File ... cannot be loaded because running scripts is disabled on this system`.
+
+**Try This**:
+Open PowerShell and enable script execution for your current user session:
+```powershell
+Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
+```
+
+---
+
+### 10.2 Line Endings (CRLF vs. LF)
+
+**Symptoms**:
+Git marks every line of a file as modified due to Windows CRLF line endings.
+
+**Try This**:
+Configure Git to automatically handle line endings:
+```bash
+git config --global core.autocrlf true
+```
+
+---
+
+## 11. How to Request Support
+
+If your problem is not covered in this guide, our community is here to help!
+
+Before opening an issue or asking for help, please gather the following information:
+
+| Information | Example |
+| :--- | :--- |
+| **Operating System** | Windows 11 / macOS Sonoma / Ubuntu 22.04 |
+| **Node.js & npm Version** | `node -v` $\rightarrow$ `v20.11.0`, `npm -v` $\rightarrow$ `10.2.4` |
+| **Command Executed** | `npm run dev` or `npm run build` |
+| **Exact Error Message** | Full terminal error output or screenshot |
+| **Reproduction Steps** | 1. Cloned repo, 2. Ran `npm install`, 3. Ran `npm run dev` |
+
+Once gathered, please open an issue on the [PACT GitHub Issues page](https://github.com/TheVicky1/Pact_OS/issues) or consult [SUPPORT.md](SUPPORT.md).

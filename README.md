@@ -168,6 +168,8 @@ node scratch/secret-scan.mjs
 npm run build
 ```
 
+> 💡 **Having setup issues?** Consult our [**Troubleshooting Guide**](docs/TROUBLESHOOTING.md) for solutions to common port, Node.js, and environment issues.
+
 ---
 
 ## 📂 Project Structure
@@ -199,10 +201,12 @@ Contributions are warmly welcomed! We believe in building a transparent, support
 > ### 🌱 New to Open Source?
 > You do not need to be an expert to contribute. We value all contributions—whether fixing a typo in documentation, improving UI accessibility, adding unit tests, or reporting a bug.
 >
-> Please read our [**Contributing Guide**](CONTRIBUTING.md) for step-by-step instructions on forking, branching, and submitting your pull request.
+> Start with our step-by-step [**Beginner's Contribution Guide**](docs/CONTRIBUTING-BEGINNERS.md) for a complete zero-to-PR walkthrough, or consult [**CONTRIBUTING.md**](CONTRIBUTING.md) for standard developer guidelines.
 
 ### Contribution Resources
+- 🌱 [**Beginner's Guide**](docs/CONTRIBUTING-BEGINNERS.md) — Step-by-step walkthrough for first-time contributors.
 - 📖 [**Contributing Guide**](CONTRIBUTING.md) — Workflow, code standards, and PR guidelines.
+- 🔧 [**Troubleshooting Guide**](docs/TROUBLESHOOTING.md) — Diagnostics for environment, build, and Git issues.
 - 🤝 [**Code of Conduct**](CODE_OF_CONDUCT.md) — Community standards and participation guidelines.
 - 💬 [**Support Guide**](SUPPORT.md) — Where to ask questions, report bugs, and propose features.
 - 👥 [**Contributors**](CONTRIBUTORS.md) — Recognition of core maintainers and community contributors.
@@ -230,6 +234,8 @@ Comprehensive technical specifications, system architectures, and operational ru
 
 | Document | Purpose |
 | :--- | :--- |
+| 🌱 [**Beginner Contributing**](docs/CONTRIBUTING-BEGINNERS.md) | Step-by-step zero-to-PR guide for first-time contributors |
+| 🔧 [**Troubleshooting**](docs/TROUBLESHOOTING.md) | Practical fixes for common setup, build, and Git roadblocks |
 | 🌟 [**Master Documentation**](docs/PACT_MASTER_DOCUMENTATION.md) | Central comprehensive technical and product reference |
 | 📖 [**Product Vision**](docs/PRODUCT.md) | Vision, dual taglines, product philosophy, and core principles |
 | 📋 [**Feature Inventory**](docs/FEATURES.md) | Authoritative inventory of all 14 core product modules |

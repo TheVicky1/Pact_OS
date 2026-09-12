@@ -8,6 +8,8 @@ Welcome to the canonical documentation for **PACT** — a Personal Operating Sys
 
 ```
 docs/
+├── CONTRIBUTING-BEGINNERS.md           # 🌱 Beginner Contributor Zero-to-PR Walkthrough
+├── TROUBLESHOOTING.md                  # 🔧 Practical Diagnostic Guide for Setup, Build & Git Roadblocks
 ├── PACT_MASTER_DOCUMENTATION.md        # 🌟 Comprehensive Central Product & Technical Specification
 ├── PRODUCT.md                          # Vision, Dual Taglines, Philosophy & User Personas
 ├── FEATURES.md                         # Inventory of 14 Core Product Systems & Status Matrix
@@ -46,6 +48,8 @@ docs/
 - [**Architecture Decision Records (ADRs)**](./DECISIONS.md): Durable technical choices, trade-offs, and design rationale.
 
 ### 3. Developer Guide, Community & Operations
+- [**Beginner's Contribution Guide**](./CONTRIBUTING-BEGINNERS.md): Zero-to-PR step-by-step tutorial for first-time open-source contributors.
+- [**Troubleshooting Guide**](./TROUBLESHOOTING.md): Practical diagnostics for Node.js, environment variables, build, port, and Git issues.
 - [**Contributing Guide**](../CONTRIBUTING.md): Root guide for opening issues, branching, coding standards, and pull requests.
 - [**Code of Conduct**](../CODE_OF_CONDUCT.md): Community participation standards and enforcement guidelines.
 - [**Security Policy**](../SECURITY.md): Public vulnerability reporting procedure and supported versions.
