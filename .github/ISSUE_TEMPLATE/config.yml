@@ -3,6 +3,9 @@ contact_links:
   - name: 🔒 Report a Security Vulnerability
     url: https://github.com/TheVicky1/Pact_OS/blob/main/SECURITY.md
     about: Please report security vulnerabilities privately. Do NOT open public issues for sensitive credentials or security exploits.
-  - name: 💬 General Support & Questions
+  - name: 💬 Community Discussions & Q&A
+    url: https://github.com/TheVicky1/Pact_OS/discussions
+    about: Have an open question, product idea, or technical design topic? Join our community discussions.
+  - name: 🔧 General Support & Troubleshooting
     url: https://github.com/TheVicky1/Pact_OS/blob/main/SUPPORT.md
-    about: Need help setting up PACT locally or have questions about system architecture? Check our support and troubleshooting guides.
+    about: Need help setting up PACT locally or diagnosing a build/test issue? Check our support and troubleshooting guides.

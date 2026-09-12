@@ -17,22 +17,24 @@ Before opening a new issue or asking a question, please take a moment to:
 
 ## 2. Where to Get Help
 
+### 💬 Questions, Ideas & Community Discussions
+- For general questions, setup advice, product ideas, and technical debates, join [**GitHub Discussions**](https://github.com/TheVicky1/Pact_OS/discussions).
+- Check out our [**Community Discussions Guide**](docs/GITHUB_DISCUSSIONS.md) for category guidelines (`📣 Announcements`, `💬 General`, `💡 Ideas`, `❓ Q&A`, `🏗️ Architecture`, `🎨 Show and Tell`).
+
 ### 🐛 Bug Reports
 If you have found a reproducible bug in PACT:
-- Open a new [GitHub Issue](https://github.com/TheVicky1/Pact_OS/issues/new).
-- Provide clear reproduction steps, your environment (Node.js version, OS, browser), expected behavior, and actual behavior.
+- Open a new [**Bug Report Issue**](https://github.com/TheVicky1/Pact_OS/issues/new?template=bug_report.yml).
+- Provide clear reproduction steps, environment details (Node.js version, OS, browser), expected behavior, and actual behavior.
 
-### 💡 Feature Requests & Ideas
-If you have an idea for improving PACT or introducing a new capability:
-- Open a [GitHub Issue](https://github.com/TheVicky1/Pact_OS/issues/new) with the prefix `[Feature Request]` or `[Proposal]`.
-- Clearly explain the problem the feature solves and how it aligns with PACT's core philosophy (*Turn Intent Into Discipline*).
+### 💡 Feature Requests
+If you have a concrete, actionable feature proposal ready for implementation:
+- Open a [**Feature Request Issue**](https://github.com/TheVicky1/Pact_OS/issues/new?template=feature_request.yml).
+- For early-stage brainstorming, please post in the [💡 Ideas Discussion Category](https://github.com/TheVicky1/Pact_OS/discussions/categories/ideas) first!
 
 ### 🔒 Security Vulnerabilities
-- For security vulnerabilities or sensitive issues, **do NOT open a public issue**.
+- For security vulnerabilities or sensitive issues, **do NOT open a public issue or discussion**.
 - Follow the private disclosure process in [SECURITY.md](SECURITY.md).
 
-### ❓ Questions & Technical Discussions
-- For questions regarding development, data models, or usage, feel free to open an issue or comment on relevant discussion threads.
 
 ---
 

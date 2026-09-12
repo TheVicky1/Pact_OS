@@ -206,6 +206,7 @@ Contributions are warmly welcomed! We believe in building a transparent, support
 ### Contribution Resources
 - 🌱 [**Beginner's Guide**](docs/CONTRIBUTING-BEGINNERS.md) — Step-by-step walkthrough for first-time contributors.
 - 🎯 [**Beginner Issues Factory**](docs/GITHUB_BEGINNER_ISSUES.md) — 40 curated, actionable good-first-issues.
+- 💬 [**Community Discussions Guide**](docs/GITHUB_DISCUSSIONS.md) — Category guidelines, ideas lifecycle, and contributor journey.
 - 📖 [**Contributing Guide**](CONTRIBUTING.md) — Workflow, code standards, and PR guidelines.
 - 🏷️ [**Label Taxonomy**](docs/GITHUB_LABELS.md) — Official issue classification system and difficulty tiers.
 - 🌐 [**Metadata & Topics**](docs/GITHUB_METADATA.md) — Canonical repository topics, description, and discoverability rules.
@@ -239,6 +240,7 @@ Comprehensive technical specifications, system architectures, and operational ru
 | :--- | :--- |
 | 🌱 [**Beginner Contributing**](docs/CONTRIBUTING-BEGINNERS.md) | Step-by-step zero-to-PR guide for first-time contributors |
 | 🎯 [**Curated Beginner Issues**](docs/GITHUB_BEGINNER_ISSUES.md) | Factory of 40 fully specified Good First Issues across all PACT modules |
+| 💬 [**Community Discussions**](docs/GITHUB_DISCUSSIONS.md) | GitHub Discussions categories, ideas lifecycle, and contributor journey |
 | 🏷️ [**GitHub Labels**](docs/GITHUB_LABELS.md) | Canonical issue classification, difficulty levels & composition |
 | 🌐 [**GitHub Metadata**](docs/GITHUB_METADATA.md) | Canonical repository description, topics taxonomy & social preview |
 | 🔧 [**Troubleshooting**](docs/TROUBLESHOOTING.md) | Practical fixes for common setup, build, and Git roadblocks |

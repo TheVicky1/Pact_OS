@@ -428,11 +428,14 @@ Every merged contribution matters! Contributors with accepted pull requests are 
 Need assistance, clarification, or guidance during your contribution journey?
 
 - 📖 **Beginner Guide**: [docs/CONTRIBUTING-BEGINNERS.md](docs/CONTRIBUTING-BEGINNERS.md)
+- 🎯 **Curated Beginner Issues**: [docs/GITHUB_BEGINNER_ISSUES.md](docs/GITHUB_BEGINNER_ISSUES.md)
+- 💬 **Community Discussions**: [docs/GITHUB_DISCUSSIONS.md](docs/GITHUB_DISCUSSIONS.md) & [GitHub Discussions](https://github.com/TheVicky1/Pact_OS/discussions)
 - 🏷️ **Label Taxonomy**: [docs/GITHUB_LABELS.md](docs/GITHUB_LABELS.md)
 - 🔧 **Troubleshooting**: [docs/TROUBLESHOOTING.md](docs/TROUBLESHOOTING.md)
-- 💬 **Support Channels**: [SUPPORT.md](SUPPORT.md)
+- 💬 **Support Guide**: [SUPPORT.md](SUPPORT.md)
 - 📚 **Full Documentation**: [docs/README.md](docs/README.md)
 - 🛡️ **Security Inquiries**: [SECURITY.md](SECURITY.md)
+
 
 ---
 

@@ -10,6 +10,7 @@ Welcome to the canonical documentation for **PACT** — a Personal Operating Sys
 docs/
 ├── CONTRIBUTING-BEGINNERS.md           # 🌱 Beginner Contributor Zero-to-PR Walkthrough
 ├── GITHUB_BEGINNER_ISSUES.md           # 🎯 Curated Beginner Issue Factory (40 Good First Issues)
+├── GITHUB_DISCUSSIONS.md               # 💬 Community Discussions, Categories & Contributor Engagement
 ├── GITHUB_LABELS.md                    # 🏷️ Canonical GitHub Issue Taxonomy & Label Dictionary
 ├── GITHUB_METADATA.md                  # 🌐 Canonical Repository Topics, Metadata & Discoverability
 ├── TROUBLESHOOTING.md                  # 🔧 Practical Diagnostic Guide for Setup, Build & Git Roadblocks
@@ -53,6 +54,7 @@ docs/
 ### 3. Developer Guide, Community & Operations
 - [**Beginner's Contribution Guide**](./CONTRIBUTING-BEGINNERS.md): Zero-to-PR step-by-step tutorial for first-time open-source contributors.
 - [**Curated Beginner Issues**](./GITHUB_BEGINNER_ISSUES.md): Factory of 40 fully specified Good First Issues across all PACT modules.
+- [**Community Discussions Guide**](./GITHUB_DISCUSSIONS.md): GitHub Discussions categories, ideas lifecycle, and contributor journey.
 - [**GitHub Label Taxonomy**](./GITHUB_LABELS.md): Official issue classification system, difficulty levels, and label composition guide.
 - [**GitHub Metadata & Topics**](./GITHUB_METADATA.md): Canonical repository description, topics taxonomy, social preview, and discoverability rules.
 - [**Troubleshooting Guide**](./TROUBLESHOOTING.md): Practical diagnostics for Node.js, environment variables, build, port, and Git issues.
