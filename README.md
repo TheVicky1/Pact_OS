@@ -256,6 +256,7 @@ Comprehensive technical specifications, system architectures, and operational ru
 | 💻 [**Developer Guide**](docs/DEVELOPMENT.md) | Local environment setup, database migrations, and development commands |
 | 🧪 [**Testing Strategy**](docs/TESTING.md) | Automated test matrix and verification runbooks |
 | ⚙️ [**CI Pipeline**](docs/CI_PIPELINE.md) | GitHub Actions automated quality gates, secret scans & test matrix |
+| 🛡️ [**Dependency Security**](docs/DEPENDENCY_SECURITY.md) | Dependency health, supply-chain hygiene & vulnerability policy |
 | 🌿 [**Git Workflow**](docs/GIT_WORKFLOW.md) | Conventional Commits, branch hygiene, and pre-commit safety rules |
 | 🗺️ [**Product Roadmap**](docs/ROADMAP.md) | Verified implementation status and future planned milestones |
 | 🎨 [**Design System**](docs/DESIGN_SYSTEM.md) | Luxury Obsidian & Gold palette, 3D celestial planetary hero, and design tokens |

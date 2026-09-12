@@ -10,6 +10,7 @@ Welcome to the canonical documentation for **PACT** — a Personal Operating Sys
 docs/
 ├── CI_PIPELINE.md                      # ⚙️ GitHub Actions CI Pipeline & Automated Quality Gates
 ├── CONTRIBUTING-BEGINNERS.md           # 🌱 Beginner Contributor Zero-to-PR Walkthrough
+├── DEPENDENCY_SECURITY.md              # 🛡️ Dependency Health, Security Auditing & Supply-Chain Policy
 ├── GITHUB_BEGINNER_ISSUES.md           # 🎯 Curated Beginner Issue Factory (40 Good First Issues)
 ├── GITHUB_DISCUSSIONS.md               # 💬 Community Discussions, Categories & Contributor Engagement
 ├── GITHUB_LABELS.md                    # 🏷️ Canonical GitHub Issue Taxonomy & Label Dictionary
@@ -70,6 +71,7 @@ docs/
 - [**Design System & UI Tokens**](./DESIGN_SYSTEM.md): Luxury Obsidian & Gold palette, 3D celestial planetary hero, card geometry, and typography tokens.
 - [**Testing & Verification Matrix**](./TESTING.md): 34-suite automated test matrix, execution runbooks, and quality gates.
 - [**CI Pipeline & Quality Gates**](./CI_PIPELINE.md): GitHub Actions automated verification, test matrix, secret scans, and build checks.
+- [**Dependency Security & Auditing**](./DEPENDENCY_SECURITY.md): Dependency health, CVSS vulnerability gate policy, and Dependabot lifecycle.
 - [**Production Deployment Runbook**](./PRODUCTION_DEPLOYMENT_RUNBOOK.md): Cloud deployment checklist, environment variable matrix, and preflight audit.
 
 ### 4. Historical Development Archive

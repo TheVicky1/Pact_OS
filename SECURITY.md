@@ -66,5 +66,6 @@ To protect your safety and user confidentiality:
 ## Secret Hygiene & Contributor Security
 
 - **Zero-Secret Baseline**: PACT utilizes an automated secret scanner (`node scratch/secret-scan.mjs`) to verify that no credentials or keys are committed to git history.
+- **Dependency & Supply-Chain Auditing**: Third-party package health, CVE scanning, and Dependabot policies are documented in our [Dependency Security Specification](docs/DEPENDENCY_SECURITY.md).
 - **Server-Authoritative RLS**: All data access is governed by PostgreSQL Row Level Security (RLS) policies.
 - **Architecture Reference**: For an in-depth review of PACT's internal security engineering model, please refer to our technical [Security Specification](docs/SECURITY.md).
