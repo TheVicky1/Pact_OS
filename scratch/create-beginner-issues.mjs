@@ -104,6 +104,19 @@ export const FIRST_BATCH_SLUGS = [
   'refactor-unused-icon-imports-integrations'
 ];
 
+export const SECOND_BATCH_SLUGS = [
+  'docs-timezone-mocking-runbook',
+  'docs-focus-audio-architecture',
+  'ui-active-focus-card-hover',
+  'ui-goals-empty-state-polish',
+  'a11y-command-palette-escape-listener',
+  'a11y-user-profile-dropdown-aria',
+  'test-focus-duration-boundaries',
+  'dev-package-typecheck-script-alias',
+  'fix-goals-form-empty-title-validation',
+  'feat-codeforces-rating-tier-badge'
+];
+
 function getToken() {
   if (process.env.GITHUB_TOKEN) return process.env.GITHUB_TOKEN;
   if (process.env.GH_TOKEN) return process.env.GH_TOKEN;
@@ -126,15 +139,28 @@ async function main() {
   const allIssues = loadCanonicalIssues();
   const args = process.argv.slice(2);
   const publishAll = args.includes('--all');
+  const isBatch1 = args.includes('--batch=1') || args.includes('--batch-1');
+  const isBatch2 = args.includes('--batch=2') || args.includes('--batch-2');
   const isDryRun = args.includes('--dry-run');
 
-  // Filter to First Batch unless --all is explicitly provided
+  let targetSlugs = FIRST_BATCH_SLUGS;
+  let batchName = 'FIRST BATCH OF 10';
+
+  if (isBatch2) {
+    targetSlugs = SECOND_BATCH_SLUGS;
+    batchName = 'SECOND BATCH OF 10';
+  } else if (isBatch1) {
+    targetSlugs = FIRST_BATCH_SLUGS;
+    batchName = 'FIRST BATCH OF 10';
+  }
+
+  // Filter to Selected Batch unless --all is explicitly provided
   const issues = publishAll
     ? allIssues
-    : allIssues.filter(iss => FIRST_BATCH_SLUGS.includes(iss.slug));
+    : allIssues.filter(iss => targetSlugs.includes(iss.slug));
 
   console.log(`Loaded ${allIssues.length} canonical issues from docs/GITHUB_BEGINNER_ISSUES.md`);
-  console.log(`Targeting ${issues.length} issues for this execution (${publishAll ? 'ALL ISSUES' : 'FIRST BATCH OF 10'}).\n`);
+  console.log(`Targeting ${issues.length} issues for this execution (${publishAll ? 'ALL ISSUES' : batchName}).\n`);
 
   const token = isDryRun ? null : getToken();
 
