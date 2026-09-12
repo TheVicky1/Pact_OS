@@ -90,10 +90,10 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
 
 ## 5. Testing & Quality Assurance
 
-PACT enforces a strict 34-suite automated test matrix verifying domain engines, math precision, security boundaries, and integration reliability.
+PACT enforces a strict 35-suite automated test matrix verifying domain engines, math precision, security boundaries, and integration reliability.
 
 ```bash
-# 1. Run all 34 automated domain test suites
+# 1. Run all 35 automated domain test suites
 node scratch/run-tests.mjs
 
 # 2. Run TypeScript strict typecheck
