@@ -2,21 +2,23 @@ import assert from 'node:assert';
 import fs from 'node:fs';
 import path from 'node:path';
 import { GET as getHealth, HEAD as headHealth } from '../src/app/api/health/route';
+import { GET as getDeepHealth, HEAD as headDeepHealth } from '../src/app/api/health/deep/route';
 import { validateSafeRedirect } from '../src/lib/auth/redirect';
+import { validateProductionEnvironment } from '../src/lib/config/production-validator';
 
 /**
- * Phase 5U — Staging & Production Deployment Smoke Test Suite
+ * Staging & Production Deployment Smoke Test Suite
  * Validates deployment invariants, operational probes, redirect boundaries, and cron authorization.
  */
 async function runStagingSmokeTests() {
   console.log('================================================================');
-  console.log('  PACT Phase 5U — Staging Smoke & Deployment Validation Suite');
+  console.log('  PACT Production Release Candidate & Deployment Smoke Suite');
   console.log('================================================================\n');
 
   const rootDir = process.cwd();
 
-  // 1. Validate Health Probe under simulated production runtime
-  console.log('1. Testing /api/health operational probe...');
+  // 1. Validate Health & Deep Health Probes under simulated production runtime
+  console.log('1. Testing /api/health and /api/health/deep operational probes...');
   const healthRes = await getHealth();
   assert.strictEqual(healthRes.status, 200, 'Health endpoint must return 200 OK');
   const healthData = await healthRes.json();
@@ -27,7 +29,17 @@ async function runStagingSmokeTests() {
 
   const headRes = await headHealth();
   assert.strictEqual(headRes.status, 200, 'Health HEAD probe must return 200 OK');
-  console.log('✅ Operational health & readiness probes pass under production runtime simulation.');
+
+  const deepRes = await getDeepHealth();
+  assert.strictEqual(deepRes.status, 200, 'Deep health endpoint must return 200 OK');
+  const deepData = await deepRes.json();
+  assert.strictEqual(deepData.status, 'healthy');
+  assert.strictEqual(deepData.subsystems?.runtime?.status, 'UP');
+  assert.strictEqual(deepData.subsystems?.rateLimiter?.status, 'ACTIVE');
+
+  const deepHeadRes = await headDeepHealth();
+  assert.strictEqual(deepHeadRes.status, 200, 'Deep health HEAD probe must return 200 OK');
+  console.log('✅ Operational health & deep readiness probes pass under production runtime simulation.');
 
   // 2. Validate OAuth Callback Open-Redirect Security
   console.log('\n2. Testing OAuth callback redirect boundary safeguards...');
@@ -92,19 +104,35 @@ async function runStagingSmokeTests() {
   assert.strictEqual(isTimingSafeBearerMatch(`Bearer ${testSecret}`, ''), false, 'Empty secret must be rejected');
   console.log('✅ Constant-time Bearer authentication guards cron endpoints against timing attacks.');
 
-  // 7. Validate Sequential Migration Inventory (25 Migrations)
+  // 7. Validate Sequential Migration Inventory (26 Migrations)
   console.log('\n7. Validating Supabase migration continuity & completeness...');
   const migrationsDir = path.join(rootDir, 'supabase', 'migrations');
   assert.ok(fs.existsSync(migrationsDir), 'supabase/migrations directory must exist');
   const migrationFiles = fs.readdirSync(migrationsDir).filter(f => f.endsWith('.sql')).sort();
-  assert.strictEqual(migrationFiles.length, 25, 'Exactly 25 sequential migrations must be present');
+  assert.strictEqual(migrationFiles.length, 26, 'Exactly 26 sequential migrations must be present');
   assert.ok(migrationFiles[0].includes('create_profiles_table'), 'Migration 1 must be create_profiles_table');
   assert.ok(migrationFiles[20].includes('passkey_credentials'), 'Migration 21 must be passkey_credentials');
   assert.ok(migrationFiles[21].includes('accountability_circles_and_pledges'), 'Migration 22 must be accountability_circles_and_pledges');
   assert.ok(migrationFiles[22].includes('production_resilience_and_telemetry'), 'Migration 23 must be production_resilience_and_telemetry');
   assert.ok(migrationFiles[23].includes('daily_rituals_and_account_governance'), 'Migration 24 must be daily_rituals_and_account_governance');
   assert.ok(migrationFiles[24].includes('multi_device_sync_and_replication'), 'Migration 25 must be multi_device_sync_and_replication');
+  assert.ok(migrationFiles[25].includes('discipline_intelligence_and_enterprise_sso'), 'Migration 26 must be discipline_intelligence_and_enterprise_sso');
   console.log(`✅ All ${migrationFiles.length} sequential migrations verified in correct chronological order.`);
+
+  // 8. Validate Production Environment & GA Release Validator
+  console.log('\n8. Validating production release candidate environment validator...');
+  const validProductionEnv = {
+    NEXT_PUBLIC_SUPABASE_URL: 'https://pact-prod.supabase.co',
+    NEXT_PUBLIC_SUPABASE_ANON_KEY: 'valid-anon-key-simulation',
+    SUPABASE_SERVICE_ROLE_KEY: 'valid-service-role-key-simulation',
+    NODE_ENV: 'production',
+  };
+  const validationResult = validateProductionEnvironment(validProductionEnv);
+  assert.strictEqual(validationResult.valid, true, 'Valid production environment must pass validation');
+  assert.strictEqual(validationResult.checks.environmentVariables.passed, true);
+  assert.strictEqual(validationResult.checks.databaseMigrations.count, 26);
+  assert.strictEqual(validationResult.checks.securityInvariants.passed, true);
+  console.log('✅ Production GA runtime validator verified all environmental and database invariants.');
 
   console.log('\n================================================================');
   console.log('🎉 ALL STAGING & DEPLOYMENT SMOKE TESTS PASSED CLEANLY');
