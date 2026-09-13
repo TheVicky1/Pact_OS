@@ -30,7 +30,7 @@ jobs:
                - 🔗 Markdown Link Integrity
                - 🧹 ESLint Code Quality
                - 🏷️ TypeScript Strict Typecheck
-               - 🧪 40-Suite Automated Domain Test Matrix
+               - 🧪 41-Suite Automated Domain Test Matrix
                - 🏗️ Next.js Production Build
             2. **Maintainer Review**: A maintainer (@TheVicky1) will review your pull request shortly.
             3. **Friendly Iteration**: If any adjustments or feedback are needed, we will provide clear, actionable suggestions to help get your PR merged smoothly.
