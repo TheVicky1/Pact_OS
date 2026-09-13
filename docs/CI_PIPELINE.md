@@ -30,7 +30,7 @@ Every CI build executes 7 deterministic quality gates in sequence:
 │  3. 🔗 Markdown Link Audit (scratch/check-links.mjs)   │
 │  4. 🧹 ESLint Code Quality (npx eslint src/)           │
 │  5. 🏷️ TypeScript Typecheck (npx tsc --noEmit)         │
-│  6. 🧪 Domain Test Matrix (35 Suites / run-tests.mjs)  │
+│  6. 🧪 Domain Test Matrix (40 Suites / run-tests.mjs)  │
 │  7. 🏗️ Production Build (npm run build)                │
 └────────────────────────────────────────────────────────┘
 ```
@@ -42,8 +42,8 @@ Every CI build executes 7 deterministic quality gates in sequence:
 | **3** | **Link Audit** | `node scratch/check-links.mjs` | Validates 100% of relative Markdown links across all documentation. |
 | **4** | **ESLint** | `npx eslint src/` | Checks code formatting, React 19 conventions, and TypeScript hygiene. |
 | **5** | **Typecheck** | `npx tsc --noEmit` | Enforces 100% TypeScript strict type safety across all domain models. |
-| **6** | **Test Matrix** | `node scratch/run-tests.mjs` | Executes 35 automated test suites covering deadlines, timezones, math, and RLS. |
-| **7** | **Production Build** | `npm run build` | Compiles all 23 Next.js App Router routes and static pages with Turbopack. |
+| **6** | **Test Matrix** | `node scratch/run-tests.mjs` | Executes 40 automated test suites covering deadlines, timezones, math, and RLS. |
+| **7** | **Production Build** | `npm run build` | Compiles all 24 Next.js App Router routes and static pages with Turbopack. |
 
 ---
 
@@ -64,7 +64,7 @@ npx eslint src/
 # 4. Verify TypeScript types
 npx tsc --noEmit
 
-# 5. Run full 35 test suites
+# 5. Run full 40 test suites
 node scratch/run-tests.mjs
 
 # 6. Verify Next.js production build
