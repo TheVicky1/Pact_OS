@@ -30,6 +30,33 @@ Every task in this catalog adheres to PACT's **Micro-Contribution Standard**:
 
 ---
 
+### 🌐 Live GitHub Issue Provisioning Mapping
+
+| Catalog # | GitHub Issue | Title | Status |
+| :---: | :---: | :--- | :---: |
+| Catalog #1 | [#52](https://github.com/TheVicky1/Pact_OS/issues/52) | `[Docs] Add Code Examples for lib/money.ts Integer-Cents Calculations` | ✅ Live |
+| Catalog #2 | [#53](https://github.com/TheVicky1/Pact_OS/issues/53) | `[Docs] Document Supabase RLS Recursion Troubleshooting Note` | ✅ Live |
+| Catalog #3 | [#54](https://github.com/TheVicky1/Pact_OS/issues/54) | `[Docs] Add LeetCode API Payload Example to Proof Connector Spec` | ✅ Live |
+| Catalog #4 | [#55](https://github.com/TheVicky1/Pact_OS/issues/55) | `[Docs] Clarify Offline Test Execution in Beginner Contribution Guide` | ✅ Live |
+| Catalog #5 | [#56](https://github.com/TheVicky1/Pact_OS/issues/56) | `[Docs] Document Conventional Commit Scopes in Git Workflow Guide` | ✅ Live |
+| Catalog #6 | [#57](https://github.com/TheVicky1/Pact_OS/issues/57) | `[Copy] Improve Empty-State Description and Callout in Goals View` | ✅ Live |
+| Catalog #7 | [#58](https://github.com/TheVicky1/Pact_OS/issues/58) | `[Copy] Correct Zero-State Pluralization in Daily Cadence Widget` | ✅ Live |
+| Catalog #8 | [#59](https://github.com/TheVicky1/Pact_OS/issues/59) | `[UI] Refine Finance Category Badge Background Opacity` | ✅ Live |
+| Catalog #9 | [#60](https://github.com/TheVicky1/Pact_OS/issues/60) | `[UI] Enhance Streak Summary Highlight Glow on Habit Card` | ✅ Live |
+| Catalog #10 | [#61](https://github.com/TheVicky1/Pact_OS/issues/61) | `[UI] Improve Mobile Bottom Sheet Padding in Task Form Modal` | ✅ Live |
+| Catalog #11 | [#62](https://github.com/TheVicky1/Pact_OS/issues/62) | `[UI] Refine Card Border Styling in Analytics Skeleton Loader` | ✅ Live |
+| Catalog #12 | [#63](https://github.com/TheVicky1/Pact_OS/issues/63) | `[A11y] Add Accessible Focus Ring to Keyboard Shortcuts Modal Close Button` | ✅ Live |
+| Catalog #13 | [#64](https://github.com/TheVicky1/Pact_OS/issues/64) | `[A11y] Add Explicit ARIA Label to Notification Popover Clear Action` | ✅ Live |
+| Catalog #14 | [#65](https://github.com/TheVicky1/Pact_OS/issues/65) | `[A11y] Add aria-expanded and aria-haspopup Attributes to User Profile Trigger` | ✅ Live |
+| Catalog #15 | [#66](https://github.com/TheVicky1/Pact_OS/issues/66) | `[A11y] Ensure Active Focus Card Timer Has Accessible Status Label` | ✅ Live |
+| Catalog #16 | [#67](https://github.com/TheVicky1/Pact_OS/issues/67) | `[JSDoc] Add JSDoc Examples and Return Contracts in lib/money.ts` | ✅ Live |
+| Catalog #17 | [#68](https://github.com/TheVicky1/Pact_OS/issues/68) | `[JSDoc] Add JSDoc Documentation to Timezone Helpers in lib/time.ts` | ✅ Live |
+| Catalog #18 | [#69](https://github.com/TheVicky1/Pact_OS/issues/69) | `[Test] Add Leap-Year Boundary Test Case to Habit Streak Test Suite` | ✅ Live |
+| Catalog #19 | [#70](https://github.com/TheVicky1/Pact_OS/issues/70) | `[Test] Add Step Boundary Range Assertion to Weekly Review Test Suite` | ✅ Live |
+| Catalog #20 | [#71](https://github.com/TheVicky1/Pact_OS/issues/71) | `[Test] Add Notification Channel Filter Test Case to Notifications Test Suite` | ✅ Live |
+
+---
+
 ## 🎯 Level 1: Fast Wins (5–10 Minutes) — Documentation & Copy
 
 ---

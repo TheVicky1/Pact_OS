@@ -162,8 +162,15 @@ async function main() {
   if (token && !isDryRun) {
     console.log('🔑 Authentication detected. Checking existing repository issues...\n');
     try {
-      const listRes = await githubApiRequest('GET', `/repos/${REPO_OWNER}/${REPO_NAME}/issues?state=all&per_page=100`, token);
-      const existingIssues = Array.isArray(listRes.data) ? listRes.data : [];
+      let existingIssues = [];
+      let page = 1;
+      while (true) {
+        const listRes = await githubApiRequest('GET', `/repos/${REPO_OWNER}/${REPO_NAME}/issues?state=all&per_page=100&page=${page}`, token);
+        const batch = Array.isArray(listRes.data) ? listRes.data : [];
+        existingIssues.push(...batch);
+        if (batch.length < 100) break;
+        page++;
+      }
       
       console.log(`Found ${existingIssues.length} existing remote issues on GitHub.\n`);
 
