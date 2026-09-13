@@ -249,12 +249,14 @@ The test runner terminates with `✖ <suite-name>.test.ts FAILED`.
 A domain validation rule, timestamp constraint, or state machine expectation was violated by your recent code modification.
 
 **Try This**:
-1. Run the test runner and note which suite failed:
+1. Run the targeted failing suite directly for faster isolated output:
    ```bash
-   node scratch/run-tests.mjs
+   npm run test:file -- tests/<failing-suite>.test.ts
+   # (or: npm test)
    ```
 2. Open `tests/<failing-suite>.test.ts` to see the exact assertion that failed.
 3. Verify whether your change altered the expected return type or state machine transition.
+4. Remember: PACT unit tests do NOT require a live database. Mock dependencies are automatically injected by the test harnesses.
 
 ---
 

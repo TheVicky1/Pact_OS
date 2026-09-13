@@ -100,4 +100,25 @@ The Accountability Resolution & Verification Engine was subjected to rigorous un
   - Defense-in-depth waiver quota trigger `trg_enforce_weekly_waiver_quota`: Direct bypass attempt exceeding weekly limit blocked.
 - **Audit Result**: `103/103 checks passed with 0 failures`.
 
+---
+
+## 5. Contributor Test Execution Guide
+
+All 56 authoritative domain test suites run completely offline without needing live Supabase credentials or network access.
+
+### Running the Entire Authoritative Matrix
+```bash
+npm test
+# (or: node scratch/run-tests.mjs)
+```
+
+### Running a Targeted Single Test Suite
+When working on a micro-contribution, run the specific test file for instant feedback:
+```bash
+npm run test:file -- tests/habit-completion-service.test.ts
+# or by filename pattern:
+node scratch/run-tests.mjs habit-completion-service
+```
+
+
 

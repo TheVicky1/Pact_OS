@@ -333,6 +333,22 @@ Comprehensive technical specifications, system architectures, and operational ru
 ---
 
 <div align="center">
+  <h2>Open Source & Contributing</h2>
+</div>
+
+PACT OS is free, open-source software built by developers who value intentionality, focus, and high-craft software engineering. We actively welcome contributions from developers, writers, designers, and students of all experience levels!
+
+### 🌱 Quick Links for Contributors:
+- 📖 [**Contributing Guide**](CONTRIBUTING.md) — Comprehensive workflow, branching, and PR policies
+- 🚀 [**Beginner's Contribution Guide**](docs/CONTRIBUTING-BEGINNERS.md) — Step-by-step zero-to-PR walkthrough
+- 🎯 [**Curated Good First Issues**](docs/GITHUB_BEGINNER_ISSUES.md) — 20 self-contained, validated micro-tasks (5–30 min)
+- 🏷️ [**Label Taxonomy**](docs/GITHUB_LABELS.md) — Standardized 12-label open-source taxonomy
+- 🔧 [**Troubleshooting Guide**](docs/TROUBLESHOOTING.md) — Solutions for common setup and build issues
+- 💬 [**Community Discussions**](https://github.com/TheVicky1/Pact_OS/discussions) — Feature ideas, Q&A, and project showcases
+
+---
+
+<div align="center">
   <h2>Contributors & Community</h2>
 </div>
 
@@ -344,7 +360,7 @@ PACT is built with care by an open-source community dedicated to personal master
 
 *A huge thank you to everyone who has contributed to PACT OS!*
 
-👉 [**View all contributors on GitHub**](https://github.com/TheVicky1/Pact_OS/graphs/contributors)
+👉 [**View all contributors on GitHub**](https://github.com/TheVicky1/Pact_OS/graphs/contributors) • [**Contributors Hall of Fame**](CONTRIBUTORS.md)
 
 </div>
 

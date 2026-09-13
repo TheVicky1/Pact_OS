@@ -1,0 +1,50 @@
+# PACT OS — Canonical Core GitHub Label Taxonomy
+# 12-Label Focused Open-Source Taxonomy
+
+- name: "good first issue"
+  color: "7057ff"
+  description: "Curated, self-contained task suitable for first-time contributors"
+
+- name: "help wanted"
+  color: "008672"
+  description: "Maintainer is actively welcoming community contributions on this issue"
+
+- name: "documentation"
+  color: "0075ca"
+  description: "Documentation additions, clarifications, guides, README, or markdown fixes"
+
+- name: "enhancement"
+  color: "a2eeef"
+  description: "Small improvement, refinement, or feature expansion"
+
+- name: "bug"
+  color: "d73a4a"
+  description: "Confirmed defect, malfunctioning behavior, or validation error"
+
+- name: "accessibility"
+  color: "1d76db"
+  description: "Accessibility / a11y improvements (ARIA attributes, keyboard navigation, contrast)"
+
+- name: "ui"
+  color: "e99695"
+  description: "UI, visual styling, responsive layout, micro-interactions, or component polish"
+
+- name: "testing"
+  color: "bfdadc"
+  description: "Unit tests, test matrix expansion, validation fixtures, and regression coverage"
+
+- name: "difficulty:beginner"
+  color: "0e8a16"
+  description: "Beginner-friendly task with single-file scope and clear acceptance criteria"
+
+- name: "area:core"
+  color: "333333"
+  description: "Core domain logic, shared arithmetic helpers, security, and utility services"
+
+- name: "area:dashboard"
+  color: "333333"
+  description: "Dashboard overview, navigation, workspaces, and user interfaces"
+
+- name: "hacktoberfest"
+  color: "ff7518"
+  description: "Eligible high-quality task for open-source community events"

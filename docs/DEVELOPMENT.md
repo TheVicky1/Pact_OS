@@ -63,19 +63,28 @@ supabase db reset    # For local Supabase CLI
 2. `20260907000000_create_core_domain_tables.sql`: Goals, projects, tasks, and commitments.
 3. `20260907010000_task_lifecycle_engine.sql`: Task transitions and audit triggers.
 4. `20260907020000_accountability_foundation.sql`: Commitments and consequences.
-5. `20260908000000_accountability_resolution_engine.sql`: Penalty resolution and waivers.
-6. `20260909000000_create_calendar_events.sql`: Calendar schedule and timeblocks.
-7. `20260910000000_create_finance_tables.sql`: Integer-cents transactions and budgets.
-8. `20260911000000_deadline_sweeper_engine.sql`: Automated task and commitment sweeper.
-9. `20260911010000_create_notifications_table.sql`: In-app notification queue and channels.
-10. `20260911020000_google_calendar_sync.sql`: Google Calendar token storage and sync logs.
-11. `20260911030000_external_proof_of_work.sql`: GitHub, LeetCode, and Codeforces proof tables.
-12. `20260911040000_financial_discipline.sql`: Budget alert triggers and recurrence rules.
-13. `20260911050000_user_onboarding.sql`: Multi-step onboarding state machine.
-14. `20260911060000_production_hardening_and_cron_schedule.sql`: pg_cron schedule definitions.
-15. `20260911070000_focus_sessions_engine.sql`: Focus timer sessions and analytics.
-16. `20260911080000_habits_and_routines_engine.sql`: Habits, routines, and streak calculation.
-17. `20260911090000_weekly_reviews_engine.sql`: Weekly review rituals and draft state.
+5. `20260907030000_commitment_assignment_engine.sql`: Direct commitment assignment and role mapping.
+6. `20260907040000_consequence_activation_engine.sql`: Consequence activation, masking, and triggers.
+7. `20260908000000_accountability_resolution_engine.sql`: Penalty resolution, waivers, and referees.
+8. `20260908010000_accountability_hardening_and_edge_cases.sql`: Immutability constraints and security.
+9. `20260909000000_create_calendar_events.sql`: Calendar schedule and timeblocks.
+10. `20260910000000_create_finance_tables.sql`: Integer-cents transactions and budgets.
+11. `20260911000000_deadline_sweeper_engine.sql`: Automated task and commitment sweeper.
+12. `20260911010000_create_notifications_table.sql`: In-app notification queue and channels.
+13. `20260911020000_google_calendar_sync.sql`: Google Calendar token storage and sync logs.
+14. `20260911030000_external_proof_of_work.sql`: GitHub, LeetCode, and Codeforces proof tables.
+15. `20260911040000_financial_discipline.sql`: Budget alert triggers and recurrence rules.
+16. `20260911050000_user_onboarding.sql`: Multi-step onboarding state machine.
+17. `20260911060000_production_hardening_and_cron_schedule.sql`: pg_cron schedule definitions.
+18. `20260911070000_focus_sessions_engine.sql`: Focus timer sessions and analytics.
+19. `20260911080000_habits_and_routines_engine.sql`: Habits, routines, and streak calculation.
+20. `20260911090000_weekly_reviews_engine.sql`: Weekly review rituals and draft state.
+21. `20260912000000_passkey_credentials.sql`: WebAuthn/Passkey credential registration and challenges.
+22. `20260913000000_accountability_circles_and_pledges.sql`: Multi-party circles and charity pledge escrow.
+23. `20260914000000_production_resilience_and_telemetry.sql`: Sentry telemetry, circuit breakers, and rate limits.
+24. `20260915000000_daily_rituals_and_account_governance.sql`: Daily rituals, data export, and deletion audit.
+25. `20260916000000_multi_device_sync_and_replication.sql`: Sync changes, vector clocks, and devices.
+26. `20260917000000_discipline_intelligence_and_enterprise_sso.sql`: Discipline insights, SSO providers, and audit logs.
 
 ---
 
@@ -90,22 +99,26 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
 
 ## 5. Testing & Quality Assurance
 
-PACT enforces a strict 41-suite automated test matrix verifying domain engines, math precision, security boundaries, and integration reliability.
+PACT enforces a strict 56-suite automated test matrix verifying domain engines, math precision, security boundaries, and integration reliability. All tests execute completely offline using mock harnesses:
 
 ```bash
-# 1. Run all 41 automated domain test suites
-node scratch/run-tests.mjs
+# 1. Run all 56 automated domain test suites
+npm test
+# (or: node scratch/run-tests.mjs)
 
-# 2. Run TypeScript strict typecheck
+# 2. Run a single targeted test suite
+npm run test:file -- tests/habit-completion-service.test.ts
+
+# 3. Run TypeScript strict typecheck
 npx tsc --noEmit
 
-# 3. Run ESLint code quality checks
+# 4. Run ESLint code quality checks
 npm run lint
 
-# 4. Run zero-secret leak scanner
+# 5. Run zero-secret leak scanner
 node scratch/secret-scan.mjs
 
-# 5. Production build test
+# 6. Production build test
 npm run build
 ```
 

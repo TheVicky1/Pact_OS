@@ -6,18 +6,31 @@ const testDir = path.resolve(process.cwd(), 'tests');
 const nodeBin = process.execPath;
 const jitiCli = path.resolve(process.cwd(), 'node_modules/jiti/lib/jiti-cli.mjs');
 
-// Authoritative offline unit, domain, security, and integration test suites (52 suites)
+// Authoritative offline unit, domain, security, and integration test suites
 const liveDbTests = new Set([
   'live-supabase-connection.test.ts',
   'core-domain-adversarial.test.ts',
 ]);
 
-const files = fs.readdirSync(testDir)
+let files = fs.readdirSync(testDir)
   .filter(f => f.endsWith('.test.ts'))
   .filter(f => !liveDbTests.has(f));
 
+const filterArg = process.argv[2];
+if (filterArg) {
+  const targetBase = path.basename(filterArg).replace(/\.ts$/, '').replace(/\.test$/, '');
+  const matched = files.filter(f => f.includes(targetBase) || f === filterArg || f === path.basename(filterArg));
+  if (matched.length > 0) {
+    files = matched;
+  } else {
+    console.error(`❌ No test suite found matching: "${filterArg}"`);
+    console.error(`Available test suites: ${files.join(', ')}`);
+    process.exit(1);
+  }
+}
+
 console.log(`================================================================`);
-console.log(`  PACT Test Runner: Running ${files.length} Authoritative Test Suites`);
+console.log(`  PACT Test Runner: Running ${files.length} Authoritative Test Suite(s)`);
 console.log(`================================================================\n`);
 
 let passed = 0;

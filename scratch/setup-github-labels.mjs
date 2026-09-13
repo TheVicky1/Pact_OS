@@ -19,43 +19,24 @@ import { execSync } from 'node:child_process';
 const REPO_OWNER = 'TheVicky1';
 const REPO_NAME = 'Pact_OS';
 
+export const PACT_CORE_LABELS = [
+  { name: 'good first issue', color: '7057ff', description: 'Curated, self-contained task suitable for first-time contributors' },
+  { name: 'help wanted', color: '008672', description: 'Maintainer is actively welcoming community contributions on this issue' },
+  { name: 'documentation', color: '0075ca', description: 'Documentation additions, clarifications, guides, README, or markdown fixes' },
+  { name: 'enhancement', color: 'a2eeef', description: 'Small improvement, refinement, or feature expansion' },
+  { name: 'bug', color: 'd73a4a', description: 'Confirmed defect, malfunctioning behavior, or validation error' },
+  { name: 'accessibility', color: '1d76db', description: 'Accessibility / a11y improvements (ARIA attributes, keyboard navigation, contrast)' },
+  { name: 'ui', color: 'e99695', description: 'UI, visual styling, responsive layout, micro-interactions, or component polish' },
+  { name: 'testing', color: 'bfdadc', description: 'Unit tests, test matrix expansion, validation fixtures, and regression coverage' },
+  { name: 'difficulty:beginner', color: '0e8a16', description: 'Beginner-friendly task with single-file scope and clear acceptance criteria' },
+  { name: 'area:core', color: '333333', description: 'Core domain logic, shared arithmetic helpers, security, and utility services' },
+  { name: 'area:dashboard', color: '333333', description: 'Dashboard overview, navigation, workspaces, and user interfaces' },
+  { name: 'hacktoberfest', color: 'ff7518', description: 'Eligible high-quality task for open-source community events' },
+];
+
 export const PACT_LABELS = [
-  // --- Category A: Contribution Type (type:*) ---
-  { name: 'type:bug', color: 'd73a4a', description: 'Something is broken, malfunctioning, or producing errors' },
-  { name: 'type:feature', color: 'a2eeef', description: 'New product capability, domain engine expansion, or enhancement' },
-  { name: 'type:documentation', color: '0075ca', description: 'Documentation additions, corrections, architecture guides' },
-  { name: 'type:docs', color: '0075ca', description: 'Alias for type:documentation' },
-  { name: 'type:ui', color: 'e99695', description: 'Visual styling, layout ergonomics, card geometry, micro-interactions' },
-  { name: 'type:a11y', color: '1d76db', description: 'Accessibility improvements, keyboard navigation, ARIA semantics, contrast' },
-  { name: 'type:test', color: 'bfdadc', description: 'Unit tests, validation suites, test harnesses, coverage improvements' },
-  { name: 'type:performance', color: 'd93f0b', description: 'Latency reduction, bundle optimization, query efficiency' },
-  { name: 'type:refactor', color: 'e4e669', description: 'Internal code restructuring without functional or behavioral changes' },
-  { name: 'type:security', color: 'b60205', description: 'Security hardening, RLS policy audit, input sanitization' },
-  { name: 'type:maintenance', color: 'e4e669', description: 'Repository upkeep, dependency upgrades, build script improvements' },
-  { name: 'type:question', color: 'd4c5f9', description: 'Support inquiries, usage questions, architectural clarifications' },
-  { name: 'type:integration', color: '5319e7', description: 'External connectors and APIs (Google, GitHub, LeetCode, Codeforces)' },
-
-  // --- Category B: Priority (priority:*) ---
-  { name: 'priority:critical', color: 'b60205', description: 'Production outage, active data loss, broken main build, severe security flaw' },
-  { name: 'priority:high', color: 'd93f0b', description: 'Major workflow blocker or high-impact defect affecting core productivity loops' },
-  { name: 'priority:medium', color: 'fbca04', description: 'Standard defect or prioritized enhancement with a viable workaround' },
-  { name: 'priority:low', color: '0e8a16', description: 'Nice-to-have visual refinement, minor documentation polish, or low-urgency feature' },
-
-  // --- Category C: Difficulty (difficulty:*) ---
-  { name: 'difficulty:beginner', color: '0e8a16', description: 'Suitable for first-time contributors; narrow scope and clear criteria' },
-  { name: 'difficulty:easy', color: '7057ff', description: 'Straightforward task requiring basic familiarity with React/TypeScript' },
-  { name: 'difficulty:intermediate', color: 'fbca04', description: 'Requires solid understanding of PACT domain engines or Server Actions' },
-  { name: 'difficulty:advanced', color: 'd93f0b', description: 'Complex task requiring deep domain knowledge, concurrency, or DB migrations' },
-
-  // --- Category D: Estimated Time (time:*) [RETIRED / LEGACY - DO NOT USE ON NEW ISSUES] ---
-  { name: 'time:<15m', color: 'c5def5', description: 'Legacy label: Quick fix (< 15 min) - Retired for new issues' },
-  { name: 'time:15-30m', color: 'bfd4f2', description: 'Legacy label: Focused task (15-30 min) - Retired for new issues' },
-  { name: 'time:30-60m', color: 'd4c5f9', description: 'Legacy label: Moderate task (30-60 min) - Retired for new issues' },
-  { name: 'time:1-2h', color: 'fef2c0', description: 'Legacy label: Substantial task (1-2h) - Retired for new issues' },
-  { name: 'time:2-4h', color: 'f9d0c4', description: 'Legacy label: In-depth task (2-4h) - Retired for new issues' },
-  { name: 'time:4h+', color: 'f8b4b4', description: 'Legacy label: Large refactor (4h+) - Retired for new issues' },
-
-  // --- Category E: Project Area (area:*) ---
+  ...PACT_CORE_LABELS,
+  // --- Extended Subsystem Areas ---
   { name: 'area:ui', color: '333333', description: 'Design system components, buttons, layout, typography' },
   { name: 'area:auth', color: '333333', description: 'Login, registration, session cookies, OAuth callbacks, onboarding' },
   { name: 'area:planning', color: '333333', description: 'Daily planner, timeline, drag-and-drop schedule, and energy blocks' },
@@ -66,7 +47,6 @@ export const PACT_LABELS = [
   { name: 'area:testing', color: '333333', description: 'Domain test suites, mock fixtures, and CI validation runners' },
   { name: 'area:documentation', color: '333333', description: 'Technical guides, contributor walkthroughs, API specifications' },
   { name: 'area:developer-experience', color: '333333', description: 'Local setup scripts, linter rules, Git hooks, dev environment' },
-  { name: 'area:dashboard', color: '333333', description: 'Main OS overview, velocity cards, and quick actions' },
   { name: 'area:calendar', color: '333333', description: 'Monthly/weekly calendar views, scheduling, and Google sync UI' },
   { name: 'area:tasks', color: '333333', description: 'Task lifecycle engine, priority filters, and deadline timers' },
   { name: 'area:goals', color: '333333', description: 'OKR hierarchy, milestones, and target completion tracking' },
@@ -78,16 +58,10 @@ export const PACT_LABELS = [
   { name: 'area:integrations', color: '333333', description: 'Proof connectors (GitHub, LeetCode, Codeforces, Google Calendar)' },
   { name: 'area:settings', color: '333333', description: 'User preferences, profile configuration, notifications, export' },
 
-  // --- Category F: Special Community Labels ---
-  { name: 'good first issue', color: '7057ff', description: 'Curated for first-time contributors; paired with difficulty:beginner' },
-  { name: 'help wanted', color: '008672', description: 'Extra maintainer assistance or community contribution actively requested' },
-  { name: 'beginner friendly', color: '0e8a16', description: 'Accessible task suitable for developers new to open source' },
-  { name: 'contributions-welcome', color: '0e8a16', description: 'Community contributions actively welcomed on this task' },
-  { name: 'up-for-grabs', color: '7057ff', description: 'Unclaimed community task open for any contributor to pick up' },
-  { name: 'hacktoberfest', color: 'ff7518', description: 'Quality open-source contribution opportunity during community events' },
-  { name: 'community', color: 'e11d48', description: 'Community-driven enhancement, UX feedback, or resource sharing' },
-
-  // --- Category G: Workflow Status Labels (status:*) ---
+  // --- Extended Difficulty & Lifecycle ---
+  { name: 'difficulty:easy', color: '7057ff', description: 'Straightforward task requiring basic familiarity with React/TypeScript' },
+  { name: 'difficulty:intermediate', color: 'fbca04', description: 'Requires solid understanding of PACT domain engines or Server Actions' },
+  { name: 'difficulty:advanced', color: 'd93f0b', description: 'Complex task requiring deep domain knowledge, concurrency, or DB migrations' },
   { name: 'status:triage', color: '6a737d', description: 'Newly submitted issue awaiting maintainer review or classification' },
   { name: 'status:ready', color: '0e8a16', description: 'Fully specified, verified, and available for implementation' },
   { name: 'status:in-progress', color: 'fbca04', description: 'Actively assigned or currently being implemented' },

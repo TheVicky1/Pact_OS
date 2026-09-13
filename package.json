@@ -35,6 +35,7 @@
     "lint": "eslint",
     "typecheck": "tsc --noEmit",
     "test": "node scratch/run-tests.mjs",
+    "test:file": "node scratch/run-tests.mjs",
     "release:check": "node scratch/release-check.mjs"
   },
   "dependencies": {

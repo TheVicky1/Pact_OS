@@ -1,7 +1,7 @@
 name: "✨ Feature Request"
 description: "Suggest a new product capability, enhancement, or workflow for PACT"
 title: "feat: "
-labels: ["type:feature"]
+labels: ["enhancement"]
 body:
   - type: markdown
     attributes:

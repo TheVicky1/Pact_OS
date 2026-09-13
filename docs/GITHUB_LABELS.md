@@ -4,7 +4,31 @@ This document serves as the canonical specification and single source of truth f
 
 ---
 
-## 1. Taxonomy Philosophy
+## 1. Core 12-Label Open-Source Taxonomy
+
+To keep the contributor experience clear, low-friction, and predictable, PACT standardizes on a **focused 12-label core taxonomy** for all public issues and pull requests:
+
+| # | Label | Color | Category | Purpose & Contributor Guidance |
+| :-: | :--- | :---: | :--- | :--- |
+| **1** | `good first issue` | `#7057FF` | Community | Curated, self-contained task specifically structured for first-time contributors. |
+| **2** | `help wanted` | `#008672` | Community | Maintainer is actively welcoming community contributions on this issue. |
+| **3** | `documentation` | `#0075CA` | Type | Markdown, documentation guides, README updates, or JSDoc docstrings. |
+| **4** | `enhancement` | `#A2EEEF` | Type | Small improvement, refinement, or non-breaking feature enhancement. |
+| **5** | `bug` | `#D73A4A` | Type | Confirmed defect, broken calculation, or malfunctioning UI component. |
+| **6** | `accessibility` | `#1D76DB` | Type | Accessibility / a11y improvements (ARIA labels, keyboard navigation, contrast). |
+| **7** | `ui` | `#E99695` | Type | UI visual styling, responsive layout polish, or micro-interaction adjustments. |
+| **8** | `testing` | `#BFDADC` | Type | Unit tests, test matrix expansion, boundary fixtures, and regression coverage. |
+| **9** | `difficulty:beginner` | `#0E8A16` | Difficulty | Beginner-friendly task with single-file scope and clear acceptance criteria (5–30m). |
+| **10** | `area:core` | `#333333` | Area | Core domain logic, shared arithmetic helpers, security, and utility services. |
+| **11** | `area:dashboard` | `#333333` | Area | Dashboard overview, navigation, workspaces, and user interfaces. |
+| **12** | `hacktoberfest` | `#FF7518` | Community | Eligible high-quality task for open-source community events. |
+
+### Label Application Rule for Beginner Issues
+Every good-first-issue is tagged with **2–4 labels** (e.g., `good first issue` + `documentation` + `difficulty:beginner`).
+
+---
+
+## 2. Taxonomy Philosophy
 
 A well-structured issue classification system lowers cognitive friction for new contributors, facilitates GitHub issue search discovery, and enables deterministic triage automation.
 
@@ -18,29 +42,9 @@ PACT’s label taxonomy is organized around **orthogonal dimensions**:
 └─────────────────┘     └─────────────────┘     └─────────────────┘     └─────────────────┘     └─────────────────┘
 ```
 
-### Compositional Design (No Label Explosion)
-Instead of creating dozens of rigid compound labels (e.g., `frontend-beginner-urgent-dashboard-fix`), PACT **composes** orthogonal dimensions:
-- `type:bug` + `priority:high` + `difficulty:beginner` + `area:dashboard` + `status:ready` + `good first issue`
-
-This provides precise filtering across GitHub search without clutter.
-
----
-
-## 2. Canonical Label Summary Matrix
-
-| Dimension | Prefix / Name | Purpose | Example Canonical Labels |
-| :--- | :--- | :--- | :--- |
-| **Type** | `type:*` | Nature of the work requested or delivered | `type:bug`, `type:feature`, `type:docs`, `type:ui`, `type:a11y`, `type:test`, `type:refactor`, `type:security`, `type:maintenance`, `type:question` |
-| **Priority** | `priority:*` | Triage severity and urgency | `priority:critical`, `priority:high`, `priority:medium`, `priority:low` |
-| **Difficulty** | `difficulty:*` | Contributor expertise level expected | `difficulty:beginner`, `difficulty:easy`, `difficulty:intermediate`, `difficulty:advanced` |
-| **Estimated Time** *(Retired)* | `time:*` | *Retired for new issues* — Complexity communicates scope | `time:<15m`, `time:15-30m` *(Legacy only; forbidden on new issues)* |
-| **Project Area** | `area:*` | Architectural subsystem affected | `area:ui`, `area:auth`, `area:planning`, `area:accountability`, `area:finance`, `area:github`, `area:supabase`, `area:testing`, `area:documentation`, `area:developer-experience` |
-| **Contributor** | *(community)* | Discovery tags for open-source contributors | `good first issue`, `help wanted`, `beginner friendly`, `contributions-welcome`, `up-for-grabs` |
-| **Status** | `status:*` | Issue & PR lifecycle progression | `status:triage`, `status:ready`, `status:in-progress`, `status:blocked`, `status:needs-review` |
-
 > [!IMPORTANT]
 > **PERMANENT RULE: NO TIME-BASED LABELS ON NEW ISSUES**
-> From Phase 6D onward, `time:*` labels are **permanently retired and forbidden** for newly created issues. Contributor scope and cognitive difficulty are communicated strictly via `difficulty:beginner` alongside the micro-issue standard (1 file preferred, 5–30m estimated completion time). Existing legacy labels on earlier issues are retained without destructive mass-edits.
+> `time:*` labels are **permanently retired and forbidden** for newly created issues. Contributor scope and cognitive difficulty are communicated strictly via `difficulty:beginner` alongside the micro-issue standard (1 file preferred, 5–30m estimated completion time).
 
 ---
 

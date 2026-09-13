@@ -1,0 +1,13 @@
+# PACT OS — Canonical Code Ownership
+# Single Source of Truth for Maintainer Code Ownership & Review Routing
+
+* @TheVicky1
+.github/ @TheVicky1
+supabase/ @TheVicky1
+src/lib/ @TheVicky1
+src/features/ @TheVicky1
+src/components/ @TheVicky1
+src/app/ @TheVicky1
+tests/ @TheVicky1
+docs/ @TheVicky1
+scratch/ @TheVicky1
