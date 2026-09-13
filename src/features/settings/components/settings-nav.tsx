@@ -8,7 +8,6 @@ export type SettingsTab =
   | 'review'
   | 'accountability'
   | 'security'
-  | 'sso'
   | 'devices'
   | 'integrations'
   | 'notifications'
@@ -52,12 +51,6 @@ const TABS: TabItem[] = [
     label: 'Account & Security',
     icon: Key,
     description: 'Email, authentication provider & password',
-  },
-  {
-    id: 'sso',
-    label: 'Enterprise SSO',
-    icon: Key,
-    description: 'Corporate SAML 2.0 & OIDC identity provider',
   },
   {
     id: 'devices',
