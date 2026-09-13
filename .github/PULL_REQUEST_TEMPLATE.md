@@ -1,7 +1,7 @@
 # 🏛️ PACT Pull Request
 
 > 💡 **Submitting a Micro-Contribution / Good First Issue?**
-> If you are working on a 1–5 minute single-file task, you only need to fill out **Sections 1, 2, and 5** (and check the Micro-Contribution Fast-Path in Section 9). You can skip or leave optional sections blank!
+> If you are working on a single-file micro-task (Good First Issue), you only need to fill out **Sections 1, 2, and 5** (and check the Micro-Contribution Fast-Path in Section 9). You can skip or leave optional sections blank!
 
 ---
 
@@ -83,7 +83,7 @@ Closes #
 
 Please verify the following before requesting a maintainer review:
 
-- [ ] **🌱 Micro-Contribution Fast-Path**: This is a targeted Good First Issue / 1–5 minute change (single file, verified locally).
+- [ ] **🌱 Micro-Contribution Fast-Path**: This is a targeted Good First Issue / 5–30 minute micro-change (single file, verified locally).
 - [ ] My PR has a single, focused scope (avoiding unrelated formatting or refactoring).
 - [ ] I have read and followed PACT's [**Contributing Guide**](https://github.com/TheVicky1/Pact_OS/blob/main/CONTRIBUTING.md).
 - [ ] I confirm that **zero secrets, API keys, private tokens, or `.env.local` files** are included in this PR.

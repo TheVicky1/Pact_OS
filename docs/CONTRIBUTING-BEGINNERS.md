@@ -59,7 +59,7 @@ If you are new to GitHub and Git, here are the core terms you will encounter:
 
 ## 3. Choose Your First Contribution (Micro-Contributions)
 
-You do not have to write hundreds of lines of complex code or understand the entire architecture. PACT embraces a **micro-contribution model**: tasks are deliberately scoped to **one single file** and **one specific, high-leverage improvement** (typically 1–5 minutes of actual implementation).
+You do not have to write hundreds of lines of complex code or understand the entire architecture. PACT embraces a **micro-contribution model**: tasks are deliberately scoped to **one single file** and **one specific, high-leverage improvement** (typically 5–30 minutes of focused implementation).
 
 Look for these beginner-friendly labels on GitHub:
 
