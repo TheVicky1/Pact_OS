@@ -7,7 +7,7 @@ This runbook outlines the day-to-day operational procedures for maintainers of *
 ## 1. Guiding Philosophy
 
 1. **Welcoming & Encouraging**: Treat every first-time contributor with respect and enthusiasm. Constructive, kind, and timely reviews build long-term open-source community members.
-2. **Uphold Engineering Integrity**: Beginner-friendly does not mean lowering engineering standards. Strict TypeScript, zero secret leakage, integer-cents currency arithmetic, and 100% pass rates across the 41-suite test matrix are required for all merged code.
+2. **Uphold Engineering Integrity**: Beginner-friendly does not mean lowering engineering standards. Strict TypeScript, zero secret leakage, integer-cents currency arithmetic, and 100% pass rates across the 56-suite test matrix are required for all merged code.
 3. **Keep Workflows Simple**: Avoid unnecessary bot bureaucracy or multi-tier approval committees. Vicky personally reviews and approves every pull request.
 
 ---
