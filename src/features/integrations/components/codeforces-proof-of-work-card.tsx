@@ -4,7 +4,6 @@ import React, { useState, useTransition } from 'react';
 import Link from 'next/link';
 import {
   Terminal,
-  Flame,
   Trophy,
   RefreshCw,
   ShieldCheck,

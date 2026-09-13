@@ -30,7 +30,7 @@ docs/
 ├── GIT_WORKFLOW.md                     # Branching, Conventional Commits & Pre-Commit Rules
 ├── ROADMAP.md                          # Current Verified Status & Future Planned Milestones
 ├── DESIGN_SYSTEM.md                    # Luxury Obsidian Canvas, 3D Celestial Hero & PACT Gold Tokens
-├── TESTING.md                          # 40-Suite Automated Test Matrix & Verification Runbook
+├── TESTING.md                          # 41-Suite Automated Test Matrix & Verification Runbook
 ├── USER_FLOWS.md                       # Core User Workflows & State Lifecycle Transitions
 ├── DECISIONS.md                        # Architecture Decision Records (ADRs)
 ├── MAINTAINER-WORKFLOW.md              # Contributor Triage, PR Review & Claim Assignment Runbook

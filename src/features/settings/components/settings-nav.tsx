@@ -8,9 +8,12 @@ export type SettingsTab =
   | 'review'
   | 'accountability'
   | 'security'
+  | 'devices'
   | 'integrations'
   | 'notifications'
-  | 'data';
+  | 'data'
+  | 'diagnostics'
+  | 'governance';
 
 export interface SettingsNavProps {
   activeTab: SettingsTab;
@@ -50,6 +53,12 @@ const TABS: TabItem[] = [
     description: 'Email, authentication provider & password',
   },
   {
+    id: 'devices',
+    label: 'Devices & Sync',
+    icon: Blocks,
+    description: 'Multi-device delta replication & active sessions',
+  },
+  {
     id: 'integrations',
     label: 'Integrations',
     icon: Blocks,
@@ -66,6 +75,18 @@ const TABS: TabItem[] = [
     label: 'Data & Privacy',
     icon: Database,
     description: 'Export structured JSON and CSV archives',
+  },
+  {
+    id: 'diagnostics',
+    label: 'System Diagnostics',
+    icon: Blocks,
+    description: 'Live latency, memory stats & rate limits',
+  },
+  {
+    id: 'governance',
+    label: 'Account Governance',
+    icon: ShieldAlert,
+    description: 'Audit trail, cache quota & account purge',
   },
 ];
 

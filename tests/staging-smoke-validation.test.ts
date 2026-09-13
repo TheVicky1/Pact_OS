@@ -92,14 +92,18 @@ async function runStagingSmokeTests() {
   assert.strictEqual(isTimingSafeBearerMatch(`Bearer ${testSecret}`, ''), false, 'Empty secret must be rejected');
   console.log('✅ Constant-time Bearer authentication guards cron endpoints against timing attacks.');
 
-  // 7. Validate Sequential Migration Inventory (20 Migrations)
+  // 7. Validate Sequential Migration Inventory (25 Migrations)
   console.log('\n7. Validating Supabase migration continuity & completeness...');
   const migrationsDir = path.join(rootDir, 'supabase', 'migrations');
   assert.ok(fs.existsSync(migrationsDir), 'supabase/migrations directory must exist');
   const migrationFiles = fs.readdirSync(migrationsDir).filter(f => f.endsWith('.sql')).sort();
-  assert.strictEqual(migrationFiles.length, 20, 'Exactly 20 sequential migrations must be present');
+  assert.strictEqual(migrationFiles.length, 25, 'Exactly 25 sequential migrations must be present');
   assert.ok(migrationFiles[0].includes('create_profiles_table'), 'Migration 1 must be create_profiles_table');
-  assert.ok(migrationFiles[19].includes('weekly_reviews_engine'), 'Migration 20 must be weekly_reviews_engine');
+  assert.ok(migrationFiles[20].includes('passkey_credentials'), 'Migration 21 must be passkey_credentials');
+  assert.ok(migrationFiles[21].includes('accountability_circles_and_pledges'), 'Migration 22 must be accountability_circles_and_pledges');
+  assert.ok(migrationFiles[22].includes('production_resilience_and_telemetry'), 'Migration 23 must be production_resilience_and_telemetry');
+  assert.ok(migrationFiles[23].includes('daily_rituals_and_account_governance'), 'Migration 24 must be daily_rituals_and_account_governance');
+  assert.ok(migrationFiles[24].includes('multi_device_sync_and_replication'), 'Migration 25 must be multi_device_sync_and_replication');
   console.log(`✅ All ${migrationFiles.length} sequential migrations verified in correct chronological order.`);
 
   console.log('\n================================================================');

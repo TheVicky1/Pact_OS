@@ -7,6 +7,7 @@ import { PactLogo } from '@/components/brand/pact-logo';
 import { signOutAction } from '@/features/auth/actions';
 import { NotificationPopover } from '@/components/ui/notification-popover';
 import { UserProfileDropdown } from '@/components/ui/user-profile-dropdown';
+import { SyncStatusIndicator } from '@/features/sync/components/sync-status-indicator';
 import {
   LayoutDashboard,
   Target,
@@ -39,7 +40,7 @@ interface NavItem {
 /**
  * PACT Application Global Header & Navigation System
  * Clean three-zone horizontal layout:
- * [Logo] -> [Primary Navigation: 8 Core Modules] -> [Flexible Space] -> [Notifications, User Profile Dropdown]
+ * [Logo] -> [Primary Navigation: 8 Core Modules] -> [Flexible Space] -> [Multi-Device Sync, Notifications, User Profile Dropdown]
  * Full responsiveness across desktop, laptop, tablet, and mobile with zero visual collision.
  */
 export function AppHeader({ userName, userEmail, timezone }: AppHeaderProps) {
@@ -171,8 +172,12 @@ export function AppHeader({ userName, userEmail, timezone }: AppHeaderProps) {
           </nav>
         </div>
 
-        {/* Right Section: Notification Bell, User Account Profile Dropdown, Mobile Menu */}
+        {/* Right Section: Multi-Device Sync Indicator, Notification Bell, User Account Profile Dropdown, Mobile Menu */}
         <div className="flex items-center gap-2 sm:gap-3 shrink-0">
+          {/* Phase 13 Multi-Device Sync Status Indicator */}
+          <div className="hidden sm:flex">
+            <SyncStatusIndicator />
+          </div>
           {/* Notification Bell with Popover Center */}
           <div className="relative">
             <button

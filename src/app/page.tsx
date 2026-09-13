@@ -2,7 +2,6 @@
 
 import React, { useState } from 'react';
 import Image from 'next/image';
-import { motion } from 'framer-motion';
 import { UnifiedAuthCard, AuthMode } from '@/components/auth/unified-auth-card';
 import { Sparkles } from 'lucide-react';
 

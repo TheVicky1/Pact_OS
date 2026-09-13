@@ -12,7 +12,6 @@ import {
   AlertCircle,
   Award,
   Layers,
-  ChevronRight,
 } from 'lucide-react';
 import {
   LeetCodeActivitySummary,

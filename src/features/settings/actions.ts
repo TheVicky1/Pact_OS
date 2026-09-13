@@ -246,3 +246,95 @@ export async function updateNotificationPreferencesAction(
   revalidatePath('/app/settings');
   return { success: true };
 }
+
+/**
+ * Server Action: Hard purge all user data (Danger Zone / Factory Reset)
+ */
+export async function purgeAccountDataAction(
+  confirmationPhrase: string
+): Promise<SettingsActionResult> {
+  if (confirmationPhrase !== 'DELETE MY ACCOUNT AND ALL DATA') {
+    return { error: 'Confirmation phrase does not match exactly.' };
+  }
+
+  const supabase = await createClient();
+  const {
+    data: { user },
+    error: authError,
+  } = await supabase.auth.getUser();
+
+  if (authError || !user) {
+    return { error: 'Unauthorized.' };
+  }
+
+  // Record final audit event before deletion
+  try {
+    await supabase.rpc('record_audit_event', {
+      p_event_type: 'ACCOUNT',
+      p_action: 'ACCOUNT_PURGE_REQUESTED',
+      p_resource_type: 'profiles',
+      p_resource_id: user.id,
+      p_metadata: { timestamp: new Date().toISOString() },
+    });
+
+    // Delete user domain records cascading from user_id
+    await supabase.from('tasks').delete().eq('user_id', user.id);
+    await supabase.from('goals').delete().eq('user_id', user.id);
+    await supabase.from('projects').delete().eq('user_id', user.id);
+    await supabase.from('habits').delete().eq('user_id', user.id);
+    await supabase.from('focus_sessions').delete().eq('user_id', user.id);
+    await supabase.from('financial_transactions').delete().eq('user_id', user.id);
+    await supabase.from('notifications').delete().eq('user_id', user.id);
+  } catch (err: unknown) {
+    return { error: err instanceof Error ? err.message : 'Purge operation failed' };
+  }
+
+  revalidatePath('/app');
+  return { success: true };
+}
+
+export interface UserAuditLogEntry {
+  id: string;
+  eventType: string;
+  action: string;
+  resourceType: string;
+  createdAt: string;
+  metadata?: Record<string, unknown>;
+}
+
+/**
+ * Server Action: Fetch user audit logs for transparency explorer
+ */
+export async function fetchUserAuditLogsAction(): Promise<SettingsActionResult<UserAuditLogEntry[]>> {
+  const supabase = await createClient();
+  const {
+    data: { user },
+    error: authError,
+  } = await supabase.auth.getUser();
+
+  if (authError || !user) {
+    return { error: 'Unauthorized.' };
+  }
+
+  const { data, error } = await supabase
+    .from('audit_logs')
+    .select('id, event_type, action, resource_type, created_at, metadata')
+    .eq('user_id', user.id)
+    .order('created_at', { ascending: false })
+    .limit(50);
+
+  if (error) {
+    return { error: 'Failed to retrieve audit log.' };
+  }
+
+  const logs: UserAuditLogEntry[] = (data || []).map((row) => ({
+    id: row.id,
+    eventType: row.event_type,
+    action: row.action,
+    resourceType: row.resource_type,
+    createdAt: row.created_at,
+    metadata: row.metadata as Record<string, unknown>,
+  }));
+
+  return { success: true, data: logs };
+}

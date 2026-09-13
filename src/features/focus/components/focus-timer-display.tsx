@@ -10,6 +10,13 @@ import {
 } from '../actions';
 import { focusSound } from '@/lib/focus/sound';
 import {
+  ScreenWakeLockSentinel,
+  requestScreenWakeLock,
+  releaseScreenWakeLock,
+  requestTimerNotificationPermission,
+  sendTimerCompletionNotification,
+} from '@/lib/focus/live-activity';
+import {
   Play,
   Pause,
   CheckCircle2,
@@ -19,6 +26,8 @@ import {
   Target,
   Loader2,
   AlertCircle,
+  Sun,
+  SunDim,
 } from 'lucide-react';
 
 export interface FocusTimerDisplayProps {
@@ -42,6 +51,8 @@ function getServerClockSnapshot(): number {
 export function FocusTimerDisplay({ session, onSessionUpdated }: FocusTimerDisplayProps) {
   const clockTick = useSyncExternalStore(subscribeClock, getClockSnapshot, getServerClockSnapshot);
   const [isSoundEnabled, setIsSoundEnabled] = useState<boolean>(true);
+  const [isWakeLockActive, setIsWakeLockActive] = useState<boolean>(false);
+  const [wakeLockSentinel, setWakeLockSentinel] = useState<ScreenWakeLockSentinel | null>(null);
   const [isLoadingAction, setIsLoadingAction] = useState<boolean>(false);
   const [actionError, setActionError] = useState<string | null>(null);
 
@@ -60,6 +71,7 @@ export function FocusTimerDisplay({ session, onSessionUpdated }: FocusTimerDispl
     ) {
       hasTriggeredCompletionRef.current = true;
       focusSound.playCompletionChime();
+      sendTimerCompletionNotification(session.tasks?.title);
 
       completeFocusSessionAction({
         sessionId: session.id,
@@ -71,6 +83,37 @@ export function FocusTimerDisplay({ session, onSessionUpdated }: FocusTimerDispl
       });
     }
   }, [session, progress.isExpired, onSessionUpdated]);
+
+  // Request notifications permission on active session mount
+  useEffect(() => {
+    if (session.status === 'active') {
+      requestTimerNotificationPermission();
+    }
+  }, [session.status]);
+
+  // Auto-acquire wake lock if active and requested
+  const toggleWakeLock = async () => {
+    if (isWakeLockActive) {
+      await releaseScreenWakeLock(wakeLockSentinel);
+      setWakeLockSentinel(null);
+      setIsWakeLockActive(false);
+    } else {
+      const sentinel = await requestScreenWakeLock();
+      if (sentinel) {
+        setWakeLockSentinel(sentinel);
+        setIsWakeLockActive(true);
+      }
+    }
+  };
+
+  // Clean up wake lock on unmount or session completion
+  useEffect(() => {
+    return () => {
+      if (wakeLockSentinel) {
+        releaseScreenWakeLock(wakeLockSentinel);
+      }
+    };
+  }, [wakeLockSentinel]);
 
   const handlePause = async () => {
     setIsLoadingAction(true);
@@ -102,6 +145,7 @@ export function FocusTimerDisplay({ session, onSessionUpdated }: FocusTimerDispl
     setIsLoadingAction(true);
     setActionError(null);
     focusSound.playCompletionChime();
+    sendTimerCompletionNotification(session.tasks?.title);
     const res = await completeFocusSessionAction({
       sessionId: session.id,
       reason: 'manual_complete',
@@ -142,8 +186,8 @@ export function FocusTimerDisplay({ session, onSessionUpdated }: FocusTimerDispl
       {/* Subtle Background Radial Ambient Glow */}
       <div className="absolute inset-0 bg-radial from-[#d4af37]/10 via-transparent to-transparent pointer-events-none" />
 
-      {/* Top Bar: Mode Badge & Sound Toggle */}
-      <div className="w-full flex items-center justify-between z-10 mb-6">
+      {/* Top Bar: Mode Badge, Screen Wake Lock & Sound Toggle */}
+      <div className="w-full flex items-center justify-between z-10 mb-6 gap-2">
         <div className="flex items-center gap-2">
           <span
             className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-wider border ${
@@ -161,14 +205,32 @@ export function FocusTimerDisplay({ session, onSessionUpdated }: FocusTimerDispl
           </span>
         </div>
 
-        <button
-          type="button"
-          onClick={toggleSound}
-          className="p-2 rounded-xl bg-white/[0.05] hover:bg-white/[0.1] border border-white/[0.08] text-zinc-400 hover:text-zinc-200 transition-colors cursor-pointer"
-          aria-label={isSoundEnabled ? 'Mute audio chimes' : 'Enable audio chimes'}
-        >
-          {isSoundEnabled ? <Volume2 className="w-4 h-4 text-[#d4af37]" /> : <VolumeX className="w-4 h-4" />}
-        </button>
+        <div className="flex items-center gap-2">
+          {/* Wake Lock Keep Screen On Toggle */}
+          <button
+            type="button"
+            onClick={toggleWakeLock}
+            className={`p-2 rounded-xl border transition-colors cursor-pointer min-h-[36px] min-w-[36px] flex items-center justify-center ${
+              isWakeLockActive
+                ? 'bg-[#d4af37]/15 border-[#d4af37] text-[#d4af37]'
+                : 'bg-white/[0.05] hover:bg-white/[0.1] border-white/[0.08] text-zinc-400 hover:text-zinc-200'
+            }`}
+            title={isWakeLockActive ? 'Screen will stay awake' : 'Enable Keep Screen Awake'}
+            aria-label={isWakeLockActive ? 'Disable Keep Screen Awake' : 'Enable Keep Screen Awake'}
+          >
+            {isWakeLockActive ? <Sun className="w-4 h-4 text-[#d4af37]" /> : <SunDim className="w-4 h-4" />}
+          </button>
+
+          {/* Sound Toggle */}
+          <button
+            type="button"
+            onClick={toggleSound}
+            className="p-2 rounded-xl bg-white/[0.05] hover:bg-white/[0.1] border border-white/[0.08] text-zinc-400 hover:text-zinc-200 transition-colors cursor-pointer min-h-[36px] min-w-[36px] flex items-center justify-center"
+            aria-label={isSoundEnabled ? 'Mute audio chimes' : 'Enable audio chimes'}
+          >
+            {isSoundEnabled ? <Volume2 className="w-4 h-4 text-[#d4af37]" /> : <VolumeX className="w-4 h-4" />}
+          </button>
+        </div>
       </div>
 
       {/* Active Task Linkage Context */}
@@ -218,15 +280,15 @@ export function FocusTimerDisplay({ session, onSessionUpdated }: FocusTimerDispl
         </div>
       )}
 
-      {/* Control Buttons */}
-      <div className="z-10 mt-8 flex items-center gap-3 sm:gap-4 flex-wrap justify-center">
+      {/* Control Buttons with mobile >= 44px touch targets */}
+      <div className="z-10 mt-8 flex items-center gap-3 sm:gap-4 flex-wrap justify-center w-full max-w-md">
         {/* Pause / Resume Button */}
         {isPaused ? (
           <button
             type="button"
             disabled={isLoadingAction}
             onClick={handleResume}
-            className="inline-flex items-center gap-2.5 px-6 py-3 rounded-xl bg-gradient-to-r from-[#d4af37] to-[#b39226] text-black font-semibold text-sm shadow-lg shadow-[#d4af37]/20 hover:brightness-110 active:scale-95 transition-all cursor-pointer disabled:opacity-50"
+            className="flex-1 min-w-[140px] min-h-[44px] inline-flex items-center justify-center gap-2.5 px-6 py-3 rounded-xl bg-gradient-to-r from-[#d4af37] to-[#b39226] text-black font-semibold text-sm shadow-lg shadow-[#d4af37]/20 hover:brightness-110 active:scale-95 transition-all cursor-pointer disabled:opacity-50"
           >
             {isLoadingAction ? <Loader2 className="w-4 h-4 animate-spin" /> : <Play className="w-4 h-4 fill-current" />}
             <span>Resume Focus</span>
@@ -236,7 +298,7 @@ export function FocusTimerDisplay({ session, onSessionUpdated }: FocusTimerDispl
             type="button"
             disabled={isLoadingAction}
             onClick={handlePause}
-            className="inline-flex items-center gap-2.5 px-6 py-3 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-zinc-100 font-medium text-sm border border-white/[0.1] active:scale-95 transition-all cursor-pointer disabled:opacity-50"
+            className="flex-1 min-w-[140px] min-h-[44px] inline-flex items-center justify-center gap-2.5 px-6 py-3 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-zinc-100 font-medium text-sm border border-white/[0.1] active:scale-95 transition-all cursor-pointer disabled:opacity-50"
           >
             {isLoadingAction ? <Loader2 className="w-4 h-4 animate-spin" /> : <Pause className="w-4 h-4 fill-current" />}
             <span>Pause</span>
@@ -248,10 +310,10 @@ export function FocusTimerDisplay({ session, onSessionUpdated }: FocusTimerDispl
           type="button"
           disabled={isLoadingAction}
           onClick={handleManualComplete}
-          className="inline-flex items-center gap-2 px-5 py-3 rounded-xl bg-emerald-500/15 hover:bg-emerald-500/25 text-emerald-400 border border-emerald-500/30 text-sm font-medium transition-all cursor-pointer active:scale-95 disabled:opacity-50"
+          className="min-h-[44px] inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl bg-emerald-500/15 hover:bg-emerald-500/25 text-emerald-400 border border-emerald-500/30 text-sm font-medium transition-all cursor-pointer active:scale-95 disabled:opacity-50"
         >
           <CheckCircle2 className="w-4 h-4" />
-          <span>Complete Session</span>
+          <span>Complete</span>
         </button>
 
         {/* Abandon Session Button */}
@@ -259,7 +321,7 @@ export function FocusTimerDisplay({ session, onSessionUpdated }: FocusTimerDispl
           type="button"
           disabled={isLoadingAction}
           onClick={handleAbandon}
-          className="inline-flex items-center gap-2 px-4 py-3 rounded-xl bg-white/[0.04] hover:bg-rose-500/10 text-zinc-400 hover:text-rose-400 border border-white/[0.06] hover:border-rose-500/30 text-sm font-medium transition-all cursor-pointer disabled:opacity-50"
+          className="min-h-[44px] inline-flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-white/[0.04] hover:bg-rose-500/10 text-zinc-400 hover:text-rose-400 border border-white/[0.06] hover:border-rose-500/30 text-sm font-medium transition-all cursor-pointer disabled:opacity-50"
         >
           <XCircle className="w-4 h-4" />
           <span>Abandon</span>
@@ -268,3 +330,4 @@ export function FocusTimerDisplay({ session, onSessionUpdated }: FocusTimerDispl
     </div>
   );
 }
+

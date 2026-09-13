@@ -22,6 +22,13 @@ import {
 } from './github';
 import { fetchLeetCodeRecentAc, LeetCodeSubmissionItem, LeetCodeAdapterResult } from './leetcode';
 import { fetchCodeforcesSubmissions, CodeforcesSubmissionItem, CodeforcesAdapterResult } from './codeforces';
+import {
+  fetchWakaTimeSummaries,
+  aggregateWakaTimeMetrics,
+  WakaTimeSummaryDay,
+  WakaTimeAdapterResult,
+  formatWakaTimeDuration,
+} from './wakatime';
 
 export interface EvaluationOptions {
   provider: ExternalProofProvider;
@@ -36,6 +43,7 @@ export interface EvaluationOptions {
     githubPRs?: (user: string, since?: string, until?: string, repo?: string, token?: string | null) => Promise<GitHubAdapterResult<GitHubPullRequestItem[]>>;
     leetcodeAc?: (user: string, limit?: number) => Promise<LeetCodeAdapterResult<LeetCodeSubmissionItem[]>>;
     codeforcesSubmissions?: (handle: string, count?: number) => Promise<CodeforcesAdapterResult<CodeforcesSubmissionItem[]>>;
+    wakatimeSummaries?: (user: string, start: string, end: string, token?: string | null) => Promise<WakaTimeAdapterResult<WakaTimeSummaryDay[]>>;
   };
 }
 
@@ -441,6 +449,129 @@ export async function evaluateProofOfWorkRule(
       evidence: evidenceItems,
       checked_count: evidenceItems.length,
       required_count: requiredCount,
+      window_start: windowStart,
+      window_end: windowEnd,
+    };
+  }
+
+  // 4. WakaTime / IDE Activity Evaluation
+  if (provider === 'wakatime' || ruleType === 'wakatime_time') {
+    const requiredMinutes =
+      typeof config.min_minutes === 'number' && config.min_minutes > 0
+        ? config.min_minutes
+        : typeof config.required_duration_seconds === 'number' && config.required_duration_seconds > 0
+        ? Math.ceil(config.required_duration_seconds / 60)
+        : typeof config.min_count === 'number' && config.min_count > 0
+        ? config.min_count
+        : 30; // default 30 minutes
+
+    const targetProject = typeof config.project === 'string' && config.project.trim() ? config.project.trim() : undefined;
+    const targetLanguage = typeof config.language === 'string' && config.language.trim() ? config.language.trim() : undefined;
+    const targetBranch = typeof config.branch === 'string' && config.branch.trim() ? config.branch.trim() : undefined;
+
+    const startDate = windowStart.split('T')[0] || new Date().toISOString().split('T')[0];
+    const endDate = windowEnd.split('T')[0] || new Date().toISOString().split('T')[0];
+
+    const wakaFetcher = fetcherOverrides?.wakatimeSummaries || fetchWakaTimeSummaries;
+    const res = await wakaFetcher(cleanHandle, startDate, endDate, token);
+
+    if (!res.success) {
+      if (res.isRateLimited) {
+        return {
+          verified: false,
+          code: 'RATE_LIMITED',
+          summary: 'WakaTime API rate limit reached. Verification will retry.',
+          provider: 'wakatime',
+          evidence: [],
+          checked_count: 0,
+          required_count: requiredMinutes,
+          window_start: windowStart,
+          window_end: windowEnd,
+          error: res.error,
+        };
+      }
+      if (res.isUnauthorized) {
+        return {
+          verified: false,
+          code: 'UNAUTHORIZED',
+          summary: 'WakaTime API key invalid or unauthorized.',
+          provider: 'wakatime',
+          evidence: [],
+          checked_count: 0,
+          required_count: requiredMinutes,
+          window_start: windowStart,
+          window_end: windowEnd,
+          error: res.error,
+        };
+      }
+      return {
+        verified: false,
+        code: 'PROVIDER_UNAVAILABLE',
+        summary: 'Unable to reach WakaTime editor telemetry service.',
+        provider: 'wakatime',
+        evidence: [],
+        checked_count: 0,
+        required_count: requiredMinutes,
+        window_start: windowStart,
+        window_end: windowEnd,
+        error: res.error,
+      };
+    }
+
+    const aggregated = aggregateWakaTimeMetrics(res.data || [], {
+      project: targetProject,
+      language: targetLanguage,
+      branch: targetBranch,
+    });
+
+    const evidenceItems: ExternalProofEvidenceItem[] = (res.data || [])
+      .filter((day) => day.totalSeconds > 0)
+      .map((day) => {
+        let matchingSec = day.totalSeconds;
+        if (targetProject) {
+          const p = day.projects.find((pr) => pr.name.toLowerCase() === targetProject.toLowerCase());
+          matchingSec = p ? p.totalSeconds : 0;
+        } else if (targetLanguage) {
+          const l = day.languages.find((la) => la.name.toLowerCase() === targetLanguage.toLowerCase());
+          matchingSec = l ? l.totalSeconds : 0;
+        }
+
+        return {
+          external_event_id: `waka_${day.date}`,
+          event_timestamp: `${day.date}T23:59:59Z`,
+          evidence_type: 'wakatime_coding_session',
+          summary: `WakaTime ${day.date}: ${formatWakaTimeDuration(matchingSec)} coded${
+            targetProject ? ` on ${targetProject}` : ''
+          }`,
+          metadata: {
+            date: day.date,
+            totalSeconds: day.totalSeconds,
+            matchingSeconds: matchingSec,
+            projects: day.projects,
+            languages: day.languages,
+          },
+        };
+      });
+
+    const verified = aggregated.matchingMinutes >= requiredMinutes;
+    const filterDesc = targetProject
+      ? ` on project "${targetProject}"`
+      : targetLanguage
+      ? ` in language "${targetLanguage}"`
+      : '';
+
+    return {
+      verified,
+      code: verified ? 'VERIFIED' : 'RULE_NOT_SATISFIED',
+      summary: verified
+        ? `Verified ${aggregated.matchingMinutes} minutes (${formatWakaTimeDuration(
+            aggregated.matchingSeconds
+          )}) of active coding${filterDesc} (required: ${requiredMinutes} mins).`
+        : `Found ${aggregated.matchingMinutes} of ${requiredMinutes} required minutes of coding${filterDesc} in commitment window.`,
+      provider: 'wakatime',
+      evidence: evidenceItems,
+      checked_count: Math.floor(aggregated.matchingMinutes),
+      required_count: requiredMinutes,
       window_start: windowStart,
       window_end: windowEnd,
     };
