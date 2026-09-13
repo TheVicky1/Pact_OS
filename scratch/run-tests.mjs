@@ -6,7 +6,7 @@ const testDir = path.resolve(process.cwd(), 'tests');
 const nodeBin = process.execPath;
 const jitiCli = path.resolve(process.cwd(), 'node_modules/jiti/lib/jiti-cli.mjs');
 
-// Authoritative offline unit, domain, security, and integration test suites (41 suites)
+// Authoritative offline unit, domain, security, and integration test suites (44 suites)
 const liveDbTests = new Set([
   'live-supabase-connection.test.ts',
   'core-domain-adversarial.test.ts',

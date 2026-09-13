@@ -86,6 +86,7 @@ export type VerificationType =
   | 'github_pr'
   | 'leetcode_solve'
   | 'codeforces_solve'
+  | 'wakatime_time'
   | 'external_proof'
   | 'custom';
 
@@ -95,6 +96,10 @@ export interface VerificationConfig {
   min_commits?: number;
   min_prs?: number;
   min_problems?: number;
+  min_minutes?: number;
+  project?: string;
+  language?: string;
+  branch?: string;
   repository?: string;
   specific_slug?: string;
   min_rating?: number;
@@ -392,13 +397,13 @@ export interface UserAccountInfo {
   lastSignInAt: string | null;
 }
 
-export type IntegrationProviderId = 'github' | 'codeforces' | 'leetcode';
+export type IntegrationProviderId = 'github' | 'codeforces' | 'leetcode' | 'wakatime';
 
 export interface IntegrationStatus {
   id: IntegrationProviderId;
   name: string;
   description: string;
-  category: 'code' | 'competitive_programming';
+  category: 'code' | 'competitive_programming' | 'editor_telemetry';
   isConnected: boolean;
   accountHandle: string | null;
   lastSyncedAt: string | null;
@@ -423,8 +428,8 @@ export interface SettingsOverviewData {
 // Phase 5B Notification Domain Types
 export * from './notifications';
 
-// Phase 5D External Proof-of-Work Domain Types
-export type ExternalProofProvider = 'github' | 'leetcode' | 'codeforces';
+// Phase 5D & Phase 7 External Proof-of-Work Domain Types
+export type ExternalProofProvider = 'github' | 'leetcode' | 'codeforces' | 'wakatime';
 
 export interface ExternalProviderIntegration {
   id: string;
@@ -458,7 +463,7 @@ export interface ExternalProofEvidence {
 export interface ExternalProofEvidenceItem {
   external_event_id: string;
   event_timestamp: string;
-  evidence_type: 'commit' | 'pr' | 'accepted_submission' | 'contest_participation';
+  evidence_type: 'commit' | 'pr' | 'accepted_submission' | 'contest_participation' | 'wakatime_coding_session';
   summary: string;
   metadata?: Record<string, unknown>;
 }

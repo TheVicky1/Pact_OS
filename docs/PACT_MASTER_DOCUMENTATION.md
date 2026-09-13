@@ -174,6 +174,7 @@ To prevent floating-point inaccuracies, all financial data is stored and calcula
 | **GitHub** | REST API / Webhook | **IMPLEMENTED** | Verify commit activity, merged pull requests, and contribution counts as objective proof. |
 | **LeetCode** | Public GraphQL API | **IMPLEMENTED** | Verify daily problem completions and submission counts without storing credentials. |
 | **Codeforces** | Official REST API | **IMPLEMENTED** | Verify contest participation and problem submissions against public handles. |
+| **WakaTime** | REST API Telemetry | **IMPLEMENTED** | Verify active IDE coding session durations, project hours, and language distributions. |
 
 ### 8.1 Fail-Safe Guarantee
 If an external API experiences an outage, network timeout, or rate limit, the verification engine enters a `RETRY_PENDING` state. **A user's commitment is never failed due to third-party infrastructure failures.**
@@ -221,7 +222,7 @@ npm run dev
 ```
 
 ### 10.2 Test Suite Execution
-PACT features an automated 41-suite test matrix covering all core domain engines:
+PACT features an automated 44-suite test matrix covering all core domain engines:
 ```bash
 # Run comprehensive test suite
 node scratch/run-tests.mjs
@@ -239,17 +240,18 @@ npm run lint
 ## 11. Security & Data Privacy
 
 1. **Zero Client Trust**: All user identity checks are strictly evaluated on the server using verified JWT claims.
-2. **Data Portability (`/api/user/export`)**: Complete RFC 4180 ZIP/JSON export of all user entities with automated secret stripping (removing OAuth tokens, refresh tokens, and password hashes).
-3. **Secret Hygiene**: Strict pre-commit verification ensuring zero API keys or credentials exist in git history.
+2. **Data Portability (`/api/user/export`)**: Complete RFC 4180 ZIP/JSON export and schema-validated JSON backup restoration with relational graph reconciliation and automated secret stripping.
+3. **Cryptographic Partner Verification**: Tokenized review links with SHA-256 verification and zero consequence penalty leakage.
+4. **Secret Hygiene**: Strict pre-commit verification ensuring zero API keys or credentials exist in git history.
 
 ---
 
 ## 12. Current Project Status & Roadmap
 
-### Current Status: **Production Ready (Certified)**
-All 14 core product modules, the automated deadline sweeping engine, external proof connectors, the 41-suite test matrix, and the single-screen landing experience are fully built, tested, and certified.
+### Current Status: **Production Ready (Phase 7 Certified)**
+All 14 core product modules, the automated deadline sweeping engine, external proof connectors (GitHub, LeetCode, Codeforces, WakaTime), the cryptographic partner verification portal, full-fidelity data backup restoration, the 44-suite test matrix, and the single-screen landing experience are fully built, tested, and certified.
 
 ### Future Roadmap
-- **Mobile Native Companion**: React Native / Expo companion app for push notifications and on-the-go quick capture.
+- **PWA & Mobile Native Companion**: Installable offline quick-capture and React Native / Expo companion app.
 - **Biometric Passkey Support**: WebAuthn/FIDO2 passwordless biometric authentication.
 - **Local-First Offline Sync**: CRDT-based client synchronization for offline planning.

@@ -18,6 +18,7 @@ export const verificationTypeSchema = z.enum([
   'github_pr',
   'leetcode_solve',
   'codeforces_solve',
+  'wakatime_time',
   'external_proof',
   'custom',
 ]);

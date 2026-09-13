@@ -12,6 +12,7 @@ This document specifies the architecture, credential lifecycle, rate-limiting, a
 | **GitHub** | `IMPLEMENTED` | REST API / Webhooks | Verify real commit activity, merged pull requests, and contribution counts for developer commitments. |
 | **LeetCode** | `IMPLEMENTED` | Public GraphQL API | Verify daily problem completions and submission counts without requiring user password storage. |
 | **Codeforces** | `IMPLEMENTED` | Official REST API | Verify contest participation, rating changes, and problem submissions against public handles. |
+| **WakaTime** | `IMPLEMENTED` | REST API Telemetry | Verify active editor coding session time, project durations, and programming languages. |
 
 ---
 
@@ -46,6 +47,11 @@ This document specifies the architecture, credential lifecycle, rate-limiting, a
 - **Proof Types**: `problem_verdict_ok`, `contest_participation`.
 - **Evaluation Mechanism**: Queries official Codeforces API (`https://codeforces.com/api/user.status?handle={handle}`).
 - **Zero Credentials**: Validated against public user handle and submission timestamps.
+
+### 3.5 WakaTime Proof Connector
+- **Proof Types**: `wakatime_time`, `project_time`, `language_time`.
+- **Evaluation Mechanism**: Queries WakaTime summaries API (`https://wakatime.com/api/v1/users/{user}/summaries`) for active coding durations within commitment windows.
+- **Filtering**: Supports project-specific, branch-specific, and language-specific coding time criteria.
 
 ---
 
