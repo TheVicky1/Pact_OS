@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
-import { telemetry } from '@/lib/observability/telemetry';
-import { notificationDispatcher } from '@/lib/notifications/notification-dispatcher';
+import { telemetry } from '../../../../lib/observability/telemetry';
+import { notificationDispatcher } from '../../../../lib/notifications/notification-dispatcher';
 
 /**
  * PACT Deep Production Health & Readiness Probe
@@ -54,7 +54,7 @@ export async function GET() {
 }
 
 export async function HEAD() {
-  return NextResponse.json(null, {
+  return new Response(null, {
     status: 200,
     headers: {
       'Cache-Control': 'no-store, no-cache, must-revalidate',
@@ -62,3 +62,4 @@ export async function HEAD() {
     },
   });
 }
+
