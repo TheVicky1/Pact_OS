@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- **Staging & Deployment Smoke Validation**: Added `tests/staging-smoke-validation.test.ts` to verify deployment invariants, open-redirect neutralizers, environment variable segregation, and automated sweeper cron scheduling.
 - **Containerization & Deployment Readiness**: Added production multi-stage `Dockerfile`, `.dockerignore`, and `docker-compose.yml` for self-hosted and staging deployments.
 - **Operational Health & Readiness Endpoint**: Implemented safe `/api/health` HTTP GET/HEAD route with uptime probes and zero credential leakage guarantees.
 - **Release Automation Workflow**: Added `.github/workflows/release.yml` with automated release preflight audit and test verification.
