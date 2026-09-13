@@ -340,7 +340,7 @@ To keep PR diffs clean and prevent accidental leaks:
 
 ## 17. Testing & Local Validation Protocol
 
-Before opening a pull request, execute the full local validation suite:
+Before opening a pull request, execute the local validation suite. All 56 authoritative domain and security tests run in a completely offline environment without requiring live Supabase or Stripe credentials:
 
 ```bash
 # 1. Code style & linting check
@@ -349,18 +349,22 @@ npm run lint
 # 2. Strict TypeScript type check
 npx tsc --noEmit
 
-# 3. Automated 41-suite domain test matrix
-node scratch/run-tests.mjs
+# 3. Run all 56 authoritative domain test suites
+npm test
+# (or: node scratch/run-tests.mjs)
 
-# 4. Zero-secret leak audit
+# 4. Run a single targeted test suite during development
+npm run test:file -- tests/habit-completion-service.test.ts
+
+# 5. Zero-secret leak audit
 node scratch/secret-scan.mjs
 
-# 5. Production build verification
+# 6. Production build verification
 npm run build
 ```
 
 > [!IMPORTANT]
-> Documentation-only pull requests do not require running the full production build, but contributors should always ensure markdown formatting and relative links are verified. Disclose what validation was performed in your PR summary.
+> Documentation-only pull requests do not require running the full production build, but contributors should always ensure markdown formatting and relative links are verified (`node scratch/check-links.mjs`). Disclose what validation was performed in your PR summary.
 
 ---
 
@@ -440,7 +444,6 @@ Need assistance, clarification, or guidance during your contribution journey?
 - 📚 **Full Documentation**: [docs/README.md](docs/README.md)
 - 🛡️ **Security Inquiries**: [SECURITY.md](SECURITY.md)
 
-
 ---
 
 ## 24. Pre-Submission Checklist
@@ -448,12 +451,12 @@ Need assistance, clarification, or guidance during your contribution journey?
 Before submitting your pull request, please verify:
 
 - [ ] I have read and followed this [**Contributing Guide**](CONTRIBUTING.md).
-- [ ] My branch is created from and up to date with `upstream/main`.
+- [ ] My branch is created from and up to date with `upstream/main` (or designated community branch).
 - [ ] My code adheres to TypeScript strictness and domain architecture rules.
 - [ ] For UI changes, I have adhered to the luxury Obsidian/Gold design system and tested responsiveness.
 - [ ] `npm run lint` passes with 0 errors.
 - [ ] `npx tsc --noEmit` passes with 0 errors.
-- [ ] `node scratch/run-tests.mjs` passes all 41 automated test suites.
+- [ ] `npm test` passes all 56 authoritative automated test suites.
 - [ ] `node scratch/secret-scan.mjs` confirms 0 committed secrets.
 - [ ] `npm run build` succeeds without build failures.
 - [ ] My pull request references the issue it addresses (e.g., `Closes #123` or `Fixes #123`).

@@ -236,7 +236,7 @@ git checkout -b <branch-name>
 
 ## Step 10: Test and Validate Your Changes
 
-Before submitting your work, run these validation checks locally to ensure everything works properly:
+Before submitting your work, run these validation checks locally. All 56 authoritative domain test suites run completely offline with zero credential requirements:
 
 1. **Check Code Quality & Formatting**:
    ```bash
@@ -246,15 +246,20 @@ Before submitting your work, run these validation checks locally to ensure every
    ```bash
    npx tsc --noEmit
    ```
-3. **Run the Test Suite**:
+3. **Run the Automated Test Suite (56 Suites)**:
    ```bash
-   node scratch/run-tests.mjs
+   npm test
+   # (or: node scratch/run-tests.mjs)
    ```
-4. **Run the Secret Scanner**:
+4. **Run a Single Test Suite (Fast Feedback)**:
+   ```bash
+   npm run test:file -- tests/habit-completion-service.test.ts
+   ```
+5. **Run the Secret Scanner**:
    ```bash
    node scratch/secret-scan.mjs
    ```
-5. **Verify Production Build**:
+6. **Verify Production Build** (for code changes):
    ```bash
    npm run build
    ```
