@@ -2,10 +2,17 @@
   "name": "PACT OS",
   "short_name": "PACT",
   "description": "Personal Operating System for Intentional Commitments, Goals, and Accountability",
+  "id": "/app",
   "start_url": "/app",
+  "scope": "/",
   "display": "standalone",
+  "orientation": "portrait-primary",
   "background_color": "#09090b",
   "theme_color": "#d4af37",
+  "categories": [
+    "productivity",
+    "utilities"
+  ],
   "icons": [
     {
       "src": "/brand/pact-app-icon-192.png",
@@ -18,6 +25,47 @@
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Quick Capture",
+      "short_name": "Capture",
+      "description": "Quickly capture tasks and thoughts offline or online",
+      "url": "/app?quick=capture",
+      "icons": [
+        {
+          "src": "/brand/pact-logo-64.png",
+          "sizes": "64x64",
+          "type": "image/png"
+        }
+      ]
+    },
+    {
+      "name": "Focus Timer",
+      "short_name": "Focus",
+      "description": "Start a deep work focus session",
+      "url": "/app/focus",
+      "icons": [
+        {
+          "src": "/brand/pact-logo-64.png",
+          "sizes": "64x64",
+          "type": "image/png"
+        }
+      ]
+    },
+    {
+      "name": "Tasks Backlog",
+      "short_name": "Tasks",
+      "description": "View and manage current task commitments",
+      "url": "/app/tasks",
+      "icons": [
+        {
+          "src": "/brand/pact-logo-64.png",
+          "sizes": "64x64",
+          "type": "image/png"
+        }
+      ]
     }
   ]
 }

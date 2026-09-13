@@ -10,6 +10,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- **PWA Foundation & Service Worker**: Installable Progressive Web App with v2 manifest, standalone display, shortcuts, and static app-shell caching with zero private data leakage guarantees.
+- **Offline Quick Capture & Durable Sync Engine**: Client-side offline queue persistence with RFC 4122 UUID v4, deterministic idempotency keys, and exponential backoff synchronization.
+- **Mobile Live Focus Activity & Screen Wake Lock**: Cross-platform Live Activity contracts for iOS Dynamic Island / Lock Screen widgets and Android Ongoing notifications, plus Screen Wake Lock and Web Notification completion alerts.
+- **Mobile Device Registration & Push Architecture**: Zod schema for device token registration and push notification formatting with strict consequence masking confidentiality.
 - **Staging & Deployment Smoke Validation**: Added `tests/staging-smoke-validation.test.ts` to verify deployment invariants, open-redirect neutralizers, environment variable segregation, and automated sweeper cron scheduling.
 - **Containerization & Deployment Readiness**: Added production multi-stage `Dockerfile`, `.dockerignore`, and `docker-compose.yml` for self-hosted and staging deployments.
 - **Operational Health & Readiness Endpoint**: Implemented safe `/api/health` HTTP GET/HEAD route with uptime probes and zero credential leakage guarantees.
