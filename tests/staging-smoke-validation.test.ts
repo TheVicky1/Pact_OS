@@ -92,14 +92,16 @@ async function runStagingSmokeTests() {
   assert.strictEqual(isTimingSafeBearerMatch(`Bearer ${testSecret}`, ''), false, 'Empty secret must be rejected');
   console.log('✅ Constant-time Bearer authentication guards cron endpoints against timing attacks.');
 
-  // 7. Validate Sequential Migration Inventory (21 Migrations)
+  // 7. Validate Sequential Migration Inventory (23 Migrations)
   console.log('\n7. Validating Supabase migration continuity & completeness...');
   const migrationsDir = path.join(rootDir, 'supabase', 'migrations');
   assert.ok(fs.existsSync(migrationsDir), 'supabase/migrations directory must exist');
   const migrationFiles = fs.readdirSync(migrationsDir).filter(f => f.endsWith('.sql')).sort();
-  assert.strictEqual(migrationFiles.length, 21, 'Exactly 21 sequential migrations must be present');
+  assert.strictEqual(migrationFiles.length, 23, 'Exactly 23 sequential migrations must be present');
   assert.ok(migrationFiles[0].includes('create_profiles_table'), 'Migration 1 must be create_profiles_table');
   assert.ok(migrationFiles[20].includes('passkey_credentials'), 'Migration 21 must be passkey_credentials');
+  assert.ok(migrationFiles[21].includes('accountability_circles_and_pledges'), 'Migration 22 must be accountability_circles_and_pledges');
+  assert.ok(migrationFiles[22].includes('production_resilience_and_telemetry'), 'Migration 23 must be production_resilience_and_telemetry');
   console.log(`✅ All ${migrationFiles.length} sequential migrations verified in correct chronological order.`);
 
   console.log('\n================================================================');

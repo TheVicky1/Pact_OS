@@ -9,6 +9,8 @@ import type {
 } from '../data-access';
 import { InterventionModal } from './intervention-modal';
 import { AccountabilityHistoryView } from './accountability-history-view';
+import { AccountabilityCirclesCard } from './accountability-circles-card';
+import { CharityPledgeModal } from './charity-pledge-modal';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { GlassCard } from '@/components/ui/glass-card';
@@ -42,10 +44,17 @@ export function AccountabilityView({
 }: AccountabilityViewProps) {
   const router = useRouter();
   const [selectedCommitment, setSelectedCommitment] = useState<ActivatedCommitmentDetails | null>(null);
+  const [isPledgeModalOpen, setIsPledgeModalOpen] = useState(false);
+  const [pledgeCommitmentId, setPledgeCommitmentId] = useState<string | undefined>(undefined);
 
   const handleResolved = () => {
     setSelectedCommitment(null);
     router.refresh();
+  };
+
+  const handleOpenPledge = (commitmentId?: string) => {
+    setPledgeCommitmentId(commitmentId);
+    setIsPledgeModalOpen(true);
   };
 
   return (
@@ -83,7 +92,12 @@ export function AccountabilityView({
           </div>
         </div>
 
-        {/* Section 1: Active Interventions */}
+        {/* Section 1: Multi-Party Accountability Circles & Social Verification */}
+        <section className="space-y-4">
+          <AccountabilityCirclesCard onOpenPledgeModal={handleOpenPledge} />
+        </section>
+
+        {/* Section 2: Active Interventions */}
         <section className="space-y-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
@@ -175,7 +189,7 @@ export function AccountabilityView({
           )}
         </section>
 
-        {/* Section 2: Historical Audit Trail */}
+        {/* Section 3: Historical Audit Trail */}
         <section className="space-y-4 pt-4">
           <div className="flex items-center gap-2">
             <History className="h-4 w-4 text-[#d4af37]" />
@@ -201,6 +215,14 @@ export function AccountabilityView({
           onResolved={handleResolved}
         />
       )}
+
+      {/* Charity Pledge Modal */}
+      <CharityPledgeModal
+        isOpen={isPledgeModalOpen}
+        onClose={() => setIsPledgeModalOpen(false)}
+        commitmentId={pledgeCommitmentId}
+        onPledgeCreated={() => router.refresh()}
+      />
     </PageContainer>
   );
 }

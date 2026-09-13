@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useTransition, useEffect } from 'react';
+import React, { useState, useTransition, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Lock, Mail, User, Globe, AlertCircle, CheckCircle2, Loader2, Eye, EyeOff, ArrowRight, ArrowLeft, KeyRound, ChevronDown, Fingerprint } from 'lucide-react';
 import { signInAction, signUpAction } from '@/features/auth/actions';
@@ -36,56 +36,47 @@ export function UnifiedAuthCard({
   onModeChange,
   className = '',
 }: UnifiedAuthCardProps) {
-  const [mode, setMode] = useState<AuthMode>(initialMode);
-  const [showPassword, setShowPassword] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [successMessage, setSuccessMessage] = useState<string | null>(null);
-  const [isPending, startTransition] = useTransition();
-  const [detectedTz, setDetectedTz] = useState('UTC');
-
-  // Detect user's local timezone on mount
-  useEffect(() => {
-    try {
-      const tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
-      if (tz) {
-        setDetectedTz(tz);
+  const [mode, setMode] = useState<AuthMode>(() => {
+    if (typeof window !== 'undefined') {
+      const params = new URLSearchParams(window.location.search);
+      const authParam = params.get('auth');
+      if (authParam === 'signup' || authParam === 'signin' || authParam === 'forgot') {
+        return authParam;
       }
-    } catch {
-      // Fallback to UTC
     }
-  }, []);
-
-  // Listen for initialMode prop updates
-  useEffect(() => {
-    setMode(initialMode);
-    setError(null);
-    setSuccessMessage(null);
-  }, [initialMode]);
-
-  // Check URL query parameters for error flags on mount
-  useEffect(() => {
+    return initialMode;
+  });
+  const [showPassword, setShowPassword] = useState(false);
+  const [error, setError] = useState<string | null>(() => {
     if (typeof window !== 'undefined') {
       const params = new URLSearchParams(window.location.search);
       if (params.get('error') === 'oauth_failed') {
-        setError('Authentication was canceled or encountered an error. Please try again.');
-      }
-      const authParam = params.get('auth');
-      if (authParam === 'signup') {
-        switchMode('signup');
-      } else if (authParam === 'signin') {
-        switchMode('signin');
+        return 'Authentication was canceled or encountered an error. Please try again.';
       }
     }
-  }, []);
+    return null;
+  });
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
+  const [isPending, startTransition] = useTransition();
+  const [detectedTz] = useState<string>(() => {
+    try {
+      return typeof Intl !== 'undefined' ? Intl.DateTimeFormat().resolvedOptions().timeZone || 'UTC' : 'UTC';
+    } catch {
+      return 'UTC';
+    }
+  });
 
-  const switchMode = (newMode: AuthMode) => {
-    setMode(newMode);
-    setError(null);
-    setSuccessMessage(null);
-    if (onModeChange) {
-      onModeChange(newMode);
-    }
-  };
+  const switchMode = useCallback(
+    (newMode: AuthMode) => {
+      setMode(newMode);
+      setError(null);
+      setSuccessMessage(null);
+      if (onModeChange) {
+        onModeChange(newMode);
+      }
+    },
+    [onModeChange]
+  );
 
   // Sign In Handler
   const handleSignIn = (e: React.FormEvent<HTMLFormElement>) => {
