@@ -27,7 +27,7 @@
       "site_admin": false
     },
     "html_url": "https://github.com/TheVicky1/Pact_OS",
-    "description": "Personal Productivity & Accountability OS — Turn Intent Into Discipline with server-authoritative commitments, time-blocked planning, and proof-of-work verification.",
+    "description": "Personal Productivity & Accountability OS -Turn Intent Into Discipline with server-authoritative commitments, time-blocked planning, and proof-of-work verification.",
     "fork": false,
     "url": "https://api.github.com/repos/TheVicky1/Pact_OS",
     "forks_url": "https://api.github.com/repos/TheVicky1/Pact_OS/forks",
@@ -67,14 +67,14 @@
     "releases_url": "https://api.github.com/repos/TheVicky1/Pact_OS/releases{/id}",
     "deployments_url": "https://api.github.com/repos/TheVicky1/Pact_OS/deployments",
     "created_at": "2026-09-06T09:35:44Z",
-    "updated_at": "2026-09-12T18:03:54Z",
+    "updated_at": "2026-09-13T05:42:56Z",
     "pushed_at": "2026-09-12T17:42:05Z",
     "git_url": "git://github.com/TheVicky1/Pact_OS.git",
     "ssh_url": "git@github.com:TheVicky1/Pact_OS.git",
     "clone_url": "https://github.com/TheVicky1/Pact_OS.git",
     "svn_url": "https://github.com/TheVicky1/Pact_OS",
     "homepage": "https://github.com/TheVicky1/Pact_OS",
-    "size": 9634,
+    "size": 9643,
     "stargazers_count": 0,
     "watchers_count": 0,
     "language": "TypeScript",
@@ -537,11 +537,15 @@
       "canonicalTitle": "docs: clarify focus timer ambient sound generation and Web Audio API",
       "titleMatch": true,
       "liveLabels": [
+        "bug",
+        "help wanted",
         "good first issue",
         "type:docs",
         "difficulty:beginner",
+        "difficulty:easy",
         "time:30-60m",
-        "area:documentation"
+        "area:documentation",
+        "beginner friendly"
       ],
       "canonicalLabels": [
         "type:docs",
@@ -550,13 +554,26 @@
         "area:documentation",
         "good first issue"
       ],
-      "labelsMatch": true,
+      "labelsMatch": false,
       "bodyMatch": true,
-      "assignees": [],
-      "commentCount": 0,
-      "comments": [],
+      "assignees": [
+        "fskalkan"
+      ],
+      "commentCount": 2,
+      "comments": [
+        {
+          "user": "fskalkan",
+          "body": "Hi! I’d like to work on this issue. Is it okay if I take it?",
+          "created_at": "2026-09-13T01:32:45Z"
+        },
+        {
+          "user": "TheVicky1",
+          "body": "Sure, go ahead! I've assigned the issue to you. Please feel free to start working on it. Looking forward to your PR.",
+          "created_at": "2026-09-13T05:37:45Z"
+        }
+      ],
       "createdAt": "2026-09-12T17:44:50Z",
-      "updatedAt": "2026-09-12T17:44:50Z"
+      "updatedAt": "2026-09-13T05:40:40Z"
     },
     {
       "number": 26,
@@ -851,13 +868,7 @@
       "bodyMatch": true,
       "assignees": [],
       "commentCount": 1,
-      "comments": [
-        {
-          "user": "hopebeatz123-ux",
-          "body": "### ⚡ Automated Resolution Proposal\n\nTo resolve the issue described and contribute to the Pact_OS repository, follow these steps:\n\nStep 1: Fork the repository on your GitHub account if you haven't already.\nStep 2: Clone your forked repository to your local machine.\nStep 3: Create a new empty branch to work on this issue, for example, `issue-42P17`.\nStep 4: Open the `docs/TROUBLESHOOTING.md` file in a text editor or GitHub editor.\n\nHere's the updated content for the `TROUBLESHOOTING.md` file:\n\n```markdown\n# Database and Supabase Troubleshooting\n\n## Supabase RLS Policy Infinite Recursion (42P17)\n\n### Problem: PostgreSQL Error 42P17\n\nWhen creating a Supabase RLS policy, you might encounter the following error:\n```\n42P17: infinite recursion detected in policy for relation\n```\n\nThis error occurs when a query contains a subquery that queries the same table it is protecting.\n\n### Cause: Infinite Recursion in RLS Policy\n\nInfinite recursion happens when a RLS policy is applied to a table that is queried within the same policy. This can lead to an infinite loop and cause the error mentioned above.\n\n### Recommended Solution: SECURITY DEFINER Functions or Direct Column Lookups\n\nTo resolve this issue, you can use `SECURITY DEFINER` functions or perform direct column lookups instead of querying the protected table within the RLS policy.\n```sql\n-- Using SECURITY DEFINER Functions\nSELECT * FROM my_table WHERE column_name = 'value' @SECURITY DEFINER;\n\n-- Using Direct Column Lookups\nSELECT * FROM my_table WHERE column_name = 'value';\n```\n\n### Verify Your Changes\n\nAfter making the necessary updates, commit your changes with a descriptive commit message, like this:\n```\nFix Supabase RLS Policy Infinite Recursion (42P17) issue\n```\n\nStep 5: Push your changes to your forked repository and create a pull request to the main repository.\n\nIn your pull request description, explain the issue you fixed and how it affects users creating Supabase RLS policies.\n\nAfter reviewing and merging your pull request, the updated documentation will be available in the repository, helping other users avoid the mentioned error.\n```markdown\n# Database and Supabase Troubleshooting\n\n## Supabase RLS Policy Infinite Recursion (42P17)\n\n### Problem: PostgreSQL Error 42P17\n\nWhen creating a Supabase RLS policy, you might encounter the following error:\n```\n42P\n\n---\n**Direct EVM Payout Wallet (USDC/ETH/USDT):** `0x52513A733D4b52282F2b4f5A91D965D38b64f3BB`",
-          "created_at": "2026-09-12T18:19:02Z"
-        }
-      ],
+      "comments": [],
       "createdAt": "2026-09-12T18:18:20Z",
       "updatedAt": "2026-09-12T18:19:02Z"
     },
@@ -890,13 +901,7 @@
       "bodyMatch": true,
       "assignees": [],
       "commentCount": 1,
-      "comments": [
-        {
-          "user": "hopebeatz123-ux",
-          "body": "### ⚡ Automated Resolution Proposal\n\nTo resolve the issue described, you can directly update the `COLOR_MAP` object in the provided repository and ensure ESLint and TypeScript checks pass. Follow these steps:\n\n1. Open your code editor and navigate to the file `src/features/finance/components/transaction-list.tsx`.\n2. Locate the `COLOR_MAP` object near line 48. It should look something like this:\n\n```typescript\nconst COLOR_MAP = {\n  bg_primary: '#0077c2',\n  bg_secondary: '#f5f5f5',\n  bg_tertiary: '#f2f2f2',\n  bg_success: '#00c776',\n  bg_warning: '#ffc107',\n  bg_error: '#ff5722',\n  bg_info: '#00bcd4',\n  bg_default: '#f5f5f5',\n  bg_light: '#f5f5f5',\n  bg_dark: '#f5f5f5',\n  bg_light_disabled: 'rgba(255, 255, 255, 0.3)',\n  bg_dark_disabled: 'rgba(255, 255, 255, 0.3)',\n};\n```\n\n3. Update the `bg` property in each color record to use `/15` instead of `/10`. The modified `COLOR_MAP` should look like this:\n\n```typescript\nconst COLOR_MAP = {\n  bg_primary: '#0077c2',\n  bg_secondary: '#f5f5f5',\n  bg_tertiary: '#f2f2f2',\n  bg_success: '#00c776',\n  bg_warning: '#ffc107',\n  bg_error: '#ff5722',\n  bg_info: '#00bcd4',\n  bg_default: '#f5f5f5',\n  bg_light: '#f5f5f5',\n  bg_dark: '#f5f5f5',\n  bg_light_disabled: 'rgba(255, 255, 255, 0.3)',\n  bg_dark_disabled: 'rgba(255, 255, 255, 0.3)',\n};\n```\n\n4. Save the file and run any necessary build or compile tasks to ensure the changes are applied correctly.\n\nAfter following these steps, the issue with the category badge opacity in the\n\n---\n**Direct EVM Payout Wallet (USDC/ETH/USDT):** `0x52513A733D4b52282F2b4f5A91D965D38b64f3BB`",
-          "created_at": "2026-09-12T18:18:57Z"
-        }
-      ],
+      "comments": [],
       "createdAt": "2026-09-12T18:18:21Z",
       "updatedAt": "2026-09-12T18:18:57Z"
     },
@@ -929,13 +934,7 @@
       "bodyMatch": true,
       "assignees": [],
       "commentCount": 1,
-      "comments": [
-        {
-          "user": "hopebeatz123-ux",
-          "body": "### ⚡ Automated Resolution Proposal\n\nTo fix the issue described and add the subtle icon glow to the streak summary card in the Pact OS repository, follow these steps:\n\n1. Open your code editor and navigate to the file `src/features/habits/components/streak-summary-card.tsx`.\n2. Locate the `div` element that contains the Top Streak card icon container. This element should be around line 55 in the file.\n3. Add the following CSS class to the existing class list within the `div` element: `shadow-sm shadow-amber-500/20`.\n4. Save the file and ensure that the formatting remains correct.\n\nHere's an example of what the updated CSS class should look like:\n\n```jsx\n<div className=\"flex flex-col items-center p-4 rounded-lg bg-white shadow-md\">\n  <!-- Rest of the code -->\n  <div className=\"flex items-center justify-center w-12 h-12 rounded-full bg-amber-500/20 text-white font-bold text-lg\">\n    <!-- Top Streak card icon -->\n  </div>\n</div>\n```\n\nAfter making this change, the Top Streak card icon container will have a subtle amber shadow/glow effect, as described in the issue.\n\nPlease make sure to replace the existing CSS code within the `div` element with the updated code snippet provided above. This solution ensures that the glow effect is added without causing any layout shifts or unintended styling changes. \n\n---\n**Direct EVM Payout Wallet (USDC/ETH/USDT):** `0x52513A733D4b52282F2b4f5A91D965D38b64f3BB`",
-          "created_at": "2026-09-12T18:18:47Z"
-        }
-      ],
+      "comments": [],
       "createdAt": "2026-09-12T18:18:22Z",
       "updatedAt": "2026-09-12T18:18:47Z"
     },
@@ -968,13 +967,7 @@
       "bodyMatch": true,
       "assignees": [],
       "commentCount": 1,
-      "comments": [
-        {
-          "user": "hopebeatz123-ux",
-          "body": "### ⚡ Automated Resolution Proposal\n\nCertainly, I'll assist you with updating the padding for the mobile view in the `task-form-modal.tsx` file. Here's a step-by-step guide with the acceptance criteria included for verification:\n\n### Steps:\n\n1. Open your code editor and navigate to `src/features/tasks/components/task-form-modal.tsx`.\n2. Locate the `<FormBody>` component. It should contain the form content.\n3. Update the padding classes within the `<FormBody>` component to `p-4 sm:p-6`. This will adjust the padding for small screens (`sm` stands for small media query).\n4. Ensure that the modal action buttons remain visible and not covered by the increased padding. You can adjust their position if needed.\n\n### Acceptance Criteria:\n\n1. **Modal padding adjusts cleanly with `p-4 sm:p-6`**: After applying the updated padding classes, the padding should change smoothly for both desktop and mobile views.\n2. **All form fields and action buttons remain fully functional**: Ensure that none of the form fields or action buttons are affected by the padding change, and they continue to work as expected.\n\nHere's an example of the updated `<FormBody>` component:\n\n```tsx\nimport React, { useState } from 'react';\nimport { Form, Input, Button } from '@ui5/webcomponents-react';\n\nconst TaskFormModal: React.FC<TaskFormModalProps> = ({ onSubmit, onCancel }) => {\n  const [task, setTask] = useState({\n    title: '',\n    description: '',\n  });\n\n  const handleSubmit = () => {\n    onSubmit(task);\n    onCancel();\n  };\n\n  return (\n    <Form>\n      <Form.Item label=\"Title\">\n        <Input value={task.title} onChange={(e) => setTask({ ...task, title: e.target.value })} />\n      </Form.Item>\n      <Form.Item label=\"Description\">\n        <Input value={task.description} onChange={(e) => setTask({ ...task, description: e.target.value })} />\n      </Form.Item>\n      <Button type=\"primary\" onClick={handleSubmit}>\n        Save Task\n      </Button>\n      <Button onClick={onCancel}>Cancel</Button>\n    </Form>\n  );\n};\n\nexport default TaskFormModal;\n```\n\n\n---\n**Direct EVM Payout Wallet (USDC/ETH/USDT):** `0x52513A733D4b52282F2b4f5A91D965D38b64f3BB`",
-          "created_at": "2026-09-12T18:18:52Z"
-        }
-      ],
+      "comments": [],
       "createdAt": "2026-09-12T18:18:22Z",
       "updatedAt": "2026-09-12T18:18:52Z"
     },
@@ -1007,13 +1000,7 @@
       "bodyMatch": true,
       "assignees": [],
       "commentCount": 1,
-      "comments": [
-        {
-          "user": "hopebeatz123-ux",
-          "body": "### ⚡ Automated Resolution Proposal\n\nCertainly! I will guide you through fixing the issue step by step. We will update the border class in the `analytics-skeleton.tsx` file to ensure consistency with the production card border styling.\n\nFollow these steps:\n\n1. Open your code editor and navigate to the `src/features/analytics/components/analytics-skeleton.tsx` file.\n2. Locate the section where the summary cards skeleton map is defined, which should be around line 24. You'll see something like this:\n\n```javascript\nconst skeletonSummaryCards = {\n  // ...\n  'summary-card-border-white-0.08': 'border-white/[0.08]',\n  // ...\n};\n```\n\n3. Update the `summary-card-border-white-0.08` key's value from `border-white/[0.08]` to `border-white/[0.06]`. Your updated section should look like this:\n\n```javascript\nconst skeletonSummaryCards = {\n  // ...\n  'summary-card-border-white-0.08': 'border-white/[0.06]',\n  // ...\n};\n```\n\n4. Save the file.\n\nNow, let's verify that the issue has been resolved. We'll check the border style and ensure there are no linter warnings.\n\n1. Open your terminal or command prompt and navigate to the project directory using the `cd` command.\n2. Run the `eslint` command to check for any linter warnings:\n\n```bash\neslint src/\n```\n\n3. If there are no linter warnings, you can consider the issue resolved. If there are warnings, fix them according to the linter's suggestions and run the command again until there are no more warnings.\n\nAfter following these steps, the summary cards' border style will be updated to `border-white/[0.06]`, and there should be no linter warnings. Let me know if you need further assistance! \n\n---\n**Direct EVM Payout Wallet (USDC/ETH/USDT):** `0x52513A733D4b52282F2b4f5A91D965D38b64f3BB`",
-          "created_at": "2026-09-12T18:18:42Z"
-        }
-      ],
+      "comments": [],
       "createdAt": "2026-09-12T18:18:23Z",
       "updatedAt": "2026-09-12T18:18:42Z"
     },
@@ -1046,13 +1033,7 @@
       "bodyMatch": true,
       "assignees": [],
       "commentCount": 1,
-      "comments": [
-        {
-          "user": "hopebeatz123-ux",
-          "body": "### ⚡ Automated Resolution Proposal\n\nTo resolve the issue described, we can add a new test case to the `habits-routines.test.ts` file in the provided repository. Here's a step-by-step guide with the exact code snippets to add the leap year test case and ensure the test passes when running `npm test`:\n\n1. Open the `tests/habits-routines.test.ts` file in a code editor or IDE.\n2. Locate the section where the streak calculation tests are defined. If it's not already present, you can add it below the existing tests as follows:\n\n```typescript\ndescribe('Habit Routine: Streak Calculation', () => {\n  it('should calculate streak for 2024-02-28', () => {\n    // ... existing streak calculation test code ...\n  });\n\n  it('should calculate streak for 2024-02-29', () => {\n    // ... existing streak calculation test code ...\n  });\n\n  it('should calculate streak for 2024-03-01', () => {\n    // ... existing streak calculation test code ...\n  });\n\n  it('should calculate streak for 2024-02-28 -> 2024-02-29 -> 2024-03-01', () => {\n    // ... existing streak calculation test code ...\n  });\n\n  it('should calculate streak for 2024-02-28 -> 2024-02-29 -> 2024-03-01 (leap year)', () => {\n    // Add the leap year test case here\n  });\n});\n```\n\n3. Add the leap year test case inside the `it('should calculate streak for 2024-02-28 -> 2024-02-29 -> 2024-03-01 (leap year)', () => {})` block:\n\n```typescript\nit('should calculate streak for 2024-02-28 -> 2024-02-29 -> 2024-03-01 (leap year)', () => {\n  // Existing test code...\n\n  // Add the leap year test case\n  const date1 = new Date('2024-02-28');\n  const date2 = new Date('2024-02-29');\n  const date3 = new Date('2024-03-01');\n\n  const streak = habitRoutineService.calculateHabitStreak(date1, date2, date3);\n\n  expect(stre\n\n---\n**Direct EVM Payout Wallet (USDC/ETH/USDT):** `0x52513A733D4b52282F2b4f5A91D965D38b64f3BB`",
-          "created_at": "2026-09-12T18:18:33Z"
-        }
-      ],
+      "comments": [],
       "createdAt": "2026-09-12T18:18:24Z",
       "updatedAt": "2026-09-12T18:18:33Z"
     },
@@ -1085,13 +1066,7 @@
       "bodyMatch": true,
       "assignees": [],
       "commentCount": 1,
-      "comments": [
-        {
-          "user": "hopebeatz123-ux",
-          "body": "### ⚡ Automated Resolution Proposal\n\nCertainly, I will guide you through adding the boundary test for weekly review step indices and ensure all unit tests pass.\n\nPlease follow these steps:\n\n1. Make sure you have Node.js and npm installed on your machine. You will need to install the dependencies of the project. Run the following command to install them:\n\n```bash\nnpm install\n```\n\n2. Open the terminal or command prompt and navigate to the project directory:\n\n```bash\ncd TheVicky1/Pact_OS\n```\n\n3. Create a new test file for the boundary test if it doesn't exist already. If it does, please skip to step 5. You can create a new file named `test_weekly_review_step_boundaries.test.ts` in the `tests` directory. If the file already exists, please use that file for the changes.\n\n4. Add the following code to the `test_weekly_review_step_boundaries.test.ts` file:\n\n```typescript\nimport { expect } from 'chai';\nimport { ReviewDraftService } from '../services/review-draft.service';\nimport { ReviewDraft } from '../models/review-draft.model';\n\ndescribe('Review Draft Service', () => {\n  let reviewDraftService: ReviewDraftService;\n  let reviewDraft: ReviewDraft;\n\n  beforeEach(() => {\n    reviewDraftService = new ReviewDraftService();\n    reviewDraft = new ReviewDraft();\n  });\n\n  it('should reject invalid step indices', () => {\n    reviewDraft.current_step = 0; // Step index 0 is invalid\n    reviewDraft.steps = [\n      { step: 1, description: 'Step 1' },\n      { step: 2, description: 'Step 2' },\n      { step: 3, description: 'Step 3' },\n      { step: 4, description: 'Step 4' },\n      { step: 5, description: 'Step 5' },\n    ];\n\n    reviewDraft.current_step = 6; // Step index 6 is invalid\n    reviewDraft.steps = [\n      { step: 1, description: 'Step 1' },\n      { step: 2, description: 'Step 2' },\n      { step: 3, description: 'Step 3' },\n      { step: 4, description: 'Step 4' },\n      { step: 5, description: 'Step 5' },\n     \n\n---\n**Direct EVM Payout Wallet (USDC/ETH/USDT):** `0x52513A733D4b52282F2b4f5A91D965D38b64f3BB`",
-          "created_at": "2026-09-12T18:18:38Z"
-        }
-      ],
+      "comments": [],
       "createdAt": "2026-09-12T18:18:24Z",
       "updatedAt": "2026-09-12T18:18:38Z"
     },
@@ -1124,13 +1099,7 @@
       "bodyMatch": true,
       "assignees": [],
       "commentCount": 1,
-      "comments": [
-        {
-          "user": "hopebeatz123-ux",
-          "body": "### ⚡ Automated Resolution Proposal\n\nTo resolve the issue described and add the necessary unit test, follow these steps:\n\n1. Make sure you have Node.js and npm installed on your machine.\n2. Open a terminal or command prompt and navigate to the repository directory: `cd TheVicky1/Pact_OS`\n3. Install the dependencies by running: `npm install`\n4. Create a new test case file for the notification delivery helpers, let's name it `empty_recipients_test.ts`.\n5. In the `empty_recipients_test.ts` file, add the following code:\n\n```typescript\nimport { expect } from 'chai';\nimport { deliverInApp, dispatchNotification } from '../src/notifications';\n\ndescribe('Notification Delivery Helpers', () => {\n  it('should handle empty recipients gracefully', async () => {\n    const result = await deliverInApp({\n      payload: {\n        title: 'Test Notification',\n        body: 'Test Notification',\n      },\n      recipients: [], // Empty recipients\n    });\n\n    expect(result).to.be.eql({\n      status: 'success',\n      message: 'Notification delivered successfully',\n    });\n  });\n\n  result = await dispatchNotification({\n    payload: {\n      title: 'Test Notification',\n      body: 'Test Notification',\n    },\n    recipients: [], // Empty recipients\n  });\n\n  expect(result).to.be.eql({\n    status: 'success',\n    message: 'Notification delivered successfully',\n  });\n});\n});\n```\n\n6. Save the file and return to the terminal.\n7. Run the test using `npm test` command.\n\nThis code snippet tests both `deliverInApp` and `dispatchNotification` functions with empty recipients. It expects both calls to return a success status and a success message.\n\nBy running `npm test`, the test case will be executed, and if it passes, it confirms that the notification delivery helpers handle empty recipient lists gracefully without throwing unhandled exceptions. \n\n---\n**Direct EVM Payout Wallet (USDC/ETH/USDT):** `0x52513A733D4b52282F2b4f5A91D965D38b64f3BB`",
-          "created_at": "2026-09-12T18:19:53Z"
-        }
-      ],
+      "comments": [],
       "createdAt": "2026-09-12T18:18:25Z",
       "updatedAt": "2026-09-12T18:19:53Z"
     },
@@ -1163,13 +1132,7 @@
       "bodyMatch": true,
       "assignees": [],
       "commentCount": 1,
-      "comments": [
-        {
-          "user": "hopebeatz123-ux",
-          "body": "### ⚡ Automated Resolution Proposal\n\nCertainly! I will guide you through the refactoring process to export the Framer Motion animation transition variants in the `modal.tsx` file. This will improve code reusability and maintainability across your PACT project.\n\nFollow these steps:\n\n1. Open your code editor and navigate to the `src/components/ui/modal.tsx` file.\n2. Locate the Framer Motion animation variant objects within or above the `Modal` component definition. In this case, let's refactor the `Modal` component:\n\n   ```typescript\n   import { motion } from 'framer-motion';\n\n   const Modal = () => {\n     // ...\n\n     const modalVariants = {\n       visible: {\n         opacity: 1,\n         transition: {\n           duration: 0.3,\n         },\n       },\n       hidden: {\n         opacity: 0,\n         transition: {\n           duration: 0.3,\n         },\n       },\n     };\n\n     // ...\n   };\n\n   export default Modal;\n   ```\n\n3. Export the variants as named constants:\n\n   ```typescript\n   import { motion } from 'framer-motion';\n\n   const Modal = () => {\n     // ...\n\n     const modalVariants = {\n       visible: {\n         opacity: 1,\n         transition: {\n           duration: 0.3,\n         },\n       },\n       hidden: {\n         opacity: 0,\n         transition: {\n           duration: 0.3,\n         },\n       },\n     };\n\n     // ...\n\n     export { modalVariants };\n   };\n   ```\n\n4. Save the file and ensure there are no TypeScript errors.\n\nNow, you can import and use these constants in other parts of your codebase where needed, like this:\n\n```typescript\nimport { MODAL_\n\n---\n**Direct EVM Payout Wallet (USDC/ETH/USDT):** `0x52513A733D4b52282F2b4f5A91D965D38b64f3BB`",
-          "created_at": "2026-09-12T18:19:44Z"
-        }
-      ],
+      "comments": [],
       "createdAt": "2026-09-12T18:18:26Z",
       "updatedAt": "2026-09-12T18:19:44Z"
     },
@@ -1199,16 +1162,10 @@
         "help wanted"
       ],
       "labelsMatch": true,
-      "bodyMatch": false,
+      "bodyMatch": true,
       "assignees": [],
       "commentCount": 1,
-      "comments": [
-        {
-          "user": "hopebeatz123-ux",
-          "body": "### ⚡ Automated Resolution Proposal\n\nTo fix the issue with negative remaining budget balance in the `budgets.ts` file of the Pact_OS repository, please follow these steps:\n\n1. Open the `src/lib/finance/budgets.ts` file in a code editor or IDE.\n2. Locate the line where `remainingCents` is calculated: `remainingCents: limitCents - spentCents`.\n3. Wrap the subtraction with `Math.max(0, limitCents - spentCents)` to clamp the remaining balance to non-negative values. The updated line should look like this:\n\n```typescript\nremainingCents: Math.max(0, limitCents - spentCents)\n```\n\n4. Save the file and run the unit tests to ensure they pass without errors.\n\nHere's the updated code snippet for reference:\n\n```typescript\nimport { Budget } from './budget';\nimport { BudgetStatus } from './budget-status';\nimport { BudgetType } from './budget-type';\nimport { BudgetCategory } from './budget-category';\nimport { BudgetCategoryStatus } from './budget-category-status';\nimport { BudgetCategoryType } from './budget-category-type';\nimport { BudgetCategory } from './budget-category';\nimport { BudgetCategoryStatus } from './budget-category-status';\nimport { BudgetCategoryType } from './budget-category-type';\nimport { BudgetCategory } from './budget-category';\nimport { BudgetCategoryStatus } from './budget-category-status';\nimport { BudgetCategoryType } from './budget-category-type';\nimport { BudgetCategory } from './budget-category';\nimport { BudgetCategoryStatus } from './budget-category-status';\nimport { BudgetCategoryType } from './budget-category-type';\nimport { BudgetCategory } from './budget-category';\nimport { BudgetCategoryStatus } from './budget-category-status';\nimport { BudgetCategoryType } from './budget-category-type';\nimport { BudgetCategory } from './budget-category';\nimport { BudgetCategoryStatus } from './budget-category-status';\nimport { BudgetCategoryType } from './budget-category-type';\nimport { BudgetCategory } from './budget-category';\nimport { BudgetCategoryStatus } from './budget-category-status';\nimport { BudgetCategoryType } from './budget-category-type';\nimport { BudgetCategory } from './budget-category';\nimport { BudgetCategoryStatus } from './budget-category-status';\nimport { BudgetCategoryType } from './budget-\n\n---\n**Direct EVM Payout Wallet (USDC/ETH/USDT):** `0x52513A733D4b52282F2b4f5A91D965D38b64f3BB`",
-          "created_at": "2026-09-12T18:19:48Z"
-        }
-      ],
+      "comments": [],
       "createdAt": "2026-09-12T18:18:26Z",
       "updatedAt": "2026-09-12T18:19:49Z"
     }
