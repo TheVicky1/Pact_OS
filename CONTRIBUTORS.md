@@ -14,9 +14,10 @@ Every contribution—whether writing code, fixing documentation, improving acces
 
 ## Community Contributors
 
-As community pull requests are accepted and merged into PACT, contributors will be recognized here in alphabetical order:
+As community pull requests are accepted and merged into PACT, contributors are recognized here in alphabetical order:
 
-*Our open-source community is actively growing. Submit your first pull request to be featured here!*
+- **@fskalkan** ([#25](https://github.com/TheVicky1/Pact_OS/pull/25)) — *Fixed documentation path in Codebase Index (`docs/CODEBASE_INDEX.md`)*
+- **Kevin Lozada Santos** ([@kevin-lozada-santos](https://github.com/kevin-lozada-santos)) ([#47](https://github.com/TheVicky1/Pact_OS/pull/47)) — *Fixed category balance clamping and preserved overage display in Budget Discipline Card (`src/features/finance/components/budget-discipline-card.tsx`)*
 
 ---
 
