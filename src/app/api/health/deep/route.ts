@@ -1,6 +1,5 @@
 import { NextResponse } from 'next/server';
 import { telemetry } from '@/lib/observability/telemetry';
-import { rateLimiter } from '@/lib/security/rate-limiter';
 import { notificationDispatcher } from '@/lib/notifications/notification-dispatcher';
 
 /**

@@ -10,6 +10,9 @@ import { IntegrationsSettingsCard } from './integrations-settings-card';
 import { NotificationSettingsCard } from './notification-settings-card';
 import { DataPrivacySettingsCard } from './data-privacy-settings-card';
 import { WeeklyReviewSettingsCard } from './weekly-review-settings-card';
+import { SystemDiagnosticsCard } from './system-diagnostics-card';
+import { AccountLifecycleCard } from './account-lifecycle-card';
+import { AuditTrailCard } from './audit-trail-card';
 import { Settings } from 'lucide-react';
 
 export interface SettingsWorkspaceProps {
@@ -33,7 +36,7 @@ export function SettingsWorkspace({ initialData }: SettingsWorkspaceProps) {
                 Settings & Preferences
               </h1>
               <p className="text-xs sm:text-sm text-zinc-400 mt-0.5">
-                Manage your profile, authoritative IANA timezone, accountability rules, integrations, and data portability.
+                Manage your profile, authoritative IANA timezone, accountability rules, integrations, diagnostics, and data governance.
               </p>
             </div>
           </div>
@@ -88,6 +91,17 @@ export function SettingsWorkspace({ initialData }: SettingsWorkspaceProps) {
 
           {activeTab === 'data' && (
             <DataPrivacySettingsCard />
+          )}
+
+          {activeTab === 'diagnostics' && (
+            <SystemDiagnosticsCard />
+          )}
+
+          {activeTab === 'governance' && (
+            <div className="space-y-6">
+              <AuditTrailCard />
+              <AccountLifecycleCard />
+            </div>
           )}
         </div>
       </div>

@@ -32,11 +32,11 @@ async function runReleasePackagingTests() {
   console.log('✅ package.json contains all required v0.1.0 release scripts and metadata.');
 
   // 2. Migration Sequence & Non-Destructive Integrity
-  console.log('\n2. Validating Supabase migration catalog (1 through 23)...');
+  console.log('\n2. Validating Supabase migration catalog (1 through 24)...');
   const migrationsDir = path.join(rootDir, 'supabase', 'migrations');
   assert.ok(fs.existsSync(migrationsDir), 'supabase/migrations directory must exist');
   const migrations = fs.readdirSync(migrationsDir).filter(f => f.endsWith('.sql')).sort();
-  assert.strictEqual(migrations.length, 23, 'Exactly 23 sequential migrations must be present');
+  assert.strictEqual(migrations.length, 24, 'Exactly 24 sequential migrations must be present');
 
   for (const mig of migrations) {
     const content = fs.readFileSync(path.join(migrationsDir, mig), 'utf8');
@@ -50,7 +50,7 @@ async function runReleasePackagingTests() {
     // Ensure no unexpected destructive DROP TABLE / DROP SCHEMA statements
     assert.ok(!content.includes('DROP SCHEMA public CASCADE'), `Migration ${mig} must not drop public schema`);
   }
-  console.log('✅ All 23 migrations validated: RLS enforced, sequential timestamps, non-destructive.');
+  console.log('✅ All 24 migrations validated: RLS enforced, sequential timestamps, non-destructive.');
 
   // 3. Operational Probes (GET & HEAD)
   console.log('\n3. Validating operational health probe routes (/api/health)...');
