@@ -8,6 +8,7 @@ export type SettingsTab =
   | 'review'
   | 'accountability'
   | 'security'
+  | 'devices'
   | 'integrations'
   | 'notifications'
   | 'data'
@@ -50,6 +51,12 @@ const TABS: TabItem[] = [
     label: 'Account & Security',
     icon: Key,
     description: 'Email, authentication provider & password',
+  },
+  {
+    id: 'devices',
+    label: 'Devices & Sync',
+    icon: Blocks,
+    description: 'Multi-device delta replication & active sessions',
   },
   {
     id: 'integrations',

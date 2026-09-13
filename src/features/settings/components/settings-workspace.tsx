@@ -13,6 +13,7 @@ import { WeeklyReviewSettingsCard } from './weekly-review-settings-card';
 import { SystemDiagnosticsCard } from './system-diagnostics-card';
 import { AccountLifecycleCard } from './account-lifecycle-card';
 import { AuditTrailCard } from './audit-trail-card';
+import { DeviceManagementCard } from './device-management-card';
 import { Settings } from 'lucide-react';
 
 export interface SettingsWorkspaceProps {
@@ -77,6 +78,10 @@ export function SettingsWorkspace({ initialData }: SettingsWorkspaceProps) {
               account={initialData.account}
               timezone={initialData.profile.timezone}
             />
+          )}
+
+          {activeTab === 'devices' && (
+            <DeviceManagementCard />
           )}
 
           {activeTab === 'integrations' && (

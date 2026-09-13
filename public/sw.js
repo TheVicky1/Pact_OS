@@ -128,3 +128,34 @@ self.addEventListener('fetch', (event) => {
     );
   }
 });
+
+/**
+ * Background Sync API Event Handler:
+ * Triggered by browser when connectivity is re-established.
+ * Communicates with all active client windows to trigger delta replication.
+ */
+self.addEventListener('sync', (event) => {
+  if (event.tag === 'pact-sync-deltas' || event.tag === 'pact-queue-sync') {
+    event.waitUntil(
+      self.clients.matchAll({ type: 'window' }).then((clientList) => {
+        for (const client of clientList) {
+          client.postMessage({
+            type: 'PACT_BACKGROUND_SYNC_TRIGGER',
+            tag: event.tag,
+            timestamp: Date.now(),
+          });
+        }
+      })
+    );
+  }
+});
+
+/**
+ * Message Handler: Receives direct sync commands from client application.
+ */
+self.addEventListener('message', (event) => {
+  if (event.data && event.data.type === 'SKIP_WAITING') {
+    self.skipWaiting();
+  }
+});
+
