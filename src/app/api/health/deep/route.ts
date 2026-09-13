@@ -52,3 +52,13 @@ export async function GET() {
     },
   });
 }
+
+export async function HEAD() {
+  return NextResponse.json(null, {
+    status: 200,
+    headers: {
+      'Cache-Control': 'no-store, no-cache, must-revalidate',
+      'X-Content-Type-Options': 'nosniff',
+    },
+  });
+}
