@@ -47,7 +47,7 @@ jobs:
       - name: 🏷️ TypeScript Strict Typecheck
         run: npx tsc --noEmit
 
-      - name: 🧪 Run Domain & Security Test Matrix (52 Suites)
+      - name: 🧪 Run Domain & Security Test Matrix (40 Suites)
         run: node scratch/run-tests.mjs
 
       - name: 🏗️ Next.js Production Build
