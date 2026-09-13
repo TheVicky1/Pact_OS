@@ -17,35 +17,34 @@ const REPO_OWNER = 'TheVicky1';
 const REPO_NAME = 'Pact_OS';
 
 /**
- * Parses all 40 issues from docs/GITHUB_BEGINNER_ISSUES.md
+ * Parses all 20 issues from docs/GITHUB_BEGINNER_ISSUES.md
  */
 function loadCanonicalIssues() {
   const filePath = path.resolve('docs/GITHUB_BEGINNER_ISSUES.md');
   const content = fs.readFileSync(filePath, 'utf8');
 
-  const issueBlocks = content.split(/### Issue \d+:\s*`([^`]+)`/g);
+  const parts = content.split(/^### Issue #(\d+):\s*/m);
   const issues = [];
 
-  for (let i = 1; i < issueBlocks.length; i += 2) {
-    const slug = issueBlocks[i].trim();
-    const bodyRaw = issueBlocks[i + 1].trim();
+  for (let i = 1; i < parts.length; i += 2) {
+    const num = parts[i];
+    const block = parts[i + 1];
+    const firstLineEnd = block.indexOf('\n');
+    const title = block.slice(0, firstLineEnd).trim();
+    const rest = block.slice(firstLineEnd).trim();
 
-    const titleMatch = bodyRaw.match(/\*\*Title:\*\*\s*`([^`]+)`/);
-    const labelsMatch = bodyRaw.match(/\*\*Labels:\*\*\s*(.+)/);
-    const markdownMatch = bodyRaw.match(/```markdown([\s\S]*?)```/);
+    const labelsMatch = rest.match(/- \*\*Labels:\*\*\s*(.+)/);
+    const labels = labelsMatch
+      ? labelsMatch[1].split(',').map(l => l.replace(/[`*]/g, '').trim()).filter(Boolean)
+      : [];
 
-    if (titleMatch && labelsMatch && markdownMatch) {
-      const title = titleMatch[1].trim();
-      const labels = labelsMatch[1].split(',').map(l => l.replace(/[`*]/g, '').trim()).filter(Boolean);
-      const body = markdownMatch[1].trim();
-
-      issues.push({
-        slug,
-        title,
-        labels,
-        body
-      });
-    }
+    issues.push({
+      id: `ISSUE-${num.padStart(3, '0')}`,
+      number: parseInt(num, 10),
+      title,
+      labels,
+      body: rest
+    });
   }
 
   return issues;
@@ -151,40 +150,12 @@ async function main() {
 
   const allIssues = loadCanonicalIssues();
   const args = process.argv.slice(2);
-  const publishAll = args.includes('--all');
-  const isBatch1 = args.includes('--batch=1') || args.includes('--batch-1');
-  const isBatch2 = args.includes('--batch=2') || args.includes('--batch-2');
-  const isBatch3 = args.includes('--batch=3') || args.includes('--batch-3');
-  const isDryRun = args.includes('--dry-run');
+  const publishAll = args.includes('--all') || !args.some(a => a.startsWith('--batch'));
+  const isDryRun = args.includes('--dry-run') || !getToken();
 
-  const hasExplicitBatch = isBatch1 || isBatch2 || isBatch3 || publishAll;
-  if (!hasExplicitBatch && !isDryRun) {
-    console.error('⚠️  SAFETY GUARD: Explicit batch selection required for live execution.');
-    console.error('Usage: node scratch/create-beginner-issues.mjs [--batch=1 | --batch=2 | --batch=3 | --all] [--dry-run]');
-    process.exit(1);
-  }
+  const issues = allIssues;
 
-  let targetSlugs = FIRST_BATCH_SLUGS;
-  let batchName = 'FIRST BATCH OF 10 (DRY RUN DEFAULT)';
-
-  if (isBatch3) {
-    targetSlugs = THIRD_BATCH_SLUGS;
-    batchName = 'THIRD BATCH OF 10 (MICRO-ISSUES)';
-  } else if (isBatch2) {
-    targetSlugs = SECOND_BATCH_SLUGS;
-    batchName = 'SECOND BATCH OF 10';
-  } else if (isBatch1) {
-    targetSlugs = FIRST_BATCH_SLUGS;
-    batchName = 'FIRST BATCH OF 10';
-  }
-
-  // Filter to Selected Batch unless --all is explicitly provided
-  const issues = publishAll
-    ? allIssues
-    : allIssues.filter(iss => targetSlugs.includes(iss.slug));
-
-  console.log(`Loaded ${allIssues.length} canonical issues from docs/GITHUB_BEGINNER_ISSUES.md`);
-  console.log(`Targeting ${issues.length} issues for this execution (${publishAll ? 'ALL ISSUES' : batchName}).\n`);
+  console.log(`Loaded ${allIssues.length} canonical issues from docs/GITHUB_BEGINNER_ISSUES.md\n`);
 
   const token = isDryRun ? null : getToken();
 
@@ -200,9 +171,8 @@ async function main() {
       let skipped = 0;
 
       for (const issue of issues) {
-        const marker = `<!-- PACT-BEGINNER-ISSUE: ${issue.slug} -->`;
         const alreadyExists = existingIssues.some(existing => 
-          existing.title === issue.title || (existing.body && existing.body.includes(marker))
+          existing.title === issue.title
         );
 
         if (alreadyExists) {
@@ -232,16 +202,16 @@ async function main() {
   }
 
   // Dry-run / CLI instructions mode
-  console.log('ℹ️  Running in dry-run mode (--dry-run or no token).');
+  console.log('ℹ️  Running in dry-run mode (no authentication token detected).');
   console.log(`📋 Verified Target Inventory (${issues.length} issues ready):\n`);
 
   issues.forEach((iss, idx) => {
-    console.log(`[${(idx + 1).toString().padStart(2, ' ')}] [${iss.slug}] ${iss.title}`);
+    console.log(`[${(idx + 1).toString().padStart(2, ' ')}] [#${iss.number}] ${iss.title}`);
     console.log(`     Labels: ${iss.labels.join(', ')}`);
   });
 
-  console.log('\nTo provision these issues live on GitHub:');
-  console.log('  node scratch/create-beginner-issues.mjs\n');
+  console.log('\nTo provision these issues live on GitHub when authenticated:');
+  console.log('  GITHUB_TOKEN=<token> node scratch/create-beginner-issues.mjs\n');
 }
 
 main().catch(console.error);
