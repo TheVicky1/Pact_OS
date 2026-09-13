@@ -195,7 +195,7 @@ export function BudgetDisciplineCard({
                     <span>
                       {isExceeded ? (
                         <span className="text-rose-400">
-                          +{formatCentsToCurrency(Math.abs(catStatus.remainingCents), currency)} over
+                          +{formatCentsToCurrency(Math.max(0, catStatus.spentCents - catStatus.limitCents), currency)} over
                         </span>
                       ) : (
                         <span className="text-zinc-400">

@@ -83,7 +83,7 @@ export function calculateBudgetStatus(
     const catName = cat?.name || 'Category';
     const colorTag = cat?.color_tag || 'gold';
     const spentCents = spendingByCat.get(b.category_id) || 0;
-    const remainingCents = b.limit_cents - spentCents;
+    const remainingCents = Math.max(0, b.limit_cents - spentCents);
     const utilizationPercent =
       b.limit_cents > 0 ? Math.round((spentCents / b.limit_cents) * 100) : 0;
 
