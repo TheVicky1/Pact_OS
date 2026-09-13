@@ -59,7 +59,7 @@ All environment variables must be configured in Vercel Project Settings (Product
 
 ## 4. Sequential Database Migration Procedure
 
-Apply all 20 migrations in `supabase/migrations/` sequentially via Supabase CLI (`supabase db push`) or by executing each file in order in the Supabase SQL Editor:
+Apply all 26 migrations in `supabase/migrations/` sequentially via Supabase CLI (`supabase db push`) or by executing each file in order in the Supabase SQL Editor:
 
 ```bash
 # Using Supabase CLI:
@@ -91,6 +91,12 @@ supabase db push
 | 18 | `20260911070000_focus_sessions_engine.sql` | Creates `focus_sessions` table with RLS & status rules | No | None |
 | 19 | `20260911080000_habits_and_routines_engine.sql` | Creates `habits`, `habit_occurrences`, routines tables | No | None |
 | 20 | `20260911090000_weekly_reviews_engine.sql` | Creates `weekly_reviews` table & uniqueness constraint | No | None |
+| 21 | `20260912000000_passkey_credentials.sql` | FIDO2 / WebAuthn Level 3 `passkey_credentials` table with RLS | No | None |
+| 22 | `20260913000000_accountability_circles_and_pledges.sql` | Multi-party accountability circles and charity pledge automation tables | No | None |
+| 23 | `20260914000000_production_resilience_and_telemetry.sql` | Composite query indexes, audit log telemetry table with RLS | No | None |
+| 24 | `20260915000000_daily_rituals_and_account_governance.sql` | Evening sunset shutdown log table with RLS & indexes | No | None |
+| 25 | `20260916000000_multi_device_sync_and_replication.sql` | Device registry, sync delta logs, staged proof attachment cache with RLS | No | None |
+| 26 | `20260917000000_discipline_intelligence_and_enterprise_sso.sql` | Autonomous discipline insights, SSO providers, and SSO audit logs with RLS | No | None |
 
 ---
 
@@ -153,8 +159,8 @@ SELECT cron.schedule(
 ## 8. Deployment Sequence Checklist
 
 ```
-[ ] 1. Apply Supabase migrations (1 through 20) in order.
-[ ] 2. Verify RLS is active on all 24 tables.
+[ ] 1. Apply Supabase migrations (1 through 26) in order.
+[ ] 2. Verify RLS is active on all tables across public schema.
 [ ] 3. Set Auth Redirect URLs in Supabase Dashboard.
 [ ] 4. Add all 5 required environment variables to Vercel.
 [ ] 5. Trigger Vercel Production Build.
