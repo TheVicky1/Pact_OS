@@ -30,13 +30,17 @@ This provides precise filtering across GitHub search without clutter.
 
 | Dimension | Prefix / Name | Purpose | Example Canonical Labels |
 | :--- | :--- | :--- | :--- |
-| **Type** | `type:*` | Nature of the work requested or delivered | `type:bug`, `type:feature`, `type:documentation`, `type:security`, `type:maintenance`, `type:question` |
+| **Type** | `type:*` | Nature of the work requested or delivered | `type:bug`, `type:feature`, `type:docs`, `type:ui`, `type:a11y`, `type:test`, `type:refactor`, `type:security`, `type:maintenance`, `type:question` |
 | **Priority** | `priority:*` | Triage severity and urgency | `priority:critical`, `priority:high`, `priority:medium`, `priority:low` |
 | **Difficulty** | `difficulty:*` | Contributor expertise level expected | `difficulty:beginner`, `difficulty:easy`, `difficulty:intermediate`, `difficulty:advanced` |
-| **Estimated Time** | `time:*` | Scoped implementation duration | `time:<15m`, `time:15-30m`, `time:30-60m`, `time:1-2h`, `time:2-4h`, `time:4h+` |
+| **Estimated Time** *(Retired)* | `time:*` | *Retired for new issues* — Complexity communicates scope | `time:<15m`, `time:15-30m` *(Legacy only; forbidden on new issues)* |
 | **Project Area** | `area:*` | Architectural subsystem affected | `area:ui`, `area:auth`, `area:planning`, `area:accountability`, `area:finance`, `area:github`, `area:supabase`, `area:testing`, `area:documentation`, `area:developer-experience` |
-| **Contributor** | *(community)* | Discovery tags for open-source contributors | `good first issue`, `help wanted`, `beginner friendly`, `hacktoberfest` |
+| **Contributor** | *(community)* | Discovery tags for open-source contributors | `good first issue`, `help wanted`, `beginner friendly`, `contributions-welcome`, `up-for-grabs` |
 | **Status** | `status:*` | Issue & PR lifecycle progression | `status:triage`, `status:ready`, `status:in-progress`, `status:blocked`, `status:needs-review` |
+
+> [!IMPORTANT]
+> **PERMANENT RULE: NO TIME-BASED LABELS ON NEW ISSUES**
+> From Phase 6D onward, `time:*` labels are **permanently retired and forbidden** for newly created issues. Contributor scope and cognitive difficulty are communicated strictly via `difficulty:beginner` alongside the micro-issue standard (1 file preferred, 5–30m estimated completion time). Existing legacy labels on earlier issues are retained without destructive mass-edits.
 
 ---
 

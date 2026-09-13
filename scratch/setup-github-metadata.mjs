@@ -34,7 +34,9 @@ const CANONICAL_METADATA = {
     'supabase',
     'postgresql',
     'open-source',
-    'good-first-issue'
+    'good-first-issue',
+    'contributions-welcome',
+    'up-for-grabs'
   ]
 };
 

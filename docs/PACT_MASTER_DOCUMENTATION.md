@@ -221,7 +221,7 @@ npm run dev
 ```
 
 ### 10.2 Test Suite Execution
-PACT features an automated 34-suite test matrix covering all core domain engines:
+PACT features an automated 41-suite test matrix covering all core domain engines:
 ```bash
 # Run comprehensive test suite
 node scratch/run-tests.mjs
@@ -247,7 +247,7 @@ npm run lint
 ## 12. Current Project Status & Roadmap
 
 ### Current Status: **Production Ready (Certified)**
-All 14 core product modules, the automated deadline sweeping engine, external proof connectors, the 34-suite test matrix, and the single-screen landing experience are fully built, tested, and certified.
+All 14 core product modules, the automated deadline sweeping engine, external proof connectors, the 41-suite test matrix, and the single-screen landing experience are fully built, tested, and certified.
 
 ### Future Roadmap
 - **Mobile Native Companion**: React Native / Expo companion app for push notifications and on-the-go quick capture.

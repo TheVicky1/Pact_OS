@@ -27,7 +27,7 @@ body:
         - "docs/DATA_MODEL.md (Relational Database Schemas)"
         - "docs/DESIGN_SYSTEM.md (Obsidian & Gold Design Tokens)"
         - "docs/SECURITY.md (Technical Security Specification)"
-        - "docs/TESTING.md (35-Suite Automated Test Matrix)"
+        - "docs/TESTING.md (41-Suite Automated Test Matrix)"
         - "docs/INTEGRATIONS.md (External Proof Connectors)"
         - "docs/PRODUCT.md (Vision, Taglines & Philosophy)"
         - "docs/FEATURES.md (14 Core Product Modules Inventory)"

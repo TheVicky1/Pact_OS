@@ -9,7 +9,7 @@ This document contains the canonical catalog of **40 curated, actionable, and be
 Starting in Phase 5G, PACT OS adopts a **Micro-Contribution Philosophy**:
 
 1. **Single-File Scoping**: Every beginner task is strictly bounded to **one target file**.
-2. **1–5 Minute Implementation**: A contributor familiar with basic TypeScript / React can implement the change in minutes.
+2. **5–30 Minute Micro-Scoping**: A contributor familiar with basic TypeScript / React can implement the change in minutes with clear acceptance criteria.
 3. **No Time Estimation Badges**: We deprecate `time:*` labels on new issues in favor of tightly-scoped acceptance criteria.
 4. **Self-Contained Verification**: Every issue provides the exact local command (e.g. `npm run lint` or `node --test tests/xyz.test.ts`) required to verify the change.
 5. **No Production Risk**: Zero complex architectural refactors, zero database migrations, and zero auth/session changes.

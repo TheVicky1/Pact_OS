@@ -81,6 +81,27 @@ async function runStagingSmokeTests() {
   assert.strictEqual(sweeperCron.schedule, '* * * * *', 'Sweeper cron must be scheduled every minute');
   console.log('✅ Vercel cron configuration declared correctly for automated deadline sweeping.');
 
+  // 6. Validate Cron Timing-Safe Bearer Authentication
+  console.log('\n6. Validating cron timing-safe Bearer token authorization...');
+  const { isTimingSafeBearerMatch } = await import('../src/app/api/cron/sweep-deadlines/route');
+  const testSecret = 'a-super-secret-cron-token-with-high-entropy-32char';
+  assert.strictEqual(isTimingSafeBearerMatch(`Bearer ${testSecret}`, testSecret), true, 'Valid Bearer token must be accepted');
+  assert.strictEqual(isTimingSafeBearerMatch(`Bearer wrong-token`, testSecret), false, 'Invalid Bearer token must be rejected');
+  assert.strictEqual(isTimingSafeBearerMatch(`Bearer ${testSecret}extra`, testSecret), false, 'Length mismatch must be rejected');
+  assert.strictEqual(isTimingSafeBearerMatch(null, testSecret), false, 'Null auth header must be rejected');
+  assert.strictEqual(isTimingSafeBearerMatch(`Bearer ${testSecret}`, ''), false, 'Empty secret must be rejected');
+  console.log('✅ Constant-time Bearer authentication guards cron endpoints against timing attacks.');
+
+  // 7. Validate Sequential Migration Inventory (20 Migrations)
+  console.log('\n7. Validating Supabase migration continuity & completeness...');
+  const migrationsDir = path.join(rootDir, 'supabase', 'migrations');
+  assert.ok(fs.existsSync(migrationsDir), 'supabase/migrations directory must exist');
+  const migrationFiles = fs.readdirSync(migrationsDir).filter(f => f.endsWith('.sql')).sort();
+  assert.strictEqual(migrationFiles.length, 20, 'Exactly 20 sequential migrations must be present');
+  assert.ok(migrationFiles[0].includes('create_profiles_table'), 'Migration 1 must be create_profiles_table');
+  assert.ok(migrationFiles[19].includes('weekly_reviews_engine'), 'Migration 20 must be weekly_reviews_engine');
+  console.log(`✅ All ${migrationFiles.length} sequential migrations verified in correct chronological order.`);
+
   console.log('\n================================================================');
   console.log('🎉 ALL STAGING & DEPLOYMENT SMOKE TESTS PASSED CLEANLY');
   console.log('================================================================');

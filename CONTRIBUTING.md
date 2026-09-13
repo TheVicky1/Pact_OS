@@ -349,7 +349,7 @@ npm run lint
 # 2. Strict TypeScript type check
 npx tsc --noEmit
 
-# 3. Automated 35-suite domain test matrix
+# 3. Automated 41-suite domain test matrix
 node scratch/run-tests.mjs
 
 # 4. Zero-secret leak audit
@@ -453,7 +453,7 @@ Before submitting your pull request, please verify:
 - [ ] For UI changes, I have adhered to the luxury Obsidian/Gold design system and tested responsiveness.
 - [ ] `npm run lint` passes with 0 errors.
 - [ ] `npx tsc --noEmit` passes with 0 errors.
-- [ ] `node scratch/run-tests.mjs` passes all 34 domain test suites.
+- [ ] `node scratch/run-tests.mjs` passes all 41 automated test suites.
 - [ ] `node scratch/secret-scan.mjs` confirms 0 committed secrets.
 - [ ] `npm run build` succeeds without build failures.
 - [ ] My pull request references the issue it addresses (e.g., `Closes #123` or `Fixes #123`).

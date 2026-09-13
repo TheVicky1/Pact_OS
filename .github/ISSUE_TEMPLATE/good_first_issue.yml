@@ -1,17 +1,17 @@
 name: "🌱 Good First Issue (Maintainer Curated)"
 description: "Maintainer-curated template to create a structured, beginner-friendly contribution"
 title: "[Good First Issue] "
-labels: ["good first issue", "difficulty:beginner"]
+labels: ["good first issue", "difficulty:beginner", "help wanted"]
 body:
   - type: markdown
     attributes:
       value: |
-        ### 🏛️ Maintainer Template: Beginner Issue Creation
+        ### 🏛️ Maintainer Template: Beginner Micro-Issue Creation
 
-        Use this template when authoring a **Good First Issue**. Every beginner task in PACT must provide crystal-clear guidance, explicit file pointers, and exact acceptance criteria.
-
-        > [!TIP]
-        > Remember: A first-time contributor should be able to open this issue and immediately know: **File → Change → Test → PR**.
+        Use this template when authoring a **Good First Issue**. Every beginner task in PACT must follow the **6-Part Micro-Issue Standard**:
+        - **Scope**: One file preferred (max 2), 5–30 min estimated effort.
+        - **Guardrails**: No database migrations, auth changes, architectural refactors, or security changes.
+        - **No Time Labels**: `time:*` labels are forbidden; use `difficulty:beginner`.
 
   - type: dropdown
     id: area
@@ -56,61 +56,73 @@ body:
     validations:
       required: true
 
-  - type: input
-    id: target_files
+  - type: textarea
+    id: what_needs_to_be_done
     attributes:
-      label: "Exact File Location(s)"
-      description: "Provide the exact path(s) to the file(s) that need editing."
-      placeholder: "e.g., src/components/dashboard/velocity-card.tsx"
+      label: "1. What Needs to Be Done"
+      description: "Explain the tiny task in simple, jargon-free language."
+      placeholder: "e.g., Add an explicit aria-label='Close notification panel' attribute to the popover close button..."
     validations:
       required: true
 
   - type: textarea
     id: why_it_matters
     attributes:
-      label: "1. Why This Matters"
-      description: "Explain the context and user value of this change in simple terms."
-      placeholder: "Explain why this change makes PACT better..."
+      label: "2. Why This Matters"
+      description: "Explain the context and value of this change in simple terms."
+      placeholder: "Explain why this change improves PACT OS for users or contributors..."
+    validations:
+      required: true
+
+  - type: input
+    id: target_files
+    attributes:
+      label: "3. Where to Work (Exact File Path)"
+      description: "Provide the exact path to the single file (or max 2) that needs editing."
+      placeholder: "e.g., src/components/notifications/notification-popover.tsx"
     validations:
       required: true
 
   - type: textarea
-    id: step_by_step
+    id: implementation_guidance
     attributes:
-      label: "2. Step-by-Step Instructions"
-      description: "Provide numbered, concrete steps for the contributor to complete the task."
+      label: "4. Implementation Guidance & Step-by-Step Hints"
+      description: "Provide numbered, concrete steps so a first-time contributor can implement the change without reverse-engineering the codebase."
       placeholder: |
-        1. Open `src/components/dashboard/velocity-card.tsx`
-        2. Locate line XX where the hover transition is defined
-        3. Update the Tailwind border utility from `border-white/5` to `border-white/10 hover:border-gold/30`
-        4. Verify that the card scales cleanly on mobile viewports
+        1. Open `src/components/notifications/notification-popover.tsx`
+        2. Locate line XX where the close button is defined
+        3. Add `aria-label="Close notification panel"` to the button props
     validations:
       required: true
 
   - type: textarea
     id: acceptance_criteria
     attributes:
-      label: "3. Acceptance Criteria"
-      description: "List the exact criteria that must be satisfied for this PR to be approved."
-      placeholder: |
-        - [ ] The velocity card displays the updated hover border transition
-        - [ ] No regression in mobile layout spacing
-        - [ ] All TypeScript checks pass with 0 errors
+      label: "5. Acceptance Criteria"
+      description: "List the exact checklist criteria for this PR to be approved."
+      value: |
+        - [ ] The specified file is updated with the requested change
+        - [ ] Visual appearance, responsiveness, and existing behavior remain intact
+        - [ ] `npm run lint` passes with 0 errors
+        - [ ] `npx tsc --noEmit` passes with 0 errors
     validations:
       required: true
 
   - type: textarea
     id: verification_commands
     attributes:
-      label: "4. Testing & Verification Runbook"
-      description: "List the local commands the contributor should run before submitting."
+      label: "6. Verification"
+      description: "List the local commands or browser verification steps for the contributor."
       value: |
         ```bash
+        # 1. Verify code formatting and linting
         npm run lint
+
+        # 2. Verify strict TypeScript type safety
         npx tsc --noEmit
+
+        # 3. Run automated domain test matrix
         node scratch/run-tests.mjs
-        node scratch/secret-scan.mjs
-        npm run build
         ```
     validations:
       required: true
@@ -118,8 +130,8 @@ body:
   - type: textarea
     id: beginner_tips
     attributes:
-      label: "5. Notes & Helpful Resources for Beginners"
-      description: "Add any extra context, design system token pointers, or helpful links."
+      label: "Helpful Resources for First-Time Contributors"
+      description: "Helpful reference links for this task."
       value: |
         - 📖 Review the [Beginner's Contribution Guide](https://github.com/TheVicky1/Pact_OS/blob/main/docs/CONTRIBUTING-BEGINNERS.md) for a zero-to-PR walkthrough.
         - 🎨 Review the [Design System](https://github.com/TheVicky1/Pact_OS/blob/main/docs/DESIGN_SYSTEM.md) for approved color tokens.
