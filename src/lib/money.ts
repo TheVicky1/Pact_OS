@@ -74,6 +74,12 @@ export function formatMonthLabel(yearMonth: string): string {
 /**
  * Safely parses a user-entered monetary amount string into integer cents.
  * Handles inputs like "45", "45.5", "45.99", "1,250.00", "₹1200".
+ * 
+ * @param input Raw monetary string or numeric value entered by the user.
+ * @returns Object containing parsed integer `cents` or a user-facing `error` message.
+ * @example
+ * parseAmountToCents("45.99"); // { cents: 4599, error: null }
+ * parseAmountToCents("₹1,250"); // { cents: 125000, error: null }
  */
 export function parseAmountToCents(input: string | number): {
   cents: number | null;
@@ -123,6 +129,14 @@ export function parseAmountToCents(input: string | number): {
 /**
  * Formats integer cents into a localized currency string.
  * Defaults to INR (₹) or standard ISO currency code.
+ * 
+ * @param cents Integer number of cents (e.g. 5399 for 53.99).
+ * @param currencyCode ISO 4217 currency code (default: 'INR').
+ * @param options Optional formatting flags for hiding decimals or compact notation.
+ * @returns Formatted currency string (e.g. "₹53.99" or "$53.99").
+ * @example
+ * formatCentsToCurrency(4999, 'USD'); // "$49.99"
+ * formatCentsToCurrency(150000, 'INR', { showFractional: false }); // "₹1,500"
  */
 export function formatCentsToCurrency(
   cents: number,

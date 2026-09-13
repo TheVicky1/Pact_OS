@@ -330,6 +330,28 @@ git config --global core.autocrlf true
 
 ---
 
+### 10.3 Supabase RLS Infinite Recursion (`infinite recursion detected in policy`)
+
+**Symptoms**:
+Supabase queries return HTTP 500 or Postgres logs report `infinite recursion detected in policy for relation "table_name"`.
+
+**Likely Causes**:
+A Row Level Security (RLS) policy queries the same table inside its `USING` clause without filtering strictly by `auth.uid() = user_id`.
+
+**Try This**:
+Ensure RLS policies use direct identity matching (`auth.uid() = user_id`) rather than nested subqueries against the same table:
+```sql
+-- ❌ Triggers recursion:
+CREATE POLICY "Select profile" ON public.profiles FOR SELECT
+USING (id IN (SELECT id FROM public.profiles WHERE user_id = auth.uid()));
+
+-- ✅ Direct non-recursive check:
+CREATE POLICY "Select profile" ON public.profiles FOR SELECT
+USING (auth.uid() = user_id);
+```
+
+---
+
 ## 11. How to Request Support
 
 If your problem is not covered in this guide, our community is here to help!

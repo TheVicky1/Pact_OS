@@ -46,14 +46,14 @@ interface TransactionListProps {
 }
 
 const COLOR_MAP: Record<FinanceColorTag, { dot: string; bg: string; text: string }> = {
-  gold: { dot: 'bg-amber-400', bg: 'bg-amber-400/10', text: 'text-amber-400' },
-  blue: { dot: 'bg-blue-400', bg: 'bg-blue-400/10', text: 'text-blue-400' },
-  purple: { dot: 'bg-purple-400', bg: 'bg-purple-400/10', text: 'text-purple-400' },
-  emerald: { dot: 'bg-emerald-400', bg: 'bg-emerald-400/10', text: 'text-emerald-400' },
-  amber: { dot: 'bg-amber-500', bg: 'bg-amber-500/10', text: 'text-amber-500' },
-  rose: { dot: 'bg-rose-400', bg: 'bg-rose-400/10', text: 'text-rose-400' },
-  cyan: { dot: 'bg-cyan-400', bg: 'bg-cyan-400/10', text: 'text-cyan-400' },
-  slate: { dot: 'bg-zinc-400', bg: 'bg-zinc-400/10', text: 'text-zinc-400' },
+  gold: { dot: 'bg-amber-400', bg: 'bg-amber-400/15', text: 'text-amber-400' },
+  blue: { dot: 'bg-blue-400', bg: 'bg-blue-400/15', text: 'text-blue-400' },
+  purple: { dot: 'bg-purple-400', bg: 'bg-purple-400/15', text: 'text-purple-400' },
+  emerald: { dot: 'bg-emerald-400', bg: 'bg-emerald-400/15', text: 'text-emerald-400' },
+  amber: { dot: 'bg-amber-500', bg: 'bg-amber-500/15', text: 'text-amber-500' },
+  rose: { dot: 'bg-rose-400', bg: 'bg-rose-400/15', text: 'text-rose-400' },
+  cyan: { dot: 'bg-cyan-400', bg: 'bg-cyan-400/15', text: 'text-cyan-400' },
+  slate: { dot: 'bg-zinc-400', bg: 'bg-zinc-400/15', text: 'text-zinc-400' },
 };
 
 export function TransactionList({

@@ -42,6 +42,22 @@ This document specifies the architecture, credential lifecycle, rate-limiting, a
 - **Proof Types**: `daily_problem_completion`, `submission_count`.
 - **Evaluation Mechanism**: Uses LeetCode's public GraphQL endpoint (`https://leetcode.com/graphql`) querying `recentSubmissionList` and `userProfileUserQuestionProgress`.
 - **Zero Credentials**: Requires only the public LeetCode username; no passwords or session cookies are requested.
+- **Example API Payload**:
+  ```json
+  {
+    "data": {
+      "recentSubmissionList": [
+        {
+          "title": "Two Sum",
+          "titleSlug": "two-sum",
+          "timestamp": "1726272000",
+          "statusDisplay": "Accepted",
+          "lang": "typescript"
+        }
+      ]
+    }
+  }
+  ```
 
 ### 3.4 Codeforces Proof Connector
 - **Proof Types**: `problem_verdict_ok`, `contest_participation`.

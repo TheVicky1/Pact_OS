@@ -288,7 +288,7 @@ function EmptyState({
             ? `No goals matched "${searchQuery}".`
             : isFiltered
               ? 'Try adjusting your filters to see more goals.'
-              : 'Establish your first core goal to anchor your projects, commitments, and daily execution.'}
+              : 'Establish your first core goal to anchor your projects, habits, and daily focus sessions.'}
         </p>
       </div>
 

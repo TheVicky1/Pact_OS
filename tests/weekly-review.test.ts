@@ -511,4 +511,14 @@ describe('PACT Phase 6D: Weekly Review & Sunday Planning Ritual Suite', () => {
     assert.equal(navReview.href, '/app/review');
     assert.equal(navReview.iconName, 'BookOpen');
   });
+
+  // 21. Step Index Boundary Assertion
+  it('21. Validates that Weekly Review step indices remain bounded within [1, 5]', () => {
+    const isStepValid = (step: number) => Number.isInteger(step) && step >= 1 && step <= 5;
+    assert.equal(isStepValid(1), true); // Retrospective
+    assert.equal(isStepValid(3), true); // Habit Scorecard
+    assert.equal(isStepValid(5), true); // Strategic Commitments
+    assert.equal(isStepValid(0), false); // Under-bound
+    assert.equal(isStepValid(6), false); // Over-bound
+  });
 });

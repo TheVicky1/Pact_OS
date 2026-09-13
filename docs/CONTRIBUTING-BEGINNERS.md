@@ -236,7 +236,7 @@ git checkout -b <branch-name>
 
 ## Step 10: Test and Validate Your Changes
 
-Before submitting your work, run these validation checks locally. All 56 authoritative domain test suites run completely offline with zero credential requirements:
+Before submitting your work, run these validation checks locally. All 56 authoritative domain test suites run completely offline using mock harnesses with zero live database connection or network credential requirements:
 
 1. **Check Code Quality & Formatting**:
    ```bash

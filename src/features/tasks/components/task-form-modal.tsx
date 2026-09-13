@@ -443,7 +443,7 @@ export function TaskFormModal({
         </div>
 
         {/* Actions Footer */}
-        <ModalFooter className="mt-4 pt-4">
+        <ModalFooter className="mt-4 pt-4 pb-6 sm:pb-4">
           <Button
             variant="ghost"
             size="sm"

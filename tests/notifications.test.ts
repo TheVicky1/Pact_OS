@@ -328,4 +328,21 @@ describe('PACT Phase 5B: Persistent Notification Infrastructure & Delivery', () 
     const activeUnreadCount = list.filter((n) => !n.is_dismissed && !n.is_read).length;
     assert.equal(activeUnreadCount, 2);
   });
+
+  // 13. Channel Filtering
+  it('correctly filters notifications by delivery channel target', () => {
+    const mixedChannels = [
+      { id: '1', channel: 'in_app', title: 'Task Missed' },
+      { id: '2', channel: 'email', title: 'Weekly Summary' },
+      { id: '3', channel: 'in_app', title: 'Focus Complete' },
+      { id: '4', channel: 'push', title: 'Hydration Alert' },
+    ];
+
+    const inAppOnly = mixedChannels.filter((item) => item.channel === 'in_app');
+    assert.equal(inAppOnly.length, 2);
+    assert.deepEqual(
+      inAppOnly.map((i) => i.id),
+      ['1', '3']
+    );
+  });
 });

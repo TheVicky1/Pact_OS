@@ -21,7 +21,7 @@ export function AnalyticsSkeleton() {
         {[...Array(4)].map((_, i) => (
           <div
             key={i}
-            className="p-5 rounded-2xl bg-zinc-950/40 border border-white/[0.08] space-y-3"
+            className="p-5 rounded-2xl bg-zinc-950/40 border border-white/[0.06] space-y-3"
           >
             <div className="flex justify-between items-center">
               <div className="h-3 w-24 bg-zinc-800 rounded" />
@@ -34,14 +34,14 @@ export function AnalyticsSkeleton() {
       </div>
 
       {/* Activity Chart Skeleton */}
-      <div className="p-6 rounded-2xl bg-zinc-950/40 border border-white/[0.08] h-64 space-y-4">
+      <div className="p-6 rounded-2xl bg-zinc-950/40 border border-white/[0.06] h-64 space-y-4">
         <div className="h-4 w-44 bg-zinc-800 rounded" />
         <div className="h-40 w-full bg-zinc-800/30 rounded-xl" />
       </div>
 
       {/* Mid Grid: Goals & Projects Skeletons */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div className="p-6 rounded-2xl bg-zinc-950/40 border border-white/[0.08] h-64 space-y-4">
+        <div className="p-6 rounded-2xl bg-zinc-950/40 border border-white/[0.06] h-64 space-y-4">
           <div className="h-4 w-36 bg-zinc-800 rounded" />
           <div className="space-y-3 pt-2">
             <div className="h-10 w-full bg-zinc-800/40 rounded-xl" />
@@ -49,7 +49,7 @@ export function AnalyticsSkeleton() {
           </div>
         </div>
 
-        <div className="p-6 rounded-2xl bg-zinc-950/40 border border-white/[0.08] h-64 space-y-4">
+        <div className="p-6 rounded-2xl bg-zinc-950/40 border border-white/[0.06] h-64 space-y-4">
           <div className="h-4 w-36 bg-zinc-800 rounded" />
           <div className="space-y-3 pt-2">
             <div className="h-10 w-full bg-zinc-800/40 rounded-xl" />

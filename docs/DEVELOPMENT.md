@@ -154,6 +154,15 @@ src/
 ## 7. Development Best Practices
 
 1. **Integer-Cents for Currency**: Never use floating-point numbers for money. Always store and calculate financial values in integer cents (`amount_cents`).
+   ```typescript
+   import { dollarsToCents, formatCentsToCurrency, sumCents } from '@/lib/money';
+
+   const itemPriceCents = dollarsToCents(49.99); // 4999
+   const taxCents = dollarsToCents(4.00);        // 400
+   const totalCents = sumCents([itemPriceCents, taxCents]); // 5399
+
+   console.log(formatCentsToCurrency(totalCents, 'USD')); // "$53.99"
+   ```
 2. **Server-Side Identity**: Never trust `user_id` provided in client payloads. Always verify identity using `supabase.auth.getUser()`.
 3. **Zod Validation**: Always validate Server Action inputs against strict Zod schemas before running business logic.
 4. **Timezone Awareness**: Always use `lib/time.ts` utilities for date operations to respect the user's configured profile timezone.
