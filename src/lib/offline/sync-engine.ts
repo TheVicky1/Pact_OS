@@ -1,6 +1,7 @@
 /**
- * PACT Phase 8: Pure Deterministic Offline Sync Engine
- * Reconciles offline pending queues against backend services with exponential backoff and idempotency.
+ * PACT Phase 9: Pure Deterministic Offline Sync Engine
+ * Reconciles offline pending queues and local entity caches against backend services
+ * with exponential backoff, conflict detection, and idempotency.
  */
 
 import {
@@ -10,20 +11,42 @@ import {
   updateItemStatus,
   getPendingItems,
 } from './queue';
+import {
+  CachedEntity,
+  getDirtyEntities,
+  markEntitySynced,
+} from './local-cache';
+import {
+  resolveEntityConflict,
+  ConflictResolutionResult,
+} from './conflict-engine';
+
+export type SyncState = 'synced' | 'syncing' | 'offline' | 'pending' | 'conflict' | 'failed';
 
 export interface SyncDispatchResult {
   success: boolean;
   error?: string;
+  serverUpdatedAt?: string;
+  conflict?: boolean;
 }
 
 export type OfflineDispatcher = (
   item: OfflineQueueItem
 ) => Promise<SyncDispatchResult>;
 
+export type EntitySyncDispatcher = (
+  entity: CachedEntity
+) => Promise<{
+  success: boolean;
+  serverRecord?: { id: string; updated_at: string; data: Record<string, unknown> };
+  error?: string;
+}>;
+
 export interface SyncProcessSummary {
   processedCount: number;
   succeededCount: number;
   failedCount: number;
+  conflictCount: number;
   updatedQueue: OfflineQueueItem[];
 }
 
@@ -53,6 +76,7 @@ export async function processQueueSync(
   let updatedQueue = [...currentQueue];
   let succeededCount = 0;
   let failedCount = 0;
+  let conflictCount = 0;
 
   for (const item of eligibleItems) {
     // 1. Mark item as syncing
@@ -74,6 +98,9 @@ export async function processQueueSync(
       } else {
         // 4. Mark as failed with incremented retry count
         const nextRetry = item.retry_count + 1;
+        if (result.conflict) {
+          conflictCount++;
+        }
         updatedQueue = updateItemStatus(updatedQueue, item.id, {
           status: 'failed',
           retry_count: nextRetry,
@@ -97,7 +124,58 @@ export async function processQueueSync(
     processedCount: eligibleItems.length,
     succeededCount,
     failedCount,
+    conflictCount,
     updatedQueue,
+  };
+}
+
+/**
+ * Pure function: Synchronizes dirty cached entities against server endpoints with conflict detection.
+ */
+export async function processEntityCacheSync(
+  dispatcher: EntitySyncDispatcher
+): Promise<{
+  synced: number;
+  conflicts: number;
+  failed: number;
+  resolutions: ConflictResolutionResult[];
+}> {
+  const dirtyEntities = getDirtyEntities();
+  let synced = 0;
+  let conflicts = 0;
+  let failed = 0;
+  const resolutions: ConflictResolutionResult[] = [];
+
+  for (const entity of dirtyEntities) {
+    try {
+      const res = await dispatcher(entity);
+      if (res.success && res.serverRecord) {
+        const conflictResolution = resolveEntityConflict(entity, res.serverRecord);
+        resolutions.push(conflictResolution);
+
+        if (conflictResolution.hasConflict) {
+          conflicts++;
+        }
+
+        if (conflictResolution.strategy !== 'REJECTED_SERVER_AUTHORITATIVE') {
+          markEntitySynced(entity.type, entity.id, res.serverRecord.updated_at);
+          synced++;
+        } else {
+          failed++;
+        }
+      } else {
+        failed++;
+      }
+    } catch {
+      failed++;
+    }
+  }
+
+  return {
+    synced,
+    conflicts,
+    failed,
+    resolutions,
   };
 }
 
@@ -125,4 +203,18 @@ export function validateOfflinePayload(item: OfflineQueueItem): boolean {
   }
 
   return false;
+}
+
+/**
+ * Determines overall sync state for UI indicators.
+ */
+export function deriveOverallSyncState(
+  isOnline: boolean,
+  queue: OfflineQueueItem[]
+): SyncState {
+  if (!isOnline) return 'offline';
+  if (queue.some((i) => i.status === 'syncing')) return 'syncing';
+  if (queue.some((i) => i.status === 'failed' && i.retry_count >= 3)) return 'failed';
+  if (queue.some((i) => i.status === 'pending')) return 'pending';
+  return 'synced';
 }

@@ -2,10 +2,11 @@
 
 import React, { useState, useTransition, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Lock, Mail, User, Globe, AlertCircle, CheckCircle2, Loader2, Eye, EyeOff, ArrowRight, ArrowLeft, KeyRound, ChevronDown } from 'lucide-react';
+import { Lock, Mail, User, Globe, AlertCircle, CheckCircle2, Loader2, Eye, EyeOff, ArrowRight, ArrowLeft, KeyRound, ChevronDown, Fingerprint } from 'lucide-react';
 import { signInAction, signUpAction } from '@/features/auth/actions';
 import { SocialAuthButtons } from '@/components/auth/social-auth-buttons';
 import { createClient } from '@/lib/supabase/client';
+import { isWebAuthnSupported } from '@/lib/auth/passkeys';
 
 export type AuthMode = 'signin' | 'signup' | 'forgot';
 
@@ -280,11 +281,27 @@ export function UnifiedAuthCard({
             {/* Google OAuth Button */}
             <SocialAuthButtons onError={setError} isLoading={isPending} />
 
+            {/* Passkey / Biometrics Button */}
+            <button
+              type="button"
+              onClick={() => {
+                if (!isWebAuthnSupported()) {
+                  setError('WebAuthn / Passkeys are not supported on this device/browser.');
+                  return;
+                }
+                setError('Please register a passkey first in Settings > Security or sign in with your email/password.');
+              }}
+              className="w-full h-10 px-4 rounded-xl bg-zinc-900/90 hover:bg-zinc-800/90 border border-white/[0.08] hover:border-white/[0.16] text-zinc-200 text-xs font-semibold flex items-center justify-center gap-2 transition-all cursor-pointer shadow-sm"
+            >
+              <Fingerprint className="w-4 h-4 text-[#d4af37]" />
+              <span>Sign in with Passkey / Biometrics</span>
+            </button>
+
             {/* Centered Symmetrical Divider */}
             <div className="flex items-center gap-2.5 my-2.5">
               <div className="flex-1 h-[1px] bg-white/[0.08]" />
               <span className="text-[10px] font-mono tracking-[0.2em] text-zinc-500 uppercase shrink-0">
-                OR
+                OR EMAIL
               </span>
               <div className="flex-1 h-[1px] bg-white/[0.08]" />
             </div>

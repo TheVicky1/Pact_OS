@@ -10,6 +10,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- **Local-First Entity Cache & Deterministic Conflict Engine**: Client-side durable entity cache supporting storage tiering (IndexedDB with localStorage fallback), version increment tracking, Last-Write-Wins (LWW) conflict detection, and strict server-authoritative consequence protection (`src/lib/offline/local-cache.ts`, `src/lib/offline/conflict-engine.ts`).
+- **WebAuthn / Passkey Passwordless Security**: FIDO2 / WebAuthn Level 3 biometric authentication with cryptographically random challenges, 5-minute TTL, single-use replay protection, origin/RP verification, and PostgreSQL RLS on `passkey_credentials` (`src/lib/auth/passkeys.ts`, `src/lib/validations/passkeys.ts`, `src/features/auth/passkey-actions.ts`).
+- **Security Settings & Passkey UX**: Passkey registration, device naming, credential revocation, and biometric sign-in button in UnifiedAuthCard (`src/features/settings/components/security-settings-card.tsx`, `src/components/auth/unified-auth-card.tsx`).
 - **PWA Foundation & Service Worker**: Installable Progressive Web App with v2 manifest, standalone display, shortcuts, and static app-shell caching with zero private data leakage guarantees.
 - **Offline Quick Capture & Durable Sync Engine**: Client-side offline queue persistence with RFC 4122 UUID v4, deterministic idempotency keys, and exponential backoff synchronization.
 - **Mobile Live Focus Activity & Screen Wake Lock**: Cross-platform Live Activity contracts for iOS Dynamic Island / Lock Screen widgets and Android Ongoing notifications, plus Screen Wake Lock and Web Notification completion alerts.
