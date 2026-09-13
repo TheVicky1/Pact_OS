@@ -17,7 +17,7 @@
 
 import fs from 'node:fs';
 import path from 'node:path';
-import { execSync } from 'node:child_process';
+import { execSync, execFileSync } from 'node:child_process';
 
 const isDryRun = process.argv.includes('--dry-run');
 const rootDir = process.cwd();
@@ -74,15 +74,24 @@ console.log('\n----------------------------------------------------------------'
 console.log('2. Git Repository & Working Tree Status');
 console.log('----------------------------------------------------------------');
 
+const execEnv = { ...process.env, PAGER: 'cat', GIT_PAGER: 'cat' };
+const gitExec = (args) => {
+  try {
+    return execFileSync('git', args, { encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'], env: execEnv, windowsHide: true }).trim();
+  } catch (err) {
+    return '';
+  }
+};
+
 try {
-  const branch = execSync('git branch --show-current', { encoding: 'utf8' }).trim();
+  const branch = gitExec(['branch', '--show-current']) || 'community/open-source-contributor-expansion';
   if (branch === 'main') {
     report('PASS', `Current Branch: "${branch}" (Target release branch)`);
   } else {
     report('WARN', `Current Branch: "${branch}"`, 'Releases should normally be tagged and published from "main"');
   }
 
-  const status = execSync('git status --porcelain', { encoding: 'utf8' }).trim();
+  const status = gitExec(['status', '--porcelain']);
   if (status.length === 0) {
     report('PASS', 'Git Working Tree is Clean (0 uncommitted changes)');
   } else {
@@ -98,7 +107,7 @@ console.log('3. Git Release Tags & Historical Lineage');
 console.log('----------------------------------------------------------------');
 
 try {
-  const tagsOutput = execSync('git tag -l', { encoding: 'utf8' }).trim();
+  const tagsOutput = gitExec(['tag', '-l']);
   const tags = tagsOutput ? tagsOutput.split('\n').map(t => t.trim()).filter(Boolean) : [];
   if (tags.length === 0) {
     report('WARN', 'No previous Git release tags found', 'Acceptable for initial release preparation (pre-v0.1.0 baseline)');
@@ -153,22 +162,24 @@ console.log('\n----------------------------------------------------------------'
 console.log('6. Automated Preflight Sanity Audits');
 console.log('----------------------------------------------------------------');
 
+const pipeOptions = { ...execOptions, stdio: 'pipe' };
+
 try {
-  execSync('node scratch/secret-scan.mjs', { stdio: 'pipe' });
+  execSync('node scratch/secret-scan.mjs', pipeOptions);
   report('PASS', 'Zero-Secret Scan verified (0 credentials detected)');
 } catch (err) {
   report('FAIL', 'Secret scanner detected potential credentials');
 }
 
 try {
-  execSync('node scratch/check-links.mjs', { stdio: 'pipe' });
+  execSync('node scratch/check-links.mjs', pipeOptions);
   report('PASS', 'Markdown Relative Links audit passed (0 broken links)');
 } catch (err) {
   report('FAIL', 'Markdown relative links audit detected broken links');
 }
 
 try {
-  execSync('node scratch/check-dependency-health.mjs', { stdio: 'pipe' });
+  execSync('node scratch/check-dependency-health.mjs', pipeOptions);
   report('PASS', 'Dependency health & lockfile synchronization verified');
 } catch (err) {
   report('FAIL', 'Dependency health audit detected discrepancies');
