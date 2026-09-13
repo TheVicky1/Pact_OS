@@ -28,7 +28,7 @@ This document defines the canonical repository metadata, topics taxonomy, social
 
 ## 2. 🏷️ Canonical Topics Taxonomy
 
-PACT uses a curated set of **14 high-signal GitHub topics**. Topics are strictly divided across domain purpose, technology stack, and open-source discoverability.
+PACT uses a curated set of **16 high-signal GitHub topics**. Topics are strictly divided across domain purpose, technology stack, and open-source discoverability.
 
 | # | Topic | Category | Rationale & Justification |
 | :-: | :--- | :--- | :--- |
@@ -45,7 +45,9 @@ PACT uses a curated set of **14 high-signal GitHub topics**. Topics are strictly
 | 11 | `supabase` | Stack | Managed backend platform providing PostgreSQL, Row Level Security (RLS), and SSR cookie auth. |
 | 12 | `postgresql` | Stack | Relational database engine executing deterministic migrations, constraints, and audit trails. |
 | 13 | `open-source` | Community | Designates the project as public, community-governed software welcoming external contributors. |
-| 14 | `good-first-issue` | Community | Discoverability index for GitHub's contributor ecosystem matching our 40 curated beginner issues. |
+| 14 | `good-first-issue` | Community | Discoverability index for GitHub's contributor ecosystem matching our curated beginner issues. |
+| 15 | `contributions-welcome` | Community | Global discoverability tag signaling active maintainer review and onboarding readiness. |
+| 16 | `up-for-grabs` | Community | Open-source ecosystem portal indexing unassigned, available contribution tasks. |
 
 ---
 

@@ -13,6 +13,8 @@
 
 [![CI](https://github.com/TheVicky1/Pact_OS/actions/workflows/ci.yml/badge.svg)](https://github.com/TheVicky1/Pact_OS/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-d4af37.svg?style=for-the-badge)](LICENSE)
+[![Good First Issues](https://img.shields.io/github/issues/TheVicky1/Pact_OS/good%20first%20issue?style=for-the-badge&color=7057ff&label=Good%20First%20Issues)](https://github.com/TheVicky1/Pact_OS/issues?q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22)
+[![Contributions Welcome](https://img.shields.io/badge/Contributions-Welcome-0e8a16.svg?style=for-the-badge)](CONTRIBUTING.md)
 [![Next.js](https://img.shields.io/badge/Next.js-16.3-050505.svg?style=for-the-badge&logo=next.js&logoColor=white)](https://nextjs.org/)
 [![React](https://img.shields.io/badge/React-19.2-050505.svg?style=for-the-badge&logo=react&logoColor=61DAFB)](https://react.dev/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.9-050505.svg?style=for-the-badge&logo=typescript&logoColor=3178C6)](https://www.typescriptlang.org/)
@@ -43,6 +45,7 @@ Most productivity tools suffer from **passive accumulation**—tasks, habits, an
 2. **Temporal Truth**: Time-blocked planning with bi-directional Google Calendar synchronization guarantees realistic daily execution capacity.
 3. **Objective Proof Verification**: Automated external connectors validate technical proof-of-work via GitHub, LeetCode, and Codeforces.
 4. **Holistic Governance**: Single unified operational system for tasks, strategic goals, scoped projects, recurring routines, deep work focus, and financial cash flow.
+5. **Open Source & Beginner Friendly**: Designed as a welcoming hub for first-time open-source contributors with single-file micro-issues, zero-database local setup, and fast-track PR reviews.
 
 ---
 
@@ -125,8 +128,15 @@ curl -I http://localhost:3000/api/health
 Contributions are warmly welcomed! PACT is designed to be one of the most welcoming and beginner-friendly open-source destinations on GitHub.
 
 > 🚀 **New to Open Source? Start with a Micro-Contribution!**
-> We deliberately scope our beginner tasks into **tiny, single-file micro-contributions** (1–5 minutes of work) with exact file pointers and step-by-step guidance.
-> 👉 [**Browse Live Good First Issues**](https://github.com/TheVicky1/Pact_OS/issues?q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22) &nbsp;|&nbsp; 📖 [**Read the Beginner's Guide**](docs/CONTRIBUTING-BEGINNERS.md)
+> We deliberately scope our beginner tasks into **tiny, single-file micro-contributions** (5–30 minutes of work) with exact file pointers, concrete acceptance criteria, and step-by-step guidance.
+> 👉 [**Browse Live Good First Issues (28 Available)**](https://github.com/TheVicky1/Pact_OS/issues?q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22) &nbsp;|&nbsp; 📖 [**Read the Beginner's Guide**](docs/CONTRIBUTING-BEGINNERS.md)
+
+### 🌟 Why Contribute to PACT OS?
+
+- **⚡ Zero-Database Friction**: Run the full application and all **41 automated test suites** locally right away using `.env.example`—no cloud database setup required.
+- **🎯 Highly Scoped Micro-Issues**: Tasks touch **one file** (max two) with zero complex business logic, no database migrations, and clear verification steps.
+- **🚀 Fast Maintainer Reviews**: First-time contributor pull requests receive priority review from core maintainers (target turnaround under 48 hours).
+- **🏛️ Permanent Recognition**: Every merged contribution is permanently acknowledged in [**CONTRIBUTORS.md**](CONTRIBUTORS.md) and on the [**GitHub Contributors Graph**](https://github.com/TheVicky1/Pact_OS/graphs/contributors).
 
 ### ⚡ 8-Step Contributor Quick Start
 
@@ -137,7 +147,7 @@ Contributions are warmly welcomed! PACT is designed to be one of the most welcom
 5. **Make the Change**: Edit the single specified file following the issue instructions.
 6. **Verify Locally**: Run `npm run lint`, `npx tsc --noEmit`, and `node scratch/run-tests.mjs`.
 7. **Open a Pull Request**: Push your branch and open a PR linking your issue (e.g., `Closes #12`).
-8. **Celebrate & Iterate**: Our automated CI and maintainer (@TheVicky1) will review and guide your PR to merge!
+8. **Celebrate & Iterate**: Our automated CI and maintainers will review and guide your PR to merge!
 
 ### For Complete Beginners
 
