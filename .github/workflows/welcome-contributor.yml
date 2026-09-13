@@ -1,0 +1,63 @@
+name: Welcome First-Time Contributor
+
+on:
+  pull_request_target:
+    types: [opened]
+
+permissions:
+  pull-requests: write
+
+jobs:
+  welcome:
+    name: Welcome Contributor
+    runs-on: ubuntu-latest
+    if: github.event.pull_request.author_association == 'FIRST_TIME_CONTRIBUTOR' || github.event.pull_request.author_association == 'FIRST_TIMER' || github.event.pull_request.author_association == 'NONE'
+    steps:
+      - name: Post Welcome Message
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const author = context.payload.pull_request.user.login;
+            const commentBody = `### 👋 Welcome to PACT OS, @${author}! 🚀
+
+            Thank you for taking the time to open your first pull request on PACT! We are thrilled to have you here in our open-source community.
+
+            ---
+
+            ### 🔍 What Happens Next?
+            1. **Automated Verification**: Our [Continuous Integration (CI)](https://github.com/TheVicky1/Pact_OS/actions/workflows/ci.yml) workflow is currently verifying:
+               - 🔒 Zero-Secret Security Scan
+               - 🔗 Markdown Link Integrity
+               - 🧹 ESLint Code Quality
+               - 🏷️ TypeScript Strict Typecheck
+               - 🧪 35-Suite Automated Domain Test Matrix
+               - 🏗️ Next.js Production Build
+            2. **Maintainer Review**: A maintainer (@TheVicky1) will review your pull request shortly.
+            3. **Friendly Iteration**: If any adjustments or feedback are needed, we will provide clear, actionable suggestions to help get your PR merged smoothly.
+
+            ---
+
+            ### 📚 Helpful Quick Links
+            - 🌱 [Beginner's Contribution Guide](https://github.com/TheVicky1/Pact_OS/blob/main/docs/CONTRIBUTING-BEGINNERS.md)
+            - 🎨 [Design System Specification](https://github.com/TheVicky1/Pact_OS/blob/main/docs/DESIGN_SYSTEM.md)
+            - 🔧 [Troubleshooting Guide](https://github.com/TheVicky1/Pact_OS/blob/main/docs/TROUBLESHOOTING.md)
+            - 💬 [Community Discussions](https://github.com/TheVicky1/Pact_OS/discussions)
+
+            *Thank you for helping make PACT better! Plan. Track. Improve. Repeat.* 🏛️✨`;
+
+            // Check if already commented to prevent duplicate welcome messages on re-runs
+            const { data: existingComments } = await github.rest.issues.listComments({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.payload.pull_request.number
+            });
+
+            const alreadyWelcomed = existingComments.some(c => c.body && c.body.includes('Welcome to PACT OS'));
+            if (!alreadyWelcomed) {
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.payload.pull_request.number,
+                body: commentBody
+              });
+            }

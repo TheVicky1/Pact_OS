@@ -57,17 +57,20 @@ If you are new to GitHub and Git, here are the core terms you will encounter:
 
 ---
 
-## 3. Choose Your First Contribution
+## 3. Choose Your First Contribution (Micro-Contributions)
 
-You do not have to write hundreds of lines of complex code. Look for these beginner-friendly labels or check out our curated [**Beginner Issues List**](GITHUB_BEGINNER_ISSUES.md):
+You do not have to write hundreds of lines of complex code or understand the entire architecture. PACT embraces a **micro-contribution model**: tasks are deliberately scoped to **one single file** and **one specific, high-leverage improvement** (typically 1–5 minutes of actual implementation).
+
+Look for these beginner-friendly labels on GitHub:
 
 - 📖 **Documentation** (`type:docs`): Fix typos, clarify setup instructions, or improve code comments.
-- 🎨 **UI Polish** (`type:ui`): Improve responsive spacing, fix text overflow, or adjust hover transitions.
-- ♿ **Accessibility** (`type:a11y`): Add missing ARIA labels, improve keyboard focus indicators, or verify color contrast.
-- 🐛 **Bug Fixes** (`type:bug`): Resolve small validation glitches or visual bugs.
-- 🧪 **Unit Tests** (`type:test`): Add tests covering edge cases in date helpers, financial math, or state machines.
+- 🎨 **UI Polish** (`type:ui`): Refine button styling, add hover elevations, improve responsive padding.
+- ♿ **Accessibility** (`type:a11y`): Add missing `aria-label` or `aria-expanded` attributes, improve keyboard focus indicators.
+- 🐛 **Bug Fixes** (`type:bug`): Prevent empty input submissions, fix string pluralizations.
+- 🧪 **Unit Tests** (`type:test`): Add single boundary or edge-case test cases to existing test suites.
+- 🧹 **Developer Experience** (`type:refactor` / `type:tooling`): Add standard script aliases, clean unused imports.
 
-> 💡 Check the [**GitHub Label Taxonomy**](GITHUB_LABELS.md) to understand estimated time badges (`time:<15m`, `time:15-30m`, etc.) so you can pick a task that fits your availability!
+> 💡 Every Good First Issue includes the **exact target file**, **step-by-step guidance**, **acceptance criteria**, and **local test command** so you can succeed on your very first try!
 
 ---
 

@@ -1,8 +1,13 @@
 # 🏛️ PACT Pull Request
 
+> 💡 **Submitting a Micro-Contribution / Good First Issue?**
+> If you are working on a 1–5 minute single-file task, you only need to fill out **Sections 1, 2, and 5** (and check the Micro-Contribution Fast-Path in Section 9). You can skip or leave optional sections blank!
+
+---
+
 ## 1. Related Issue
 
-<!-- Link the relevant issue below (e.g., Closes #123, Fixes #456, or Related to #789) -->
+<!-- Link the relevant issue below (e.g., Closes #12, Fixes #24, or Related to #34) -->
 Closes #
 
 ---
@@ -13,13 +18,13 @@ Closes #
 
 ---
 
-## 3. Motivation & Context
+## 3. Motivation & Context (Optional for Micro-PRs)
 
 <!-- Why is this change necessary? What problem does it solve or what value does it add? -->
 
 ---
 
-## 4. Implementation Details
+## 4. Implementation Details (Optional for Micro-PRs)
 
 <!-- Briefly describe the technical approach or key files modified -->
 
@@ -34,12 +39,12 @@ Closes #
 - [ ] `node scratch/secret-scan.mjs` — Zero secrets or sensitive credentials detected
 - [ ] `npm run build` — Production build succeeded without errors
 
-*If this is a documentation-only PR, specify which markdown / link validation was performed:*
+*If this is a documentation-only or micro PR, specify which verification was performed:*
 > 
 
 ---
 
-## 6. UI & Visual Changes
+## 6. UI & Visual Changes (Optional)
 
 <!-- If your changes affect the user interface, please complete this section -->
 - [ ] **No UI changes** (This PR does not alter visual styling, layout, or components)
@@ -54,7 +59,7 @@ Closes #
 
 ---
 
-## 7. Database & Security Impact
+## 7. Database & Security Impact (Optional)
 
 - [ ] **No database or security-sensitive changes**
 - [ ] **Database modifications included**:
@@ -67,7 +72,7 @@ Closes #
 
 ---
 
-## 8. Documentation Impact
+## 8. Documentation Impact (Optional)
 
 - [ ] Documentation updated to reflect changes (e.g., in `docs/` or `README.md`)
 - [ ] Documentation updates not required for this change
@@ -78,6 +83,7 @@ Closes #
 
 Please verify the following before requesting a maintainer review:
 
+- [ ] **🌱 Micro-Contribution Fast-Path**: This is a targeted Good First Issue / 1–5 minute change (single file, verified locally).
 - [ ] My PR has a single, focused scope (avoiding unrelated formatting or refactoring).
 - [ ] I have read and followed PACT's [**Contributing Guide**](https://github.com/TheVicky1/Pact_OS/blob/main/CONTRIBUTING.md).
 - [ ] I confirm that **zero secrets, API keys, private tokens, or `.env.local` files** are included in this PR.

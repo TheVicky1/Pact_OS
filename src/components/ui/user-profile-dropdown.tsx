@@ -153,9 +153,10 @@ export function UserProfileDropdown({
           {/* Functional Account Navigation Action Links */}
           <div className="space-y-0.5">
             <Link
-              href="/app/settings"
+              href="/app/settings#profile"
+              role="menuitem"
               onClick={handleClose}
-              className="w-full flex items-center gap-3 px-3 py-2 rounded-xl text-xs sm:text-sm font-medium text-zinc-300 hover:text-zinc-100 hover:bg-white/[0.05] transition-colors group"
+              className="w-full flex items-center gap-3 px-3 py-2 rounded-xl text-xs sm:text-sm font-medium text-zinc-300 hover:text-zinc-100 hover:bg-white/[0.05] focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[#d4af37]/50 transition-colors group"
             >
               <User className="w-4 h-4 text-zinc-400 group-hover:text-[#d4af37] transition-colors shrink-0" />
               <span>Profile</span>
@@ -163,8 +164,9 @@ export function UserProfileDropdown({
 
             <Link
               href="/app/review"
+              role="menuitem"
               onClick={handleClose}
-              className="w-full flex items-center gap-3 px-3 py-2 rounded-xl text-xs sm:text-sm font-medium text-zinc-300 hover:text-zinc-100 hover:bg-white/[0.05] transition-colors group"
+              className="w-full flex items-center gap-3 px-3 py-2 rounded-xl text-xs sm:text-sm font-medium text-zinc-300 hover:text-zinc-100 hover:bg-white/[0.05] focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[#d4af37]/50 transition-colors group"
             >
               <BookOpen className="w-4 h-4 text-zinc-400 group-hover:text-[#d4af37] transition-colors shrink-0" />
               <span>Review</span>
@@ -172,8 +174,9 @@ export function UserProfileDropdown({
 
             <Link
               href="/app/settings"
+              role="menuitem"
               onClick={handleClose}
-              className="w-full flex items-center gap-3 px-3 py-2 rounded-xl text-xs sm:text-sm font-medium text-zinc-300 hover:text-zinc-100 hover:bg-white/[0.05] transition-colors group"
+              className="w-full flex items-center gap-3 px-3 py-2 rounded-xl text-xs sm:text-sm font-medium text-zinc-300 hover:text-zinc-100 hover:bg-white/[0.05] focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[#d4af37]/50 transition-colors group"
             >
               <SettingsIcon className="w-4 h-4 text-zinc-400 group-hover:text-zinc-200 transition-colors shrink-0" />
               <span>Settings</span>
@@ -201,7 +204,8 @@ export function UserProfileDropdown({
           <form action={signOutAction} className="w-full">
             <button
               type="submit"
-              className="w-full flex items-center gap-3 px-3 py-2 rounded-xl text-xs sm:text-sm font-medium text-rose-400 hover:text-rose-300 hover:bg-rose-500/10 transition-colors cursor-pointer text-left"
+              role="menuitem"
+              className="w-full flex items-center gap-3 px-3 py-2 rounded-xl text-xs sm:text-sm font-medium text-rose-400 hover:text-rose-300 hover:bg-rose-500/10 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-rose-400/50 transition-colors cursor-pointer text-left"
             >
               <LogOut className="w-4 h-4 text-rose-400 shrink-0" />
               <span>Sign Out</span>

@@ -104,6 +104,32 @@ export const FIRST_BATCH_SLUGS = [
   'refactor-unused-icon-imports-integrations'
 ];
 
+export const SECOND_BATCH_SLUGS = [
+  'docs-timezone-mocking-runbook',
+  'docs-focus-audio-architecture',
+  'ui-active-focus-card-hover',
+  'ui-goals-empty-state-polish',
+  'a11y-command-palette-escape-listener',
+  'a11y-user-profile-dropdown-aria',
+  'test-focus-duration-boundaries',
+  'dev-package-typecheck-script-alias',
+  'fix-goals-form-empty-title-validation',
+  'feat-codeforces-rating-tier-badge'
+];
+
+export const THIRD_BATCH_SLUGS = [
+  'docs-troubleshooting-rls-recursion',
+  'ui-finance-category-badge-opacity',
+  'ui-streak-summary-pulse-glow',
+  'ui-task-form-modal-mobile-padding',
+  'ui-analytics-skeleton-shimmer',
+  'test-habit-streak-leap-year',
+  'test-weekly-review-step-boundaries',
+  'test-notification-channel-filter',
+  'refactor-modal-transition-variants',
+  'fix-finance-negative-budget-remaining'
+];
+
 function getToken() {
   if (process.env.GITHUB_TOKEN) return process.env.GITHUB_TOKEN;
   if (process.env.GH_TOKEN) return process.env.GH_TOKEN;
@@ -126,15 +152,39 @@ async function main() {
   const allIssues = loadCanonicalIssues();
   const args = process.argv.slice(2);
   const publishAll = args.includes('--all');
+  const isBatch1 = args.includes('--batch=1') || args.includes('--batch-1');
+  const isBatch2 = args.includes('--batch=2') || args.includes('--batch-2');
+  const isBatch3 = args.includes('--batch=3') || args.includes('--batch-3');
   const isDryRun = args.includes('--dry-run');
 
-  // Filter to First Batch unless --all is explicitly provided
+  const hasExplicitBatch = isBatch1 || isBatch2 || isBatch3 || publishAll;
+  if (!hasExplicitBatch && !isDryRun) {
+    console.error('⚠️  SAFETY GUARD: Explicit batch selection required for live execution.');
+    console.error('Usage: node scratch/create-beginner-issues.mjs [--batch=1 | --batch=2 | --batch=3 | --all] [--dry-run]');
+    process.exit(1);
+  }
+
+  let targetSlugs = FIRST_BATCH_SLUGS;
+  let batchName = 'FIRST BATCH OF 10 (DRY RUN DEFAULT)';
+
+  if (isBatch3) {
+    targetSlugs = THIRD_BATCH_SLUGS;
+    batchName = 'THIRD BATCH OF 10 (MICRO-ISSUES)';
+  } else if (isBatch2) {
+    targetSlugs = SECOND_BATCH_SLUGS;
+    batchName = 'SECOND BATCH OF 10';
+  } else if (isBatch1) {
+    targetSlugs = FIRST_BATCH_SLUGS;
+    batchName = 'FIRST BATCH OF 10';
+  }
+
+  // Filter to Selected Batch unless --all is explicitly provided
   const issues = publishAll
     ? allIssues
-    : allIssues.filter(iss => FIRST_BATCH_SLUGS.includes(iss.slug));
+    : allIssues.filter(iss => targetSlugs.includes(iss.slug));
 
   console.log(`Loaded ${allIssues.length} canonical issues from docs/GITHUB_BEGINNER_ISSUES.md`);
-  console.log(`Targeting ${issues.length} issues for this execution (${publishAll ? 'ALL ISSUES' : 'FIRST BATCH OF 10'}).\n`);
+  console.log(`Targeting ${issues.length} issues for this execution (${publishAll ? 'ALL ISSUES' : batchName}).\n`);
 
   const token = isDryRun ? null : getToken();
 

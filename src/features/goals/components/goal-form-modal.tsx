@@ -164,6 +164,7 @@ export function GoalFormModal({ isOpen, onClose, goalToEdit }: GoalFormModalProp
         {/* Error Banner */}
         {errorMsg && (
           <div
+            id="goal-error-banner"
             role="alert"
             className="p-3.5 rounded-xl bg-rose-950/50 border border-rose-800/60 text-xs text-rose-300 flex items-center gap-2.5"
           >
@@ -189,6 +190,8 @@ export function GoalFormModal({ isOpen, onClose, goalToEdit }: GoalFormModalProp
               onChange={(e) => setTitle(e.target.value)}
               placeholder="e.g., Launch a SaaS product by year-end"
               autoFocus
+              aria-invalid={errorMsg ? 'true' : 'false'}
+              aria-describedby={errorMsg ? 'goal-error-banner' : undefined}
               className="w-full bg-zinc-950/80 border border-zinc-800 rounded-xl px-3.5 py-2.5 text-xs text-zinc-100 placeholder-zinc-500 focus:border-[#d4af37] focus:outline-none transition-colors disabled:opacity-50"
             />
           </div>
@@ -209,6 +212,8 @@ export function GoalFormModal({ isOpen, onClose, goalToEdit }: GoalFormModalProp
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               placeholder="Define why this goal matters and what success looks like..."
+              aria-invalid={errorMsg ? 'true' : 'false'}
+              aria-describedby={errorMsg ? 'goal-error-banner' : undefined}
               className="w-full bg-zinc-950/80 border border-zinc-800 rounded-xl px-3.5 py-2.5 text-xs text-zinc-100 placeholder-zinc-500 focus:border-[#d4af37] focus:outline-none transition-colors resize-none disabled:opacity-50"
             />
             <p className="text-[11px] text-zinc-600 mt-1 text-right" aria-live="polite">
@@ -231,6 +236,8 @@ export function GoalFormModal({ isOpen, onClose, goalToEdit }: GoalFormModalProp
                 disabled={isPending}
                 value={targetDate}
                 onChange={(e) => setTargetDate(e.target.value)}
+                aria-invalid={errorMsg ? 'true' : 'false'}
+                aria-describedby={errorMsg ? 'goal-error-banner' : undefined}
                 className="w-full bg-zinc-950/80 border border-zinc-800 rounded-xl px-3.5 py-2 text-xs text-zinc-100 focus:border-[#d4af37] focus:outline-none transition-colors disabled:opacity-50"
               />
             </div>
@@ -264,7 +271,7 @@ export function GoalFormModal({ isOpen, onClose, goalToEdit }: GoalFormModalProp
               type="button"
               onClick={onClose}
               disabled={isPending}
-              className="px-4 py-2 rounded-xl text-xs font-medium text-zinc-400 hover:text-zinc-200 hover:bg-zinc-800/80 border border-transparent transition-colors cursor-pointer disabled:opacity-50"
+              className="px-4 py-2 min-h-[44px] rounded-xl text-xs font-medium text-zinc-400 hover:text-zinc-200 hover:bg-zinc-800/80 border border-transparent transition-colors cursor-pointer disabled:opacity-50"
             >
               Cancel
             </button>
@@ -272,7 +279,7 @@ export function GoalFormModal({ isOpen, onClose, goalToEdit }: GoalFormModalProp
             <button
               type="submit"
               disabled={isPending || !title.trim()}
-              className="inline-flex items-center gap-2 bg-[#d4af37] hover:bg-[#e5c158] text-zinc-950 font-semibold px-5 py-2 rounded-xl text-xs transition-colors shadow-md cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+              className="inline-flex items-center justify-center gap-2 bg-[#d4af37] hover:bg-[#e5c158] text-zinc-950 font-semibold px-5 py-2 min-h-[44px] rounded-xl text-xs transition-colors shadow-md cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {isPending ? (
                 <>

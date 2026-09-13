@@ -14,19 +14,6 @@ body:
         > Remember: A first-time contributor should be able to open this issue and immediately know: **File → Change → Test → PR**.
 
   - type: dropdown
-    id: estimated_time
-    attributes:
-      label: "Estimated Completion Time"
-      description: "How long should this task take for a first-time contributor?"
-      options:
-        - "time:<15m (< 15 minutes — Quick typo or single-line tweak)"
-        - "time:15-30m (15–30 minutes — Localized UI or test addition)"
-        - "time:30-60m (30–60 minutes — Component polish or validation rule)"
-        - "time:1-2h (1–2 hours — Small sub-feature or multi-file tweak)"
-    validations:
-      required: true
-
-  - type: dropdown
     id: area
     attributes:
       label: "Subsystem / Area"

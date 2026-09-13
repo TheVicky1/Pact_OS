@@ -2,7 +2,65 @@
 
 This document contains the canonical catalog of **40 curated, actionable, and beginner-friendly issues** designed for first-time open-source contributors joining the PACT project.
 
-Every issue is fully specified with exact file pointers, step-by-step guidance, acceptance criteria, and local verification commands.
+---
+
+## ⚡ Phase 5G Micro-Contribution Standard
+
+Starting in Phase 5G, PACT OS adopts a **Micro-Contribution Philosophy**:
+
+1. **Single-File Scoping**: Every beginner task is strictly bounded to **one target file**.
+2. **1–5 Minute Implementation**: A contributor familiar with basic TypeScript / React can implement the change in minutes.
+3. **No Time Estimation Badges**: We deprecate `time:*` labels on new issues in favor of tightly-scoped acceptance criteria.
+4. **Self-Contained Verification**: Every issue provides the exact local command (e.g. `npm run lint` or `node --test tests/xyz.test.ts`) required to verify the change.
+5. **No Production Risk**: Zero complex architectural refactors, zero database migrations, and zero auth/session changes.
+
+---
+
+## 🔍 Audit & Classification Matrix of the 20 Unpublished Catalog Issues
+
+Below is the exhaustive classification of all 20 unpublished catalog issues from Phases 5B/5E, audited against the current repository state:
+
+| Catalog # | Canonical Slug | Original Title | Action | Classification Rational & Micro-Conversion Strategy |
+| :---: | :--- | :--- | :---: | :--- |
+| **#3** | `docs-integrations-payload-examples` | docs: add API payload examples to proof connector specification | **REDUCE** | Scoped down from full multi-provider spec to a single LeetCode JSON response example in `docs/INTEGRATIONS.md`. |
+| **#5** | `docs-weekly-review-flow-diagram` | docs: document weekly review 5-step state machine in user flows | **REDUCE** | Simplified to documenting the 5 state enum names in `docs/DEVELOPMENT.md`. |
+| **#7** | `docs-habit-recurrence-syntax` | docs: document habit recurrence rule syntax in data model guide | **KEEP** | Retained as concise documentation snippet for recurrence rules. |
+| **#8** | `docs-troubleshooting-rls-recursion` | docs: add troubleshooting steps for Supabase RLS recursion errors | **KEEP** | **Batch 3 Candidate #1**: High-leverage troubleshooting entry in `docs/TROUBLESHOOTING.md`. |
+| **#13** | `ui-finance-category-badge-opacity` | ui: refine category badge color opacity in transaction list | **KEEP** | **Batch 3 Candidate #2**: Single Tailwind class opacity tweak in `src/features/finance/components/transaction-list.tsx`. |
+| **#14** | `ui-streak-summary-pulse-glow` | ui: add pulse glow effect to streak summary highlight on overview | **REDUCE** | Simple CSS animation addition on overview card. |
+| **#15** | `ui-task-form-modal-mobile-padding` | ui: improve mobile bottom sheet padding in task form modal | **KEEP** | **Batch 3 Candidate #5**: Single Tailwind padding adjustment `pb-6 sm:pb-4` in `src/features/tasks/components/task-form-modal.tsx`. |
+| **#16** | `ui-analytics-skeleton-shimmer` | ui: polish skeleton loader shimmer animation in analytics workspace | **KEEP** | **Batch 3 Candidate #8**: Single hover border transition in `src/features/analytics/components/analytics-summary-cards.tsx`. |
+| **#21** | `a11y-focus-timer-aria-live` | a11y: add aria-live polite region to focus timer countdown | **REPLACE** | Timer display already contains `aria-live="polite"`; replaced with **Batch 3 Candidate #3**: `a11y-command-palette-results-label`. |
+| **#24** | `test-habit-streak-leap-year` | test: add unit test verifying habit streak calculation on leap years | **KEEP** | **Batch 3 Candidate #4**: Single leap-year test case in `tests/habits-routines.test.ts`. |
+| **#26** | `test-weekly-review-step-boundaries` | test: add unit tests for weekly review step progression boundary checks | **KEEP** | **Batch 3 Candidate #7**: Single step boundary test in `tests/weekly-review.test.ts`. |
+| **#27** | `test-notification-channel-filter` | test: add unit tests for notification channel filter utility | **KEEP** | Retained for future batches in `tests/notifications.test.ts`. |
+| **#30** | `refactor-currency-symbol-helper` | refactor: centralize currency symbol formatting in lib/money.ts | **REPLACE** | Replaced with **Batch 3 Candidate #10**: `test-money-sum-negative-cents`. |
+| **#31** | `refactor-date-string-helper-time` | refactor: export type-safe date string helper in lib/time.ts | **REPLACE** | Replaced with higher-leverage micro-docs task. |
+| **#32** | `refactor-modal-transition-variants` | refactor: export shared modal transition variants in components/ui/modal.tsx | **REDUCE** | Scoped to exporting existing framer-motion variants. |
+| **#33** | `fix-finance-negative-budget-remaining` | fix: prevent negative budget remaining calculation on expense overage | **KEEP** | **Batch 3 Candidate #9**: Clean 1-line `Math.max(0, ...)` clamp in `src/lib/validations/finance.ts`. |
+| **#34** | `fix-notification-popover-hydration-timestamp` | fix: resolve hydration warning on formatted relative timestamp in notification popover | **DROP** | Popover is already fully client-side hydrated. |
+| **#38** | `feat-settings-webhook-copy-button` | feat: add copy-to-clipboard button on integration webhook URL in settings | **REDUCE** | Simple copy button component addition. |
+| **#39** | `feat-tasks-proof-verified-filter` | feat: add quick filter for proof-verified tasks in task list | **REPLACE** | Too complex for micro-contribution standard. |
+| **#40** | `feat-settings-export-format-selector` | feat: add export data format selector (JSON / CSV) helper in data privacy settings | **REPLACE** | Export API already supports CSV/JSON endpoints. |
+
+---
+
+## 🎯 Batch 3 Candidate Set (10 Micro-Issues)
+
+The following 10 micro-issues constitute the candidate set for **Batch 3**:
+
+| # | Slug | Title | Type | Area | Difficulty | Target File |
+| :-: | :--- | :--- | :--- | :--- | :--- | :--- |
+| 1 | `docs-troubleshooting-rls-recursion` | `docs: add Supabase RLS recursion troubleshooting note` | `type:docs` | `area:documentation` | `difficulty:beginner` | `docs/TROUBLESHOOTING.md` |
+| 2 | `ui-finance-category-badge-opacity` | `ui: refine category badge opacity in transaction list` | `type:ui` | `area:finance` | `difficulty:beginner` | `src/features/finance/components/transaction-list.tsx` |
+| 3 | `ui-streak-summary-pulse-glow` | `ui: add subtle icon glow in streak summary card` | `type:ui` | `area:habits` | `difficulty:beginner` | `src/features/habits/components/streak-summary-card.tsx` |
+| 4 | `ui-task-form-modal-mobile-padding` | `ui: improve mobile padding in task form modal` | `type:ui` | `area:tasks` | `difficulty:beginner` | `src/features/tasks/components/task-form-modal.tsx` |
+| 5 | `ui-analytics-skeleton-shimmer` | `ui: refine skeleton loading card borders in analytics workspace` | `type:ui` | `area:analytics` | `difficulty:beginner` | `src/features/analytics/components/analytics-skeleton.tsx` |
+| 6 | `test-habit-streak-leap-year` | `test: add leap year unit test to habit streak test suite` | `type:test` | `area:testing` | `difficulty:easy` | `tests/habits-routines.test.ts` |
+| 7 | `test-weekly-review-step-boundaries` | `test: add boundary check test for weekly review step progression` | `type:test` | `area:testing` | `difficulty:beginner` | `tests/weekly-review.test.ts` |
+| 8 | `test-notification-channel-filter` | `test: add unit test for in-app notification filtering` | `type:test` | `area:testing` | `difficulty:beginner` | `tests/notifications.test.ts` |
+| 9 | `refactor-modal-transition-variants` | `refactor: export modal motion transition variants in modal component` | `type:refactor` | `area:ui` | `difficulty:beginner` | `src/components/ui/modal.tsx` |
+| 10 | `fix-finance-negative-budget-remaining` | `fix: clamp negative budget remaining balance to zero in budget engine` | `type:bug` | `area:finance` | `difficulty:easy` | `src/lib/finance/budgets.ts` |
 
 ---
 
@@ -71,8 +129,8 @@ Every issue is fully specified with exact file pointers, step-by-step guidance, 
 ## 📖 Issue Specifications (1 – 40)
 
 ### Issue 1: `docs-money-cents-examples`
-**Title:** `docs: add code examples for lib/money.ts integer-cents calculations`  
-**Labels:** `type:docs`, `difficulty:beginner`, `time:15-30m`, `area:documentation`, `good first issue`  
+**Title:** `docs: add code examples for lib/money.ts integer-cents calculations`
+**Labels:** `type:docs`, `difficulty:beginner`, `time:15-30m`, `area:documentation`, `good first issue`
 **Target File:** `docs/DEVELOPMENT.md` & `src/lib/money.ts`
 
 ```markdown
@@ -116,8 +174,8 @@ This is a great first contribution! You only need to write documentation; no run
 ---
 
 ### Issue 2: `docs-timezone-mocking-runbook`
-**Title:** `docs: document local timezone mocking in tests runbook`  
-**Labels:** `type:docs`, `difficulty:beginner`, `time:15-30m`, `area:documentation`, `good first issue`  
+**Title:** `docs: document local timezone mocking in tests runbook`
+**Labels:** `type:docs`, `difficulty:beginner`, `time:15-30m`, `area:documentation`, `good first issue`
 **Target File:** `docs/TESTING.md` & `src/lib/time.ts`
 
 ```markdown
@@ -145,8 +203,8 @@ PACT guarantees timezone safety across global timezones (e.g. `America/New_York`
 ---
 
 ### Issue 3: `docs-integrations-payload-examples`
-**Title:** `docs: add API payload examples to proof connector specification`  
-**Labels:** `type:docs`, `difficulty:beginner`, `time:30-60m`, `area:documentation`, `good first issue`  
+**Title:** `docs: add API payload examples to proof connector specification`
+**Labels:** `type:docs`, `difficulty:beginner`, `time:30-60m`, `area:documentation`, `good first issue`
 **Target File:** `docs/INTEGRATIONS.md` & `src/lib/integrations/proof-of-work/`
 
 ```markdown
@@ -176,8 +234,8 @@ Contributors building or testing proof-of-work connectors need realistic mock pa
 ---
 
 ### Issue 4: `docs-focus-audio-architecture`
-**Title:** `docs: clarify focus timer ambient sound generation and Web Audio API`  
-**Labels:** `type:docs`, `difficulty:beginner`, `time:30-60m`, `area:documentation`, `good first issue`  
+**Title:** `docs: clarify focus timer ambient sound generation and Web Audio API`
+**Labels:** `type:docs`, `difficulty:beginner`, `time:30-60m`, `area:documentation`, `good first issue`
 **Target File:** `docs/ARCHITECTURE.md` & `src/lib/focus/sound.ts`
 
 ```markdown
@@ -203,8 +261,8 @@ PACT generates focus sounds (pink noise, white noise, brown noise, binaural wave
 ---
 
 ### Issue 5: `docs-weekly-review-flow-diagram`
-**Title:** `docs: document weekly review 5-step state machine in user flows`  
-**Labels:** `type:docs`, `difficulty:beginner`, `time:30-60m`, `area:documentation`, `good first issue`  
+**Title:** `docs: document weekly review 5-step state machine in user flows`
+**Labels:** `type:docs`, `difficulty:beginner`, `time:30-60m`, `area:documentation`, `good first issue`
 **Target File:** `docs/USER_FLOWS.md` & `src/features/weekly-review/components/weekly-review-workspace.tsx`
 
 ```markdown
@@ -226,8 +284,8 @@ The weekly review is a core ritual in PACT. Contributors should understand how d
 ---
 
 ### Issue 6: `docs-developer-commands-cheatsheet`
-**Title:** `docs: add quick-reference command table to developer guide`  
-**Labels:** `type:docs`, `difficulty:beginner`, `time:15-30m`, `area:documentation`, `good first issue`  
+**Title:** `docs: add quick-reference command table to developer guide`
+**Labels:** `type:docs`, `difficulty:beginner`, `time:15-30m`, `area:documentation`, `good first issue`
 **Target File:** `docs/DEVELOPMENT.md`
 
 ```markdown
@@ -258,8 +316,8 @@ Developers frequently consult `docs/DEVELOPMENT.md` to find verification and tes
 ---
 
 ### Issue 7: `docs-habit-recurrence-syntax`
-**Title:** `docs: document habit recurrence rule syntax in data model guide`  
-**Labels:** `type:docs`, `difficulty:beginner`, `time:30-60m`, `area:documentation`, `good first issue`  
+**Title:** `docs: document habit recurrence rule syntax in data model guide`
+**Labels:** `type:docs`, `difficulty:beginner`, `time:30-60m`, `area:documentation`, `good first issue`
 **Target File:** `docs/DATA_MODEL.md` & `src/lib/habits/`
 
 ```markdown
@@ -278,27 +336,45 @@ Understanding the habit data model helps developers working on habit completion 
 ---
 
 ### Issue 8: `docs-troubleshooting-rls-recursion`
-**Title:** `docs: add troubleshooting steps for Supabase RLS recursion errors`  
-**Labels:** `type:docs`, `difficulty:beginner`, `time:15-30m`, `area:documentation`, `good first issue`  
-**Target File:** `docs/TROUBLESHOOTING.md` & `docs/SECURITY.md`
+**Title:** `docs: add Supabase RLS recursion troubleshooting note`
+**Labels:** `type:docs`, `difficulty:beginner`, `area:documentation`, `good first issue`, `help wanted`
+**Target File:** `docs/TROUBLESHOOTING.md`
 
 ```markdown
 <!-- PACT-BEGINNER-ISSUE: docs-troubleshooting-rls-recursion -->
 ## 🎯 What needs to be done
-Add a troubleshooting entry in `docs/TROUBLESHOOTING.md` addressing PostgreSQL error `42P17 (infinite recursion detected in policy for relation)`.
+Add a troubleshooting note in `docs/TROUBLESHOOTING.md` under database / Supabase configuration explaining how to resolve PostgreSQL error `42P17 (infinite recursion detected in policy for relation)`.
 
 ## Why this matters
-Contributors writing new RLS policies may inadvertently query the same table inside a subquery. Documenting the fix (`SECURITY DEFINER` functions or separate lookup tables) prevents confusion.
+Contributors writing new Row-Level Security (RLS) policies may accidentally query the same table inside a subquery. Documenting the fix (`SECURITY DEFINER` functions or direct column lookups) prevents confusion and onboarding friction.
 
 ## 📍 Where to work
-- `docs/TROUBLESHOOTING.md` (Add to Section 9: Supabase & Database Issues)
+`docs/TROUBLESHOOTING.md`
+
+## 🧭 Implementation guidance
+1. Open `docs/TROUBLESHOOTING.md`.
+2. Locate the database or Supabase troubleshooting section (or create subsection `3.3 Supabase RLS Policy Infinite Recursion (42P17)`).
+3. Add a concise problem explanation, cause, and recommended solution.
+4. Save the file.
+
+## ✅ Acceptance criteria
+- [ ] `docs/TROUBLESHOOTING.md` documents PostgreSQL error 42P17 and its resolution clearly.
+- [ ] Markdown link validation passes with 0 broken links.
+
+## 🧪 Verification
+```bash
+node scratch/check-links.mjs
+```
+
+## 🌱 Beginner note
+This is a documentation-only task! No TypeScript build or complex local setup is required.
 ```
 
 ---
 
 ### Issue 9: `ui-active-focus-card-hover`
-**Title:** `ui: enhance hover elevation and gold border on active focus card`  
-**Labels:** `type:ui`, `difficulty:beginner`, `time:15-30m`, `area:focus`, `good first issue`  
+**Title:** `ui: enhance hover elevation and gold border on active focus card`
+**Labels:** `type:ui`, `difficulty:beginner`, `time:15-30m`, `area:focus`, `good first issue`
 **Target File:** `src/features/dashboard/components/active-focus-card.tsx`
 
 ```markdown
@@ -333,8 +409,8 @@ npx tsc --noEmit
 ---
 
 ### Issue 10: `ui-goals-empty-state-polish`
-**Title:** `ui: standardize empty state layout in goals view`  
-**Labels:** `type:ui`, `difficulty:beginner`, `time:15-30m`, `area:goals`, `good first issue`  
+**Title:** `ui: standardize empty state layout in goals view`
+**Labels:** `type:ui`, `difficulty:beginner`, `time:15-30m`, `area:goals`, `good first issue`
 **Target File:** `src/features/goals/components/goals-view.tsx`
 
 ```markdown
@@ -353,8 +429,8 @@ Consistent empty states across all modules (Tasks, Goals, Projects, Habits) crea
 ---
 
 ### Issue 11: `ui-finance-summary-responsive-padding`
-**Title:** `ui: improve responsive padding on finance summary cards`  
-**Labels:** `type:ui`, `difficulty:beginner`, `time:15-30m`, `area:finance`, `good first issue`  
+**Title:** `ui: improve responsive padding on finance summary cards`
+**Labels:** `type:ui`, `difficulty:beginner`, `time:15-30m`, `area:finance`, `good first issue`
 **Target File:** `src/features/finance/components/finance-summary-cards.tsx`
 
 ```markdown
@@ -375,8 +451,8 @@ On narrow mobile screens (375px), large numbers in integer-cents formatting can 
 ---
 
 ### Issue 12: `ui-habits-routine-toggle-transition`
-**Title:** `ui: add subtle transition animation to habit routine toggle buttons`  
-**Labels:** `type:ui`, `difficulty:beginner`, `time:15-30m`, `area:habits`, `good first issue`  
+**Title:** `ui: add subtle transition animation to habit routine toggle buttons`
+**Labels:** `type:ui`, `difficulty:beginner`, `time:15-30m`, `area:habits`, `good first issue`
 **Target File:** `src/features/habits/components/routine-card.tsx`
 
 ```markdown
@@ -394,84 +470,156 @@ Completing a routine item should feel rewarding and responsive. Adding tactile m
 ---
 
 ### Issue 13: `ui-finance-category-badge-opacity`
-**Title:** `ui: refine category badge color opacity in transaction list`  
-**Labels:** `type:ui`, `difficulty:beginner`, `time:15-30m`, `area:finance`, `good first issue`  
+**Title:** `ui: refine category badge opacity in transaction list`
+**Labels:** `type:ui`, `difficulty:beginner`, `area:finance`, `good first issue`, `help wanted`
 **Target File:** `src/features/finance/components/transaction-list.tsx`
 
 ```markdown
 <!-- PACT-BEGINNER-ISSUE: ui-finance-category-badge-opacity -->
 ## 🎯 What needs to be done
-Refine the background opacity of category pills in the transaction table rows from `bg-white/[0.04]` to `bg-white/[0.06]` for optimal contrast.
+In `src/features/finance/components/transaction-list.tsx`, refine the category badge background opacity tokens in `COLOR_MAP` from `bg-*-400/10` to `bg-*-400/15` for enhanced contrast against deep obsidian card backgrounds.
 
 ## Why this matters
-Improves readability of category tags (e.g., Housing, Food, Investment) against deep obsidian table backgrounds.
+Slightly higher badge background opacity enhances readability for category tags (e.g. Income, Food, Housing, Utilities) across light/dark ambient lighting.
 
 ## 📍 Where to work
-- `src/features/finance/components/transaction-list.tsx`
+`src/features/finance/components/transaction-list.tsx` (lines 48–57)
+
+## 🧭 Implementation guidance
+1. Open `src/features/finance/components/transaction-list.tsx`.
+2. Locate the `COLOR_MAP` object near line 48.
+3. Update the `bg` property in each color record to use `/15` instead of `/10`.
+4. Do not modify any logic or other components.
+
+## ✅ Acceptance criteria
+- [ ] `COLOR_MAP` background opacity tokens updated to `/15`.
+- [ ] ESLint and TypeScript checks pass.
+
+## 🧪 Verification
+```bash
+npm run lint
+```
+
+## 🌱 Beginner note
+This is an isolated single-file styling tweak with zero business logic risk.
 ```
 
 ---
 
 ### Issue 14: `ui-streak-summary-pulse-glow`
-**Title:** `ui: add pulse glow effect to streak summary highlight on overview`  
-**Labels:** `type:ui`, `difficulty:beginner`, `time:30-60m`, `area:habits`, `good first issue`  
+**Title:** `ui: add subtle icon glow in streak summary card`
+**Labels:** `type:ui`, `difficulty:beginner`, `area:habits`, `good first issue`, `help wanted`
 **Target File:** `src/features/habits/components/streak-summary-card.tsx`
 
 ```markdown
 <!-- PACT-BEGINNER-ISSUE: ui-streak-summary-pulse-glow -->
 ## 🎯 What needs to be done
-Add a subtle gold glow indicator next to active streak counts > 7 days in `streak-summary-card.tsx`.
+In `src/features/habits/components/streak-summary-card.tsx`, add a subtle amber shadow/glow to the Top Streak Flame icon badge container.
 
 ## Why this matters
-Visual feedback on streak milestones encourages momentum without gamifying or distracting from focused work.
+Visual feedback on top active streaks provides celebratory visual polish without distracting from focused daily execution.
 
 ## 📍 Where to work
-- `src/features/habits/components/streak-summary-card.tsx`
+`src/features/habits/components/streak-summary-card.tsx`
+
+## 🧭 Implementation guidance
+1. Open `src/features/habits/components/streak-summary-card.tsx`.
+2. Locate the Top Streak card icon container `div` (around line 55).
+3. Add `shadow-sm shadow-amber-500/20` to the class list.
+4. Save and verify formatting.
+
+## ✅ Acceptance criteria
+- [ ] Top Streak icon badge container includes `shadow-sm shadow-amber-500/20`.
+- [ ] No layout shift or unintended styling changes.
+
+## 🧪 Verification
+```bash
+npm run lint
+```
+
+## 🌱 Beginner note
+A clean 1-line Tailwind CSS class addition perfect for your first PR!
 ```
 
 ---
 
 ### Issue 15: `ui-task-form-modal-mobile-padding`
-**Title:** `ui: improve mobile bottom sheet padding in task form modal`  
-**Labels:** `type:ui`, `difficulty:beginner`, `time:15-30m`, `area:tasks`, `good first issue`  
+**Title:** `ui: improve mobile padding in task form modal`
+**Labels:** `type:ui`, `difficulty:beginner`, `area:tasks`, `good first issue`, `help wanted`
 **Target File:** `src/features/tasks/components/task-form-modal.tsx`
 
 ```markdown
 <!-- PACT-BEGINNER-ISSUE: ui-task-form-modal-mobile-padding -->
 ## 🎯 What needs to be done
-Add safe-area bottom padding (`pb-8 sm:pb-6`) to the action buttons inside `task-form-modal.tsx`.
+In `src/features/tasks/components/task-form-modal.tsx`, update the form content container padding from `p-4` to `p-4 sm:p-6` to ensure comfortable touch targets on mobile while providing clean breathing room on desktop viewports.
 
 ## Why this matters
-Prevents the "Save Task" button from colliding with mobile navigation bars (e.g. iOS home indicator).
+Consistent responsive padding prevents form controls and action buttons from feeling cramped on wide screens or colliding with mobile screen edges.
 
 ## 📍 Where to work
-- `src/features/tasks/components/task-form-modal.tsx`
+`src/features/tasks/components/task-form-modal.tsx`
+
+## 🧭 Implementation guidance
+1. Open `src/features/tasks/components/task-form-modal.tsx`.
+2. Find the form body container element.
+3. Update padding classes to `p-4 sm:p-6`.
+4. Ensure modal action buttons remain clearly visible.
+
+## ✅ Acceptance criteria
+- [ ] Modal padding adjusts cleanly with `p-4 sm:p-6`.
+- [ ] All form fields and action buttons remain fully functional.
+
+## 🧪 Verification
+```bash
+npm run lint
+```
+
+## 🌱 Beginner note
+A simple, focused responsive CSS polish in a single file.
 ```
 
 ---
 
 ### Issue 16: `ui-analytics-skeleton-shimmer`
-**Title:** `ui: polish skeleton loader shimmer animation in analytics workspace`  
-**Labels:** `type:ui`, `difficulty:beginner`, `time:15-30m`, `area:analytics`, `good first issue`  
+**Title:** `ui: refine skeleton loading card borders in analytics workspace`
+**Labels:** `type:ui`, `difficulty:beginner`, `area:analytics`, `good first issue`, `help wanted`
 **Target File:** `src/features/analytics/components/analytics-skeleton.tsx`
 
 ```markdown
 <!-- PACT-BEGINNER-ISSUE: ui-analytics-skeleton-shimmer -->
 ## 🎯 What needs to be done
-Standardize the placeholder shimmer gradient tokens in `analytics-skeleton.tsx` to match `src/components/ui/glass-card.tsx`.
+In `src/features/analytics/components/analytics-skeleton.tsx`, update the summary skeleton cards' border class from `border-white/[0.08]` to `border-white/[0.06]` to match production card border styling.
 
 ## Why this matters
-Ensures skeleton loading states appear smooth, uniform, and seamlessly integrated into the dark obsidian canvas.
+Consistency in skeleton border tokens eliminates visual flicker when placeholder skeletons transition into loaded metric cards.
 
 ## 📍 Where to work
-- `src/features/analytics/components/analytics-skeleton.tsx`
+`src/features/analytics/components/analytics-skeleton.tsx`
+
+## 🧭 Implementation guidance
+1. Open `src/features/analytics/components/analytics-skeleton.tsx`.
+2. Locate the summary cards skeleton map around line 24.
+3. Update `border-white/[0.08]` to `border-white/[0.06]`.
+4. Save the file.
+
+## ✅ Acceptance criteria
+- [ ] Summary skeleton card border token matches production cards (`border-white/[0.06]`).
+- [ ] Linter passes with 0 warnings.
+
+## 🧪 Verification
+```bash
+npm run lint
+```
+
+## 🌱 Beginner note
+One class name update in one file — ideal for getting your first merged contribution!
 ```
 
 ---
 
 ### Issue 17: `a11y-notification-popover-close-button`
-**Title:** `a11y: add aria-label and visible focus ring to notification popover close button`  
-**Labels:** `type:a11y`, `difficulty:beginner`, `time:15-30m`, `area:dashboard`, `good first issue`  
+**Title:** `a11y: add aria-label and visible focus ring to notification popover close button`
+**Labels:** `type:a11y`, `difficulty:beginner`, `time:15-30m`, `area:dashboard`, `good first issue`
 **Target File:** `src/components/ui/notification-popover.tsx`
 
 ```markdown
@@ -493,8 +641,8 @@ Icon-only buttons require explicit `aria-label` attributes so screen readers ann
 ---
 
 ### Issue 18: `a11y-command-palette-escape-listener`
-**Title:** `a11y: add keyboard Escape listener to command palette modal`  
-**Labels:** `type:a11y`, `difficulty:beginner`, `time:30-60m`, `area:dashboard`, `good first issue`  
+**Title:** `a11y: add keyboard Escape listener to command palette modal`
+**Labels:** `type:a11y`, `difficulty:beginner`, `time:30-60m`, `area:dashboard`, `good first issue`
 **Target File:** `src/features/command-center/command-palette-modal.tsx`
 
 ```markdown
@@ -512,8 +660,8 @@ Keyboard accessibility requires that all modal dialogs can be dismissed with the
 ---
 
 ### Issue 19: `a11y-task-priority-sr-only`
-**Title:** `a11y: ensure task priority icons include screen reader accessible text`  
-**Labels:** `type:a11y`, `difficulty:beginner`, `time:15-30m`, `area:tasks`, `good first issue`  
+**Title:** `a11y: ensure task priority icons include screen reader accessible text`
+**Labels:** `type:a11y`, `difficulty:beginner`, `time:15-30m`, `area:tasks`, `good first issue`
 **Target File:** `src/features/tasks/components/task-card.tsx`
 
 ```markdown
@@ -531,8 +679,8 @@ Assistive technologies cannot infer priority purely from SVG icon colors. Hidden
 ---
 
 ### Issue 20: `a11y-user-profile-dropdown-aria`
-**Title:** `a11y: add aria-expanded and aria-haspopup attributes to user profile dropdown`  
-**Labels:** `type:a11y`, `difficulty:beginner`, `time:15-30m`, `area:settings`, `good first issue`  
+**Title:** `a11y: add aria-expanded and aria-haspopup attributes to user profile dropdown`
+**Labels:** `type:a11y`, `difficulty:beginner`, `time:15-30m`, `area:settings`, `good first issue`
 **Target File:** `src/components/ui/user-profile-dropdown.tsx`
 
 ```markdown
@@ -550,8 +698,8 @@ Informs screen readers whether the dropdown menu is currently open or collapsed.
 ---
 
 ### Issue 21: `a11y-focus-timer-aria-live`
-**Title:** `a11y: add aria-live polite region to focus timer countdown`  
-**Labels:** `type:a11y`, `difficulty:easy`, `time:30-60m`, `area:focus`, `good first issue`  
+**Title:** `a11y: add aria-live polite region to focus timer countdown`
+**Labels:** `type:a11y`, `difficulty:easy`, `time:30-60m`, `area:focus`, `good first issue`
 **Target File:** `src/features/focus/components/focus-timer-display.tsx`
 
 ```markdown
@@ -569,8 +717,8 @@ Allows screen reader users to receive timely auditory announcements when work in
 ---
 
 ### Issue 22: `test-money-cents-formatting-edge-cases`
-**Title:** `test: add unit tests for formatCentsToDollars edge cases (negative & zero values)`  
-**Labels:** `type:test`, `difficulty:beginner`, `time:30-60m`, `area:testing`, `good first issue`  
+**Title:** `test: add unit tests for formatCentsToDollars edge cases (negative & zero values)`
+**Labels:** `type:test`, `difficulty:beginner`, `time:30-60m`, `area:testing`, `good first issue`
 **Target File:** `tests/finance-domain-validation.test.ts` & `src/lib/money.ts`
 
 ```markdown
@@ -593,8 +741,8 @@ Financial integrity is a top priority in PACT. Exhaustive unit testing on intege
 ---
 
 ### Issue 23: `test-task-priority-sorting-comparator`
-**Title:** `test: add unit tests for task priority sorting comparator`  
-**Labels:** `type:test`, `difficulty:beginner`, `time:30-60m`, `area:testing`, `good first issue`  
+**Title:** `test: add unit tests for task priority sorting comparator`
+**Labels:** `type:test`, `difficulty:beginner`, `time:30-60m`, `area:testing`, `good first issue`
 **Target File:** `tests/tasks-validation.test.ts` & `src/lib/validations/domain.ts`
 
 ```markdown
@@ -613,28 +761,45 @@ Prevents sorting instability and inconsistent task ordering on the planner and t
 ---
 
 ### Issue 24: `test-habit-streak-leap-year`
-**Title:** `test: add unit test verifying habit streak calculation on leap years`  
-**Labels:** `type:test`, `difficulty:easy`, `time:30-60m`, `area:testing`, `good first issue`  
-**Target File:** `tests/habits-routines.test.ts` & `src/lib/habits/streaks.ts`
+**Title:** `test: add leap year unit test to habit streak test suite`
+**Labels:** `type:test`, `difficulty:easy`, `area:testing`, `good first issue`, `help wanted`
+**Target File:** `tests/habits-routines.test.ts`
 
 ```markdown
 <!-- PACT-BEGINNER-ISSUE: test-habit-streak-leap-year -->
 ## 🎯 What needs to be done
-Add a unit test in `tests/habits-routines.test.ts` verifying that daily habit streaks calculate consecutively across Feb 28 -> Feb 29 -> Mar 1 in leap years.
+Add a unit test in `tests/habits-routines.test.ts` verifying that daily habit streaks calculate consecutively across Feb 28 -> Feb 29 -> Mar 1 in leap years (e.g. 2024 or 2028).
 
 ## Why this matters
-Ensures streak calculations do not break or reset due to date boundary quirks on leap days.
+Guarantees that streak calculation engines and calendar day difference helpers do not break or reset due to leap year date boundaries.
 
 ## 📍 Where to work
-- `tests/habits-routines.test.ts`
-- `src/lib/habits/streaks.ts`
+`tests/habits-routines.test.ts`
+
+## 🧭 Implementation guidance
+1. Open `tests/habits-routines.test.ts`.
+2. Locate the streak calculation test block.
+3. Add a test case using sample dates across `2024-02-28`, `2024-02-29`, and `2024-03-01`.
+4. Assert that `calculateHabitStreak` computes a streak count of `3`.
+
+## ✅ Acceptance criteria
+- [ ] Leap year streak test case added to `tests/habits-routines.test.ts`.
+- [ ] Test passes when running `npm test`.
+
+## 🧪 Verification
+```bash
+npm test
+```
+
+## 🌱 Beginner note
+Adding unit tests in existing test files is one of the safest and most valuable ways to start contributing to open source!
 ```
 
 ---
 
 ### Issue 25: `test-focus-duration-boundaries`
-**Title:** `test: add boundary tests for focus session duration validator`  
-**Labels:** `type:test`, `difficulty:beginner`, `time:30-60m`, `area:testing`, `good first issue`  
+**Title:** `test: add boundary tests for focus session duration validator`
+**Labels:** `type:test`, `difficulty:beginner`, `time:30-60m`, `area:testing`, `good first issue`
 **Target File:** `tests/focus-engine.test.ts` & `src/lib/validations/focus.ts`
 
 ```markdown
@@ -652,46 +817,81 @@ Hardens input validation against invalid session parameters before server action
 ---
 
 ### Issue 26: `test-weekly-review-step-boundaries`
-**Title:** `test: add unit tests for weekly review step progression boundary checks`  
-**Labels:** `type:test`, `difficulty:beginner`, `time:30-60m`, `area:testing`, `good first issue`  
-**Target File:** `tests/weekly-review.test.ts` & `src/lib/validations/weekly-review.ts`
+**Title:** `test: add boundary check test for weekly review step progression`
+**Labels:** `type:test`, `difficulty:beginner`, `area:testing`, `good first issue`, `help wanted`
+**Target File:** `tests/weekly-review.test.ts`
 
 ```markdown
 <!-- PACT-BEGINNER-ISSUE: test-weekly-review-step-boundaries -->
 ## 🎯 What needs to be done
-Add test cases in `tests/weekly-review.test.ts` verifying that step indices in review draft payloads must be integers between 1 and 5.
+In `tests/weekly-review.test.ts`, add a test case verifying that `saveReviewDraftSchema` rejects invalid step index values (e.g. `step: 0` or `step: 6`).
 
 ## Why this matters
-Validates that invalid step values (e.g. step 0, step 6, or negative numbers) cannot corrupt review draft records.
+Ensures user review drafts remain within the strict 5-step weekly review workflow boundaries.
 
 ## 📍 Where to work
-- `tests/weekly-review.test.ts`
+`tests/weekly-review.test.ts`
+
+## 🧭 Implementation guidance
+1. Open `tests/weekly-review.test.ts`.
+2. Locate the schema validation test suite.
+3. Add assertions testing `saveReviewDraftSchema.safeParse` with `current_step: 0` and `current_step: 6` to verify rejection.
+4. Verify all tests pass.
+
+## ✅ Acceptance criteria
+- [ ] Boundary test added for weekly review draft step indices.
+- [ ] All unit tests pass with 0 failures.
+
+## 🧪 Verification
+```bash
+npm test
+```
+
+## 🌱 Beginner note
+A straightforward unit test addition using Node's built-in test runner.
 ```
 
 ---
 
 ### Issue 27: `test-notification-channel-filter`
-**Title:** `test: add unit tests for notification channel filter utility`  
-**Labels:** `type:test`, `difficulty:beginner`, `time:30-60m`, `area:testing`, `good first issue`  
-**Target File:** `tests/notifications.test.ts` & `src/lib/notifications/`
+**Title:** `test: add unit test for in-app notification filtering`
+**Labels:** `type:test`, `difficulty:beginner`, `area:testing`, `good first issue`, `help wanted`
+**Target File:** `tests/notifications.test.ts`
 
 ```markdown
 <!-- PACT-BEGINNER-ISSUE: test-notification-channel-filter -->
 ## 🎯 What needs to be done
-Add unit tests verifying that in-app notification queries filter accurately by channel (`IN_APP`, `EMAIL`, `CRON`) and read status.
+In `tests/notifications.test.ts`, add a unit test asserting that notification delivery helpers handle empty recipient lists gracefully without throwing unhandled exceptions.
 
 ## Why this matters
-Ensures user notification feeds accurately reflect selected channel filters.
+Ensures resilient notification delivery when no channels are configured or available.
 
 ## 📍 Where to work
-- `tests/notifications.test.ts`
+`tests/notifications.test.ts`
+
+## 🧭 Implementation guidance
+1. Open `tests/notifications.test.ts`.
+2. Add a test case testing `deliverInApp` or `dispatchNotification` with an empty or unconfigured state.
+3. Assert that it resolves safely with the expected fallback status.
+
+## ✅ Acceptance criteria
+- [ ] Unit test added in `tests/notifications.test.ts`.
+- [ ] Test passes when running `npm test`.
+
+## 🧪 Verification
+```bash
+npm test
+```
+
+## 🌱 Beginner note
+Unit testing error handling and fallbacks helps keep PACT production-ready.
 ```
 
 ---
 
 ### Issue 28: `dev-package-typecheck-script-alias`
-**Title:** `chore: add npm run typecheck alias script in package.json`  
-**Labels:** `type:refactor`, `difficulty:beginner`, `time:15-30m`, `area:developer-experience`, `good first issue`  
+**Title:** `chore: add npm run typecheck alias script in package.json`
+**Labels:** `type:refactor`, `difficulty:beginner`, `time:15-30m`, `area:developer-experience`, `good first issue`
 **Target File:** `package.json` & `docs/DEVELOPMENT.md`
 
 ```markdown
@@ -713,8 +913,8 @@ Many developers intuitively type `npm run typecheck` to verify TypeScript types 
 ---
 
 ### Issue 29: `refactor-unused-icon-imports-integrations`
-**Title:** `refactor: prune unused icon imports in integration cards`  
-**Labels:** `type:refactor`, `difficulty:beginner`, `time:15-30m`, `area:integrations`, `good first issue`  
+**Title:** `refactor: prune unused icon imports in integration cards`
+**Labels:** `type:refactor`, `difficulty:beginner`, `time:15-30m`, `area:integrations`, `good first issue`
 **Target File:** `src/features/integrations/components/codeforces-proof-of-work-card.tsx` & `src/features/integrations/components/leetcode-proof-of-work-card.tsx`
 
 ```markdown
@@ -733,8 +933,8 @@ Keeps the codebase warning-free and reduces bundle overhead.
 ---
 
 ### Issue 30: `refactor-currency-symbol-helper`
-**Title:** `refactor: centralize currency symbol formatting in lib/money.ts`  
-**Labels:** `type:refactor`, `difficulty:beginner`, `time:30-60m`, `area:finance`, `good first issue`  
+**Title:** `refactor: centralize currency symbol formatting in lib/money.ts`
+**Labels:** `type:refactor`, `difficulty:beginner`, `time:30-60m`, `area:finance`, `good first issue`
 **Target File:** `src/lib/money.ts`
 
 ```markdown
@@ -753,8 +953,8 @@ Avoids hardcoding `$` across multiple finance components and centralizes currenc
 ---
 
 ### Issue 31: `refactor-date-string-helper-time`
-**Title:** `refactor: export type-safe date string helper in lib/time.ts`  
-**Labels:** `type:refactor`, `difficulty:easy`, `time:30-60m`, `area:developer-experience`, `good first issue`  
+**Title:** `refactor: export type-safe date string helper in lib/time.ts`
+**Labels:** `type:refactor`, `difficulty:easy`, `time:30-60m`, `area:developer-experience`, `good first issue`
 **Target File:** `src/lib/time.ts`
 
 ```markdown
@@ -773,47 +973,83 @@ Prevents subtle date offset bugs when converting `Date` objects to HTML date inp
 ---
 
 ### Issue 32: `refactor-modal-transition-variants`
-**Title:** `refactor: export shared modal transition variants in components/ui/modal.tsx`  
-**Labels:** `type:refactor`, `difficulty:beginner`, `time:15-30m`, `area:ui`, `good first issue`  
+**Title:** `refactor: export modal motion transition variants in modal component`
+**Labels:** `type:refactor`, `difficulty:beginner`, `area:ui`, `good first issue`, `help wanted`
 **Target File:** `src/components/ui/modal.tsx`
 
 ```markdown
 <!-- PACT-BEGINNER-ISSUE: refactor-modal-transition-variants -->
 ## 🎯 What needs to be done
-Extract and export Framer Motion animation transition variants from `src/components/ui/modal.tsx` so custom dialogs can reuse standard backdrop and card spring animations.
+In `src/components/ui/modal.tsx`, export the backdrop and modal card Framer Motion animation transition variants as named constants (`MODAL_BACKDROP_VARIANTS` and `MODAL_CONTENT_VARIANTS`).
 
 ## Why this matters
-Ensures uniform modal entrance and exit easing curves across all modules.
+Allows custom dialogs and drawers across PACT to reuse identical easing curves and spring physics without code duplication.
 
 ## 📍 Where to work
-- `src/components/ui/modal.tsx`
+`src/components/ui/modal.tsx`
+
+## 🧭 Implementation guidance
+1. Open `src/components/ui/modal.tsx`.
+2. Find the motion variant objects defined inside or above `Modal`.
+3. Add `export const` to make them reusable by other components.
+4. Verify TypeScript and ESLint pass.
+
+## ✅ Acceptance criteria
+- [ ] Modal transition variants exported as named constants.
+- [ ] TypeScript check passes with 0 errors.
+
+## 🧪 Verification
+```bash
+npx tsc --noEmit
+npm run lint
+```
+
+## 🌱 Beginner note
+Exporting an existing constant is an ideal 2-line micro-contribution!
 ```
 
 ---
 
 ### Issue 33: `fix-finance-negative-budget-remaining`
-**Title:** `fix: prevent negative budget remaining calculation on expense overage`  
-**Labels:** `type:bug`, `difficulty:easy`, `time:30-60m`, `area:finance`, `good first issue`  
-**Target File:** `src/features/finance/components/budget-discipline-card.tsx`
+**Title:** `fix: clamp negative budget remaining balance to zero in budget engine`
+**Labels:** `type:bug`, `difficulty:easy`, `area:finance`, `good first issue`, `help wanted`
+**Target File:** `src/lib/finance/budgets.ts`
 
 ```markdown
 <!-- PACT-BEGINNER-ISSUE: fix-finance-negative-budget-remaining -->
 ## 🎯 What needs to be done
-Update `budget-discipline-card.tsx` so that when expenses exceed the allocated budget, the remaining amount displays with an explicit negative indicator and "Over Budget" badge instead of confusing zero-floor clamping.
+In `src/lib/finance/budgets.ts`, wrap the remaining amount calculation in `Math.max(0, limitCents - spentCents)` inside `calculateBudgetStatus` so remaining budget balance never reports as a negative integer.
 
 ## Why this matters
-Users need clear, honest visibility when a category budget has been exceeded.
+When an expense exceeds a category budget, `remainingCents` should clamp cleanly to `0` while `isExceeded` flags the overage.
 
 ## 📍 Where to work
-- `src/features/finance/components/budget-discipline-card.tsx`
-- `src/lib/money.ts`
+`src/lib/finance/budgets.ts` (inside `calculateBudgetStatus`)
+
+## 🧭 Implementation guidance
+1. Open `src/lib/finance/budgets.ts`.
+2. Locate `remainingCents: limitCents - spentCents`.
+3. Wrap with `Math.max(0, limitCents - spentCents)`.
+4. Run unit tests to verify.
+
+## ✅ Acceptance criteria
+- [ ] `remainingCents` is clamped to non-negative values.
+- [ ] Finance unit tests pass cleanly.
+
+## 🧪 Verification
+```bash
+npm test
+```
+
+## 🌱 Beginner note
+A crisp 1-line arithmetic bug fix with immediate test verification.
 ```
 
 ---
 
 ### Issue 34: `fix-notification-popover-hydration-timestamp`
-**Title:** `fix: resolve hydration warning on formatted relative timestamp in notification popover`  
-**Labels:** `type:bug`, `difficulty:easy`, `time:30-60m`, `area:dashboard`, `good first issue`  
+**Title:** `fix: resolve hydration warning on formatted relative timestamp in notification popover`
+**Labels:** `type:bug`, `difficulty:easy`, `time:30-60m`, `area:dashboard`, `good first issue`
 **Target File:** `src/components/ui/notification-popover.tsx`
 
 ```markdown
@@ -831,8 +1067,8 @@ Relative timestamps rendered on the server can differ by a few seconds from the 
 ---
 
 ### Issue 35: `fix-daily-cadence-zero-tasks-pluralization`
-**Title:** `fix: correct pluralization on zero tasks remaining in daily cadence widget`  
-**Labels:** `type:bug`, `difficulty:beginner`, `time:15-30m`, `area:dashboard`, `good first issue`  
+**Title:** `fix: correct pluralization on zero tasks remaining in daily cadence widget`
+**Labels:** `type:bug`, `difficulty:beginner`, `time:15-30m`, `area:dashboard`, `good first issue`
 **Target File:** `src/features/dashboard/components/daily-cadence-widget.tsx`
 
 ```markdown
@@ -850,8 +1086,8 @@ Improves linguistic precision and polish on the primary overview dashboard.
 ---
 
 ### Issue 36: `fix-goals-form-empty-title-validation`
-**Title:** `fix: prevent empty goal title submission in goal form modal`  
-**Labels:** `type:bug`, `difficulty:beginner`, `time:15-30m`, `area:goals`, `good first issue`  
+**Title:** `fix: prevent empty goal title submission in goal form modal`
+**Labels:** `type:bug`, `difficulty:beginner`, `time:15-30m`, `area:goals`, `good first issue`
 **Target File:** `src/features/goals/components/goal-form-modal.tsx`
 
 ```markdown
@@ -869,8 +1105,8 @@ Prevents accidental creation of blank or whitespace-only goals.
 ---
 
 ### Issue 37: `feat-codeforces-rating-tier-badge`
-**Title:** `feat: add Codeforces rating tier color badge helper`  
-**Labels:** `type:feature`, `difficulty:easy`, `time:30-60m`, `area:integrations`, `good first issue`  
+**Title:** `feat: add Codeforces rating tier color badge helper`
+**Labels:** `type:feature`, `difficulty:easy`, `time:30-60m`, `area:integrations`, `good first issue`
 **Target File:** `src/features/integrations/components/codeforces-proof-of-work-card.tsx`
 
 ```markdown
@@ -888,8 +1124,8 @@ Provides visual recognition for competitive programming achievements inside PACT
 ---
 
 ### Issue 38: `feat-settings-webhook-copy-button`
-**Title:** `feat: add copy-to-clipboard button on integration webhook URL in settings`  
-**Labels:** `type:feature`, `difficulty:easy`, `time:30-60m`, `area:settings`, `good first issue`  
+**Title:** `feat: add copy-to-clipboard button on integration webhook URL in settings`
+**Labels:** `type:feature`, `difficulty:easy`, `time:30-60m`, `area:settings`, `good first issue`
 **Target File:** `src/features/settings/components/integrations-settings-card.tsx`
 
 ```markdown
@@ -907,8 +1143,8 @@ Simplifies setting up GitHub webhooks by allowing one-click copying of the recei
 ---
 
 ### Issue 39: `feat-tasks-proof-verified-filter`
-**Title:** `feat: add quick filter for proof-verified tasks in task list`  
-**Labels:** `type:feature`, `difficulty:easy`, `time:1-2h`, `area:tasks`, `good first issue`  
+**Title:** `feat: add quick filter for proof-verified tasks in task list`
+**Labels:** `type:feature`, `difficulty:easy`, `time:1-2h`, `area:tasks`, `good first issue`
 **Target File:** `src/features/tasks/components/tasks-view.tsx`
 
 ```markdown
@@ -926,8 +1162,8 @@ Allows developers and engineers to quickly view their coding and algorithmic tas
 ---
 
 ### Issue 40: `feat-settings-export-format-selector`
-**Title:** `feat: add export data format selector (JSON / CSV) helper in data privacy settings`  
-**Labels:** `type:feature`, `difficulty:easy`, `time:30-60m`, `area:settings`, `good first issue`  
+**Title:** `feat: add export data format selector (JSON / CSV) helper in data privacy settings`
+**Labels:** `type:feature`, `difficulty:easy`, `time:30-60m`, `area:settings`, `good first issue`
 **Target File:** `src/features/settings/components/data-privacy-settings-card.tsx`
 
 ```markdown
