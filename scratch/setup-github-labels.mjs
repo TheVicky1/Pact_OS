@@ -47,13 +47,13 @@ export const PACT_LABELS = [
   { name: 'difficulty:intermediate', color: 'fbca04', description: 'Requires solid understanding of PACT domain engines or Server Actions' },
   { name: 'difficulty:advanced', color: 'd93f0b', description: 'Complex task requiring deep domain knowledge, concurrency, or DB migrations' },
 
-  // --- Category D: Estimated Time (time:*) ---
-  { name: 'time:<15m', color: 'c5def5', description: 'Quick fix, typo correction, or minor tweak (< 15 minutes)' },
-  { name: 'time:15-30m', color: 'bfd4f2', description: 'Focused task executable in 15 to 30 minutes' },
-  { name: 'time:30-60m', color: 'd4c5f9', description: 'Moderate task achievable in 30 to 60 minutes' },
-  { name: 'time:1-2h', color: 'fef2c0', description: 'Substantial task requiring 1 to 2 hours of focused effort' },
-  { name: 'time:2-4h', color: 'f9d0c4', description: 'In-depth implementation requiring 2 to 4 hours' },
-  { name: 'time:4h+', color: 'f8b4b4', description: 'Large feature or subsystem refactor requiring 4+ hours' },
+  // --- Category D: Estimated Time (time:*) [RETIRED / LEGACY - DO NOT USE ON NEW ISSUES] ---
+  { name: 'time:<15m', color: 'c5def5', description: 'Legacy label: Quick fix (< 15 min) - Retired for new issues' },
+  { name: 'time:15-30m', color: 'bfd4f2', description: 'Legacy label: Focused task (15-30 min) - Retired for new issues' },
+  { name: 'time:30-60m', color: 'd4c5f9', description: 'Legacy label: Moderate task (30-60 min) - Retired for new issues' },
+  { name: 'time:1-2h', color: 'fef2c0', description: 'Legacy label: Substantial task (1-2h) - Retired for new issues' },
+  { name: 'time:2-4h', color: 'f9d0c4', description: 'Legacy label: In-depth task (2-4h) - Retired for new issues' },
+  { name: 'time:4h+', color: 'f8b4b4', description: 'Legacy label: Large refactor (4h+) - Retired for new issues' },
 
   // --- Category E: Project Area (area:*) ---
   { name: 'area:ui', color: '333333', description: 'Design system components, buttons, layout, typography' },
@@ -82,6 +82,8 @@ export const PACT_LABELS = [
   { name: 'good first issue', color: '7057ff', description: 'Curated for first-time contributors; paired with difficulty:beginner' },
   { name: 'help wanted', color: '008672', description: 'Extra maintainer assistance or community contribution actively requested' },
   { name: 'beginner friendly', color: '0e8a16', description: 'Accessible task suitable for developers new to open source' },
+  { name: 'contributions-welcome', color: '0e8a16', description: 'Community contributions actively welcomed on this task' },
+  { name: 'up-for-grabs', color: '7057ff', description: 'Unclaimed community task open for any contributor to pick up' },
   { name: 'hacktoberfest', color: 'ff7518', description: 'Quality open-source contribution opportunity during community events' },
   { name: 'community', color: 'e11d48', description: 'Community-driven enhancement, UX feedback, or resource sharing' },
 

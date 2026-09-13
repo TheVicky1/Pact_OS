@@ -123,3 +123,28 @@ To prevent issue flooding and maintain a high standard of contributor engagement
 4. **Zero Stale Blockers**: Less than **20%** of open issues have stalled or inactive claims.
 
 Maintainers should run `node scratch/inspect-community-intake.mjs` to evaluate intake metrics prior to releasing any future batch.
+
+---
+
+## 9. Permanent Micro-Issue Quality Standard & Label Governance
+
+From Phase 6D onward, all newly generated or curated contributor issues must strictly adhere to the following standards:
+
+1. **Micro-Scope Guarantee**:
+   - **One file preferred**, two files maximum.
+   - **5–30 minutes** expected completion for a beginner.
+   - Zero architectural, migration, authentication, or production-infrastructure scope.
+2. **Permanent Retirement of Time-Based Labels**:
+   - `time:<15m`, `time:15-30m`, `time:30-60m`, etc., are **permanently retired and forbidden** on new issues.
+   - Contributor difficulty is communicated cleanly via `difficulty:beginner` and structured acceptance criteria.
+3. **Canonical 6-Part Anatomy**:
+   - `## What needs to be done`
+   - `## Why this matters`
+   - `## Where to work`
+   - `## Implementation guidance`
+   - `## Acceptance criteria`
+   - `## Verification`
+4. **Issue Discovery Labeling**:
+   - Use standard tags: `good first issue`, `beginner friendly`, `difficulty:beginner`, `help wanted`, `contributions-welcome`, `up-for-grabs`.
+   - Add orthogonal classification: `type:*` (`type:docs`, `type:ui`, `type:a11y`, `type:test`, `type:bug`, `type:refactor`) and `area:*`.
+

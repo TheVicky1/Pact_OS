@@ -29,104 +29,99 @@ Issue titles must use natural GitHub search terminology and follow the Conventio
 
 ---
 
-## 3. Canonical 15-Part Issue Specification
+## 3. Permanent PACT OS Micro-Issue Standard
 
-Every issue generated for PACT's backlog or community onboarding MUST adhere to the following 15-part anatomical structure:
+From Phase 6D onward, all beginner and first-time contributor issues MUST satisfy the **Micro-Issue Standard**:
 
-```
-┌─────────────────────────────────────────────────────────────────────────────────┐
-│ 1. Search-Optimized Title                                                       │
-│ 2. Concise Problem Statement                                                    │
-│ 3. Why This Issue Matters (Domain & User Impact)                                │
-│ 4. Exact Expected Behavior                                                      │
-│ 5. Implementation Hints & Architecture Pointers                                 │
-│ 6. Files & Areas Involved                                                       │
-│ 7. Acceptance Criteria Checklist                                                │
-│ 8. Testing Requirements                                                         │
-│ 9. Difficulty Level                                                             │
-│ 10. Estimated Effort (Time Window)                                              │
-│ 11. Prerequisites & Environment Setup                                           │
-│ 12. Canonical Labels                                                            │
-│ 13. Step-by-Step Contribution Instructions                                      │
-│ 14. Related Documentation Links                                                 │
-│ 15. Good First Issue Suitability Assessment                                     │
-└─────────────────────────────────────────────────────────────────────────────────┘
+### Complexity & Scope Boundary
+- **Files Touched**: **One file preferred**, two files maximum unless absolutely necessary.
+- **Estimated Completion**: **5–30 minutes** for a first-time contributor.
+- **Architectural Isolation**:
+  - ❌ No architectural changes
+  - ❌ No database migrations or schema adjustments
+  - ❌ No authentication or session logic changes
+  - ❌ No production infrastructure modifications
+  - ❌ No complex business logic or temporal engine alterations
+  - ❌ No large refactors
+  - ❌ No dependency upgrades
+  - ❌ No security-sensitive changes
+- **Permanent Labeling Rule**: **TIME LABELS ARE PERMANENTLY FORBIDDEN** (`time:<15m`, `time:<30m`, `time:1-2h`). Cognitive complexity is communicated strictly via `difficulty:beginner`.
+
+### Canonical 6-Part Micro-Issue Anatomy
+Every beginner issue must contain the following clear structure:
+
+```markdown
+## What needs to be done
+Explain the tiny task in simple, jargon-free language.
+
+## Why this matters
+Explain why this change improves PACT OS for users or contributors.
+
+## Where to work
+Point directly to the exact file path and component.
+
+## Implementation guidance
+Give concise, actionable information so the contributor understands
+what to change without reverse-engineering the entire codebase.
+
+## Acceptance criteria
+- [ ] Requirement 1
+- [ ] Requirement 2
+
+## Verification
+Explain the simplest command or manual steps to verify the change locally.
 ```
 
 ---
 
-## 4. Canonical Issue Template Example
-
-Below is the standard reference implementation demonstrating how all 15 components compose into a production-grade GitHub issue:
+## 4. Canonical Micro-Issue Reference Example
 
 ```markdown
-### 1. Title
-`feat(planner): add keyboard shortcuts for time-block navigation in daily timeline`
+## What needs to be done
+Add an explicit `aria-label="Close notification panel"` attribute to the popover close button inside the notification popover component.
 
-### 2. Problem Statement
-Users navigating the daily planner timeline currently rely exclusively on mouse pointer clicks to select and move between scheduled time blocks. This interrupts fast keyboard-driven productivity workflows for power users.
+## Why this matters
+Screen reader users navigating the top bar cannot currently identify the purpose of the close button icon, creating an accessibility barrier.
 
-### 3. Why This Issue Matters
-PACT is designed for hyper-focused, low-friction productivity. Enabling standard keyboard navigation (such as `j`/`k` or `ArrowUp`/`ArrowDown` for block selection and `Enter` to open block details) makes the planner accessible, fast, and compliant with power-user ergonomics.
+## Where to work
+`src/components/notifications/notification-popover.tsx`
 
-### 4. Expected Behavior
-- Pressing `j` or `ArrowDown` selects the next sequential time block on the daily timeline.
-- Pressing `k` or `ArrowUp` selects the previous time block.
-- Pressing `Enter` opens the task details drawer for the selected block.
-- Pressing `Escape` deselects the active block.
-- Shortcuts are automatically disabled when typing inside input or textarea elements.
+## Implementation guidance
+1. Open `src/components/notifications/notification-popover.tsx`.
+2. Locate the close button element (`<button>` wrapping the `X` icon).
+3. Add `aria-label="Close notification panel"` to the button props.
 
-### 5. Implementation Hints & Architecture Pointers
-- Hook into the existing keyboard listener pattern located in `src/hooks/use-hotkeys.ts` (or create a localized event listener in the timeline container).
-- Ensure the selected time block maintains an active state index in the planner store (`src/features/planner/`).
-- Use `data-selected="true"` and apply the design system focus ring token (`ring-2 ring-primary`).
+## Acceptance criteria
+- [ ] Popover close button includes `aria-label="Close notification panel"`.
+- [ ] Visual appearance and click behavior remain unchanged.
+- [ ] All linting and TypeScript checks pass.
 
-### 6. Files & Areas Involved
-- `src/features/planner/components/timeline-grid.tsx` (Timeline container and DOM focus management)
-- `src/features/planner/components/time-block-card.tsx` (Card styling and active state props)
-- `src/features/planner/hooks/use-timeline-navigation.ts` (Navigation logic hook)
-
-### 7. Acceptance Criteria
-- [ ] Arrow navigation moves focus between time blocks sequentially.
-- [ ] Keyboard events do not fire when active element is an input, select, or textarea.
-- [ ] ARIA attributes (`aria-selected="true"`, `tabindex="0"`) update accurately on the DOM elements.
-- [ ] Full keyboard navigation is demonstrated without mouse input.
-
-### 8. Testing Requirements
-- Unit test in `tests/features/planner/use-timeline-navigation.test.ts` covering boundary navigation (first/last block).
-- Run full test suite: `node scratch/run-tests.mjs`.
-- Lint and typecheck: `npx eslint src/` and `npx tsc --noEmit`.
-
-### 9. Difficulty
-`difficulty:beginner`
-
-### 10. Estimated Effort
-`time:30-60m`
-
-### 11. Prerequisites
-- Node.js 20.x
-- Local repository clone with `npm ci` completed
-- Basic understanding of React hooks and keyboard event listeners
-
-### 12. Canonical Labels
-`type:feature`, `area:planning`, `difficulty:beginner`, `time:30-60m`, `good first issue`, `status:ready`
-
-### 13. Step-by-Step Contribution Instructions
-1. Fork and clone the repository.
-2. Create your branch: `git checkout -b feat/planner-keyboard-nav`.
-3. Follow the setup instructions in [CONTRIBUTING.md](../CONTRIBUTING.md).
-4. Implement the hook and connect it to `timeline-grid.tsx`.
-5. Verify code quality with `npm run build` and `node scratch/run-tests.mjs`.
-6. Submit a Pull Request linking this issue: `Closes #<issue_number>`.
-
-### 14. Related Documentation
-- [Planner Architecture Guide](../docs/ARCHITECTURE.md)
-- [Design System Keyboard & Focus Guidelines](../docs/DESIGN_SYSTEM.md)
-- [Contributor Onboarding Walkthrough](../docs/CONTRIBUTING-BEGINNERS.md)
-
-### 15. Good First Issue Suitability
-**Suitability: YES (100%)** — The component is localized to the frontend UI layer, does not require Supabase schema changes or network requests, and has clear input/output behavior easily verified in the browser.
+## Verification
+1. Run `npm run lint` — verify 0 errors.
+2. Run `npx tsc --noEmit` — verify 0 errors.
+3. Open `http://localhost:3000` in your browser and inspect the close button using browser DevTools.
 ```
+
+---
+
+## 5. Required Contributor Label Taxonomy
+
+For all newly created beginner issues, apply the following orthogonal labels:
+
+### Contributor Discovery Labels
+- `good first issue`
+- `beginner friendly`
+- `difficulty:beginner`
+- `help wanted`
+- `contributions-welcome` (optional)
+- `up-for-grabs` (optional)
+
+### Classification Labels
+- `type:docs`, `type:ui`, `type:a11y`, `type:test`, `type:bug`, `type:refactor`
+- `area:<subsystem>` (e.g., `area:ui`, `area:documentation`, `area:testing`, `area:finance`)
+- `status:ready`
+
+> 🚫 **Forbidden Labels**: Do NOT use `time:*` labels on new issues. Time-based estimation is retired.
 
 ---
 
