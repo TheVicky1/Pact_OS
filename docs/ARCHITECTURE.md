@@ -65,6 +65,16 @@ src/
 
 ---
 
+## Focus & Deep Work Audio Engine
+
+PACT includes an offline, client-side ambient sound synthesizer located in `src/lib/focus/sound.ts` that generates focus soundscapes without external audio assets or network requests.
+
+- **Core Technology**: Built on native browser `AudioContext` with lazy initialization upon user interaction.
+- **Synthesizer Components**: Utilizes `BiquadFilterNode`, custom audio buffer generators, and Web Audio oscillators to produce focus frequencies and auditory chimes (start, pause, and completion chimes using sine and triangle wave patterns).
+- **Privacy & Performance Guarantee**: Fully offline-first design ensuring zero telemetry leaks or external bandwidth consumption for background soundscapes.
+
+---
+
 ## 3. Server vs. Client Boundary Architecture
 
 1. **Server Actions for Mutations**: All mutations (create/update/delete) are performed through Next.js Server Actions with strict Zod validation.
