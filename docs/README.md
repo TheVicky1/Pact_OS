@@ -17,23 +17,27 @@ docs/
 ├── GITHUB_ISSUE_FACTORY.md             # 🏭 Issue Factory Architecture & Search Discovery Guidelines
 ├── GITHUB_LABELS.md                    # 🏷️ Canonical GitHub Issue Taxonomy & Label Dictionary
 ├── GITHUB_METADATA.md                  # 🌐 Canonical Repository Topics, Metadata & Discoverability
-├── RELEASE_MANAGEMENT.md               # 📦 Release Engineering, Semantic Versioning & Changelog Standards
-├── TROUBLESHOOTING.md                  # 🔧 Practical Diagnostic Guide for Setup, Build & Git Roadblocks
+├── MAINTAINER-HEALTH.md                # 📊 Maintainer Operational Health Dashboard & Governance
+├── MAINTAINER-WORKFLOW.md              # Contributor Triage, PR Review & Claim Assignment Runbook
 ├── PACT_MASTER_DOCUMENTATION.md        # 🌟 Comprehensive Central Product & Technical Specification
+├── PHASE-16-PUBLICATION-READINESS.md   # 🚀 Phase 16 Publication Readiness & Launch Certification Report
+├── PHASE-17-PUBLIC-LAUNCH-CERTIFICATION.md # 📜 Phase 17 Final Public Launch Certification
 ├── PRODUCT.md                          # Vision, Dual Taglines, Philosophy & User Personas
 ├── FEATURES.md                         # Inventory of 14 Core Product Systems & Status Matrix
 ├── ARCHITECTURE.md                     # System Architecture, Tech Stack & Data Flow
 ├── DATA_MODEL.md                       # Relational Schemas, Constraints, Indexes & RLS
 ├── INTEGRATIONS.md                     # External Proof Connectors (Google Calendar, GitHub, LeetCode, Codeforces)
 ├── SECURITY.md                         # Security Matrix, Zero-Trust Boundaries & Sanitization
+├── THREAT_MODEL.md                     # 🛡️ Threat Actor Taxonomy, Attack Surfaces & Defense Mitigations
 ├── DEVELOPMENT.md                      # Local Setup, Development Workflow, Scripts & DB Migrations
 ├── GIT_WORKFLOW.md                     # Branching, Conventional Commits & Pre-Commit Rules
+├── RELEASE_MANAGEMENT.md               # 📦 Release Engineering, Semantic Versioning & Changelog Standards
 ├── ROADMAP.md                          # Current Verified Status & Future Planned Milestones
 ├── DESIGN_SYSTEM.md                    # Luxury Obsidian Canvas, 3D Celestial Hero & PACT Gold Tokens
 ├── TESTING.md                          # 56-Suite Automated Test Matrix & Verification Runbook
+├── TROUBLESHOOTING.md                  # 🔧 Practical Diagnostic Guide for Setup, Build & Git Roadblocks
 ├── USER_FLOWS.md                       # Core User Workflows & State Lifecycle Transitions
 ├── DECISIONS.md                        # Architecture Decision Records (ADRs)
-├── MAINTAINER-WORKFLOW.md              # Contributor Triage, PR Review & Claim Assignment Runbook
 ├── PRODUCTION_DEPLOYMENT_RUNBOOK.md    # Production Deployment, Environment Variables & Verification
 └── archive/                            # Historical Development Phase Reports (Phases 4-6)
     └── README.md                       # Archive Index
@@ -54,7 +58,8 @@ docs/
 - [**System Architecture**](./ARCHITECTURE.md): Next.js 16 App Router structure, Server Actions, state management, and cron infrastructure.
 - [**Data Model & Relational Schemas**](./DATA_MODEL.md): Postgres tables, foreign keys, lifecycle constraints, and RLS policies.
 - [**Integrations & External Proofs**](./INTEGRATIONS.md): Bi-directional Google Calendar sync, GitHub, LeetCode, and Codeforces connectors.
-- [**Security & Threat Modeling**](./SECURITY.md): 28-point security checklist, zero-trust server boundaries, and confidential consequence masking.
+- [**Security & Zero-Trust Boundaries**](./SECURITY.md): 28-point security checklist, zero-trust server boundaries, and confidential consequence masking.
+- [**Threat Model Specification**](./THREAT_MODEL.md): Threat actor taxonomy, attack surface analysis, and defense-in-depth security mitigations.
 - [**Architecture Decision Records (ADRs)**](./DECISIONS.md): Durable technical choices, trade-offs, and design rationale.
 
 ### 3. Developer Guide, Community & Operations
@@ -69,6 +74,9 @@ docs/
 - [**Contributing Guide**](../CONTRIBUTING.md): Root guide for opening issues, branching, coding standards, and pull requests.
 - [**Code of Conduct**](../CODE_OF_CONDUCT.md): Community participation standards and enforcement guidelines.
 - [**Maintainer Operating Workflow**](./MAINTAINER-WORKFLOW.md): Contributor issue triage, PR review checklist, claim management, and release runbook.
+- [**Maintainer Operational Health**](./MAINTAINER-HEALTH.md): Maintainer health metrics, operational governance, triage SLA, and release invariants.
+- [**Phase 16 Publication Readiness**](./PHASE-16-PUBLICATION-READINESS.md): Phase 16 publication readiness report, security audits, and deployment verification.
+- [**Phase 17 Launch Certification**](./PHASE-17-PUBLIC-LAUNCH-CERTIFICATION.md): Phase 17 final launch certification, quality gate results, and launch readiness.
 - [**Security Policy**](../SECURITY.md): Public vulnerability reporting procedure and supported versions.
 - [**Support Guide**](../SUPPORT.md): How and where to ask for help, report bugs, or propose features.
 - [**Contributors**](../CONTRIBUTORS.md): Recognition of core maintainers and community contributors.
