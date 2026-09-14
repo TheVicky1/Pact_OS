@@ -97,6 +97,13 @@ function getTimezoneOffsetMinutes(date: Date, timeZone: string): number {
  * Converts a local wall-clock date/time string (e.g. "2026-10-15T18:30") in a specific IANA timezone
  * to an absolute UTC ISO timestamp.
  * Handles DST spring-forward (nonexistent local times) and fall-back (ambiguous local times).
+ * 
+ * @param localDateTimeStr Wall-clock date/time string in "YYYY-MM-DDTHH:mm" format.
+ * @param timeZone Valid IANA timezone string (e.g. "Asia/Kolkata", "America/New_York").
+ * @returns Object containing `utcIso` string or validation error flags.
+ * @example
+ * localToUtc("2026-10-15T18:30", "Asia/Kolkata");
+ * // { utcIso: "2026-10-15T13:00:00.000Z", isNonexistent: false, isAmbiguous: false, error: null }
  */
 export function localToUtc(localDateTimeStr: string, timeZone: string): LocalToUtcResult {
   if (!isValidIanaTimezone(timeZone)) {

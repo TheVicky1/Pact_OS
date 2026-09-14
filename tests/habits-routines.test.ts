@@ -238,6 +238,23 @@ describe('PACT Phase 6C: Habits & Daily Routines Engine Suite', () => {
       assert.equal(streak.isCompletedToday, true);
     });
 
+    it('2.5 Leap-year boundary (Feb 28 -> Feb 29 -> Mar 1) computes continuous daily streak', () => {
+      // 2028 is a leap year (Feb has 29 days)
+      const template = createMockTemplate({ frequency_type: 'daily', start_date: '2028-02-01' });
+      const asOf = '2028-03-01';
+
+      const occurrences: HabitOccurrence[] = [
+        { id: 'l1', user_id: 'u', habit_template_id: template.id, scheduled_date: '2028-02-28', status: 'completed', completed_at: '2028-02-28T10:00:00Z', notes: null, created_at: '', updated_at: '' },
+        { id: 'l2', user_id: 'u', habit_template_id: template.id, scheduled_date: '2028-02-29', status: 'completed', completed_at: '2028-02-29T10:00:00Z', notes: null, created_at: '', updated_at: '' },
+        { id: 'l3', user_id: 'u', habit_template_id: template.id, scheduled_date: '2028-03-01', status: 'completed', completed_at: '2028-03-01T10:00:00Z', notes: null, created_at: '', updated_at: '' },
+      ];
+
+      const streak = calculateHabitStreak(template, occurrences, asOf);
+      assert.equal(streak.currentStreak, 3);
+      assert.equal(streak.longestStreak, 3);
+      assert.equal(streak.isCompletedToday, true);
+    });
+
     it('2.4 Past missed scheduled day terminates active streak', () => {
       const template = createMockTemplate({ frequency_type: 'daily', start_date: '2026-09-01' });
       const asOf = '2026-09-05';

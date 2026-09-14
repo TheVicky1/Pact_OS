@@ -97,7 +97,7 @@ export function DailyCadenceWidget({ tasks, timezone }: DailyCadenceWidgetProps)
               <div
                 key={bucket.label}
                 className="flex-1 flex flex-col items-center gap-2 group/bar cursor-default"
-                title={`${bucket.label} (${bucket.hourRange}): ${bucket.count} tasks`}
+                title={`${bucket.label} (${bucket.hourRange}): ${bucket.count} ${bucket.count === 1 ? 'task' : 'tasks'}`}
               >
                 <div className="w-full h-16 flex items-end justify-center">
                   <div

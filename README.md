@@ -171,7 +171,7 @@ All contributions are welcome! Whether you are optimizing SQL queries, refining 
 | :--- | :--- |
 | 📖 [**Contributing Guide**](CONTRIBUTING.md) | Standard developer workflow, code style, and PR standards |
 | 🌱 [**Beginner's Guide**](docs/CONTRIBUTING-BEGINNERS.md) | Step-by-step zero-to-PR walkthrough for first-time contributors |
-| 🎯 [**Beginner Issues Factory**](docs/GITHUB_BEGINNER_ISSUES.md) | 40 curated, actionable Good First Issues |
+| 🎯 [**Beginner Issues Factory**](docs/GITHUB_BEGINNER_ISSUES.md) | 20 curated, actionable Good First Issues (#52–#71) |
 | 💬 [**Discussions Guide**](docs/GITHUB_DISCUSSIONS.md) | Categories, idea lifecycles, and community forum guidelines |
 | 🏷️ [**Label Taxonomy**](docs/GITHUB_LABELS.md) | Official issue classification system and difficulty tiers |
 | ⚙️ [**CI Pipeline**](docs/CI_PIPELINE.md) | GitHub Actions quality gates and verification requirements |
@@ -304,7 +304,7 @@ Comprehensive technical specifications, system architectures, and operational ru
 | Document | Purpose |
 | :--- | :--- |
 | 🌱 [**Beginner Contributing**](docs/CONTRIBUTING-BEGINNERS.md) | Step-by-step zero-to-PR guide for first-time contributors |
-| 🎯 [**Curated Beginner Issues**](docs/GITHUB_BEGINNER_ISSUES.md) | Factory of 40 fully specified Good First Issues across all PACT modules |
+| 🎯 [**Curated Beginner Issues**](docs/GITHUB_BEGINNER_ISSUES.md) | Factory of 20 fully specified Good First Issues (#52–#71) across all PACT modules |
 | 🏭 [**Issue Factory Architecture**](docs/GITHUB_ISSUE_FACTORY.md) | 15-part issue specification, SEO discovery rules & domain vocabulary |
 | 💬 [**Community Discussions**](docs/GITHUB_DISCUSSIONS.md) | GitHub Discussions categories, ideas lifecycle, and contributor journey |
 | 🏷️ [**GitHub Labels**](docs/GITHUB_LABELS.md) | Canonical issue classification, difficulty levels & composition |

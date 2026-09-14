@@ -94,7 +94,7 @@ export function KeyboardShortcutsModal() {
           <button
             onClick={() => setIsOpen(false)}
             aria-label="Close shortcuts guide"
-            className="p-1 rounded-lg text-neutral-400 hover:text-neutral-200 hover:bg-neutral-800 transition-colors"
+            className="p-1 rounded-lg text-neutral-400 hover:text-neutral-200 hover:bg-neutral-800 transition-colors focus:outline-none focus:ring-2 focus:ring-amber-400/50 focus:ring-offset-1 focus:ring-offset-neutral-900"
           >
             <X className="w-4 h-4" />
           </button>

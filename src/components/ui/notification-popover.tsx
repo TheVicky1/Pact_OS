@@ -292,7 +292,7 @@ export function NotificationPopover({
               onClick={handleMarkAllAsRead}
               disabled={isMutating}
               title="Mark all as read"
-              aria-label="Mark all as read"
+              aria-label="Mark all notifications as read"
               className="p-1.5 rounded-lg hover:bg-white/[0.06] text-zinc-400 hover:text-zinc-200 transition-colors cursor-pointer text-xs flex items-center gap-1"
             >
               <CheckCheck className="w-3.5 h-3.5" />

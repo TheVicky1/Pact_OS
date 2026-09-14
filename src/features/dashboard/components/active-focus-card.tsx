@@ -113,7 +113,10 @@ export function ActiveFocusCard({
           {task.title}
         </h3>
 
-        <div className="flex items-center gap-2 text-xs text-[#8B8B92] font-mono">
+        <div
+          aria-label={`Immediate focus task due today at ${formattedDeadline}`}
+          className="flex items-center gap-2 text-xs text-[#8B8B92] font-mono"
+        >
           <Clock className="w-3.5 h-3.5 text-[#D4AF37]" />
           <span>Due today at {formattedDeadline}</span>
         </div>

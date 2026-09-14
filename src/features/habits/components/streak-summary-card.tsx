@@ -21,7 +21,7 @@ export function StreakSummaryCard({ metrics }: StreakSummaryCardProps) {
   return (
     <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
       {/* 1. Today's Progress */}
-      <div className="bg-[#121217]/80 border border-white/[0.08] rounded-2xl p-4 backdrop-blur-xl">
+      <div className="bg-[#121217]/80 border border-white/[0.08] rounded-2xl p-4 backdrop-blur-xl transition-all duration-200 hover:border-amber-500/30 hover:shadow-[0_0_15px_rgba(212,175,55,0.05)]">
         <div className="flex items-center justify-between mb-2">
           <span className="text-xs font-semibold text-zinc-400 uppercase tracking-wider">
             Today&apos;s Target
@@ -47,7 +47,7 @@ export function StreakSummaryCard({ metrics }: StreakSummaryCardProps) {
       </div>
 
       {/* 2. Top Active Streak */}
-      <div className="bg-[#121217]/80 border border-white/[0.08] rounded-2xl p-4 backdrop-blur-xl">
+      <div className="bg-[#121217]/80 border border-white/[0.08] rounded-2xl p-4 backdrop-blur-xl transition-all duration-200 hover:border-amber-500/30 hover:shadow-[0_0_15px_rgba(212,175,55,0.05)]">
         <div className="flex items-center justify-between mb-2">
           <span className="text-xs font-semibold text-zinc-400 uppercase tracking-wider">
             Top Streak
@@ -66,7 +66,7 @@ export function StreakSummaryCard({ metrics }: StreakSummaryCardProps) {
       </div>
 
       {/* 3. Consistency Adherence */}
-      <div className="bg-[#121217]/80 border border-white/[0.08] rounded-2xl p-4 backdrop-blur-xl">
+      <div className="bg-[#121217]/80 border border-white/[0.08] rounded-2xl p-4 backdrop-blur-xl transition-all duration-200 hover:border-amber-500/30 hover:shadow-[0_0_15px_rgba(212,175,55,0.05)]">
         <div className="flex items-center justify-between mb-2">
           <span className="text-xs font-semibold text-zinc-400 uppercase tracking-wider">
             Adherence Rate
@@ -90,7 +90,7 @@ export function StreakSummaryCard({ metrics }: StreakSummaryCardProps) {
       </div>
 
       {/* 4. Total Active Habits */}
-      <div className="bg-[#121217]/80 border border-white/[0.08] rounded-2xl p-4 backdrop-blur-xl">
+      <div className="bg-[#121217]/80 border border-white/[0.08] rounded-2xl p-4 backdrop-blur-xl transition-all duration-200 hover:border-amber-500/30 hover:shadow-[0_0_15px_rgba(212,175,55,0.05)]">
         <div className="flex items-center justify-between mb-2">
           <span className="text-xs font-semibold text-zinc-400 uppercase tracking-wider">
             Active Habits

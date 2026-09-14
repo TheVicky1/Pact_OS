@@ -123,5 +123,5 @@ Security is paramount when executing automated agents with GitHub API credential
 The bot infrastructure is designed for phased rollout without disruptive repository reorganizations:
 
 - **Phase 12 (Current):** Governance, Label Taxonomy, Branch Protection, Issue Factory Architecture (Completed).
-- **Phase 13 (Next):** Issue Factory Generation (40 beginner issues) + Local/GitHub Actions Issue Triage Automation Workflow.
+- **Phase 13 (Next):** Issue Factory Generation (20 canonical beginner issues #52–#71) + Local/GitHub Actions Issue Triage Automation Workflow.
 - **Phase 14 (Future):** Dedicated PACT GitHub App integration with event router and multi-repo support.
