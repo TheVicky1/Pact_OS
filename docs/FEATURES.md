@@ -70,8 +70,8 @@ This document provides the authoritative inventory of all 14 integrated product 
 - Full relational domain model across all 14 core areas.
 - Server-authoritative mutations with zero-trust validation.
 - Responsive dark glassmorphic design system.
+- Biometric WebAuthn passkey authentication & RLS security model.
+- Offline-first local synchronization & IndexedDB delta sync engine.
 
 ### Future Scope (Planned)
 - Native mobile companion application (React Native / Expo).
-- Biometric WebAuthn passkey authentication.
-- Offline-first local synchronization (CRDT / SQLite).
