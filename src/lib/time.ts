@@ -94,16 +94,27 @@ function getTimezoneOffsetMinutes(date: Date, timeZone: string): number {
 }
 
 /**
- * Converts a local wall-clock date/time string (e.g. "2026-10-15T18:30") in a specific IANA timezone
- * to an absolute UTC ISO timestamp.
- * Handles DST spring-forward (nonexistent local times) and fall-back (ambiguous local times).
- * 
- * @param localDateTimeStr Wall-clock date/time string in "YYYY-MM-DDTHH:mm" format.
- * @param timeZone Valid IANA timezone string (e.g. "Asia/Kolkata", "America/New_York").
- * @returns Object containing `utcIso` string or validation error flags.
+ * Converts a local wall-clock date/time string in a specific IANA timezone
+ * to an absolute UTC ISO 8601 timestamp.
+ *
+ * Handles DST spring-forward (nonexistent local times) and fall-back
+ * (ambiguous local times).
+ *
+ * @param localDateTimeStr - Local wall-clock date/time in
+ * "YYYY-MM-DDTHH:mm" or "YYYY-MM-DDTHH:mm:ss" format.
+ * @param timeZone - Valid IANA timezone identifier, such as "Asia/Kolkata"
+ * or "America/New_York".
+ * @returns A LocalToUtcResult containing the UTC ISO timestamp,
+ * DST status flags, and an error message when applicable.
+ *
  * @example
  * localToUtc("2026-10-15T18:30", "Asia/Kolkata");
- * // { utcIso: "2026-10-15T13:00:00.000Z", isNonexistent: false, isAmbiguous: false, error: null }
+ * // {
+ * //   utcIso: "2026-10-15T13:00:00.000Z",
+ * //   isNonexistent: false,
+ * //   isAmbiguous: false,
+ * //   error: null
+ * // }
  */
 export function localToUtc(localDateTimeStr: string, timeZone: string): LocalToUtcResult {
   if (!isValidIanaTimezone(timeZone)) {
@@ -260,8 +271,18 @@ export function getDeadlineStatus(deadlineAt: Date | string, clock: Clock = defa
 }
 
 /**
- * Converts a stored UTC ISO string to a wall-clock "YYYY-MM-DDTHH:mm" string
- * formatted for <input type="datetime-local"> in a specific IANA timezone.
+ * Converts a stored UTC ISO 8601 timestamp to a wall-clock
+ * "YYYY-MM-DDTHH:mm" string formatted for an
+ * <input type="datetime-local"> in a specific IANA timezone.
+ *
+ * @param utcIsoStr - UTC ISO 8601 timestamp to convert.
+ * @param timeZone - IANA timezone identifier, such as "Asia/Kolkata" or "America/New_York".
+ * @returns A local datetime string in "YYYY-MM-DDTHH:mm" format,
+ * or an empty string when the UTC timestamp is invalid.
+ *
+ * @example
+ * utcToDatetimeLocalInput("2026-10-15T13:00:00.000Z", "Asia/Kolkata");
+ * // Returns: "2026-10-15T18:30"
  */
 export function utcToDatetimeLocalInput(utcIsoStr: string, timeZone: string): string {
   if (!isValidIanaTimezone(timeZone)) {
