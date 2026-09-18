@@ -6,9 +6,10 @@ Every contribution—whether writing code, fixing documentation, improving acces
 
 ---
 
-## 🏛️ Project Creator & Core Maintainer
+## 🏛️ Project Creator & Maintainers
 
-- **Vicky Patel** ([@TheVicky1](https://github.com/TheVicky1)) — *Creator & Lead Architect*
+- **Vicky Patel** ([@TheVicky1](https://github.com/TheVicky1)) — *Creator, Lead Architect & Maintainer*
+- **@TheVicky2** ([@TheVicky2](https://github.com/TheVicky2)) — *Secondary Reviewer, Community Governance & Quality Assurance*
 
 ---
 
@@ -16,11 +17,15 @@ Every contribution—whether writing code, fixing documentation, improving acces
 
 As community pull requests are accepted and merged into PACT, contributors are recognized here:
 
+### 📖 Documentation & Technical Writing
+- **Vikas Mallikarjuna** ([@vikas-mallikarjuna](https://github.com/vikas-mallikarjuna)) ([#79](https://github.com/TheVicky1/Pact_OS/pull/79)) — *Added JSDoc documentation and usage contracts to timezone helpers (`src/lib/time.ts`)*
+- **Ferhat Samet Kalkan** ([@fskalkan](https://github.com/fskalkan)) ([#44](https://github.com/TheVicky1/Pact_OS/pull/44)) — *Clarified Web Audio API focus timer ambient sound synth documentation (`docs/FEATURES.md`)*
+
 ### 💻 Code & Features
 - **Kevin Lozada Santos** ([@kevin-lozada-santos](https://github.com/kevin-lozada-santos)) ([#47](https://github.com/TheVicky1/Pact_OS/pull/47)) — *Fixed category balance clamping and preserved overage display in Budget Discipline Card (`src/features/finance/components/budget-discipline-card.tsx`)*
 
-### 📖 Documentation & Technical Writing
-- **@fskalkan** ([#25](https://github.com/TheVicky1/Pact_OS/pull/25)) — *Fixed documentation path in Codebase Index (`docs/CODEBASE_INDEX.md`)*
+### 🤖 Automated Infrastructure & Security
+- **@dependabot[bot]** ([@dependabot[bot]](https://github.com/apps/dependabot)) ([#6](https://github.com/TheVicky1/Pact_OS/pull/6), [#75](https://github.com/TheVicky1/Pact_OS/pull/75)) — *Automated Dependency Security Maintenance & Lockfile Synchronizations*
 
 ---
 
