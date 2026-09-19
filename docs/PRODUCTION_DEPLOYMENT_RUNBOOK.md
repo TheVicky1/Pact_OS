@@ -5,6 +5,8 @@
 **Classification:** Operational Guide & Production Standard  
 **Last Verified:** September 11, 2026  
 
+> 🌐 **Official Live Production URL**: **[https://pact-os.vercel.app](https://pact-os.vercel.app)**
+
 ---
 
 ## 1. Prerequisites
