@@ -9,6 +9,8 @@ We warmly welcome contributions from everyone—whether you are a first-time ope
 Every meaningful contribution helps make PACT more reliable, accessible, and empowering for everyone.
 
 > [!TIP]
+> **Experience PACT OS Live**: Test out the official production app at **[https://pact-os.vercel.app](https://pact-os.vercel.app)**
+>
 > **First time contributing to open source?**  
 > Check out our step-by-step [**Beginner's Contribution Guide**](docs/CONTRIBUTING-BEGINNERS.md) for a zero-to-PR onboarding tutorial. If you encounter any environment or Git hiccups, consult our [**Troubleshooting Guide**](docs/TROUBLESHOOTING.md).
 

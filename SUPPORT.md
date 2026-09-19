@@ -2,6 +2,8 @@
 
 Welcome to the **PACT** community! Whether you are using PACT as your personal operating system or contributing to its codebase, this guide explains how and where to find help.
 
+> 🚀 **Official Live Web Application**: Access PACT OS online at **[https://pact-os.vercel.app](https://pact-os.vercel.app)**
+
 ---
 
 ## 1. Before Asking for Help
