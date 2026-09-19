@@ -11,6 +11,7 @@
 
 <br />
 
+[![Live App](https://img.shields.io/badge/Live_App-pact--os.vercel.app-000000.svg?style=for-the-badge&logo=vercel&logoColor=white&color=000000)](https://pact-os.vercel.app)
 [![CI](https://github.com/TheVicky1/Pact_OS/actions/workflows/ci.yml/badge.svg)](https://github.com/TheVicky1/Pact_OS/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-d4af37.svg?style=for-the-badge)](LICENSE)
 [![Good First Issues](https://img.shields.io/github/issues/TheVicky1/Pact_OS/good%20first%20issue?style=for-the-badge&color=7057ff&label=Good%20First%20Issues)](https://github.com/TheVicky1/Pact_OS/issues?q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22)
@@ -23,7 +24,11 @@
 
 <br />
 
-[About](#about) · [Quick Start](#quick-start) · [Contributing](#contributing) · [Core Features](#core-features) · [Architecture](#architecture) · [Documentation](#documentation)
+> 🌐 **Live Production Deployment**: Experience PACT OS live in action at **[https://pact-os.vercel.app](https://pact-os.vercel.app)**
+
+<br />
+
+[Live Demo](https://pact-os.vercel.app) · [About](#about) · [Quick Start](#quick-start) · [Contributing](#contributing) · [Core Features](#core-features) · [Architecture](#architecture) · [Documentation](#documentation)
 
 </div>
 
