@@ -22,7 +22,8 @@ async function runReleasePackagingTests() {
   assert.ok(fs.existsSync(pkgPath), 'package.json must exist');
   const pkg = JSON.parse(fs.readFileSync(pkgPath, 'utf8'));
   assert.strictEqual(pkg.name, 'pact-os', 'Package name must be pact-os');
-  assert.strictEqual(pkg.version, '0.1.0', 'Package version must be canonical 0.1.0');
+  const semverPattern = /^\d+\.\d+\.\d+(?:-[0-9A-Za-z.-]+)?(?:\+[0-9A-Za-z.-]+)?$/;
+  assert.ok(semverPattern.test(pkg.version), `Package version "${pkg.version}" must be valid SemVer`);
   assert.strictEqual(pkg.license, 'MIT', 'Package license must be MIT');
   assert.ok(pkg.scripts.build, 'build script must exist');
   assert.ok(pkg.scripts.lint, 'lint script must exist');

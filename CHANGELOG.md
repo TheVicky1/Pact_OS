@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.2.0] - 2026-09-20
+
 ### Added
 - **Multi-Device Delta Replication Protocol (Phase 13)**: Lightweight, deterministic delta-based replication protocol with Lamport logical clocks, monotonic sync cursors, operation deduplication, tombstones, and zero punitive consequence leakage guarantees (`src/lib/offline/delta-engine.ts`, `src/features/sync/sync-actions.ts`, `src/app/api/sync/delta/route.ts`).
 - **Service Worker Background Synchronization (Phase 13)**: Enhanced Progressive Web App Service Worker with Background Sync API event listener (`pact-sync-deltas`), reconnect recovery listeners, and durable device identity resolution (`src/lib/offline/background-sync.ts`, `public/sw.js`).
