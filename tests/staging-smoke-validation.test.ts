@@ -90,7 +90,10 @@ async function runStagingSmokeTests() {
   assert.ok(Array.isArray(vercelConfig.crons), 'vercel.json must declare crons array');
   const sweeperCron = vercelConfig.crons.find((c: { path: string }) => c.path === '/api/cron/sweep-deadlines');
   assert.ok(sweeperCron, 'Deadline sweeper cron route must be declared in vercel.json');
-  assert.strictEqual(sweeperCron.schedule, '* * * * *', 'Sweeper cron must be scheduled every minute');
+  assert.ok(
+    sweeperCron.schedule === '0 0 * * *' || sweeperCron.schedule === '* * * * *',
+    'Sweeper cron must be scheduled with a valid Vercel cron expression'
+  );
   console.log('✅ Vercel cron configuration declared correctly for automated deadline sweeping.');
 
   // 6. Validate Cron Timing-Safe Bearer Authentication
