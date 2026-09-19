@@ -16,7 +16,8 @@ This guide provides practical solutions for common errors and setup roadblocks w
 8. [Secret Scanner Warnings](#8-secret-scanner-warnings)
 9. [Production Build Failures](#9-production-build-failures)
 10. [Windows PowerShell & OS Tips](#10-windows-powershell--os-tips)
-11. [How to Request Support](#11-how-to-request-support)
+11. [Database & Supabase Issues](#11-database--supabase-issues)
+12. [How to Request Support](#12-how-to-request-support)
 
 ---
 
@@ -330,29 +331,39 @@ git config --global core.autocrlf true
 
 ---
 
-### 10.3 Supabase RLS Infinite Recursion (`infinite recursion detected in policy`)
+## 11. Database & Supabase Issues
+
+### 11.1 Supabase RLS Infinite Recursion (`42P17`)
 
 **Symptoms**:
-Supabase queries return HTTP 500 or Postgres logs report `infinite recursion detected in policy for relation "table_name"`.
+A Supabase request fails with HTTP 500 and PostgreSQL error `42P17`: `infinite recursion detected in policy for relation "profiles"` (or another table).
 
 **Likely Causes**:
-A Row Level Security (RLS) policy queries the same table inside its `USING` clause without filtering strictly by `auth.uid() = user_id`.
+A Row Level Security (RLS) policy reads its own table, causing PostgreSQL to evaluate the same policy again. This can also happen across tables: a policy on table A queries table B, whose policy queries table A (`A → B → A`). Adding an `auth.uid()` filter inside the recursive subquery does not break that cycle.
 
 **Try This**:
-Ensure RLS policies use direct identity matching (`auth.uid() = user_id`) rather than nested subqueries against the same table:
-```sql
--- ❌ Triggers recursion:
-CREATE POLICY "Select profile" ON public.profiles FOR SELECT
-USING (id IN (SELECT id FROM public.profiles WHERE user_id = auth.uid()));
+1. Inspect the policies on the reported table and any tables they query. Follow both `USING` and `WITH CHECK` expressions until you find the circular dependency.
+2. Where access depends only on row ownership, replace the recursive lookup with a direct comparison against the current row. PACT's `profiles.id` references `auth.users.id`, so its ownership check uses `id`; tables such as `tasks` use `user_id` instead.
 
--- ✅ Direct non-recursive check:
-CREATE POLICY "Select profile" ON public.profiles FOR SELECT
-USING (auth.uid() = user_id);
-```
+   ```sql
+   -- ❌ Recursive: reading profiles invokes the profiles policy again.
+   CREATE POLICY "Select profile" ON public.profiles FOR SELECT
+   TO authenticated
+   USING (id IN (SELECT id FROM public.profiles WHERE id = auth.uid()));
+
+   -- ✅ Alternative: check the current row without querying profiles.
+   CREATE POLICY "Select profile" ON public.profiles FOR SELECT
+   TO authenticated
+   USING (auth.uid() = id);
+   ```
+
+   These are alternative examples, not statements to run together. In a migration, alter or replace the offending existing policy; adding another policy does not remove the recursive one. PACT's existing profile policies already use direct identity checks.
+3. If authorization genuinely needs a lookup that would otherwise create a cycle, consider a narrowly scoped `SECURITY DEFINER` helper. It runs as its owner; it only avoids re-entering the lookup table's RLS policies if that owner's privileges actually bypass them. `SECURITY DEFINER` alone is not a recursion fix. Keep the helper in a non-exposed schema, set a safe `search_path` (for example, empty with schema-qualified references), and restrict execution to the roles that need it. Have it check the caller's identity and return only the required authorization result. See the [Supabase RLS guide](https://supabase.com/docs/guides/database/postgres/row-level-security) before using this pattern.
+4. Retest the failing query as an authenticated user, including attempts to access another user's rows. Confirm both that recursion is gone and that unauthorized access remains denied; testing only as a privileged database role can hide RLS problems. Keep RLS enabled.
 
 ---
 
-## 11. How to Request Support
+## 12. How to Request Support
 
 If your problem is not covered in this guide, our community is here to help!
 
