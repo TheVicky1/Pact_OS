@@ -64,6 +64,11 @@ Every task in this catalog adheres to PACT's **Micro-Contribution Standard**:
 | Catalog #28 | [#87](https://github.com/TheVicky1/Pact_OS/issues/87) | `[Test] Add Single-Item Boundary Test Case to Task Prioritization Test Suite` | ✅ Live |
 | Catalog #29 | [#88](https://github.com/TheVicky1/Pact_OS/issues/88) | `[A11y] Add aria-expanded and aria-controls to Navigation Menu Triggers` | ✅ Live |
 | Catalog #30 | [#89](https://github.com/TheVicky1/Pact_OS/issues/89) | `[Test] Add Step Completion Boundary Test Case to Weekly Review Test Suite` | ✅ Live |
+| Catalog #31 | [#91](https://github.com/TheVicky1/Pact_OS/issues/91) | `[A11y] Add aria-label and type="button" to Calendar Navigation Arrow Controls` | ✅ Live |
+| Catalog #32 | [#92](https://github.com/TheVicky1/Pact_OS/issues/92) | `[JSDoc] Document Parameter Constraints and Return Types in src/lib/utils/time.ts` | ✅ Live |
+| Catalog #33 | [#93](https://github.com/TheVicky1/Pact_OS/issues/93) | `[Test] Add Boundary Test Case for Max Budget Percentage in Budget Remaining Test Suite` | ✅ Live |
+| Catalog #34 | [#94](https://github.com/TheVicky1/Pact_OS/issues/94) | `[A11y] Add aria-describedby Instruction Link to Goal Target Input Field` | ✅ Live |
+| Catalog #35 | [#95](https://github.com/TheVicky1/Pact_OS/issues/95) | `[Test] Add Multiple Tag Deduplication Test Case to Tasks Validation Test Suite` | ✅ Live |
 
 ---
 
