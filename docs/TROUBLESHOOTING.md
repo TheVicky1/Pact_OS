@@ -147,6 +147,26 @@ Restart `npm run dev`.
 
 ---
 
+### 3.2 Missing Supabase URL or Publishable Key
+
+**Symptoms**:
+The browser logs `Supabase public environment variables missing. Auth features require valid credentials.`, or sign-in fails after local setup. The current Supabase clients fall back to placeholder credentials when a required variable is missing, so the app can start even though authentication does not work.
+
+**Likely Causes**:
+`NEXT_PUBLIC_SUPABASE_URL` or `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` is missing, empty, misspelled, or still contains the template value. Copying `.env.example` alone does not configure a real Supabase project. The development server may also still be using values loaded before the file was edited.
+
+**Try This**:
+1. If `.env.local` is missing, create it as described in Section 3.1. If it already exists, edit it without overwriting your other settings. Keep it in the project root beside `package.json`.
+2. Set both variables to the URL and publishable key from the same Supabase project, using the exact names from [`.env.example`](../.env.example):
+   ```dotenv
+   NEXT_PUBLIC_SUPABASE_URL=https://your-project-id.supabase.co
+   NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=your-supabase-publishable-key
+   ```
+   Replace these example values with your project's values. PACT reads `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`, not `NEXT_PUBLIC_SUPABASE_ANON_KEY`. Never put a service role key in a `NEXT_PUBLIC_` variable; those variables are exposed to the browser.
+3. Stop the development server, run `npm run dev` again, and reload the page. Confirm that the missing-variable warning is gone and retry sign-in. Keep `.env.local` untracked and do not paste credentials into issues or logs.
+
+---
+
 ## 4. Git & GitHub Issues
 
 ### 4.1 Permission Denied When Pushing (`403` / `Publickey`)
