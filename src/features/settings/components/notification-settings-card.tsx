@@ -168,8 +168,16 @@ export function NotificationSettingsCard({
                     </p>
                   </div>
                 </div>
-
-                <label className="relative inline-flex items-center cursor-pointer shrink-0">
+                        <label
+                  className="relative inline-flex items-center cursor-pointer shrink-0"
+                  tabIndex={0}
+                  onKeyDown={(event) => {
+                    if (event.key === 'Enter' || event.key === ' ') {
+                      event.preventDefault();
+                      opt.onChange(!opt.checked);
+                    }
+                  }}
+                >
                   <input
                     type="checkbox"
                     checked={opt.checked}
