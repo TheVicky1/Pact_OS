@@ -68,7 +68,7 @@ describe('PACT Phase 7: Cryptographic Accountability Partner Verification', () =
         commitmentId: 'a0000000-0000-0000-0000-000000000001',
         tokenHash: 'somehash',
         createdAt: '2026-09-13T00:00:00Z',
-        expiresAt: '2026-09-20T00:00:00Z',
+        expiresAt: '2099-01-01T00:00:00Z',
         partnerName: 'Jordan',
         isUsed: false,
       };
@@ -110,7 +110,7 @@ describe('PACT Phase 7: Cryptographic Accountability Partner Verification', () =
       commitmentId: 'a0000000-0000-0000-0000-000000000001',
       tokenHash,
       createdAt: '2026-09-13T00:00:00Z',
-      expiresAt: '2026-09-20T00:00:00Z',
+      expiresAt: '2099-01-01T00:00:00Z',
       partnerName: 'Morgan',
       isUsed: false,
     };
