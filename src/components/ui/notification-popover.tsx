@@ -293,7 +293,7 @@ export function NotificationPopover({
               disabled={isMutating}
               title="Mark all as read"
               aria-label="Mark all notifications as read"
-              className="p-1.5 rounded-lg hover:bg-white/[0.06] text-zinc-400 hover:text-zinc-200 transition-colors cursor-pointer text-xs flex items-center gap-1"
+              className="p-1.5 rounded-lg hover:bg-white/[0.06] text-zinc-400 hover:text-zinc-200 transition-colors cursor-pointer text-xs flex items-center gap-1 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[#d4af37]/50"
             >
               <CheckCheck className="w-3.5 h-3.5" />
               <span className="text-[11px] hidden sm:inline">Mark read</span>
@@ -304,7 +304,7 @@ export function NotificationPopover({
             type="button"
             onClick={onClose}
             aria-label="Close notification center"
-            className="p-1.5 rounded-lg hover:bg-white/[0.06] text-zinc-400 hover:text-zinc-100 transition-colors cursor-pointer"
+            className="p-1.5 rounded-lg hover:bg-white/[0.06] text-zinc-400 hover:text-zinc-100 transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[#d4af37]/50"
           >
             <X className="w-4 h-4" />
           </button>
@@ -411,7 +411,7 @@ export function NotificationPopover({
                   type="button"
                   onClick={(e) => handleDismiss(n.id, e)}
                   aria-label="Dismiss notification"
-                  className="opacity-0 group-hover:opacity-100 p-1 rounded-lg hover:bg-white/[0.08] text-zinc-400 hover:text-zinc-200 transition-all cursor-pointer shrink-0"
+                  className="opacity-0 group-hover:opacity-100 p-1 rounded-lg hover:bg-white/[0.08] text-zinc-400 hover:text-zinc-200 transition-all cursor-pointer shrink-0 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[#d4af37]/50"
                 >
                   <X className="w-3.5 h-3.5" />
                 </button>
