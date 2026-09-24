@@ -50,7 +50,12 @@ for (const [spent, remaining, exceeded, utilization] of [
     assert.equal(evaluateBudgetAlert('user-1', status).type, 'budget_exceeded');
   }
 }
+// Budget boundary: spending exactly the budget leaves 0 remaining and 100% used.
+const exactBudgetOverview = overviewFor(10000);
+const exactBudgetStatus = exactBudgetOverview.categories[0];
 
+assert.equal(exactBudgetStatus.remainingCents, 0);
+assert.equal(exactBudgetStatus.utilizationPercent, 100);
 const jiti = createJiti(import.meta.url, { jsx: true, alias: { '@': path.resolve('src') } });
 const { BudgetDisciplineCard } = jiti('../src/features/finance/components/budget-discipline-card.tsx') as {
   BudgetDisciplineCard: React.ComponentType<{
