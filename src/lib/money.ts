@@ -133,7 +133,7 @@ export function parseAmountToCents(input: string | number): {
  * @param cents Integer number of cents (e.g. 5399 for 53.99).
  * @param currencyCode ISO 4217 currency code (default: 'INR').
  * @param options Optional formatting flags for hiding decimals or compact notation.
- * @returns Formatted currency string (e.g. "₹53.99" or "$53.99").
+ * @returns {string} Formatted currency string (e.g. "₹53.99" or "$53.99").
  * @example
  * formatCentsToCurrency(4999, 'USD'); // "$49.99"
  * formatCentsToCurrency(150000, 'INR', { showFractional: false }); // "₹1,500"
