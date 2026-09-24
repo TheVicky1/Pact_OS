@@ -363,7 +363,9 @@ PACT is built with care by an open-source community dedicated to personal master
 
 <div align="center">
 
-[![Contributors](https://img.shields.io/github/contributors/TheVicky1/Pact_OS?style=for-the-badge&color=d4af37)](https://github.com/TheVicky1/Pact_OS/graphs/contributors)
+[![Contributors Count](https://img.shields.io/github/contributors/TheVicky1/Pact_OS?style=for-the-badge&color=d4af37)](https://github.com/TheVicky1/Pact_OS/graphs/contributors)
+
+[![PACT Contributors](https://contrib.rocks/image?repo=TheVicky1/Pact_OS)](https://github.com/TheVicky1/Pact_OS/graphs/contributors)
 
 *A huge thank you to everyone who has contributed to PACT OS!*
 
