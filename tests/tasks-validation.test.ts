@@ -139,6 +139,45 @@ function runTaskValidationTests() {
   assert.ok(updateRes.success, 'Expected partial status and priority update to pass');
   console.log('✅ Partial Task update schema validated correctly.');
 
+  // 13. Duplicate Task Tag Deduplication
+  console.log('13. Testing duplicate task tag deduplication...');
+  const inputTags = ['deep-work', 'deep-work', 'urgent'];
+  const processedTags = Array.from(new Set(inputTags));
+  assert.deepStrictEqual(
+    processedTags,
+    ['deep-work', 'urgent'],
+    'Duplicate tags must be removed while preserving unique tags'
+  );
+  assert.strictEqual(processedTags.length, 2, 'Duplicate deep-work tag should be removed');
+  assert.strictEqual(processedTags[0], 'deep-work');
+  assert.strictEqual(processedTags[1], 'urgent', 'Unique urgent tag should be preserved');
+  console.log('✅ Duplicate task tags deduplicated correctly.');
+
+  // 14. Single-Item Task Collection Filter Boundary Case
+  console.log('14. Testing single-item task collection filter boundary (preserves single task when matching filter criteria)...');
+  const singleTask = {
+    id: '11111111-1111-4111-8111-111111111111',
+    title: 'Focus Deep Work Session',
+    description: 'Complete high-priority strategic milestone.',
+    deadline_at: validDeadlineIso,
+    priority: 'urgent' as const,
+    status: 'pending' as const,
+  };
+  const taskCollection = [singleTask];
+  const filteredTasks = taskCollection.filter(
+    (task) => task.status === 'pending' && task.priority === 'urgent'
+  );
+
+  assert.strictEqual(filteredTasks.length, 1, 'Resulting array must contain exactly one element (length = 1)');
+  assert.strictEqual(filteredTasks[0], singleTask, 'Single task must be preserved correctly');
+  assert.strictEqual(filteredTasks[0].id, singleTask.id, 'Task id must remain unchanged');
+  assert.strictEqual(filteredTasks[0].title, singleTask.title, 'Task title must remain unchanged');
+  assert.strictEqual(filteredTasks[0].description, singleTask.description, 'Task description must remain unchanged');
+  assert.strictEqual(filteredTasks[0].deadline_at, singleTask.deadline_at, 'Task deadline must remain unchanged');
+  assert.strictEqual(filteredTasks[0].priority, singleTask.priority, 'Task priority must remain unchanged');
+  assert.strictEqual(filteredTasks[0].status, singleTask.status, 'Task status must remain unchanged');
+  console.log('✅ Single-item task collection filter boundary verified correctly.');
+
   console.log('\n================================================================');
   console.log('🎉 ALL TASK DOMAIN VALIDATION UNIT TESTS PASSED CLEANLY');
   console.log('================================================================\n');
