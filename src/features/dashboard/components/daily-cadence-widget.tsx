@@ -123,7 +123,9 @@ export function DailyCadenceWidget({ tasks, timezone }: DailyCadenceWidgetProps)
       {/* Footer */}
       <div className="relative z-10 pt-3 border-t border-white/[0.04] flex items-center justify-between text-xs text-[#71717A] font-mono">
         <span>Distribution across day</span>
-        <span>{tasks.length} total</span>
+        <span>
+          {tasks.length} active {tasks.length === 1 ? 'commitment' : 'commitments'} remaining
+        </span>
       </div>
     </div>
   );
