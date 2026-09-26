@@ -1,6 +1,12 @@
-# PACT — Curated Beginner Issue Factory (20 Good First Issues)
+# PACT — Curated Beginner Issue Factory (Good First Issues)
 
-This document contains the canonical catalog of **20 curated, validated, and beginner-friendly issues** designed for first-time open-source contributors joining the PACT project.
+This document contains the canonical catalog of **curated, validated, and beginner-friendly issues** designed for first-time open-source and **Hacktoberfest** contributors joining the PACT project.
+
+> 📁 **Latest Issue Catalogs**:
+> - [**Issues #166–#185 Catalog** (20 Hacktoberfest Issues)](GITHUB_BEGINNER_ISSUES_166_185.md)
+> - [**Issues #140–#164 Catalog** (25 Hacktoberfest Issues)](GITHUB_BEGINNER_ISSUES_140_164.md)
+> - [**Issues #130–#138 Catalog** (9 Beginner Issues)](GITHUB_BEGINNER_ISSUES_130_138.md)
+> - [**Issues #107–#113 Catalog** (7 Beginner Issues)](GITHUB_BEGINNER_ISSUES_107_113.md)
 
 ---
 
