@@ -3,6 +3,7 @@
 This document contains the canonical catalog of **curated, validated, and beginner-friendly issues** designed for first-time open-source and **Hacktoberfest** contributors joining the PACT project.
 
 > 📁 **Latest Issue Catalogs**:
+> - [**Issues #187–#204 Catalog** (18 High-Impact Feature & Growth Issues)](GITHUB_HIGH_IMPACT_ISSUES_187_204.md)
 > - [**Issues #166–#185 Catalog** (20 Hacktoberfest Issues)](GITHUB_BEGINNER_ISSUES_166_185.md)
 > - [**Issues #140–#164 Catalog** (25 Hacktoberfest Issues)](GITHUB_BEGINNER_ISSUES_140_164.md)
 > - [**Issues #130–#138 Catalog** (9 Beginner Issues)](GITHUB_BEGINNER_ISSUES_130_138.md)
