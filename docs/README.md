@@ -15,8 +15,9 @@ docs/
 ├── DEPENDENCY_SECURITY.md              # 🛡️ Dependency Health, Security Auditing & Supply-Chain Policy
 ├── GITHUB_AUTOMATION.md                # 🤖 GitHub Automation, Triage Bot & Policy Engine Architecture
 ├── GITHUB_BEGINNER_ISSUES.md           # 🎯 Curated Beginner Issue Factory & Master Catalog Index
+├── GITHUB_HIGH_IMPACT_ISSUES_187_204.md # 🚀 High-Impact Feature & Growth Issues #187–#204 Catalog (18 Issues)
 ├── GITHUB_BEGINNER_ISSUES_166_185.md   # 🎃 Curated Hacktoberfest Issues #166–#185 Catalog (20 Issues)
-├── GITHUB_BEGINNER_ISSUES_140_164.md   # 🎃 Curated Hacktoberfest Issues #140–#164 Catalog (25 Issues)
+├── GITHUB_BEGINNER_ISSUES_140_164.md   # 🎃 Curated Hacktoberfest Issues Catalog #140–#164
 ├── GITHUB_BEGINNER_ISSUES_130_138.md   # 🎯 Curated Beginner Issues Catalog #130–#138
 ├── GITHUB_BEGINNER_ISSUES_107_113.md   # 🎯 Curated Beginner Issues Catalog #107–#113
 ├── GITHUB_DISCUSSIONS.md               # 💬 Community Discussions, Categories & Contributor Engagement
