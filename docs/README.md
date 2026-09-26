@@ -17,6 +17,7 @@ docs/
 ├── GITHUB_BEGINNER_ISSUES.md           # 🎯 Curated Beginner Issue Factory (#52–#71, #80–#89, #91–#95)
 ├── GITHUB_BEGINNER_ISSUES_107_113.md   # 🎯 Curated Beginner Issues Catalog #107–#113
 ├── GITHUB_BEGINNER_ISSUES_130_138.md   # 🎯 Curated Beginner Issues Catalog #130–#138
+├── GITHUB_BEGINNER_ISSUES_140_164.md   # 🎯 Curated Hacktoberfest Issues Catalog #140–#164
 ├── GITHUB_DISCUSSIONS.md               # 💬 Community Discussions, Categories & Contributor Engagement
 ├── GITHUB_ISSUE_FACTORY.md             # 🏭 Issue Factory Architecture & Search Discovery Guidelines
 ├── GITHUB_LABELS.md                    # 🏷️ Canonical GitHub Issue Taxonomy & Label Dictionary
