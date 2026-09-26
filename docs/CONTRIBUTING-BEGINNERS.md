@@ -52,7 +52,7 @@ If you are new to GitHub and Git, here are the core terms you will encounter:
 
 ## 2. Before You Start
 
-1. **Check Existing Issues**: Visit the [GitHub Issues](https://github.com/TheVicky1/Pact_OS/issues) tab. Filter issues with the [`good first issue`](https://github.com/TheVicky1/Pact_OS/labels/good%20first%20issue) and `difficulty:beginner` labels (or browse our [**20 Curated Beginner Issues Catalog (#52–#71)**](GITHUB_BEGINNER_ISSUES.md) and [**Label Taxonomy**](GITHUB_LABELS.md)).
+1. **Check Existing Issues**: Visit the [GitHub Issues](https://github.com/TheVicky1/Pact_OS/issues) tab. Filter issues with the [`good first issue`](https://github.com/TheVicky1/Pact_OS/labels/good%20first%20issue) and `difficulty:beginner` labels (or browse our [**Curated Issues Master Catalog**](GITHUB_BEGINNER_ISSUES.md) and [**Label Taxonomy**](GITHUB_LABELS.md)).
 2. **Avoid Duplicate Work**: Check if someone is already commenting on or assigned to an issue before starting.
 3. **Claim an Issue**: Leave a short comment on the issue (e.g., *"I'd like to work on this issue. Please assign it to me."*). A maintainer will confirm your assignment.
 4. **Ask Questions**: If any requirement is unclear, ask directly inside the issue. It is always better to clarify early than to rewrite code later.
