@@ -88,7 +88,10 @@ PACT has completed all core development phases through **Phase 14 (Discipline In
 ### Phase 14: Autonomous Discipline Orchestration & Production General Availability
 - [x] **AI-Powered Discipline Insights & Anti-Burnout Engine**: Privacy-preserving deterministic heuristics for cognitive load, habit fatigue, velocity decline, and schedule balancing without external AI data leakage (`src/lib/discipline/insights-engine.ts`, `src/features/discipline/*`).
 - [x] **Enterprise Identity Provider Integration (SAML / OIDC)**: Enterprise SSO security engine with cryptographic state generation, replay protection, domain validation, role mapping, and token parsing (`src/lib/auth/sso-engine.ts`, `src/features/auth/sso-actions.ts`, `src/features/settings/components/sso-settings-card.tsx`).
-- [x] **Production General Availability Launch & Environment Validation**: Production runtime validator, 26 sequential Supabase migrations, release sanity checks, zero-secret compliance, and clean production build (`src/lib/config/production-validator.ts`, `supabase/migrations/20260917000000_discipline_intelligence_and_enterprise_sso.sql`).
+### Phase 15: Open Source Community Growth & High-Impact Issue Catalogs
+- [x] **99 Curated Live Issue Catalogs**: Created 6 dedicated catalog files covering 99 live, validated, single-file bounded community issues (`#52–#71`, `#107–#113`, `#130–#138`, `#140–#164`, `#166–#185`, `#187–#204`).
+- [x] **High-Impact Feature & Growth Issues**: Added 18 advanced feature specifications (`#187–#204`) spanning Gemini AI prompt engineering, natural language task parsing, iCal export, PWA background sync queues, IndexedDB local persistence, rate limiting, and OpenAPI 3.0.
+- [x] **Open-Source Directory Sync**: Standardized `.github/up-for-grabs.yml`, `MunGell/awesome-for-beginners`, `CodeTriage`, and `contrib.rocks` contributor widget tracking.
 
 ---
 

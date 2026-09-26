@@ -26,7 +26,7 @@ Engineered for individuals seeking uncompromising discipline, PACT OS integrates
 - 🎯 **Focus Engine & Pomodoro**: Dynamic timer, live activity indicator, and distraction audio traps.
 - 📊 **Habit Streak & Routines**: Multi-frequency streak calculators with leap-year boundary safety.
 - 🔐 **Zero-Knowledge Privacy**: Passkeys (WebAuthn), local IndexedDB caching, and zero tracking scripts.
-- 🤝 **35+ Good First Issues**: Curated, single-file beginner tasks with exact local test commands.
+- 🤝 **99+ Curated Good First & Community Issues**: Curated, single-file beginner tasks with exact local test commands.
 
 ### 🛠️ Tech Stack
 - **Frontend**: Next.js 15 (App Router), React 19, TypeScript, TailwindCSS, Lucide Icons
