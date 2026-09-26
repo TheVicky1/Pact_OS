@@ -14,7 +14,9 @@ docs/
 ├── CONTRIBUTING-BEGINNERS.md           # 🌱 Beginner Contributor Zero-to-PR Walkthrough
 ├── DEPENDENCY_SECURITY.md              # 🛡️ Dependency Health, Security Auditing & Supply-Chain Policy
 ├── GITHUB_AUTOMATION.md                # 🤖 GitHub Automation, Triage Bot & Policy Engine Architecture
-├── GITHUB_BEGINNER_ISSUES.md           # 🎯 Curated Beginner Issue Factory (20 Good First Issues #52–#71)
+├── GITHUB_BEGINNER_ISSUES.md           # 🎯 Curated Beginner Issue Factory (#52–#71, #80–#89, #91–#95)
+├── GITHUB_BEGINNER_ISSUES_107_113.md   # 🎯 Curated Beginner Issues Catalog #107–#113
+├── GITHUB_BEGINNER_ISSUES_130_138.md   # 🎯 Curated Beginner Issues Catalog #130–#138
 ├── GITHUB_DISCUSSIONS.md               # 💬 Community Discussions, Categories & Contributor Engagement
 ├── GITHUB_ISSUE_FACTORY.md             # 🏭 Issue Factory Architecture & Search Discovery Guidelines
 ├── GITHUB_LABELS.md                    # 🏷️ Canonical GitHub Issue Taxonomy & Label Dictionary
@@ -66,7 +68,7 @@ docs/
 
 ### 3. Developer Guide, Community & Operations
 - [**Beginner's Contribution Guide**](./CONTRIBUTING-BEGINNERS.md): Zero-to-PR step-by-step tutorial for first-time open-source contributors.
-- [**Curated Beginner Issues**](./GITHUB_BEGINNER_ISSUES.md): Factory of 20 fully specified Good First Issues (#52–#71) across all PACT modules.
+- [**Curated Beginner Issues**](./GITHUB_BEGINNER_ISSUES.md): Master factory of 44 fully specified Good First Issues across all PACT modules ([#107–#113](./GITHUB_BEGINNER_ISSUES_107_113.md), [#130–#138](./GITHUB_BEGINNER_ISSUES_130_138.md)).
 - [**Issue Factory Architecture**](./GITHUB_ISSUE_FACTORY.md): 15-part issue specification, SEO discovery rules, and domain search vocabulary.
 - [**Community Discussions Guide**](./GITHUB_DISCUSSIONS.md): GitHub Discussions categories, ideas lifecycle, and contributor journey.
 - [**GitHub Label Taxonomy**](./GITHUB_LABELS.md): Official issue classification system, difficulty levels, and label composition guide.

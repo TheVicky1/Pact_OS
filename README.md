@@ -348,7 +348,7 @@ PACT OS is free, open-source software built by developers who value intentionali
 ### 🌱 Quick Links for Contributors:
 - 📖 [**Contributing Guide**](CONTRIBUTING.md) — Comprehensive workflow, branching, and PR policies
 - 🚀 [**Beginner's Contribution Guide**](docs/CONTRIBUTING-BEGINNERS.md) — Step-by-step zero-to-PR walkthrough
-- 🎯 [**Curated Good First Issues**](docs/GITHUB_BEGINNER_ISSUES.md) — 20 self-contained, validated micro-tasks (5–30 min)
+- 🎯 [**Curated Good First Issues**](docs/GITHUB_BEGINNER_ISSUES.md) — 44+ self-contained, validated micro-tasks ([#107–#113](docs/GITHUB_BEGINNER_ISSUES_107_113.md), [#130–#138](docs/GITHUB_BEGINNER_ISSUES_130_138.md))
 - 🏷️ [**Label Taxonomy**](docs/GITHUB_LABELS.md) — Standardized 12-label open-source taxonomy
 - 🔧 [**Troubleshooting Guide**](docs/TROUBLESHOOTING.md) — Solutions for common setup and build issues
 - 💬 [**Community Discussions**](https://github.com/TheVicky1/Pact_OS/discussions) — Feature ideas, Q&A, and project showcases

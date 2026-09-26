@@ -69,6 +69,15 @@ Every task in this catalog adheres to PACT's **Micro-Contribution Standard**:
 | Catalog #33 | [#93](https://github.com/TheVicky1/Pact_OS/issues/93) | `[Test] Add Boundary Test Case for Max Budget Percentage in Budget Remaining Test Suite` | ✅ Live |
 | Catalog #34 | [#94](https://github.com/TheVicky1/Pact_OS/issues/94) | `[A11y] Add aria-describedby Instruction Link to Goal Target Input Field` | ✅ Live |
 | Catalog #35 | [#95](https://github.com/TheVicky1/Pact_OS/issues/95) | `[Test] Add Multiple Tag Deduplication Test Case to Tasks Validation Test Suite` | ✅ Live |
+| Catalog #36 | [#130](https://github.com/TheVicky1/Pact_OS/issues/130) | `[A11y] Add aria-pressed Attribute to Focus Mode Switcher Buttons` | ✅ Live |
+| Catalog #37 | [#131](https://github.com/TheVicky1/Pact_OS/issues/131) | `[Test] Add Boundary Test Case for Exact 255 Character Title in Goals Validation Test Suite` | ✅ Live |
+| Catalog #38 | [#132](https://github.com/TheVicky1/Pact_OS/issues/132) | `[JSDoc] Add Return Type Annotations and Usage Example to formatTimerDisplay in src/lib/focus/timer.ts` | ✅ Live |
+| Catalog #39 | [#133](https://github.com/TheVicky1/Pact_OS/issues/133) | `[A11y] Add aria-label Attribute to Delete Task Modal Cancel Action` | ✅ Live |
+| Catalog #40 | [#134](https://github.com/TheVicky1/Pact_OS/issues/134) | `[JSDoc] Add Return Type Annotations and Usage Example to formatMonthLabel in src/lib/money.ts` | ✅ Live |
+| Catalog #41 | [#135](https://github.com/TheVicky1/Pact_OS/issues/135) | `[Test] Add Single-Frequency Filter Test Case to Habit Recurrence Suite` | ✅ Live |
+| Catalog #42 | [#136](https://github.com/TheVicky1/Pact_OS/issues/136) | `[A11y] Add ARIA Progressbar Role and Value Attributes to Streak Summary Card` | ✅ Live |
+| Catalog #43 | [#137](https://github.com/TheVicky1/Pact_OS/issues/137) | `[JSDoc] Add JSDoc Annotations to Partner Verification Schemas in src/lib/validations/partner.ts` | ✅ Live |
+| Catalog #44 | [#138](https://github.com/TheVicky1/Pact_OS/issues/138) | `[Docs] Add Node.js Version Verification Tip in docs/DEVELOPMENT.md` | ✅ Live |
 
 ---
 
