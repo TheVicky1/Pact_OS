@@ -5,6 +5,8 @@ import {
   updatePasswordSchema,
   updateAccountabilityPreferencesSchema,
   updateNotificationPreferencesSchema,
+  updateThemeSettingsSchema,
+  hexColorSchema,
 } from '../src/lib/validations/settings';
 import {
   POPULAR_TIMEZONES,
@@ -202,6 +204,64 @@ describe('PACT Phase 4I-4: Settings Domain Validation Suite', () => {
           `Failed to format live time for timezone: ${tz.value}`
         );
         assert.ok(formatted.length > 0);
+      }
+    });
+  });
+
+  // 6. Theme & Hex Color Code Validation
+  describe('Theme Settings & Hex Color Validation (updateThemeSettingsSchema / hexColorSchema)', () => {
+    it('accepts valid 3-character and 6-character hex color codes (#FFF, #123456, #FF5500)', () => {
+      const validColors = ['#FFF', '#fff', '#123456', '#FF5500', '#abc', '#000000', '#ffffff'];
+
+      for (const color of validColors) {
+        const schemaRes = hexColorSchema.safeParse(color);
+        assert.equal(schemaRes.success, true, `Expected valid hex color for ${color}`);
+
+        const themeRes = updateThemeSettingsSchema.safeParse({ accentColor: color });
+        assert.equal(themeRes.success, true, `Expected valid theme accent color for ${color}`);
+
+        const profileRes = updateProfileSchema.safeParse({
+          fullName: 'Test User',
+          timezone: 'UTC',
+          accentColor: color,
+        });
+        assert.equal(profileRes.success, true, `Expected valid profile accent color for ${color}`);
+      }
+    });
+
+    it('rejects invalid hex color strings (123456, #GGGGGG, #12, #12345, empty)', () => {
+      const invalidColors = [
+        '123456', // missing '#' prefix
+        '#GGGGGG', // invalid hex characters
+        '#12', // too short (2 chars)
+        '#1234', // invalid length (4 chars)
+        '#12345', // invalid length (5 chars)
+        '#1234567', // too long (7 chars)
+        '#ZZZ', // non-hex letters
+        'red', // named color instead of hex
+        '',
+        '   ',
+      ];
+
+      for (const color of invalidColors) {
+        const schemaRes = hexColorSchema.safeParse(color);
+        assert.equal(schemaRes.success, false, `Expected rejection for invalid hex color: ${color}`);
+        if (!schemaRes.success) {
+          assert.match(
+            schemaRes.error.issues[0]?.message || '',
+            /Invalid hex color code format \(e\.g\. #FF5500\)/
+          );
+        }
+
+        const themeRes = updateThemeSettingsSchema.safeParse({ accentColor: color });
+        assert.equal(themeRes.success, false, `Expected theme rejection for invalid hex color: ${color}`);
+
+        const profileRes = updateProfileSchema.safeParse({
+          fullName: 'Test User',
+          timezone: 'UTC',
+          accentColor: color,
+        });
+        assert.equal(profileRes.success, false, `Expected profile rejection for invalid accent color: ${color}`);
       }
     });
   });
