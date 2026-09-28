@@ -4,7 +4,7 @@
  */
 
 import { CommandCategory, CommandGroup, EntitySearchPayload, SearchResultItem } from './types';
-import { ALL_STATIC_COMMANDS, STATIC_QUICK_ACTIONS } from './registry';
+import { ALL_STATIC_COMMANDS, STATIC_QUICK_ACTIONS, sanitizeSearchQuery } from './registry';
 import { formatCentsToCurrency } from '../money';
 
 export interface FilterOptions {
@@ -13,13 +13,7 @@ export interface FilterOptions {
   maxPerGroup?: number;
 }
 
-/**
- * Sanitizes and normalizes user search query.
- */
-export function sanitizeSearchQuery(rawQuery: string): string {
-  if (!rawQuery) return '';
-  return rawQuery.trim().toLowerCase().slice(0, 100);
-}
+export { sanitizeSearchQuery };
 
 /**
  * Calculates a match relevance score for a command or entity item.
