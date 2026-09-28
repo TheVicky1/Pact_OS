@@ -9,6 +9,7 @@ import {
   getDeadlineStatus,
   utcToDatetimeLocalInput,
   getDefaultLocalDeadline,
+  formatSecondsToHumanReadable,
 } from '../src/lib/time';
 
 function runTemporalEngineTestSuite() {
@@ -229,6 +230,23 @@ function runTemporalEngineTestSuite() {
   assert.strictEqual(utcToDatetimeLocalInput(existingDbUtc, 'Asia/Kolkata'), '2026-09-18T22:25');
   assert.strictEqual(utcToLocal(existingDbUtc, 'Asia/Kolkata'), 'Sep 18, 2026, 10:25 PM');
   console.log('✅ Case 9: Existing task stored in DB displayed as 10:25 PM and prefilled as 22:25 in Asia/Kolkata.\n');
+
+  // ----------------------------------------------------------------
+  // 9. DURATION FORMATTER TESTS (formatSecondsToHumanReadable)
+  // ----------------------------------------------------------------
+  console.log('9. Testing formatSecondsToHumanReadable...');
+  assert.strictEqual(formatSecondsToHumanReadable(0), '0s');
+  assert.strictEqual(formatSecondsToHumanReadable(-15), '0s');
+  assert.strictEqual(formatSecondsToHumanReadable(NaN), '0s');
+  assert.strictEqual(formatSecondsToHumanReadable(45), '45s');
+  assert.strictEqual(formatSecondsToHumanReadable(60), '1m');
+  assert.strictEqual(formatSecondsToHumanReadable(72), '1m 12s');
+  assert.strictEqual(formatSecondsToHumanReadable(2712), '45m 12s');
+  assert.strictEqual(formatSecondsToHumanReadable(3600), '1h');
+  assert.strictEqual(formatSecondsToHumanReadable(5400), '1h 30m');
+  assert.strictEqual(formatSecondsToHumanReadable(3665), '1h 1m 5s');
+  assert.strictEqual(formatSecondsToHumanReadable(7325), '2h 2m 5s');
+  console.log('✅ formatSecondsToHumanReadable tests passed cleanly.\n');
 
   console.log('================================================================');
   console.log('🎉 ALL TEMPORAL ENGINE & TIMEZONE UNIT TESTS PASSED CLEANLY');
