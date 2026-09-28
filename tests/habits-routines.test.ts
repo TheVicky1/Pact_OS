@@ -238,9 +238,9 @@ describe('PACT Phase 6C: Habits & Daily Routines Engine Suite', () => {
       assert.equal(streak.isCompletedToday, true);
     });
 
-    it('2.5 Leap-year boundary (Feb 28 -> Feb 29 -> Mar 1) computes continuous daily streak', () => {
+    it('2.5 Leap-year boundary (2028-02-28 -> 2028-02-29 -> 2028-03-01) computes continuous 3-day daily streak', () => {
       // 2028 is a leap year (Feb has 29 days)
-      const template = createMockTemplate({ frequency_type: 'daily', start_date: '2028-02-01' });
+      const template = createMockTemplate({ frequency_type: 'daily', start_date: '2028-02-28' });
       const asOf = '2028-03-01';
 
       const occurrences: HabitOccurrence[] = [
@@ -249,9 +249,16 @@ describe('PACT Phase 6C: Habits & Daily Routines Engine Suite', () => {
         { id: 'l3', user_id: 'u', habit_template_id: template.id, scheduled_date: '2028-03-01', status: 'completed', completed_at: '2028-03-01T10:00:00Z', notes: null, created_at: '', updated_at: '' },
       ];
 
+      const scheduled = getScheduledDatesForRange(template, '2028-02-28', '2028-03-01');
+      assert.deepEqual(scheduled, ['2028-02-28', '2028-02-29', '2028-03-01']);
+      assert.equal(diffCalendarDays('2028-02-28', '2028-03-01'), 2);
+
       const streak = calculateHabitStreak(template, occurrences, asOf);
       assert.equal(streak.currentStreak, 3);
       assert.equal(streak.longestStreak, 3);
+      assert.equal(streak.totalCompletions, 3);
+      assert.equal(streak.totalScheduled, 3);
+      assert.equal(streak.completionRate, 100);
       assert.equal(streak.isCompletedToday, true);
     });
 
@@ -272,7 +279,7 @@ describe('PACT Phase 6C: Habits & Daily Routines Engine Suite', () => {
       assert.equal(streak.longestStreak, 2); // tie between 1-2 and 4-5
     });
 
-    it('2.5 Calculates overall aggregate metrics correctly', () => {
+    it('2.6 Calculates overall aggregate metrics correctly', () => {
       const habit1: DailyHabitItem = {
         template: createMockTemplate({ id: 'h1', name: 'H1' }),
         occurrence: { id: 'o1', user_id: 'u', habit_template_id: 'h1', scheduled_date: '2026-09-11', status: 'completed', completed_at: '', notes: null, created_at: '', updated_at: '' },
