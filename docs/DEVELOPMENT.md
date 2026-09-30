@@ -30,23 +30,37 @@ git remote add upstream https://github.com/TheVicky1/Pact_OS.git
 npm install
 ```
 
-### 2.2 Environment Variables
-Copy `.env.example` to `.env.local` and configure your credentials:
-```bash
-cp .env.example .env.local
-```
+### Environment Variables Setup
+
+PACT uses a `.env.example` reference template in the repository root so contributors can configure local environment variables without committing secrets. Follow these step-by-step instructions to set up your local environment:
+
+1. **Copy `.env.example` to `.env.local`** in the project root:
+   ```bash
+   # macOS / Linux / Git Bash / PowerShell
+   cp .env.example .env.local
+
+   # Windows Command Prompt
+   copy .env.example .env.local
+   ```
+2. **Populate your Supabase & application keys** in `.env.local`:
+   - Retrieve `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_ANON_KEY` (or `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`) from your Supabase project dashboard under **Project Settings -> API**.
+   - Note that the default template values in `.env.example` allow you to run the entire 56-suite offline test matrix (`npm test`) and explore the UI locally without live production credentials.
+3. **Verify secret protection before committing**:
+   - `.env.local` is ignored by Git via `.gitignore`. Never commit actual keys to `.env.example` or version control, and run `node scratch/secret-scan.mjs` to verify zero leaked credentials.
 
 | Variable | Description | Required | Example |
 | :--- | :--- | :--- | :--- |
-| `NEXT_PUBLIC_SUPABASE_URL` | Supabase API URL | Yes | `https://xyz.supabase.co` |
-| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Supabase Anonymous Key | Yes | `eyJhbGciOi...` |
-| `SUPABASE_SERVICE_ROLE_KEY` | Supabase Service Role Key | Yes (Server) | `eyJhbGciOi...` |
-| `CRON_SECRET` | Secret token for `/api/cron/sweep-deadlines` | Yes (Cron) | `random_secure_hex_string` |
-| `NEXT_PUBLIC_APP_URL` | Public application URL | Yes | `http://localhost:3000` |
-| `GOOGLE_CLIENT_ID` | Google OAuth Client ID | Optional | `xxx.apps.googleusercontent.com` |
-| `GOOGLE_CLIENT_SECRET` | Google OAuth Client Secret | Optional | `GOCSPX-xxx` |
-| `GITHUB_CLIENT_ID` | GitHub Integration Client ID | Optional | `Ov23xxx` |
-| `GITHUB_CLIENT_SECRET` | GitHub Integration Client Secret | Optional | `ghs_xxx` |
+| `NEXT_PUBLIC_SUPABASE_URL` | Supabase project API URL used by browser and server clients | Yes | `https://xyz.supabase.co` |
+| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Supabase public anonymous key for client-side auth & RLS queries | Yes | `eyJhbGciOi...` |
+| `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` | Supabase publishable client key referenced in `.env.example` | Yes | `your-supabase-publishable-key` |
+| `SUPABASE_SERVICE_ROLE_KEY` | Server-only Supabase Service Role key for background cron sweeps | Yes (Server) | `eyJhbGciOi...` |
+| `CRON_SECRET` | Bearer secret token authorizing `/api/cron/sweep-deadlines` | Yes (Cron) | `random_secure_hex_string` |
+| `NEXT_PUBLIC_APP_URL` | Base public application URL for callbacks and links | Yes | `http://localhost:3000` |
+| `GOOGLE_CLIENT_ID` | Google Calendar OAuth 2.0 Client ID | Optional | `xxx.apps.googleusercontent.com` |
+| `GOOGLE_CLIENT_SECRET` | Google Calendar OAuth 2.0 Client Secret | Optional | `GOCSPX-xxx` |
+| `GITHUB_CLIENT_ID` | GitHub OAuth / Proof-of-Work Integration Client ID | Optional | `Ov23xxx` |
+| `GITHUB_CLIENT_SECRET` | GitHub OAuth / Proof-of-Work Integration Client Secret | Optional | `ghs_xxx` |
+| `RESEND_API_KEY` | Resend API key for transactional email notifications | Optional | `re_your_resend_api_key` |
 
 ---
 
@@ -169,3 +183,4 @@ src/
 3. **Zod Validation**: Always validate Server Action inputs against strict Zod schemas before running business logic.
 4. **Timezone Awareness**: Always use `lib/time.ts` utilities for date operations to respect the user's configured profile timezone.
 5. **Fail-Safe Third-Party Calls**: External integration calls must always be wrapped in try/catch blocks that transition to `RETRY_PENDING` on failure rather than throwing unhandled exceptions.
+
