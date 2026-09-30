@@ -30,7 +30,7 @@ git remote add upstream https://github.com/TheVicky1/Pact_OS.git
 npm install
 ```
 
-### Environment Variables Setup
+### 2.2 Environment Variables Setup (`cp .env.example .env.local`)
 
 PACT uses a `.env.example` reference template in the repository root so contributors can configure local environment variables without committing secrets. Follow these step-by-step instructions to set up your local environment:
 
