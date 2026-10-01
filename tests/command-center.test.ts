@@ -10,9 +10,10 @@ import {
   ALL_STATIC_COMMANDS,
   STATIC_QUICK_ACTIONS,
   STATIC_NAVIGATION_COMMANDS,
+  sanitizeSearchQuery,
+  searchCommandRegistry,
 } from '../src/lib/command-center/registry';
 import {
-  sanitizeSearchQuery,
   computeMatchScore,
   mapEntitiesToSearchResults,
   filterAndGroupCommands,
@@ -72,6 +73,21 @@ describe('PACT Phase 6A: Global Command Center Unit Test Suite', () => {
     assert.equal(sanitizeSearchQuery(''), '');
     const longStr = 'a'.repeat(200);
     assert.equal(sanitizeSearchQuery(longStr).length, 100);
+  });
+
+  it('2.1b sanitizeSearchQuery strips regex special characters and collapses excess whitespace', () => {
+    assert.equal(sanitizeSearchQuery('  *Task*  (urgent)  [high]+  '), 'task urgent high');
+    assert.equal(sanitizeSearchQuery('^find? $all {items}|\\'), 'find all items');
+  });
+
+  it('2.1c searchCommandRegistry uses sanitizeSearchQuery to match commands safely', () => {
+    const results = searchCommandRegistry('  *Task*  ');
+    assert.ok(results.length > 0, 'Should find task commands even with special characters');
+    const hasCreateTask = results.some((cmd) => cmd.id === 'action-create-task');
+    assert.equal(hasCreateTask, true, 'action-create-task must match "Task"');
+
+    const emptyResults = searchCommandRegistry('   ***???   ');
+    assert.equal(emptyResults.length, 0, 'Empty sanitized query should return empty array');
   });
 
   it('2.2 computeMatchScore ranks exact title match higher than keyword or subtitle match', () => {
