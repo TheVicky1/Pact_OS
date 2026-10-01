@@ -93,6 +93,23 @@ function getTimezoneOffsetMinutes(date: Date, timeZone: string): number {
   return Math.round((asUtc - date.getTime()) / 60000);
 }
 
+
+/**
+ * Converts minutes to milliseconds, returning 0 for negative values
+ *
+ * @param minutes - The duration in minutes to convert.
+ * @returns The converted duration in milliseconds, or 0 if input is non-positive.
+ *
+ * @example
+ * convertMinutesToMilliseconds(5);
+ * // Returns: 300000
+ */
+export function convertMinutesToMilliseconds(minutes: number): number {
+
+  return minutes <=0 ? 0 : minutes * 60 * 1000;
+
+}
+
 /**
  * Converts a local wall-clock date/time string in a specific IANA timezone
  * to an absolute UTC ISO 8601 timestamp.
