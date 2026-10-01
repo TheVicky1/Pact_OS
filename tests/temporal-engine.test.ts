@@ -9,6 +9,7 @@ import {
   getDeadlineStatus,
   utcToDatetimeLocalInput,
   getDefaultLocalDeadline,
+  convertMinutesToMilliseconds
 } from '../src/lib/time';
 
 function runTemporalEngineTestSuite() {
@@ -229,6 +230,22 @@ function runTemporalEngineTestSuite() {
   assert.strictEqual(utcToDatetimeLocalInput(existingDbUtc, 'Asia/Kolkata'), '2026-09-18T22:25');
   assert.strictEqual(utcToLocal(existingDbUtc, 'Asia/Kolkata'), 'Sep 18, 2026, 10:25 PM');
   console.log('✅ Case 9: Existing task stored in DB displayed as 10:25 PM and prefilled as 22:25 in Asia/Kolkata.\n');
+
+  // ----------------------------------------------------------------
+  // 9. MINUTES TO MILLISECONDS CONVERSION
+  // ----------------------------------------------------------------
+  console.log('9. Testing Minutes <-> Milliseconds Conversions...');
+
+  // CASE 1 — Minutes are positive
+  const targetMms = 300000;
+  const MinutesConverted = convertMinutesToMilliseconds(5);
+  assert.strictEqual(MinutesConverted, targetMms);
+  console.log('✅ Case 1: Positive minutes properly converted.');
+
+  // CASE 2 — Minutes are negative
+  const NegativeMinutesConverted = convertMinutesToMilliseconds(-5);
+  assert.strictEqual(NegativeMinutesConverted, 0);
+  console.log('✅ Case 2: Negative minutes handled properly.');
 
   console.log('================================================================');
   console.log('🎉 ALL TEMPORAL ENGINE & TIMEZONE UNIT TESTS PASSED CLEANLY');
