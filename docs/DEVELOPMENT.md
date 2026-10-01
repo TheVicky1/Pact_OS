@@ -112,6 +112,28 @@ npm run dev
 Open [http://localhost:3000](http://localhost:3000) in your browser.
 
 ---
+### Troubleshooting Port Conflicts
+
+If port 3000 is already in use, Next.js will automatically try another available port.
+
+You can also specify a custom port:
+
+```bash
+PORT=3001 npm run dev
+```
+
+If you need to stop an existing process using port 3000, find the process ID with:
+
+```bash
+netstat -ano | findstr :3000
+```
+
+Then stop the process using:
+
+```bash
+taskkill /PID <PID> /F
+```
+---
 
 ## 5. Testing & Quality Assurance
 
