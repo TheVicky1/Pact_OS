@@ -1,8 +1,18 @@
 import { z } from 'zod';
 import { isValidIanaTimezone } from '../time';
 
+export const HEX_COLOR_REGEX = /^#(?:[0-9a-fA-F]{3}){1,2}$/;
+
 /**
- * Validation schema for updating user profile (Name & IANA Timezone)
+ * Validation schema for 3-character and 6-character hex color codes.
+ */
+export const hexColorSchema = z
+  .string()
+  .trim()
+  .regex(HEX_COLOR_REGEX, 'Invalid hex color code format (e.g. #FF5500)');
+
+/**
+ * Validation schema for updating user profile (Name, IANA Timezone, optional accent color)
  */
 export const updateProfileSchema = z.object({
   fullName: z
@@ -17,9 +27,25 @@ export const updateProfileSchema = z.object({
     .refine((val) => isValidIanaTimezone(val), {
       message: 'Invalid IANA timezone identifier (e.g., Asia/Kolkata, America/New_York, UTC).',
     }),
+  accentColor: hexColorSchema.optional(),
 });
 
 export type UpdateProfileInput = z.infer<typeof updateProfileSchema>;
+
+/**
+ * Validation schema for profile theme customization settings
+ */
+export const updateThemeSettingsSchema = z.object({
+  accentColor: hexColorSchema,
+  colorMode: z.enum(['light', 'dark', 'system']).default('system').optional(),
+});
+
+export type UpdateThemeSettingsInput = z.infer<typeof updateThemeSettingsSchema>;
+
+export const updateProfileThemeSchema = updateThemeSettingsSchema;
+export const updateThemePreferencesSchema = updateThemeSettingsSchema;
+export type UpdateProfileThemeInput = UpdateThemeSettingsInput;
+export type UpdateThemePreferencesInput = UpdateThemeSettingsInput;
 
 /**
  * Validation schema for updating user password
