@@ -30,7 +30,7 @@
 
 <br />
 
-[Live Demo](https://pact-os.vercel.app) · [About](#about) · [Quick Start](#quick-start) · [Contributing](#contributing) · [Core Features](#core-features) · [Architecture](#architecture) · [Documentation](#documentation)
+[Live Demo](https://pact-os.vercel.app) · [About](#about) · [Quick Start](#quick-start) · [Contributing](#contributing) · [Core Features](#core-features) · [Architecture](#architecture) · [Documentation](#documentation) · [API Spec](docs/openapi.json)
 
 </div>
 
