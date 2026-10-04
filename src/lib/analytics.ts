@@ -445,6 +445,26 @@ export function formatDurationHoursMinutes(totalSeconds: number): string {
 }
 
 /**
+ * Calculates goal completion as a whole-number percentage bounded between 0 and 100.
+ *
+ * @param currentValue - Progress achieved so far (e.g. 30 of 120 pages read).
+ * @param targetValue - Value that represents 100% completion.
+ * @returns Rounded percentage in the range 0–100. Returns 0 when the target is 0,
+ * negative, or either input is not a finite number.
+ *
+ * @example
+ * calculateGoalProgressPercentage(30, 120); // 25
+ * calculateGoalProgressPercentage(150, 100); // 100 (capped)
+ * calculateGoalProgressPercentage(5, 0); // 0 (no target)
+ */
+export function calculateGoalProgressPercentage(currentValue: number, targetValue: number): number {
+  if (!Number.isFinite(currentValue) || !Number.isFinite(targetValue) || targetValue <= 0) {
+    return 0;
+  }
+  return Math.min(100, Math.max(0, Math.round((currentValue / targetValue) * 100)));
+}
+
+/**
  * Deterministically generates factual observations from real PACT activity numbers.
  * Strictly no fake AI, no personality scoring, no gamification badges.
  */
