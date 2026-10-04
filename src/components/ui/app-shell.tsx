@@ -6,6 +6,7 @@ import { PwaRegister } from '@/components/pwa/pwa-register';
 import { OfflineIndicator } from '@/components/pwa/offline-indicator';
 import { SkipToContent } from './skip-to-content';
 import { KeyboardShortcutsModal } from './keyboard-shortcuts-modal';
+import { GlobalErrorBoundary } from './global-error-boundary';
 
 export interface AppShellProps {
   userName?: string;
@@ -44,9 +45,11 @@ export function AppShell({
         {/* Global Application Header */}
         <AppHeader userName={userName} userEmail={userEmail} timezone={timezone} />
 
-        {/* Main Content Area */}
+        {/* Main Content Area Protected by GlobalErrorBoundary */}
         <main id="main-content" className="flex-1 w-full relative z-10 flex flex-col">
-          {children}
+          <GlobalErrorBoundary>
+            {children}
+          </GlobalErrorBoundary>
         </main>
 
         {/* PWA Offline & Synchronization Indicator */}

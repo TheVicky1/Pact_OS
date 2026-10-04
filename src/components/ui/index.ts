@@ -16,4 +16,5 @@ export * from './page-container';
 export * from './app-shell';
 export * from './bulk-action-toolbar';
 export * from './user-profile-dropdown';
+export * from './global-error-boundary';
 
