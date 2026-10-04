@@ -3,6 +3,7 @@
 import React, { useState, useEffect, useTransition } from 'react';
 import { POPULAR_TIMEZONES, formatTimezoneLiveTime } from '@/lib/timezones-data';
 import { isValidIanaTimezone } from '@/lib/time';
+import { sanitizeTextInput } from '@/lib/security/sanitizer';
 import {
   User,
   Globe,
@@ -95,7 +96,7 @@ export function StepIdentity({
     startTransition(async () => {
       try {
         await onNext({
-          fullName: fullName.trim(),
+          fullName: sanitizeTextInput(fullName.trim()),
           timezone: timezone.trim(),
           workStartTime,
           workEndTime,

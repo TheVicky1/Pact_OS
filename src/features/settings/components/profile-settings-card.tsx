@@ -5,6 +5,7 @@ import { UserProfileSettings } from '@/types/domain';
 import { updateProfileAction } from '@/features/settings/actions';
 import { POPULAR_TIMEZONES, formatTimezoneLiveTime } from '@/lib/timezones-data';
 import { isValidIanaTimezone } from '@/lib/time';
+import { sanitizeTextInput } from '@/lib/security/sanitizer';
 import {
   User,
   Globe,
@@ -79,7 +80,7 @@ export function ProfileSettingsCard({ profile }: ProfileSettingsCardProps) {
 
     startTransition(async () => {
       const res = await updateProfileAction({
-        fullName: fullName.trim(),
+        fullName: sanitizeTextInput(fullName.trim()),
         timezone: timezone.trim(),
       });
 

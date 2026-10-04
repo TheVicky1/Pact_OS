@@ -11,6 +11,7 @@ import {
   Loader2,
   AlertCircle,
 } from 'lucide-react';
+import { sanitizeTextInput } from '@/lib/security/sanitizer';
 
 
 export interface StepOperatingPreferencesProps {
@@ -87,8 +88,10 @@ export function StepOperatingPreferences({
         await onNext({
           dailyTaskTarget: dailyTarget,
           notificationPreferences: notifications,
-          initialGoalTitle: goalTitle.trim() || undefined,
-          initialProjectTitle: projectTitle.trim() || undefined,
+          initialGoalTitle: goalTitle.trim() ? sanitizeTextInput(goalTitle.trim()) : undefined,
+          initialProjectTitle: projectTitle.trim()
+            ? sanitizeTextInput(projectTitle.trim())
+            : undefined,
         });
       } catch (err: unknown) {
         setError(err instanceof Error ? err.message : 'Failed to save preferences.');
