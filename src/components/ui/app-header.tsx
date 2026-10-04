@@ -8,6 +8,7 @@ import { signOutAction } from '@/features/auth/actions';
 import { NotificationPopover } from '@/components/ui/notification-popover';
 import { UserProfileDropdown } from '@/components/ui/user-profile-dropdown';
 import { SyncStatusIndicator } from '@/features/sync/components/sync-status-indicator';
+import { updateFaviconBadge } from '@/utils/favicon-badge';
 import {
   LayoutDashboard,
   Target,
@@ -48,6 +49,10 @@ export function AppHeader({ userName, userEmail, timezone }: AppHeaderProps) {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isNotificationOpen, setIsNotificationOpen] = useState(false);
   const [unreadCount, setUnreadCount] = useState<number>(0);
+
+  useEffect(() => {
+    updateFaviconBadge(unreadCount);
+  }, [unreadCount]);
 
   const isDashboardActive = pathname === '/app';
   const isFocusActive = pathname === '/app/focus' || pathname.startsWith('/app/focus/');
