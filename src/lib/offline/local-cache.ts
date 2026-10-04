@@ -22,7 +22,7 @@ export interface LocalCacheSnapshot {
   entities: Record<CacheableEntityType, CachedEntity[]>;
 }
 
-const CACHE_STORAGE_KEY = 'pact_local_entity_cache_v2';
+export const CACHE_STORAGE_KEY = 'pact_local_entity_cache_v2';
 const CACHE_SCHEMA_VERSION = 2;
 
 export interface CacheStorageAdapter {
