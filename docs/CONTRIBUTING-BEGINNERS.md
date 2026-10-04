@@ -244,6 +244,19 @@ Before submitting your work, run these validation checks locally. All 56 authori
    ```bash
    npm run lint
    ```
+
+### Code Formatting & Prettier
+
+Keeping code cleanly formatted and linted makes your pull request easy to review and prevents CI failures:
+
+> 💡 **Code Formatting & Linting Guidelines Box**
+> - **Run ESLint before committing**: Always run `npm run lint` to catch unused variables, missing React hook dependencies, and formatting issues early.
+> - **Verify TypeScript types**: Run `npx tsc --noEmit` to ensure all types and imports compile cleanly.
+> - **Recommended IDE Extensions (VS Code)**:
+>   - **ESLint** (`dbaeumer.vscode-eslint`) — highlights lint rules inline as you type.
+>   - **Prettier - Code formatter** (`esbenp.prettier-vscode`) — keeps indentation (2 spaces), quotes, and trailing commas consistent across `.ts`, `.tsx`, `.json`, and `.md` files.
+>   - **Tailwind CSS IntelliSense** (`bradlc.vscode-tailwindcss`) — autocompletes and sorts Tailwind utility classes.
+> - **Keep diffs minimal**: Format only the files you touched for your issue so your pull request diff stays small and focused.
 2. **Check TypeScript Types**:
    ```bash
    npx tsc --noEmit

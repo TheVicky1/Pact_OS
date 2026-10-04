@@ -682,3 +682,35 @@ export function getMonthGridForDate(
   };
 }
 
+/**
+ * Formats a duration in seconds into a clean, human-readable string.
+ * Examples:
+ * - 0 -> '0s'
+ * - 45 -> '45s'
+ * - 2712 -> '45m 12s'
+ * - 5400 -> '1h 30m'
+ * - 3665 -> '1h 1m 5s'
+ * - 3600 -> '1h'
+ * - 60 -> '1m'
+ *
+ * @param totalSeconds - Total elapsed duration in seconds
+ * @returns Human-readable duration string (e.g., '1h 30m', '45m 12s', '0s')
+ */
+export function formatSecondsToHumanReadable(totalSeconds: number): string {
+  if (!totalSeconds || isNaN(totalSeconds) || totalSeconds <= 0) {
+    return '0s';
+  }
+
+  const secondsInt = Math.floor(totalSeconds);
+  const hours = Math.floor(secondsInt / 3600);
+  const minutes = Math.floor((secondsInt % 3600) / 60);
+  const seconds = secondsInt % 60;
+
+  const parts: string[] = [];
+  if (hours > 0) parts.push(`${hours}h`);
+  if (minutes > 0) parts.push(`${minutes}m`);
+  if (seconds > 0 || parts.length === 0) parts.push(`${seconds}s`);
+
+  return parts.join(' ');
+}
+

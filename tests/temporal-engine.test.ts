@@ -9,6 +9,7 @@ import {
   getDeadlineStatus,
   utcToDatetimeLocalInput,
   getDefaultLocalDeadline,
+  formatSecondsToHumanReadable,
   convertMinutesToMilliseconds
 } from '../src/lib/time';
 
@@ -232,9 +233,26 @@ function runTemporalEngineTestSuite() {
   console.log('✅ Case 9: Existing task stored in DB displayed as 10:25 PM and prefilled as 22:25 in Asia/Kolkata.\n');
 
   // ----------------------------------------------------------------
-  // 9. MINUTES TO MILLISECONDS CONVERSION
+  // 9. DURATION FORMATTER TESTS (formatSecondsToHumanReadable)
   // ----------------------------------------------------------------
-  console.log('9. Testing Minutes <-> Milliseconds Conversions...');
+  console.log('9. Testing formatSecondsToHumanReadable...');
+  assert.strictEqual(formatSecondsToHumanReadable(0), '0s');
+  assert.strictEqual(formatSecondsToHumanReadable(-15), '0s');
+  assert.strictEqual(formatSecondsToHumanReadable(NaN), '0s');
+  assert.strictEqual(formatSecondsToHumanReadable(45), '45s');
+  assert.strictEqual(formatSecondsToHumanReadable(60), '1m');
+  assert.strictEqual(formatSecondsToHumanReadable(72), '1m 12s');
+  assert.strictEqual(formatSecondsToHumanReadable(2712), '45m 12s');
+  assert.strictEqual(formatSecondsToHumanReadable(3600), '1h');
+  assert.strictEqual(formatSecondsToHumanReadable(5400), '1h 30m');
+  assert.strictEqual(formatSecondsToHumanReadable(3665), '1h 1m 5s');
+  assert.strictEqual(formatSecondsToHumanReadable(7325), '2h 2m 5s');
+  console.log('✅ formatSecondsToHumanReadable tests passed cleanly.\n');
+
+  // ----------------------------------------------------------------
+  // 10. MINUTES TO MILLISECONDS CONVERSION
+  // ----------------------------------------------------------------
+  console.log('10. Testing Minutes <-> Milliseconds Conversions...');
 
   // CASE 1 — Minutes are positive
   const targetMms = 300000;

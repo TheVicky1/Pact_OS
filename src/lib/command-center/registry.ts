@@ -217,3 +217,50 @@ export const ALL_STATIC_COMMANDS: CommandItem[] = [
   ...STATIC_QUICK_ACTIONS,
   ...STATIC_NAVIGATION_COMMANDS,
 ];
+
+/**
+ * Sanitizes and normalizes user search query before searching the command registry.
+ * Strips special regex characters, trims excess whitespace, and converts to lowercase.
+ *
+ * @param query - The raw input search string
+ * @returns The sanitized, safe lowercase search query string
+ */
+export function sanitizeSearchQuery(query: string): string {
+  if (!query) return '';
+  return query
+    .replace(/[.*+?^${}()|[\]\\]/g, '')
+    .trim()
+    .replace(/\s+/g, ' ')
+    .toLowerCase()
+    .slice(0, 100);
+}
+
+/**
+ * Searches the static command registry for items matching the sanitized search query.
+ * Normalizes the query with sanitizeSearchQuery and searches across title, subtitle,
+ * category, and keywords.
+ *
+ * @param query - Raw search query from the user
+ * @param items - Command registry items to search within (defaults to ALL_STATIC_COMMANDS)
+ * @returns Array of matching CommandItem records
+ */
+export function searchCommandRegistry(
+  query: string,
+  items: CommandItem[] = ALL_STATIC_COMMANDS
+): CommandItem[] {
+  const sanitized = sanitizeSearchQuery(query);
+  if (!sanitized) {
+    return [];
+  }
+
+  return items.filter((cmd) => {
+    const titleMatch = cmd.title.toLowerCase().includes(sanitized);
+    const subtitleMatch = cmd.subtitle?.toLowerCase().includes(sanitized) ?? false;
+    const categoryMatch = cmd.category.toLowerCase().includes(sanitized);
+    const keywordMatch = cmd.keywords?.some((kw) =>
+      kw.toLowerCase().includes(sanitized) || sanitized.includes(kw.toLowerCase())
+    ) ?? false;
+
+    return titleMatch || subtitleMatch || categoryMatch || keywordMatch;
+  });
+}
