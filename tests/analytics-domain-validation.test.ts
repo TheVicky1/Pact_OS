@@ -7,6 +7,7 @@ import {
   calculateProjectProgressList,
   formatDurationHoursMinutes,
   generateFactualObservations,
+  calculateGoalProgressPercentage,
 } from '../src/lib/analytics';
 
 console.log('================================================================');
@@ -171,6 +172,21 @@ assert.ok(obs.some((o) => o.includes('Recorded 1h 30m of verified session time a
 assert.ok(obs.some((o) => o.includes('Accountability resolutions: 1 fulfilled, 0 waived')));
 
 console.log('✅ Deterministic factual observations verified.');
+
+// 8. Goal Progress Percentage Helper
+console.log('\n8. Testing calculateGoalProgressPercentage bounds...');
+
+assert.strictEqual(calculateGoalProgressPercentage(30, 120), 25, 'Standard progress should be 25%');
+assert.strictEqual(calculateGoalProgressPercentage(1, 3), 33, 'Fractional progress should round to nearest whole percent');
+assert.strictEqual(calculateGoalProgressPercentage(0, 50), 0, 'No progress should be 0%');
+assert.strictEqual(calculateGoalProgressPercentage(50, 50), 100, 'Exact target should be 100%');
+assert.strictEqual(calculateGoalProgressPercentage(10, 0), 0, 'Zero target must safely return 0%');
+assert.strictEqual(calculateGoalProgressPercentage(10, -5), 0, 'Negative target must safely return 0%');
+assert.strictEqual(calculateGoalProgressPercentage(150, 100), 100, 'Overflow progress must be capped at 100%');
+assert.strictEqual(calculateGoalProgressPercentage(-20, 100), 0, 'Negative progress must be floored at 0%');
+assert.strictEqual(calculateGoalProgressPercentage(NaN, 100), 0, 'Non-finite progress must return 0%');
+
+console.log('✅ Goal progress percentage bounds verified.');
 
 console.log('\n================================================================');
 console.log('🎉 ALL PHASE 4I-3 ANALYTICS DOMAIN & VALIDATION TESTS PASSED');
