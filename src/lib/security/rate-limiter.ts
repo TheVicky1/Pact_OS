@@ -199,3 +199,93 @@ export function formatRateLimitHeaders(result: RateLimitResult): Record<string, 
 
   return headers;
 }
+
+export interface TokenBucketResult {
+  allowed: boolean;
+  /** Whole tokens left in the bucket after this call */
+  remaining: number;
+  /** Seconds until enough tokens refill (0 when allowed) */
+  retryAfterSeconds: number;
+}
+
+interface TokenBucket {
+  tokens: number;
+  updatedAt: number; // Unix timestamp in ms
+}
+
+/**
+ * Token bucket rate limiter. Each key gets a bucket of `capacity` tokens that refills
+ * continuously at `refillPerSecond`, allowing short bursts while enforcing an average rate.
+ *
+ * @example
+ * const limiter = new TokenBucketLimiter(10, 1); // burst of 10, then 1 req/sec
+ * if (!limiter.consume(clientIp).allowed) return new Response(null, { status: 429 });
+ */
+export class TokenBucketLimiter {
+  private buckets = new Map<string, TokenBucket>();
+  private maxEntries = 10000;
+
+  constructor(
+    private readonly capacity: number,
+    private readonly refillPerSecond: number,
+    private readonly now: () => number = Date.now
+  ) {
+    if (!(capacity > 0) || !(refillPerSecond > 0)) {
+      throw new RangeError('capacity and refillPerSecond must be positive numbers');
+    }
+  }
+
+  /**
+   * Attempts to take `tokens` from the bucket for `key`.
+   * @throws RangeError if `tokens` is not a positive number or exceeds capacity.
+   */
+  public consume(key: string, tokens = 1): TokenBucketResult {
+    if (!(tokens > 0) || tokens > this.capacity) {
+      throw new RangeError(`tokens must be greater than 0 and at most ${this.capacity}`);
+    }
+
+    const now = this.now();
+    const bucket = this.buckets.get(key) ?? { tokens: this.capacity, updatedAt: now };
+    const elapsedSeconds = Math.max(0, now - bucket.updatedAt) / 1000;
+    bucket.tokens = Math.min(this.capacity, bucket.tokens + elapsedSeconds * this.refillPerSecond);
+    bucket.updatedAt = now;
+
+    const allowed = bucket.tokens >= tokens;
+    if (allowed) bucket.tokens -= tokens;
+
+    this.prune(now);
+    this.buckets.set(key, bucket);
+
+    return {
+      allowed,
+      remaining: Math.floor(bucket.tokens),
+      retryAfterSeconds: allowed ? 0 : Math.ceil((tokens - bucket.tokens) / this.refillPerSecond),
+    };
+  }
+
+  /**
+   * Clears all buckets.
+   */
+  public clear(): void {
+    this.buckets.clear();
+  }
+
+  /**
+   * Drops buckets that have fully refilled (equivalent to a fresh bucket) once the store grows large.
+   */
+  private prune(now: number): void {
+    if (this.buckets.size < this.maxEntries) return;
+    const fullAfterMs = (this.capacity / this.refillPerSecond) * 1000;
+    for (const [k, b] of this.buckets) {
+      if (now - b.updatedAt >= fullAfterMs) this.buckets.delete(k);
+    }
+    // If still too large, drop oldest 20%
+    if (this.buckets.size >= this.maxEntries) {
+      let deleted = 0;
+      for (const k of this.buckets.keys()) {
+        this.buckets.delete(k);
+        if (++deleted >= this.maxEntries / 5) break;
+      }
+    }
+  }
+}
