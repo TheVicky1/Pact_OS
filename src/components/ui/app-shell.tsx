@@ -7,11 +7,14 @@ import { OfflineIndicator } from '@/components/pwa/offline-indicator';
 import { SkipToContent } from './skip-to-content';
 import { KeyboardShortcutsModal } from './keyboard-shortcuts-modal';
 import { GlobalErrorBoundary } from './global-error-boundary';
+import { FontScaleSync } from './font-scale-sync';
+import { DEFAULT_FONT_SCALE, FontScale } from '@/lib/ui/font-scale';
 
 export interface AppShellProps {
   userName?: string;
   userEmail?: string;
   timezone?: string;
+  fontScale?: FontScale;
   children: React.ReactNode;
 }
 
@@ -25,6 +28,7 @@ export function AppShell({
   userName,
   userEmail,
   timezone,
+  fontScale = DEFAULT_FONT_SCALE,
   children,
 }: AppShellProps) {
   return (
@@ -32,6 +36,9 @@ export function AppShell({
       <div className="min-h-screen bg-[#09090b] text-zinc-100 flex flex-col selection:bg-[#d4af37]/30 selection:text-zinc-100 relative overflow-x-hidden">
         {/* Accessible Skip Link */}
         <SkipToContent />
+
+        {/* Workspace Font Scale Preference */}
+        <FontScaleSync fontScale={fontScale} />
 
         {/* Global Keyboard Shortcuts Modal ('?') */}
         <KeyboardShortcutsModal />
