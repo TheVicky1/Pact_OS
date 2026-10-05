@@ -5,6 +5,7 @@ import {
   updatePasswordSchema,
   updateAccountabilityPreferencesSchema,
   updateNotificationPreferencesSchema,
+  updateWorkspacePreferencesSchema,
   updateThemeSettingsSchema,
   hexColorSchema,
 } from '../src/lib/validations/settings';
@@ -262,6 +263,31 @@ describe('PACT Phase 4I-4: Settings Domain Validation Suite', () => {
           accentColor: color,
         });
         assert.equal(profileRes.success, false, `Expected profile rejection for invalid accent color: ${color}`);
+      }
+    });
+  });
+
+  // 7. Workspace Preferences Validation
+  describe('Workspace Preferences Validation (updateWorkspacePreferencesSchema)', () => {
+    it('accepts every supported font scale', () => {
+      for (const fontScale of ['90%', '100%', '110%', '125%']) {
+        const res = updateWorkspacePreferencesSchema.safeParse({ fontScale });
+        assert.equal(res.success, true, `Expected valid font scale: ${fontScale}`);
+      }
+    });
+
+    it('defaults to the standard 100% font scale when missing', () => {
+      const res = updateWorkspacePreferencesSchema.safeParse({});
+      assert.equal(res.success, true);
+      if (res.success) {
+        assert.equal(res.data.fontScale, '100%');
+      }
+    });
+
+    it('rejects unsupported font scales', () => {
+      for (const fontScale of ['80%', '150%', '100', '', 1.1, null]) {
+        const res = updateWorkspacePreferencesSchema.safeParse({ fontScale });
+        assert.equal(res.success, false, `Expected rejection for font scale: ${String(fontScale)}`);
       }
     });
   });
