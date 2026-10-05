@@ -7,7 +7,9 @@ import {
   NotificationPreferences,
   UserAccountabilityPreferences,
   ConsequenceDefinition,
+  WorkspacePreferences,
 } from '@/types/domain';
+import { resolveFontScale } from '@/lib/ui/font-scale';
 
 /**
  * Server-side data access layer for PACT Settings & Preferences.
@@ -159,6 +161,11 @@ export async function getSettingsData(): Promise<SettingsOverviewData | null> {
     weeklyReviewNotice: notifMeta.weeklyReviewNotice ?? true,
   };
 
+  // 8. Workspace Preferences (stored in user metadata or defaults)
+  const preferences: WorkspacePreferences = {
+    fontScale: resolveFontScale(user.user_metadata?.preferences?.fontScale),
+  };
+
   return {
     profile,
     account,
@@ -166,5 +173,6 @@ export async function getSettingsData(): Promise<SettingsOverviewData | null> {
     consequenceDefinitions,
     integrations,
     notifications,
+    preferences,
   };
 }

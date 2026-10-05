@@ -1,5 +1,6 @@
 import { z } from 'zod';
 import { isValidIanaTimezone } from '../time';
+import { DEFAULT_FONT_SCALE, FONT_SCALES } from '../ui/font-scale';
 
 export const HEX_COLOR_REGEX = /^#(?:[0-9a-fA-F]{3}){1,2}$/;
 
@@ -91,4 +92,15 @@ export const updateNotificationPreferencesSchema = z.object({
 
 export type UpdateNotificationPreferencesInput = z.infer<
   typeof updateNotificationPreferencesSchema
+>;
+
+/**
+ * Validation schema for workspace display preferences
+ */
+export const updateWorkspacePreferencesSchema = z.object({
+  fontScale: z.enum(FONT_SCALES).default(DEFAULT_FONT_SCALE),
+});
+
+export type UpdateWorkspacePreferencesInput = z.infer<
+  typeof updateWorkspacePreferencesSchema
 >;

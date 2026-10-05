@@ -7,11 +7,14 @@ import {
   updatePasswordSchema,
   updateAccountabilityPreferencesSchema,
   updateNotificationPreferencesSchema,
+  updateWorkspacePreferencesSchema,
   UpdateProfileInput,
   UpdatePasswordInput,
   UpdateAccountabilityPreferencesInput,
   UpdateNotificationPreferencesInput,
+  UpdateWorkspacePreferencesInput,
 } from '@/lib/validations/settings';
+import { WorkspacePreferences } from '@/types/domain';
 
 export interface SettingsActionResult<T = unknown> {
   success?: boolean;
@@ -245,6 +248,50 @@ export async function updateNotificationPreferencesAction(
 
   revalidatePath('/app/settings');
   return { success: true };
+}
+
+/**
+ * Server Action: Update workspace display preferences (font scale)
+ */
+export async function updateWorkspacePreferencesAction(
+  payload: UpdateWorkspacePreferencesInput | FormData
+): Promise<SettingsActionResult<WorkspacePreferences>> {
+  const rawData =
+    payload instanceof FormData
+      ? { fontScale: payload.get('fontScale') }
+      : payload;
+
+  const validation = updateWorkspacePreferencesSchema.safeParse(rawData);
+  if (!validation.success) {
+    return {
+      error:
+        validation.error.issues[0]?.message ||
+        'Invalid workspace preferences.',
+    };
+  }
+
+  const preferences = validation.data;
+  const supabase = await createClient();
+
+  const {
+    data: { user },
+    error: authError,
+  } = await supabase.auth.getUser();
+
+  if (authError || !user) {
+    return { error: 'Unauthorized. Please sign in again.' };
+  }
+
+  const { error } = await supabase.auth.updateUser({
+    data: { preferences },
+  });
+
+  if (error) {
+    return { error: 'Failed to update workspace preferences.' };
+  }
+
+  revalidatePath('/app', 'layout');
+  return { success: true, data: preferences };
 }
 
 /**
