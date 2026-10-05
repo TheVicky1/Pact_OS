@@ -8,6 +8,7 @@ import { AccountabilitySettingsCard } from './accountability-settings-card';
 import { SecuritySettingsCard } from './security-settings-card';
 import { IntegrationsSettingsCard } from './integrations-settings-card';
 import { NotificationSettingsCard } from './notification-settings-card';
+import { PreferencesSettingsCard } from './preferences-settings-card';
 import { DataPrivacySettingsCard } from './data-privacy-settings-card';
 import { WeeklyReviewSettingsCard } from './weekly-review-settings-card';
 import { SystemDiagnosticsCard } from './system-diagnostics-card';
@@ -60,6 +61,10 @@ export function SettingsWorkspace({ initialData }: SettingsWorkspaceProps) {
         <div className="lg:col-span-8 min-w-0">
           {activeTab === 'profile' && (
             <ProfileSettingsCard profile={initialData.profile} />
+          )}
+
+          {activeTab === 'preferences' && (
+            <PreferencesSettingsCard preferences={initialData.preferences} />
           )}
 
           {activeTab === 'review' && (

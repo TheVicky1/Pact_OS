@@ -1,10 +1,11 @@
 'use client';
 
 import React from 'react';
-import { User, ShieldAlert, Key, Blocks, Bell, Database, BookOpen } from 'lucide-react';
+import { User, ShieldAlert, Key, Blocks, Bell, Database, BookOpen, ALargeSmall } from 'lucide-react';
 
 export type SettingsTab =
   | 'profile'
+  | 'preferences'
   | 'review'
   | 'accountability'
   | 'security'
@@ -33,6 +34,12 @@ const TABS: TabItem[] = [
     label: 'Profile & Timezone',
     icon: User,
     description: 'Name, avatar & authoritative IANA timezone',
+  },
+  {
+    id: 'preferences',
+    label: 'Preferences',
+    icon: ALargeSmall,
+    description: 'Workspace font size & text scaling',
   },
   {
     id: 'review',

@@ -7,6 +7,7 @@ export * from './components/accountability-settings-card';
 export * from './components/security-settings-card';
 export * from './components/integrations-settings-card';
 export * from './components/notification-settings-card';
+export * from './components/preferences-settings-card';
 export * from './components/settings-skeleton';
 
 export * from './data-access';
