@@ -11,8 +11,10 @@ import { Cloud, CloudOff, RefreshCw, CheckCircle2 } from 'lucide-react';
 import { setupNetworkSyncListeners, getOrSetDeviceId, getOrSetDeviceName } from '@/lib/offline/background-sync';
 import { replicateDeltasAction } from '@/features/sync/sync-actions';
 import { loadOfflineQueue } from '@/lib/offline/storage';
+import { useBatteryStatus } from '@/hooks/use-battery-status';
 
 export function SyncStatusIndicator() {
+  const { isLowPowerMode } = useBatteryStatus();
   const [isOnline, setIsOnline] = useState<boolean>(true);
   const [isSyncing, setIsSyncing] = useState<boolean>(false);
   const [pendingCount, setPendingCount] = useState<number>(0);
@@ -53,7 +55,10 @@ export function SyncStatusIndicator() {
   }, [isSyncing, lastSyncTime, checkPending]);
 
   useEffect(() => {
+    // Automatic syncs (reconnect / tab visible) pause in low power mode to save
+    // battery; the manual "sync now" button stays available.
     const cleanup = setupNetworkSyncListeners(() => {
+      if (isLowPowerMode) return;
       triggerSync();
     });
 
@@ -73,7 +78,7 @@ export function SyncStatusIndicator() {
       cleanup();
       clearInterval(interval);
     };
-  }, [triggerSync, checkPending, lastSyncTime]);
+  }, [triggerSync, checkPending, lastSyncTime, isLowPowerMode]);
 
   return (
     <div className="flex items-center gap-2">
