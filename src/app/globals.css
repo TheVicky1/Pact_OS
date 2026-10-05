@@ -75,6 +75,13 @@
     --status-danger: #ef4444;
     --status-info: #3b82f6;
     --status-waived: #8b5cf6;
+
+    /* Workspace Text Scaling */
+    --app-font-scale: 100%;
+  }
+
+  html {
+    font-size: var(--app-font-scale);
   }
 
   body {
