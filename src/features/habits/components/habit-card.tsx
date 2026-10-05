@@ -167,7 +167,7 @@ export function HabitCard({
             onClick={handleToggleCompletion}
             disabled={isPending || isPaused || isSkipped || !occurrence}
             aria-label={isCompleted ? 'Mark incomplete' : 'Mark complete'}
-            className={`mt-0.5 relative flex-shrink-0 w-8 h-8 rounded-xl border flex items-center justify-center transition-all ${
+            className={`mt-0.5 relative flex-shrink-0 w-8 h-8 rounded-xl border flex items-center justify-center transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold-400 ${
               isCompleted
                 ? 'bg-emerald-500 text-black border-emerald-400 shadow-md shadow-emerald-500/20 scale-105'
                 : isSkipped
