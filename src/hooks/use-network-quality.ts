@@ -55,9 +55,11 @@ function subscribeToNetwork(
 
 export function useNetworkQuality(): NetworkQuality {
   const [networkQuality, setNetworkQuality] = useState<NetworkQuality>(
-    getCurrentNetworkQuality(),
+    isOnline: false,
+    effectiveType: 'unknown',
+    saveData: false,
+    isSlowConnection: false,
   );
-
   useEffect(() => {
     return subscribeToNetwork(setNetworkQuality);
   }, []);
