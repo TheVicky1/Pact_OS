@@ -5,6 +5,7 @@
 
 export * from './glass-card';
 export * from './button';
+export * from './copy-to-clipboard-button';
 export * from './input';
 export * from './badge';
 export * from './modal';
