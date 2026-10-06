@@ -6,6 +6,7 @@
 export * from './glass-card';
 export * from './button';
 export * from './input';
+export * from './search-input';
 export * from './badge';
 export * from './modal';
 export * from './alert';
