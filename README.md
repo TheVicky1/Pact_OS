@@ -336,6 +336,7 @@ Comprehensive technical specifications, system architectures, and operational ru
 | 🎨 [**Design System**](docs/DESIGN_SYSTEM.md) | Luxury Obsidian & Gold palette, 3D celestial planetary hero, and design tokens |
 | 🔄 [**User Flows**](docs/USER_FLOWS.md) | Domain hierarchy flow, daily planning, and consequence lifecycle |
 | 🚀 [**Deployment Runbook**](docs/PRODUCTION_DEPLOYMENT_RUNBOOK.md) | Production cloud deployment guide and environment configuration |
+| ⚡ [**Performance & Profiling**](docs/PERFORMANCE_PROFILING.md) | UI profiling, Web Vitals, Lighthouse CI, Vitest benchmarks & bundle optimization |
 
 ---
 
@@ -351,6 +352,7 @@ PACT OS is free, open-source software built by developers who value intentionali
 - 🎯 [**Curated Good First & Community Issues**](docs/GITHUB_BEGINNER_ISSUES.md) — 99+ self-contained, validated micro & feature tasks ([#187–#204](docs/GITHUB_HIGH_IMPACT_ISSUES_187_204.md), [#166–#185](docs/GITHUB_BEGINNER_ISSUES_166_185.md), [#140–#164](docs/GITHUB_BEGINNER_ISSUES_140_164.md), [#130–#138](docs/GITHUB_BEGINNER_ISSUES_130_138.md), [#107–#113](docs/GITHUB_BEGINNER_ISSUES_107_113.md))
 - 🏷️ [**Label Taxonomy**](docs/GITHUB_LABELS.md) — Standardized 12-label open-source taxonomy
 - 🔧 [**Troubleshooting Guide**](docs/TROUBLESHOOTING.md) — Solutions for common setup and build issues
+- ⚡ [**Performance Profiling Guide**](docs/PERFORMANCE_PROFILING.md) — React DevTools profiler, Lighthouse audits, Vitest benchmarking & bundle optimization
 - 💬 [**Community Discussions**](https://github.com/TheVicky1/Pact_OS/discussions) — Feature ideas, Q&A, and project showcases
 
 ---

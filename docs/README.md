@@ -42,6 +42,7 @@ docs/
 ├── ROADMAP.md                          # Current Verified Status & Future Planned Milestones
 ├── DESIGN_SYSTEM.md                    # Luxury Obsidian Canvas, 3D Celestial Hero & PACT Gold Tokens
 ├── TESTING.md                          # 56-Suite Automated Test Matrix & Verification Runbook
+├── PERFORMANCE_PROFILING.md            # ⚡ Performance Profiling, Web Vitals, Benchmarks & UI Optimization
 ├── TROUBLESHOOTING.md                  # 🔧 Practical Diagnostic Guide for Setup, Build & Git Roadblocks
 ├── USER_FLOWS.md                       # Core User Workflows & State Lifecycle Transitions
 ├── DECISIONS.md                        # Architecture Decision Records (ADRs)
@@ -93,6 +94,7 @@ docs/
 - [**Git Workflow & Standards**](./GIT_WORKFLOW.md): Conventional Commit conventions, branch protection rules, and secret prevention hygiene.
 - [**Design System & UI Tokens**](./DESIGN_SYSTEM.md): Luxury Obsidian & Gold palette, 3D celestial planetary hero, card geometry, and typography tokens.
 - [**Testing & Verification Matrix**](./TESTING.md): 56-suite automated test matrix, execution runbooks, and quality gates.
+- [**Performance Profiling & Benchmarking**](./PERFORMANCE_PROFILING.md): UI render profiling with React DevTools, Core Web Vitals, Lighthouse CI, bundle analysis, and Vitest benchmarks.
 - [**CI Pipeline & Quality Gates**](./CI_PIPELINE.md): GitHub Actions automated verification, test matrix, secret scans, and build checks.
 - [**Dependency Security & Auditing**](./DEPENDENCY_SECURITY.md): Dependency health, CVSS vulnerability gate policy, and Dependabot lifecycle.
 - [**Release Management & Versioning**](./RELEASE_MANAGEMENT.md): Semantic Versioning policy, Keep a Changelog governance, and release checklists.

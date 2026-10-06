@@ -124,6 +124,25 @@ npm run dev
 
 ---
 
+### 2.3 UI Slowness, High Render Latency, or Slow Page Loads
+
+**Symptoms**:
+UI feels sluggish during user interactions (typing in input fields, toggling tasks, switching calendar views, opening modals), frames drop during animations, or production build reports high First Load JS.
+
+**Likely Causes**:
+- Unnecessary re-renders cascading down the component tree from parent state updates without memoization (`React.memo` / `useCallback`).
+- Heavy computational work or sorting executed synchronously on the main thread instead of in `useMemo` or React `startTransition`.
+- Non-virtualized large lists mounting hundreds of DOM nodes simultaneously.
+- Missing code-splitting on client-side heavy modules or animating layout-triggering CSS properties in Framer Motion.
+
+**Try This**:
+1. Profile component re-render times and inspect render reasons using **React DevTools Profiler** (Settings > *Record why each component rendered*).
+2. Measure Core Web Vitals (INP, LCP, CLS) using **Chrome Lighthouse** on a production build (`npm run build && npm run start`).
+3. Audit client bundle weights with `@next/bundle-analyzer` (`ANALYZE=true npm run build`).
+4. Consult our comprehensive [**Performance Profiling & Benchmarking Guide**](PERFORMANCE_PROFILING.md) for full step-by-step instructions, Vitest benchmark suites, and component optimization best practices.
+
+---
+
 ## 3. Environment Variables & Configuration
 
 ### 3.1 Missing `.env.local` File
