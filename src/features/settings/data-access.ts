@@ -157,6 +157,7 @@ export async function getSettingsData(): Promise<SettingsOverviewData | null> {
     deadlineAlerts: notifMeta.deadlineAlerts ?? true,
     consequenceAlerts: notifMeta.consequenceAlerts ?? true,
     weeklyReviewNotice: notifMeta.weeklyReviewNotice ?? true,
+      alertTone: notifMeta.alertTone ?? 'chime',
   };
 
   return {

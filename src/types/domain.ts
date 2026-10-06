@@ -408,12 +408,14 @@ export interface IntegrationStatus {
   accountHandle: string | null;
   lastSyncedAt: string | null;
 }
+export type AlertTone = 'chime' | 'bell' | 'digital-pulse';
 
 export interface NotificationPreferences {
   dailyPlanReminder: boolean;
   deadlineAlerts: boolean;
   consequenceAlerts: boolean;
   weeklyReviewNotice: boolean;
+  alertTone: AlertTone;
 }
 
 export interface SettingsOverviewData {

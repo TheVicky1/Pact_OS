@@ -1,8 +1,9 @@
 'use client';
 
 import React, { useState, useTransition } from 'react';
-import { NotificationPreferences } from '@/types/domain';
+import { NotificationPreferences, AlertTone  } from '@/types/domain';
 import { updateNotificationPreferencesAction } from '@/features/settings/actions';
+import { playNotificationPreview } from '@/lib/focus/sound';
 import {
   Bell,
   Calendar,
@@ -13,6 +14,7 @@ import {
   AlertCircle,
   Loader2,
   Sliders,
+  Volume2
 } from 'lucide-react';
 
 export interface NotificationSettingsCardProps {
@@ -34,6 +36,9 @@ export function NotificationSettingsCard({
   const [weeklyReviewNotice, setWeeklyReviewNotice] = useState(
     notifications.weeklyReviewNotice
   );
+  const [alertTone , setAlertTone] = useState(
+    notifications.alertTone
+  );
 
   const [feedback, setFeedback] = useState<{
     type: 'success' | 'error';
@@ -52,6 +57,7 @@ export function NotificationSettingsCard({
         deadlineAlerts,
         consequenceAlerts,
         weeklyReviewNotice,
+        alertTone,
       });
 
       if (res.error) {
@@ -190,7 +196,56 @@ export function NotificationSettingsCard({
             );
           })}
         </div>
+        <div className="p-5 rounded-2xl bg-zinc-900/60 border border-white/[0.08] hover:border-white/[0.12] transition-all">
+          <div className="flex items-start gap-3.5">
+            <div className="p-2.5 rounded-xl bg-[#121217] border border-white/[0.06] text-zinc-300 shrink-0">
+              <Volume2 className="w-4 h-4 text-[#d4af37]" />
+            </div>
 
+            <div className="flex-1 space-y-1">
+              <span className="text-sm font-semibold text-zinc-100 block">
+                Alert Tone
+              </span>
+
+              <p className="text-xs text-zinc-400 leading-relaxed max-w-lg">
+                Choose the sound used for notification alerts.
+              </p>
+
+              <div className="mt-4 flex flex-col sm:flex-row gap-3 sm:items-end">
+                <div className="flex-1">
+                  <label
+                    htmlFor="alert-tone"
+                    className="text-xs text-zinc-400 block mb-2"
+                  >
+                    Notification sound
+                  </label>
+
+                  <select
+                    id="alert-tone"
+                    value={alertTone}
+                    onChange={(event) =>
+                      setAlertTone(event.target.value as AlertTone)
+                    }
+                    className="w-full px-4 py-3 rounded-xl bg-[#121217] border border-white/[0.08] text-sm text-zinc-100 focus:outline-none focus:border-[#d4af37]/50 transition-all cursor-pointer"
+                  >
+                    <option value="chime">Chime</option>
+                    <option value="bell">Bell</option>
+                    <option value="digital-pulse">Digital Pulse</option>
+                  </select>
+                </div>
+
+                <button
+                  type="button"
+                  onClick={() => playNotificationPreview(alertTone)}
+                  className="px-4 py-3 rounded-xl bg-[#121217] border border-white/[0.08] hover:border-[#d4af37]/40 text-zinc-200 text-sm font-medium transition-all flex items-center justify-center gap-2 cursor-pointer"
+                >
+                  <Volume2 className="w-4 h-4 text-[#d4af37]" />
+                  Preview Tone
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
         {/* Submit Action */}
         <div className="pt-4 flex justify-end">
           <button

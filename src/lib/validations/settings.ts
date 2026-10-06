@@ -87,6 +87,7 @@ export const updateNotificationPreferencesSchema = z.object({
   deadlineAlerts: z.boolean().default(true),
   consequenceAlerts: z.boolean().default(true),
   weeklyReviewNotice: z.boolean().default(true),
+  alertTone: z.enum(['chime', 'bell', 'digital-pulse']).default('chime')
 });
 
 export type UpdateNotificationPreferencesInput = z.infer<
