@@ -3,6 +3,7 @@
 Welcome to the canonical documentation for **PACT** — a Personal Operating System designed to turn intent into discipline through unbreakable accountability, time-blocked planning, and automated proof-of-work verification.
 
 > 🚀 **Official Production Deployment**: Access the live PACT OS web application at **[https://pact-os.vercel.app](https://pact-os.vercel.app)**
+> 🎃 **Hacktoberfest 2026 Documentation Hub**: Canonical open-source specifications, contributor guides, and issue catalogs.
 
 ---
 
