@@ -136,7 +136,7 @@ Contributions are warmly welcomed! PACT is designed to be one of the most welcom
 
 > 🚀 **New to Open Source? Start with a Micro-Contribution!**
 > We deliberately scope our beginner tasks into **tiny, single-file micro-contributions** (5–30 minutes of work) with exact file pointers, concrete acceptance criteria, and step-by-step guidance.
-> 👉 [**Browse Live Good First Issues (28 Available)**](https://github.com/TheVicky1/Pact_OS/issues?q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22) &nbsp;|&nbsp; 📖 [**Read the Beginner's Guide**](docs/CONTRIBUTING-BEGINNERS.md)
+> 👉 [**Browse Live Hacktoberfest & Good First Issues (50+ Available)**](https://github.com/TheVicky1/Pact_OS/issues?q=is%3Aissue+is%3Aopen+label%3Ahacktoberfest) &nbsp;|&nbsp; 📖 [**Read the Beginner's Guide**](docs/CONTRIBUTING-BEGINNERS.md)
 
 ### 🌟 Why Contribute to PACT OS?
 
