@@ -11,7 +11,7 @@ To keep the PACT open-source repository organized, productive, and beginner-frie
 | Channel | Purpose | Examples | Primary Location |
 | :--- | :--- | :--- | :--- |
 | **GitHub Issues** | Actionable, reproducible, and scoped tasks | Reproducible bugs, approved feature implementations, documentation errors, curated good-first-issues | [Issues Tab](https://github.com/TheVicky1/Pact_OS/issues) |
-| **GitHub Discussions** | Open conversations, brainstorming, and Q&A | Setup questions, product ideas, architecture debates, community setups, announcements | [Discussions Tab](https://github.com/TheVicky1/Pact_OS/discussions) |
+| **GitHub Discussions** | Open conversations, brainstorming, and Q&A | Setup questions, product ideas, Hacktoberfest Q&A, architecture debates, community setups, announcements | [Discussions Tab](https://github.com/TheVicky1/Pact_OS/discussions) |
 | **Pull Requests** | Code and documentation contributions | Bug fixes, feature implementations, test coverage additions, documentation improvements | [Pull Requests](https://github.com/TheVicky1/Pact_OS/pulls) |
 | **Support Guide** | Self-serve troubleshooting & diagnostics | Local environment setup roadblocks, build errors, port conflicts, test failures | [`SUPPORT.md`](../SUPPORT.md) & [`docs/TROUBLESHOOTING.md`](./TROUBLESHOOTING.md) |
 | **Security Policy** | Private vulnerability disclosures | Secret leakage, authentication bypasses, RLS vulnerabilities | [`SECURITY.md`](../SECURITY.md) *(Private only)* |
