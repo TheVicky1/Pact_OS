@@ -7,7 +7,7 @@
 
 | Attribute | Operational Value |
 | :--- | :--- |
-| **Current Version** | `v0.1.0` (Initial Open-Source Preview) |
+| **Current Version** | `v0.2.0` (Hacktoberfest Community Release) |
 | **Active Development Line** | `main` |
 | **Integration Line** | `phase-6` |
 | **Contributor Expansion Branch** | `community/open-source-contributor-expansion` |
