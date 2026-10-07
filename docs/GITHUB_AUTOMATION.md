@@ -1,6 +1,6 @@
 # PACT — GitHub Automation & Triage Bot Architecture
 
-This document defines the architectural specification, security model, and policy engine design for PACT's future **GitHub Automation & Contributor Triage Bot** (`pact-bot`).
+This document defines the architectural specification, security model, policy engine design, and automated 3-week unassigned issue triage lifecycle for PACT's **GitHub Automation & Contributor Triage Bot** (`pact-bot`).
 
 ---
 
