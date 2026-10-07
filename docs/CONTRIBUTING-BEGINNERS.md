@@ -7,6 +7,7 @@ You do not need to be an expert to contribute to **PACT**. Whether you are fixin
 This guide walks you through the entire process step by step, from creating your personal copy of the repository to opening your first Pull Request.
 
 > 🚀 **Live Production App**: Play with the live app before contributing at **[https://pact-os.vercel.app](https://pact-os.vercel.app)**
+> 🎃 **Hacktoberfest 2026**: All merged PRs for open `good first issue` & `hacktoberfest` issues automatically count toward Hacktoberfest!
 
 ---
 
