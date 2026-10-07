@@ -12,6 +12,7 @@ To keep the contributor experience clear, low-friction, and predictable, PACT st
 | :-: | :--- | :---: | :--- | :--- |
 | **1** | `good first issue` | `#7057FF` | Community | Curated, self-contained task specifically structured for first-time contributors. |
 | **2** | `help wanted` | `#008672` | Community | Maintainer is actively welcoming community contributions on this issue. |
+| **3** | `hacktoberfest` | `#FF79C6` | Event | Official Hacktoberfest topic label for global open-source event discoverability. |
 | **3** | `documentation` | `#0075CA` | Type | Markdown, documentation guides, README updates, or JSDoc docstrings. |
 | **4** | `enhancement` | `#A2EEEF` | Type | Small improvement, refinement, or non-breaking feature enhancement. |
 | **5** | `bug` | `#D73A4A` | Type | Confirmed defect, broken calculation, or malfunctioning UI component. |
