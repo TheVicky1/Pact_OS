@@ -4,8 +4,9 @@ This document contains the canonical, pre-formatted project descriptions and sub
 
 1. 🌟 **Up For Grabs** (`up-for-grabs.net`)
 2. 🌱 **Good First Issue Dev** (`goodfirstissue.dev`)
-3. 📬 **CodeTriage** (`codetriage.com`)
-4. 🚀 **First Timers Only** (`firsttimersonly.com`)
+3. 🎃 **Hacktoberfest Hub** (`hacktoberfest.com`)
+4. 📬 **CodeTriage** (`codetriage.com`)
+5. 🚀 **First Timers Only** (`firsttimersonly.com`)
 
 ---
 
