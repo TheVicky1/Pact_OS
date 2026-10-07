@@ -36,6 +36,7 @@ PACT uses a curated set of **16 high-signal GitHub topics**. Topics are strictly
 | 2 | `personal-productivity` | Domain | Differentiates PACT as an executive personal system rather than enterprise team ticketing software. |
 | 3 | `personal-operating-system` | Domain | Captures the holistic OS paradigm unifying tasks, goals, habits, finance, and focus under one canvas. |
 | 4 | `accountability` | Domain | Core differentiator: enforceable commitment contracts, confidential consequences, and resolution workflows. |
+| 5 | `hacktoberfest` | Event | Official Hacktoberfest 2026 discoverability topic label for open-source contributors. |
 | 5 | `discipline` | Domain | Philosophical pillar emphasizing follow-through and anti-passive accumulation. |
 | 6 | `time-blocking` | Domain | Core temporal planning engine supporting day/week/month calendar scheduling with Google Calendar sync. |
 | 7 | `nextjs` | Stack | Foundation framework: Next.js 16 App Router, React Server Components, and Server Actions. |
