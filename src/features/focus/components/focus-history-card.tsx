@@ -78,8 +78,21 @@ export function FocusHistoryCard({ history }: FocusHistoryCardProps) {
         </div>
 
         {history.length === 0 ? (
-          <div className="py-8 text-center text-zinc-500 text-xs">
-            No focus sessions logged yet. Begin your first deep work block above.
+          <div
+            className="flex flex-col items-center justify-center p-8 text-center"
+            role="status"
+            aria-live="polite"
+          >
+            <Clock
+              className="w-12 h-12 text-neutral-500 mb-3"
+              aria-hidden="true"
+            />
+            <p className="text-sm font-medium text-neutral-300">
+              No focus sessions recorded yet
+            </p>
+            <p className="text-xs text-neutral-500 mt-1">
+              Complete your first focus session to see your productivity history here.
+            </p>
           </div>
         ) : (
           <div className="space-y-2.5">
