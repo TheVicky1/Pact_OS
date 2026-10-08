@@ -22,9 +22,17 @@ export function createFocusTrap(containerElement: HTMLElement | null, onEscape?:
   const previouslyFocused = document.activeElement as HTMLElement | null;
 
   const getFocusableElements = (): HTMLElement[] => {
-    return Array.from(containerElement.querySelectorAll<HTMLElement>(focusableSelectors)).filter(
-      (el) => el.offsetParent !== null // visible elements only
-    );
+    return Array.from(
+      containerElement.querySelectorAll<HTMLElement>(focusableSelectors),
+    ).filter((el) => {
+      const style = window.getComputedStyle(el);
+
+      return (
+        style.display !== 'none' &&
+        style.visibility !== 'hidden' &&
+        el.getAttribute('aria-hidden') !== 'true'
+      );
+    });
   };
 
   const focusable = getFocusableElements();
