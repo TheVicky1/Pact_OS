@@ -3,11 +3,15 @@
 
 CREATE TABLE IF NOT EXISTS public.profiles (
   id UUID PRIMARY KEY REFERENCES auth.users(id) ON DELETE CASCADE,
+  email TEXT,
   full_name TEXT,
   timezone TEXT NOT NULL DEFAULT 'UTC',
   created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
   updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
 );
+
+-- Ensure email exists on pre-existing profiles tables (CREATE TABLE IF NOT EXISTS skips them)
+ALTER TABLE public.profiles ADD COLUMN IF NOT EXISTS email TEXT;
 
 -- Enable Row Level Security (Mandatory Security Boundary)
 ALTER TABLE public.profiles ENABLE ROW LEVEL SECURITY;
