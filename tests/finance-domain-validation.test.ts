@@ -14,6 +14,8 @@ import {
   updateCategorySchema,
   createTransactionSchema,
   updateTransactionSchema,
+  createBudgetSchema,
+  updateBudgetSchema,
 } from '../src/lib/validations/finance';
 
 console.log('================================================================');
@@ -286,6 +288,51 @@ const invalidCatColor = createCategorySchema.safeParse({
 assert.strictEqual(invalidCatColor.success, false, 'Invalid color tag must be rejected');
 
 console.log('✅ Zod domain schemas verified.');
+
+// 8. Budget Boundary Validation (negative & sub-cent amounts)
+console.log('8. Testing budget schema boundaries for negative and sub-cent amounts...');
+
+const budgetBase = {
+  category_id: 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11',
+  period: '2026-09',
+};
+
+// Valid lower and typical bounds
+assert.ok(createBudgetSchema.safeParse({ ...budgetBase, limit_cents: 1 }).success, 'Budget of 1 cent must pass');
+assert.ok(createBudgetSchema.safeParse({ ...budgetBase, limit_cents: 500000 }).success, 'Whole-cent budget must pass');
+
+// Negative and zero allocations
+const negativeBudget = createBudgetSchema.safeParse({ ...budgetBase, limit_cents: -500 });
+assert.strictEqual(negativeBudget.success, false, 'Negative budget allocation must be rejected');
+if (!negativeBudget.success) {
+  assert.ok(
+    negativeBudget.error.issues.some((i) => i.message === 'Budget limit must be greater than zero'),
+    'Negative budget must surface the greater-than-zero message'
+  );
+}
+assert.strictEqual(createBudgetSchema.safeParse({ ...budgetBase, limit_cents: -1 }).success, false, '-1 cent must be rejected');
+assert.strictEqual(createBudgetSchema.safeParse({ ...budgetBase, limit_cents: 0 }).success, false, 'Zero budget must be rejected');
+
+// Sub-cent floating point precision
+const subCentBudget = createBudgetSchema.safeParse({ ...budgetBase, limit_cents: 12.345 });
+assert.strictEqual(subCentBudget.success, false, 'Sub-cent precision (12.345) must be rejected');
+if (!subCentBudget.success) {
+  assert.ok(
+    subCentBudget.error.issues.some((i) => i.message === 'Limit must be an integer in cents'),
+    'Sub-cent budget must surface the integer-cents message'
+  );
+}
+assert.strictEqual(createBudgetSchema.safeParse({ ...budgetBase, limit_cents: 0.5 }).success, false, 'Half-cent must be rejected');
+assert.strictEqual(createBudgetSchema.safeParse({ ...budgetBase, limit_cents: -12.345 }).success, false, 'Negative sub-cent must be rejected');
+
+// Update schema applies the same boundaries
+assert.ok(updateBudgetSchema.safeParse({ limit_cents: 2500 }).success, 'Valid budget update must pass');
+assert.ok(updateBudgetSchema.safeParse({ is_active: false }).success, 'Update without limit_cents must pass');
+assert.strictEqual(updateBudgetSchema.safeParse({ limit_cents: -500 }).success, false, 'Negative budget update must be rejected');
+assert.strictEqual(updateBudgetSchema.safeParse({ limit_cents: 0 }).success, false, 'Zero budget update must be rejected');
+assert.strictEqual(updateBudgetSchema.safeParse({ limit_cents: 99.999 }).success, false, 'Sub-cent budget update must be rejected');
+
+console.log('✅ Budget negative and sub-cent boundaries verified.');
 
 console.log('\n================================================================');
 console.log('🎉 ALL PHASE 4I-2 FINANCE DOMAIN & VALIDATION TESTS PASSED');
