@@ -19,10 +19,12 @@ import {
 
 export interface NotificationSettingsCardProps {
   notifications: NotificationPreferences;
+  isLoading?: boolean;
 }
 
 export function NotificationSettingsCard({
   notifications,
+  isLoading = false,
 }: NotificationSettingsCardProps) {
   const [dailyPlanReminder, setDailyPlanReminder] = useState(
     notifications.dailyPlanReminder
@@ -115,6 +117,54 @@ export function NotificationSettingsCard({
 
   return (
     <div className="glass-card rounded-3xl p-6 sm:p-8 space-y-8">
+      {isLoading ? (
+        <div
+          role="status"
+          aria-label="Loading notification preferences"
+          className="space-y-8 animate-pulse"
+        >
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-white/[0.06]">
+            <div className="space-y-3 flex-1">
+              <div className="h-6 w-56 rounded-lg bg-zinc-800" />
+              <div className="h-4 w-full max-w-lg rounded bg-zinc-800" />
+            </div>
+            <div className="h-8 w-32 rounded-full bg-zinc-800 self-start" />
+          </div>
+
+          <div className="space-y-4">
+            {[1, 2, 3, 4].map((item) => (
+              <div
+                key={item}
+                className="min-h-[112px] p-5 rounded-2xl bg-zinc-900/60 border border-white/[0.08] flex items-center justify-between gap-4"
+              >
+                <div className="flex items-start gap-3.5 flex-1">
+                  <div className="w-10 h-10 rounded-xl bg-zinc-800 shrink-0" />
+                  <div className="flex-1 space-y-3">
+                    <div className="h-4 w-3/5 max-w-64 rounded bg-zinc-800" />
+                    <div className="h-3 w-full max-w-lg rounded bg-zinc-800" />
+                    <div className="h-3 w-4/5 max-w-md rounded bg-zinc-800" />
+                  </div>
+                </div>
+                <div className="w-11 h-6 rounded-full bg-zinc-800 shrink-0" />
+              </div>
+            ))}
+          </div>
+
+          <div className="min-h-[164px] p-5 rounded-2xl bg-zinc-900/60 border border-white/[0.08] flex gap-3.5">
+            <div className="w-10 h-10 rounded-xl bg-zinc-800 shrink-0" />
+            <div className="flex-1 space-y-4">
+              <div className="h-4 w-24 rounded bg-zinc-800" />
+              <div className="h-3 w-full max-w-lg rounded bg-zinc-800" />
+              <div className="h-10 w-full max-w-md rounded-xl bg-zinc-800" />
+            </div>
+          </div>
+
+          <div className="pt-4 flex justify-end">
+            <div className="h-12 w-64 rounded-2xl bg-zinc-800" />
+          </div>
+        </div>
+      ) : (
+        <>
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-white/[0.06]">
         <div>
@@ -264,6 +314,8 @@ export function NotificationSettingsCard({
           </button>
         </div>
       </form>
+      </>
+     )}
     </div>
   );
 }
