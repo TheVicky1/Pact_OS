@@ -395,6 +395,29 @@ describe('PACT Phase 6C: Habits & Daily Routines Engine Suite', () => {
       };
       assert.equal(createRoutineSchema.safeParse(validRoutine).success, true);
     });
+
+    it('4.6 Accepts habit name with exactly 99 characters (boundary)', () => {
+      const payload99 = { name: 'a'.repeat(99) };
+      const result = createHabitSchema.safeParse(payload99);
+      assert.equal(result.success, true);
+    });
+
+    it('4.7 Accepts habit name with exactly 100 characters (boundary)', () => {
+      const payload100 = { name: 'a'.repeat(100) };
+      const result = createHabitSchema.safeParse(payload100);
+      assert.equal(result.success, true);
+    });
+
+    it('4.8 Rejects habit name exceeding 100 characters (101 characters boundary)', () => {
+      const payload101 = { name: 'a'.repeat(101) };
+      const result = createHabitSchema.safeParse(payload101);
+      assert.equal(result.success, false);
+      if (!result.success) {
+        const nameIssue = result.error.issues.find((issue) => issue.path.includes('name'));
+        assert.ok(nameIssue, 'Expected validation error on habit name field');
+        assert.equal(nameIssue.message, 'Habit name must not exceed 100 characters');
+      }
+    });
   });
 
   // =========================================================================
