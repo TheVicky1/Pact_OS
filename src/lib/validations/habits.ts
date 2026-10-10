@@ -22,7 +22,7 @@ export const habitStatusSchema = z.enum(['active', 'paused', 'archived']);
 
 export const createHabitSchema = z
   .object({
-    name: z.string().trim().min(1, 'Habit name is required').max(255, 'Habit name must not exceed 255 characters'),
+    name: z.string().trim().min(1, 'Habit name is required').max(100, 'Habit name must not exceed 100 characters'),
     description: z.string().max(2000, 'Description must not exceed 2000 characters').nullable().optional(),
     category: habitCategorySchema.default('general'),
     frequencyType: habitFrequencySchema.default('daily'),
