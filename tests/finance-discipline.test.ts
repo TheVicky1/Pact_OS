@@ -12,6 +12,7 @@ import {
   FinanceTransaction,
   parseAmountToCents,
   formatCentsToCurrency,
+  formatCentsToDollars, // Ensure this is imported from money lib
 } from '../src/lib/money';
 import {
   createRecurringTransactionSchema,
@@ -48,7 +49,6 @@ assert.strictEqual(
 );
 
 // Monthly with Day 31 Clamping:
-// Jan 31 -> Feb 28 (2026 non-leap) -> Mar 31 -> Apr 30 -> May 31
 const jan31 = '2026-01-31';
 const febNext = calculateNextOccurrence(jan31, 'monthly', jan31);
 assert.strictEqual(febNext, '2026-02-28', 'Jan 31 monthly must clamp to Feb 28 in non-leap year');
@@ -143,7 +143,7 @@ const mockBudgets: FinanceBudget[] = [
     user_id: 'user-1',
     category_id: 'cat-food',
     period: '2026-09',
-    limit_cents: 1000000, // ₹10,000
+    limit_cents: 1000000,
     is_active: true,
     created_at: '2026-09-01T00:00:00Z',
     updated_at: '2026-09-01T00:00:00Z',
@@ -153,7 +153,7 @@ const mockBudgets: FinanceBudget[] = [
     user_id: 'user-1',
     category_id: 'cat-tech',
     period: '2026-09',
-    limit_cents: 500000, // ₹5,000
+    limit_cents: 500000,
     is_active: true,
     created_at: '2026-09-01T00:00:00Z',
     updated_at: '2026-09-01T00:00:00Z',
@@ -161,7 +161,6 @@ const mockBudgets: FinanceBudget[] = [
 ];
 
 const mockTransactions: FinanceTransaction[] = [
-  // Food spent: 8,500.00 (85% - approaching threshold)
   {
     id: 'tx-1',
     user_id: 'user-1',
@@ -173,7 +172,6 @@ const mockTransactions: FinanceTransaction[] = [
     created_at: '2026-09-05T00:00:00Z',
     updated_at: '2026-09-05T00:00:00Z',
   },
-  // Tech spent: 6,000.00 (120% - exceeded threshold)
   {
     id: 'tx-2',
     user_id: 'user-1',
@@ -185,7 +183,6 @@ const mockTransactions: FinanceTransaction[] = [
     created_at: '2026-09-08T00:00:00Z',
     updated_at: '2026-09-08T00:00:00Z',
   },
-  // Income (must not count towards expense budgets)
   {
     id: 'tx-3',
     user_id: 'user-1',
@@ -280,6 +277,17 @@ const invalidPeriodBudget = createBudgetSchema.safeParse({
 assert.strictEqual(invalidPeriodBudget.success, false, 'Invalid period string must fail');
 
 console.log('✅ Validation schemas verified.');
+
+// --- ADDED FOR ISSUE #451: Currency Formatter Edge Cases ---
+console.log('6. Testing Currency Formatter Edge Cases (Issue #451)...');
+
+assert.strictEqual(formatCentsToDollars(0), '$0.00', 'Zero cents must format to $0.00');
+assert.strictEqual(formatCentsToDollars(-1250), '-$12.50', 'Negative cents must format correctly');
+assert.strictEqual(formatCentsToDollars(1005), '$10.05', 'Fractional cents rounding behavior must be accurate');
+assert.strictEqual(formatCentsToDollars(10000000), '$100,000.00', 'Large integer values must format correctly with commas');
+
+console.log('✅ Currency formatter edge cases verified.');
+// -------------------------------------------------------------
 
 console.log('\n================================================================');
 console.log('  ALL PHASE 5E TESTS PASSED (100% SUCCESS)');
