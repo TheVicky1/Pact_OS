@@ -61,7 +61,26 @@ export interface LocalToUtcResult {
 }
 
 /**
- * Helper to get the UTC offset in minutes for a given wall-clock date in a specific IANA timezone.
+ * Calculates the UTC offset at an instant in a specific IANA timezone.
+ * The offset reflects daylight saving time in effect at that instant.
+ *
+ * @param date - Valid Date representing the instant to look up.
+ * @param timeZone - IANA timezone identifier, such as "Asia/Kolkata"
+ * or "America/New_York".
+ * @returns Offset in minutes east of UTC. Positive values are ahead of UTC,
+ * negative values are behind UTC, and UTC itself returns 0.
+ * This sign is the opposite of Date.prototype.getTimezoneOffset().
+ * @throws {RangeError} If the date or timezone is invalid.
+ *
+ * @example
+ * getTimezoneOffsetMinutes(new Date("2026-01-15T12:00:00Z"), "Asia/Kolkata");
+ * // Returns: 330
+ *
+ * @example
+ * getTimezoneOffsetMinutes(new Date("2026-01-15T12:00:00Z"), "America/New_York");
+ * // Returns: -300 (standard time)
+ * getTimezoneOffsetMinutes(new Date("2026-07-15T12:00:00Z"), "America/New_York");
+ * // Returns: -240 (daylight saving time)
  */
 function getTimezoneOffsetMinutes(date: Date, timeZone: string): number {
   const formatter = new Intl.DateTimeFormat('en-US', {
