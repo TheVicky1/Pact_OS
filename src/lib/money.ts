@@ -312,3 +312,6 @@ export const DEFAULT_FINANCE_CATEGORIES: Array<{
   { name: 'Salary / Income', color_tag: 'emerald' },
   { name: 'Freelance & Business', color_tag: 'gold' },
 ];
+export function formatCentsToDollars(cents: number): string {
+  return formatCentsToCurrency(cents, 'USD');
+}
