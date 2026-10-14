@@ -336,6 +336,7 @@ Comprehensive technical specifications, system architectures, and operational ru
 | 🗺️ [**Product Roadmap**](docs/ROADMAP.md) | Verified implementation status and future planned milestones |
 | 🎨 [**Design System**](docs/DESIGN_SYSTEM.md) | Luxury Obsidian & Gold palette, 3D celestial planetary hero, and design tokens |
 | 🔄 [**User Flows**](docs/USER_FLOWS.md) | Domain hierarchy flow, daily planning, and consequence lifecycle |
+| ⚡ [**Web Vitals Playbook**](docs/WEB_VITALS_PLAYBOOK.md) | LCP, INP, and CLS optimization tactics for developers |
 | 🚀 [**Deployment Runbook**](docs/PRODUCTION_DEPLOYMENT_RUNBOOK.md) | Production cloud deployment guide and environment configuration |
 
 ---

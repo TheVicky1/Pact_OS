@@ -49,6 +49,7 @@ docs/
 ├── TIMEZONE_GUIDE.md                   # 🌍 Multi-Timezone Setup, UTC Storage & DST Handling
 ├── TROUBLESHOOTING.md                  # 🔧 Practical Diagnostic Guide for Setup, Build & Git Roadblocks
 ├── USER_FLOWS.md                       # Core User Workflows & State Lifecycle Transitions
+├── WEB_VITALS_PLAYBOOK.md              # ⚡ LCP, INP & CLS Optimization Playbook for Developers
 ├── DECISIONS.md                        # Architecture Decision Records (ADRs)
 ├── PRODUCTION_DEPLOYMENT_RUNBOOK.md    # Production Deployment, Environment Variables & Verification
 └── archive/                            # Historical Development Phase Reports (Phases 4-6)
@@ -103,6 +104,7 @@ docs/
 - [**Design System & UI Tokens**](./DESIGN_SYSTEM.md): Luxury Obsidian & Gold palette, 3D celestial planetary hero, card geometry, and typography tokens.
 - [**Testing & Verification Matrix**](./TESTING.md): 56-suite automated test matrix, execution runbooks, and quality gates.
 - [**CI Pipeline & Quality Gates**](./CI_PIPELINE.md): GitHub Actions automated verification, test matrix, secret scans, and build checks.
+- [**Web Vitals Playbook**](./WEB_VITALS_PLAYBOOK.md): LCP, INP, and CLS optimization tactics grounded in the repository's own font, image, idle-scheduling, and render-budget primitives.
 - [**Dependency Security & Auditing**](./DEPENDENCY_SECURITY.md): Dependency health, CVSS vulnerability gate policy, and Dependabot lifecycle.
 - [**Release Management & Versioning**](./RELEASE_MANAGEMENT.md): Semantic Versioning policy, Keep a Changelog governance, and release checklists.
 - [**Production Deployment Runbook**](./PRODUCTION_DEPLOYMENT_RUNBOOK.md): Cloud deployment checklist, environment variable matrix, and preflight audit.
