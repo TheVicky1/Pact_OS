@@ -52,6 +52,21 @@ describe('computeIsLowPowerMode', () => {
   it('treats an empty, unplugged battery as low power', () => {
     assert.equal(computeIsLowPowerMode(0, false), true);
   });
+  it('is low power at a critical 5% battery level when unplugged', () => {
+    assert.equal(computeIsLowPowerMode(0.05, false), true);
+  });
+
+  it('is not low power at a 20% battery level', () => {
+    assert.equal(computeIsLowPowerMode(0.2, false), false);
+  });
+
+  it('is not low power at a healthy 80% battery level', () => {
+    assert.equal(computeIsLowPowerMode(0.8, false), false);
+  });
+
+  it('is not low power at 5% when charging', () => {
+    assert.equal(computeIsLowPowerMode(0.05, true), false);
+  });
 });
 
 describe('subscribeToBattery', () => {
