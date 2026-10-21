@@ -5,6 +5,8 @@ import path from 'node:path';
 const testDir = path.resolve(process.cwd(), 'tests');
 const nodeBin = process.execPath;
 const jitiCli = path.resolve(process.cwd(), 'node_modules/jiti/lib/jiti-cli.mjs');
+const vitestCli = path.resolve(process.cwd(), 'node_modules/vitest/vitest.mjs');
+const vitestTests = new Set(['elo-rating.test.ts']);
 
 // Authoritative offline unit, domain, security, and integration test suites
 const liveDbTests = new Set([
@@ -44,7 +46,10 @@ for (const file of files) {
   console.log(`------------------------------------------------------------`);
   
   const start = Date.now();
-  const res = spawnSync(nodeBin, [jitiCli, filePath], {
+  const args = vitestTests.has(file)
+    ? [vitestCli, 'run', filePath]
+    : [jitiCli, filePath];
+  const res = spawnSync(nodeBin, args, {
     cwd: process.cwd(),
     stdio: 'inherit',
   });
