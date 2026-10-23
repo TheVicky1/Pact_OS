@@ -265,6 +265,73 @@ function runTemporalEngineTestSuite() {
   assert.strictEqual(NegativeMinutesConverted, 0);
   console.log('✅ Case 2: Negative minutes handled properly.');
 
+
+  // ----------------------------------------------------------------
+  // 11. FRACTIONAL-SECOND & MILLISECOND PRECISION TESTS
+  // ----------------------------------------------------------------
+  console.log('11. Testing Fractional-Second & Millisecond Precision...');
+
+  // 11.1 Instants separated by 5 milliseconds must be ordered correctly.
+  assert.ok(
+    compareInstants('2026-10-15T12:00:00.100Z', '2026-10-15T12:00:00.105Z') < 0
+  );
+  assert.ok(
+    compareInstants('2026-10-15T12:00:00.105Z', '2026-10-15T12:00:00.100Z') > 0
+  );
+
+  // 11.2 Different fractional representations of the same instant are equal.
+  assert.strictEqual(
+    compareInstants('2026-10-15T12:00:00.1Z', '2026-10-15T12:00:00.10Z'),
+    0
+  );
+  assert.strictEqual(
+    compareInstants('2026-10-15T12:00:00.000Z', '2026-10-15T12:00:00Z'),
+    0
+  );
+
+  // 11.3 UTC-to-local display remains consistent for fractional-second inputs.
+  const expectedDisplay = utcToLocal('2026-10-15T12:00:00.000Z', 'UTC');
+  for (const timestamp of [
+    '2026-10-15T12:00:00.1Z',
+    '2026-10-15T12:00:00.12Z',
+    '2026-10-15T12:00:00.123Z',
+    '2026-10-15T12:00:00.000Z'
+  ]) {
+    assert.strictEqual(utcToLocal(timestamp, 'UTC'), expectedDisplay);
+  }
+
+  // 11.4 Deadline checks must respect the exact millisecond boundary.
+  const fractionalDeadline = '2026-10-15T12:00:00.105Z';
+  assert.strictEqual(
+    isDeadlineReached(fractionalDeadline, new TestClock('2026-10-15T12:00:00.104Z')),
+    false,
+    'A deadline must not be reached 1 ms early'
+  );
+  assert.strictEqual(
+    isDeadlineReached(fractionalDeadline, new TestClock('2026-10-15T12:00:00.105Z')),
+    true,
+    'A deadline must be reached at the exact millisecond'
+  );
+  assert.strictEqual(
+    isDeadlineReached(fractionalDeadline, new TestClock('2026-10-15T12:00:00.106Z')),
+    true,
+    'A deadline must remain reached 1 ms later'
+  );
+
+  // 11.5 datetime-local input intentionally omits seconds and fractions.
+  for (const timestamp of [
+    '2026-10-15T12:00:00.1Z',
+    '2026-10-15T12:00:00.12Z',
+    '2026-10-15T12:00:00.123Z',
+    '2026-10-15T12:00:00.000Z'
+  ]) {
+    assert.strictEqual(
+      utcToDatetimeLocalInput(timestamp, 'Asia/Kolkata'),
+      '2026-10-15T17:30'
+    );
+  }
+
+  console.log('Fractional-second and millisecond precision tests passed.\n');
   console.log('================================================================');
   console.log('🎉 ALL TEMPORAL ENGINE & TIMEZONE UNIT TESTS PASSED CLEANLY');
   console.log('================================================================\n');
