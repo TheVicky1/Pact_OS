@@ -54,6 +54,7 @@ The community issue factory provides continuous, self-contained micro-contributi
 | **Issues #166–#185** | [`docs/GITHUB_BEGINNER_ISSUES_166_185.md`](GITHUB_BEGINNER_ISSUES_166_185.md) | 20 curated Hacktoberfest good first issues | Hacktoberfest 2026 |
 | **Issues #187–#204** | [`docs/GITHUB_HIGH_IMPACT_ISSUES_187_204.md`](GITHUB_HIGH_IMPACT_ISSUES_187_204.md) | High-impact community growth and architecture issues | Senior contributors |
 | **Issues #564–#608** | [`docs/GITHUB_BEGINNER_ISSUES.md`](GITHUB_BEGINNER_ISSUES.md) | Zero-dependency pure TypeScript utilities & algorithms | First-timers & Hacktoberfest |
+| **Issues #655–#659** | [`docs/GITHUB_HACKTOBERFEST_ISSUES_655_659.md`](GITHUB_HACKTOBERFEST_ISSUES_655_659.md) | High-impact cognitive recovery, statistics, cryptography, and behavioral elasticity utilities | First-timers & Hacktoberfest |
 
 ---
 
