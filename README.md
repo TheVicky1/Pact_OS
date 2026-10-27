@@ -27,11 +27,12 @@
 
 <br />
 
-> 🌐 **Live Production Deployment**: Experience PACT OS live in action at **[https://pact-os.vercel.app](https://pact-os.vercel.app)**
+> 🌐 **Live Production Deployment**: Experience PACT OS live in action at **[https://pact-os.vercel.app](https://pact-os.vercel.app)**  
+> 🎥 **Video Demo & Walkthrough**: Watch the project video demo at **[Google Drive Video](https://drive.google.com/drive/folders/1xGLSrxhbWLSaos2wKePvCGBnK0MoVRdQ?usp=sharing)**
 
 <br />
 
-[Live Demo](https://pact-os.vercel.app) · [About](#about) · [Quick Start](#quick-start) · [Contributing](#contributing) · [Core Features](#core-features) · [Architecture](#architecture) · [Documentation](#documentation)
+[Live Demo](https://pact-os.vercel.app) · [Video Demo](https://drive.google.com/drive/folders/1xGLSrxhbWLSaos2wKePvCGBnK0MoVRdQ?usp=sharing) · [About](#about) · [Quick Start](#quick-start) · [Contributing](#contributing) · [Core Features](#core-features) · [Architecture](#architecture) · [Documentation](#documentation)
 
 </div>
 
