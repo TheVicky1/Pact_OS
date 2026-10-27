@@ -35,7 +35,7 @@ Closes #
 <!-- Check only the tests and verification commands that were actually executed locally -->
 - [ ] `npm run lint` — ESLint passed with 0 errors
 - [ ] `npx tsc --noEmit` — TypeScript strict check passed with 0 errors
-- [ ] `npm test` (or `node scratch/run-tests.mjs`) — 56-suite authoritative test matrix passed
+- [ ] `npm test` (or `node scratch/run-tests.mjs`) — 102-suite authoritative test matrix passed
 - [ ] `npm run test:file -- <file>` — targeted single test suite passed (for micro-contributions)
 - [ ] `node scratch/secret-scan.mjs` — Zero secrets or sensitive credentials detected
 - [ ] `npm run build` — Production build succeeded without errors

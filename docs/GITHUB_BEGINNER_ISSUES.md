@@ -3,6 +3,9 @@
 This document contains the canonical catalog of **curated, validated, and beginner-friendly issues** designed for first-time open-source and **Hacktoberfest** contributors joining the PACT project.
 
 > 📁 **Latest Issue Catalogs**:
+> - [**Issues #671–#685 Catalog** (15 Algorithmic & Security Tasks)](GITHUB_HACKTOBERFEST_ISSUES_671_685.md)
+> - [**Issues #661–#670 Catalog** (10 Discipline & Focus Tasks)](GITHUB_HACKTOBERFEST_ISSUES_661_670.md)
+> - [**Issues #655–#659 Catalog** (5 Focus Recovery & Elasticity Tasks)](GITHUB_HACKTOBERFEST_ISSUES_655_659.md)
 > - [**Issues #564–#608 Catalog** (Fresh Hacktoberfest 2026 Micro-Tasks)](https://github.com/TheVicky1/Pact_OS/issues?q=is%3Aissue+is%3Aopen+label%3Ahacktoberfest)
 > - [**Issues #187–#204 Catalog** (18 High-Impact Feature & Growth Issues)](GITHUB_HIGH_IMPACT_ISSUES_187_204.md)
 > - [**Issues #166–#185 Catalog** (20 Hacktoberfest Issues)](GITHUB_BEGINNER_ISSUES_166_185.md)

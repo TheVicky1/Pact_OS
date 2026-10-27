@@ -64,7 +64,7 @@ npx eslint src/
 # 4. Verify TypeScript types
 npx tsc --noEmit
 
-# 5. Run full 41 test suites
+# 5. Run full 102 test suites
 node scratch/run-tests.mjs
 
 # 6. Verify Next.js production build

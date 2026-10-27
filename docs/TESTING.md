@@ -104,7 +104,7 @@ The Accountability Resolution & Verification Engine was subjected to rigorous un
 
 ## 5. Contributor Test Execution Guide
 
-All 85 authoritative domain test suites run completely offline without needing live Supabase credentials or network access.
+All 102 authoritative domain test suites run completely offline without needing live Supabase credentials or network access.
 
 ### Running the Entire Authoritative Matrix
 ```bash

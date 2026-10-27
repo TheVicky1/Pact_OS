@@ -312,7 +312,7 @@ Comprehensive technical specifications, system architectures, and operational ru
 | Document | Purpose |
 | :--- | :--- |
 | 🌱 [**Beginner Contributing**](docs/CONTRIBUTING-BEGINNERS.md) | Step-by-step zero-to-PR guide for first-time contributors |
-| 🎯 [**Curated Issue Catalogs**](docs/GITHUB_BEGINNER_ISSUES.md) | Master catalog of 99 live curated issues across AI, PWA, UX, and beginner tasks |
+| 🎯 [**Curated Issue Catalogs**](docs/GITHUB_BEGINNER_ISSUES.md) | Master catalog of 330+ live curated issues across core discipline, algorithms, a11y, and beginner tasks |
 | 🏭 [**Issue Factory Architecture**](docs/GITHUB_ISSUE_FACTORY.md) | 15-part issue specification, SEO discovery rules & domain vocabulary |
 | 💬 [**Community Discussions**](docs/GITHUB_DISCUSSIONS.md) | GitHub Discussions categories, ideas lifecycle, and contributor journey |
 | 🏷️ [**GitHub Labels**](docs/GITHUB_LABELS.md) | Canonical issue classification, difficulty levels & composition |
@@ -349,7 +349,7 @@ PACT OS is free, open-source software built by developers who value intentionali
 ### 🌱 Quick Links for Contributors:
 - 📖 [**Contributing Guide**](CONTRIBUTING.md) — Comprehensive workflow, branching, and PR policies
 - 🚀 [**Beginner's Contribution Guide**](docs/CONTRIBUTING-BEGINNERS.md) — Step-by-step zero-to-PR walkthrough
-- 🎯 [**Curated Good First & Community Issues**](docs/GITHUB_BEGINNER_ISSUES.md) — 150+ self-contained, validated micro & feature tasks ([#564–#608](https://github.com/TheVicky1/Pact_OS/issues?q=is%3Aissue+is%3Aopen+label%3Ahacktoberfest), [#187–#204](docs/GITHUB_HIGH_IMPACT_ISSUES_187_204.md), [#166–#185](docs/GITHUB_BEGINNER_ISSUES_166_185.md), [#140–#164](docs/GITHUB_BEGINNER_ISSUES_140_164.md), [#130–#138](docs/GITHUB_BEGINNER_ISSUES_130_138.md), [#107–#113](docs/GITHUB_BEGINNER_ISSUES_107_113.md))
+- 🎯 [**Curated Good First & Community Issues**](docs/GITHUB_BEGINNER_ISSUES.md) — 330+ self-contained, validated micro & feature tasks ([#671–#685](docs/GITHUB_HACKTOBERFEST_ISSUES_671_685.md), [#661–#670](docs/GITHUB_HACKTOBERFEST_ISSUES_661_670.md), [#655–#659](docs/GITHUB_HACKTOBERFEST_ISSUES_655_659.md), [#564–#608](https://github.com/TheVicky1/Pact_OS/issues?q=is%3Aissue+is%3Aopen+label%3Ahacktoberfest), [#187–#204](docs/GITHUB_HIGH_IMPACT_ISSUES_187_204.md), [#166–#185](docs/GITHUB_BEGINNER_ISSUES_166_185.md), [#140–#164](docs/GITHUB_BEGINNER_ISSUES_140_164.md), [#130–#138](docs/GITHUB_BEGINNER_ISSUES_130_138.md), [#107–#113](docs/GITHUB_BEGINNER_ISSUES_107_113.md))
 - 🏷️ [**Label Taxonomy**](docs/GITHUB_LABELS.md) — Standardized 12-label open-source taxonomy
 - 🔧 [**Troubleshooting Guide**](docs/TROUBLESHOOTING.md) — Solutions for common setup and build issues
 - 💬 [**Community Discussions**](https://github.com/TheVicky1/Pact_OS/discussions) — Feature ideas, Q&A, and project showcases
@@ -368,7 +368,7 @@ PACT is built with care by an open-source community dedicated to personal master
 
 [![PACT Contributors](https://contrib.rocks/image?repo=TheVicky1/Pact_OS)](https://github.com/TheVicky1/Pact_OS/graphs/contributors)
 
-*A huge thank you to all 41+ developers who have contributed to PACT OS!*
+*A huge thank you to all 51+ developers who have contributed to PACT OS!*
 
 👉 [**View all contributors on GitHub**](https://github.com/TheVicky1/Pact_OS/graphs/contributors) • [**Contributors Hall of Fame**](CONTRIBUTORS.md)
 

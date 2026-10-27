@@ -30,4 +30,4 @@ What are the pros, cons, and performance/security implications of different appr
 
 ## 🔗 Related ADRs or Specifications
 
-Reference any relevant [Architecture Decision Records (ADRs)](docs/DECISIONS.md) or technical docs in `docs/`.
+Reference any relevant [Architecture Decision Records (ADRs)](../../docs/DECISIONS.md) or technical docs in `docs/`.

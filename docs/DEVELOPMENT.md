@@ -44,7 +44,7 @@ PACT uses a `.env.example` reference template in the repository root so contribu
    ```
 2. **Populate your Supabase & application keys** in `.env.local`:
    - Retrieve `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_ANON_KEY` (or `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`) from your Supabase project dashboard under **Project Settings -> API**.
-   - Note that the default template values in `.env.example` allow you to run the entire 56-suite offline test matrix (`npm test`) and explore the UI locally without live production credentials.
+   - Note that the default template values in `.env.example` allow you to run the entire 102-suite offline test matrix (`npm test`) and explore the UI locally without live production credentials.
 3. **Verify secret protection before committing**:
    - `.env.local` is ignored by Git via `.gitignore`. Never commit actual keys to `.env.example` or version control, and run `node scratch/secret-scan.mjs` to verify zero leaked credentials.
 
@@ -137,10 +137,10 @@ taskkill /PID <PID> /F
 
 ## 5. Testing & Quality Assurance
 
-PACT enforces a strict 56-suite automated test matrix verifying domain engines, math precision, security boundaries, and integration reliability. All tests execute completely offline using mock harnesses:
+PACT enforces a strict 102-suite automated test matrix verifying domain engines, math precision, security boundaries, and integration reliability. All tests execute completely offline using mock harnesses:
 
 ```bash
-# 1. Run all 56 automated domain test suites
+# 1. Run all 102 automated domain test suites
 npm test
 # (or: node scratch/run-tests.mjs)
 

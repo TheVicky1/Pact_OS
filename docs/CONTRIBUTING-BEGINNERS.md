@@ -239,7 +239,7 @@ git checkout -b <branch-name>
 
 ## Step 10: Test and Validate Your Changes
 
-Before submitting your work, run these validation checks locally. All 85 authoritative domain test suites run completely offline using mock harnesses with zero live database connection or network credential requirements:
+Before submitting your work, run these validation checks locally. All 102 authoritative domain test suites run completely offline using mock harnesses with zero live database connection or network credential requirements:
 
 1. **Check Code Quality & Formatting**:
    ```bash
@@ -262,7 +262,7 @@ Keeping code cleanly formatted and linted makes your pull request easy to review
    ```bash
    npm run typecheck
    ```
-3. **Run the Automated Test Suite (85 Suites)**:
+3. **Run the Automated Test Suite (102 Suites)**:
    ```bash
    npm test
    # (or: node scratch/run-tests.mjs)

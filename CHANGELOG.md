@@ -10,19 +10,35 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
-- **Hacktoberfest Issue Factory Expansion**: Designed, validated, and published 27 brand-new, zero-collision micro-task issues across three distinct batches:
+- **Hacktoberfest Issue Factory Expansion**: Designed, validated, and published 62 brand-new, zero-collision micro-task issues across seven distinct batches:
   - Batch 1 (`#577`–`#587`): Multi-locale currency formatter, DST shift detector, CRC-32 checksum calculator, Luhn PIN verifier, binaural beats frequency detuner, 5-second rule countdown evaluator, conic progress gradients, hex opacity appender, habit momentum index, JSON-LD generator, and natural recurrence describer.
   - Batch 2 (`#591`–`#601`): Haversine distance & geofence evaluator, RFC 6238 TOTP URI builder, 90-minute ultradian sleep cycle calculator, aspect ratio box fitting, bounded in-memory LRU cache, Levenshtein distance & similarity index, compounding penalty accrual, daily hydration target calculator, safe Markdown auto-closure truncator, 31-day bitmask check-in flags, and Heckbert "nice numbers" axis tick scale generator.
   - Batch 3 (`#604`–`#608`): Audio frequency to musical pitch note translator, exponential XP progression curve calculator, Base58 unambiguous verification token encoder/decoder, Soundex phonetic matching code generator, and Run-Length Encoding (RLE) streak record compressor.
+  - Batch 4 (`#655`–`#659`): Focus cognitive recovery predictor, Gini coefficient domain time allocation inequality, HMAC-SHA256 signed verification tokens, habit elasticity decay, and Yerkes-Dodson arousal curve.
+  - Batch 5 (`#661`–`#670`): Implementation intentions "If-Then" trigger parser, streak shield insurance points, task opportunity cost allocator, Pomodoro work-to-rest auto-tuner, EMA habit consistency smoother, WCAG 2.2 modular typographic scale, 4-7-8 & box breathing recovery cycles, temptation bundling matcher, circadian cortisol awakening response planner, and Pearson correlation coefficient matrix.
+  - Batch 6 (`#671`–`#675`): Shannon entropy habit routine predictability, parked distraction triage queue, Fogg behavior model task friction diagnostic, delta-RLE timestamp compression engine, and commitment bond slashing schedule.
+  - Batch 7 (`#676`–`#685`): ISO 226 equal-loudness contour filter, habit stacking anchor compatibility scorer, Shamir's secret sharing (2-of-3) key splitter, decision fatigue choice budget, Zipf's law power-law distribution validator, geohash precision encoder, cognitive warm-up sigmoid ramping, six-attribute character skill tree, social jetlag calculator, and Dutch auction escalating penalty price decaying multiplier.
 - **Community Contributions & Merged Features**:
+  - Dutch auction escalating penalty decaying multiplier (#686) by Aryan (`@Aryan9891`).
+  - Inverted index search, SRI hash calculator, XP level progression, and focus efficiency ratio (#650, #651, #652, #653) by Toyes (`@toyes3429`).
+  - Constant-time string/buffer comparisons and Elo rating calculator (#648, #649) by Akshat (`@akshatXD-hash`).
+  - Fixed-precision decimal arithmetic and automatic theme preference observer (#621, #642) by Sibi Sudhan Elangovan (`@SibiSudhanElangovan`).
+  - Edge-case unit test suites for fractional timestamps, low battery threshold levels, and currency formatting (#622, #623, #654) by Ravi Modiya (`@ravimodiya`).
+  - Countdown ignition evaluator for discipline enforcement (#636) by `@xhbxx`.
+  - Base58 unambiguous token encoder/decoder, 20-20-20 screen rest, caffeine sleep cutoff, Parkinson's law compression, and Jaro-Winkler string similarity (#620, #625, #626, #627, #628) by Aryan (`@Aryan9891`).
+  - Media box-fit aspect ratio calculator (#614) by Krishna (`@krishna2707`).
+  - Accessible accent swatch announcements and selection states (#613) by Aaqib Hafeez Khan (`@Aaqibhafeezkhan`).
+  - Windows contributing and PowerShell troubleshooting guide (#612) by Sunanda Pandit (`@sunandapandit03`).
+  - Sliding-window rate limiter for partner invitations (#611) by `@mutabalShawandar`.
+  - Run-Length Encoding (RLE) streak record compressor (#610) by `@Enard52`.
   - Verification PIN generation & Luhn check digit validation (#602) by Sahil Thakur (`@sahilthakurr24`).
   - Color hex alpha transparency utility (#590) by Gaurav Patil (`@GauravPatil2515`).
   - Screen wake lock API manager for active focus sessions (#588) by Gautam (`@GauravPatil2515` / `@Gautam5471`).
   - Deterministic category tag color palette generator (#576) by Ayaan Qazi (`@ayaan-qazi`).
   - Daily ritual step progress & completion calculator (#575) by Naman Goyal (`@namangoyal176-10`).
   - Comprehensive documentation guides for webhooks, troubleshooting, offline sync, PWA service workers, code review policy, timezone setup, and Supabase RLS (#544–#553) by Arthur Joseph Lawson (`@ArthurJosephLawson`).
-- **Community Contributors Hall of Fame Update**: Expanded `CONTRIBUTORS.md` recognizing all 41 community contributors and their specific merged pull requests across core engineering, accessibility, quality assurance, theming, and technical writing.
-- **Test Matrix Expansion**: Automated test matrix expanded to 85 complete test suites with 100% pass rate covering all domain validations, utilities, and security guarantees.
+- **Community Contributors Hall of Fame Update**: Expanded `CONTRIBUTORS.md` recognizing all 51 community contributors and their specific merged pull requests across core engineering, accessibility, quality assurance, theming, and technical writing.
+- **Test Matrix Expansion**: Automated test matrix expanded to 102 complete test suites with 100% pass rate covering all domain validations, utilities, and security guarantees.
 
 
 ## [0.2.0] - 2026-09-20

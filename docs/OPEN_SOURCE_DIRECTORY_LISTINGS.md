@@ -27,12 +27,12 @@ Engineered for individuals seeking uncompromising discipline, PACT OS integrates
 - 🎯 **Focus Engine & Pomodoro**: Dynamic timer, live activity indicator, and distraction audio traps.
 - 📊 **Habit Streak & Routines**: Multi-frequency streak calculators with leap-year boundary safety.
 - 🔐 **Zero-Knowledge Privacy**: Passkeys (WebAuthn), local IndexedDB caching, and zero tracking scripts.
-- 🤝 **150+ Curated Good First & Community Issues**: Curated, single-file beginner tasks with exact local test commands.
+- 🤝 **330+ Curated Good First & Community Issues**: Curated, single-file beginner tasks with exact local test commands.
 
 ### 🛠️ Tech Stack
 - **Frontend**: Next.js 16 (App Router), React 19, TypeScript 5, TailwindCSS v4, Lucide Icons
 - **Backend & DB**: Supabase (PostgreSQL, RLS security), WebAuthn Passkeys
-- **Testing & Quality**: Vitest, Custom Domain Validation Matrix (85 Test Suites, 100% Passing)
+- **Testing & Quality**: Vitest, Custom Domain Validation Matrix (102 Test Suites, 100% Passing)
 
 ### 🔗 Quick Links
 - 🐙 **GitHub Repository**: https://github.com/TheVicky1/Pact_OS
@@ -104,11 +104,11 @@ PACT OS is an open-source local-first accountability operating system. We mainta
 
 ### CodeTriage Project Profile Description
 ```markdown
-PACT OS is a high-performance, local-first accountability operating system written in Next.js 15, TypeScript, and Supabase. 
+PACT OS is a high-performance, local-first accountability operating system written in Next.js 16, TypeScript, and Supabase. 
 
 We actively welcome open-source triage and community contributions! Our repository features:
-- 35+ Curated Good First Issues (single-file scope, 5–15 minute tasks).
-- 100% Test Coverage across 56 domain validation suites.
+- 330+ Curated Good First Issues (single-file scope, 5–15 minute tasks).
+- 100% Test Coverage across 102 domain validation suites.
 - Friendly maintainers with fast PR review times (< 24h).
 - Dedicated beginner contribution guide with step-by-step Git instructions.
 
