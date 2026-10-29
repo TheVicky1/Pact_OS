@@ -157,3 +157,19 @@ export function calculateOverallHabitMetrics(
     highestStreak,
   };
 }
+
+/**
+ * Calculates milestone reward multiplier based on consecutive streak days:
+ * - < 7 days: 1.0x baseline (including broken/0 or negative/fractional days)
+ * - 7 to 29 days: 1.5x milestone multiplier
+ * - >= 30 days: 2.0x milestone multiplier
+ */
+export function calculateRewardMultiplier(streakDays: number): number {
+  if (typeof streakDays !== 'number' || isNaN(streakDays) || streakDays < 7 || !Number.isInteger(streakDays)) {
+    return 1.0;
+  }
+  if (streakDays >= 30) {
+    return 2.0;
+  }
+  return 1.5;
+}
