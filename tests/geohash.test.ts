@@ -4,6 +4,8 @@ import {
   decodeGeohash,
   getGeohashBoundingBox,
   isPointInsideGeohash,
+  getGeohashNeighbor,
+  getGeohashNeighbors,
 } from '../src/lib/data/geohash';
 
 describe('Geohash Precision Encoder & Proximity Bounding Box', () => {
@@ -124,6 +126,59 @@ describe('Geohash Precision Encoder & Proximity Bounding Box', () => {
       expect(isPointInsideGeohash(targetLat, NaN, targetGeohash)).toBe(false);
       expect(isPointInsideGeohash(Infinity, targetLng, targetGeohash)).toBe(false);
       expect(isPointInsideGeohash(targetLat, -Infinity, targetGeohash)).toBe(false);
+    });
+  });
+
+  describe('getGeohashNeighbor & getGeohashNeighbors', () => {
+    it('calculates adjacent neighbor cells across all cardinal directions', () => {
+      // Hanoi center 7-char geohash
+      const base = encodeGeohash(21.0285, 105.8542, 7);
+      const north = getGeohashNeighbor(base, 'n');
+      const south = getGeohashNeighbor(base, 's');
+      const east = getGeohashNeighbor(base, 'e');
+      const west = getGeohashNeighbor(base, 'w');
+
+      expect(north).toHaveLength(7);
+      expect(south).toHaveLength(7);
+      expect(east).toHaveLength(7);
+      expect(west).toHaveLength(7);
+      expect(north).not.toBe(base);
+      expect(south).not.toBe(base);
+
+      // North neighbor must have higher latitude center
+      const baseDecoded = decodeGeohash(base);
+      const northDecoded = decodeGeohash(north);
+      expect(northDecoded.latitude).toBeGreaterThan(baseDecoded.latitude);
+
+      // South neighbor must have lower latitude center
+      const southDecoded = decodeGeohash(south);
+      expect(southDecoded.latitude).toBeLessThan(baseDecoded.latitude);
+    });
+
+    it('calculates all 8 surrounding neighbor cells in getGeohashNeighbors', () => {
+      const base = 'u09tunq'; // Eiffel tower
+      const neighbors = getGeohashNeighbors(base);
+
+      expect(neighbors).toHaveProperty('n');
+      expect(neighbors).toHaveProperty('ne');
+      expect(neighbors).toHaveProperty('e');
+      expect(neighbors).toHaveProperty('se');
+      expect(neighbors).toHaveProperty('s');
+      expect(neighbors).toHaveProperty('sw');
+      expect(neighbors).toHaveProperty('w');
+      expect(neighbors).toHaveProperty('nw');
+
+      // All neighbors must have length matching the input geohash
+      for (const key of Object.keys(neighbors) as (keyof typeof neighbors)[]) {
+        expect(neighbors[key]).toHaveLength(base.length);
+        expect(neighbors[key]).not.toBe(base);
+      }
+    });
+
+    it('throws error on invalid cardinal direction', () => {
+      expect(() => getGeohashNeighbor('u09tunq', 'up' as any)).toThrow(
+        'Invalid direction'
+      );
     });
   });
 });

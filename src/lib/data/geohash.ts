@@ -24,6 +24,19 @@ export interface DecodedGeohash {
   };
 }
 
+export interface GeohashNeighbors {
+  n: string;
+  ne: string;
+  e: string;
+  se: string;
+  s: string;
+  sw: string;
+  w: string;
+  nw: string;
+}
+
+export type GeohashDirection = 'n' | 's' | 'e' | 'w';
+
 // Standard Gustavo Niemeyer 32-character alphabet (omitting 'a', 'i', 'l', 'o')
 const BASE32 = '0123456789bcdefghjkmnpqrstuvwxyz';
 const BITS = [16, 8, 4, 2, 1];
@@ -242,4 +255,70 @@ export function isPointInsideGeohash(
     lat <= box.maxLat &&
     longitudeInside
   );
+}
+
+/**
+ * Calculates the adjacent neighboring geohash in a given cardinal direction ('n', 's', 'e', 'w').
+ *
+ * @param geohash - Base geohash string
+ * @param direction - Cardinal direction ('n' | 's' | 'e' | 'w')
+ * @returns Adjacent neighboring geohash string with identical precision
+ */
+export function getGeohashNeighbor(
+  geohash: string,
+  direction: GeohashDirection
+): string {
+  const cleanGeohash = geohash.toLowerCase().trim();
+  const box = getGeohashBoundingBox(cleanGeohash);
+  const latSpan = box.maxLat - box.minLat;
+  const lngSpan = box.maxLng - box.minLng;
+  const centerLat = (box.minLat + box.maxLat) / 2;
+  const centerLng = (box.minLng + box.maxLng) / 2;
+
+  let targetLat = centerLat;
+  let targetLng = centerLng;
+
+  switch (direction.toLowerCase()) {
+    case 'n':
+      targetLat = centerLat + latSpan;
+      break;
+    case 's':
+      targetLat = centerLat - latSpan;
+      break;
+    case 'e':
+      targetLng = centerLng + lngSpan;
+      break;
+    case 'w':
+      targetLng = centerLng - lngSpan;
+      break;
+    default:
+      throw new Error(`Invalid direction: "${direction}". Must be 'n', 's', 'e', or 'w'`);
+  }
+
+  return encodeGeohash(targetLat, targetLng, cleanGeohash.length);
+}
+
+/**
+ * Calculates all 8 surrounding neighboring geohash cells (N, NE, E, SE, S, SW, W, NW).
+ *
+ * @param geohash - Base geohash string
+ * @returns GeohashNeighbors object containing all 8 adjacent geohash strings
+ */
+export function getGeohashNeighbors(geohash: string): GeohashNeighbors {
+  const cleanGeohash = geohash.toLowerCase().trim();
+  const n = getGeohashNeighbor(cleanGeohash, 'n');
+  const s = getGeohashNeighbor(cleanGeohash, 's');
+  const e = getGeohashNeighbor(cleanGeohash, 'e');
+  const w = getGeohashNeighbor(cleanGeohash, 'w');
+
+  return {
+    n,
+    ne: getGeohashNeighbor(n, 'e'),
+    e,
+    se: getGeohashNeighbor(s, 'e'),
+    s,
+    sw: getGeohashNeighbor(s, 'w'),
+    w,
+    nw: getGeohashNeighbor(n, 'w'),
+  };
 }
