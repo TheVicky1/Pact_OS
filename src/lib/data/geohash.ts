@@ -38,7 +38,6 @@ for (let i = 0; i < BASE32.length; i++) {
  * Normalizes longitude to [-180, 180] degrees.
  */
 function normalizeLongitude(lng: number): number {
-  if (isNaN(lng) || !isFinite(lng)) return 0;
   let normalized = (lng + 180) % 360;
   if (normalized < 0) {
     normalized += 360;
@@ -50,7 +49,6 @@ function normalizeLongitude(lng: number): number {
  * Clamps latitude to [-90, 90] degrees.
  */
 function clampLatitude(lat: number): number {
-  if (isNaN(lat) || !isFinite(lat)) return 0;
   if (lat > 90) return 90;
   if (lat < -90) return -90;
   return lat;
@@ -69,6 +67,13 @@ export function encodeGeohash(
   longitude: number,
   precision: number = 7
 ): string {
+  if (typeof latitude !== 'number' || !Number.isFinite(latitude)) {
+    throw new Error('Latitude must be a finite number');
+  }
+  if (typeof longitude !== 'number' || !Number.isFinite(longitude)) {
+    throw new Error('Longitude must be a finite number');
+  }
+
   if (typeof precision !== 'number' || isNaN(precision) || precision < 1) {
     precision = 7;
   }
@@ -77,8 +82,8 @@ export function encodeGeohash(
   const lat = clampLatitude(latitude);
   const lng = normalizeLongitude(longitude);
 
-  let latInterval = [-90.0, 90.0];
-  let lngInterval = [-180.0, 180.0];
+  const latInterval: [number, number] = [-90.0, 90.0];
+  const lngInterval: [number, number] = [-180.0, 180.0];
 
   let geohash = '';
   let isEven = true; // Even bits correspond to longitude, odd to latitude
@@ -131,8 +136,12 @@ export function getGeohashBoundingBox(geohash: string): BoundingBox {
   }
 
   const cleanGeohash = geohash.toLowerCase().trim();
-  let latInterval = [-90.0, 90.0];
-  let lngInterval = [-180.0, 180.0];
+  if (cleanGeohash.length === 0) {
+    throw new Error('Geohash must be a non-empty string');
+  }
+
+  const latInterval: [number, number] = [-90.0, 90.0];
+  const lngInterval: [number, number] = [-180.0, 180.0];
   let isEven = true;
 
   for (let i = 0; i < cleanGeohash.length; i++) {
@@ -142,7 +151,7 @@ export function getGeohashBoundingBox(geohash: string): BoundingBox {
       throw new Error(`Invalid geohash character: "${c}"`);
     }
 
-    for (let mask of BITS) {
+    for (const mask of BITS) {
       if (isEven) {
         const mid = (lngInterval[0] + lngInterval[1]) / 2;
         if ((cd & mask) !== 0) {
@@ -207,7 +216,15 @@ export function isPointInsideGeohash(
   longitude: number,
   targetGeohash: string
 ): boolean {
-  if (isNaN(latitude) || isNaN(longitude)) return false;
+  if (
+    typeof latitude !== 'number' ||
+    !Number.isFinite(latitude) ||
+    typeof longitude !== 'number' ||
+    !Number.isFinite(longitude)
+  ) {
+    return false;
+  }
+
   const lat = clampLatitude(latitude);
   const lng = normalizeLongitude(longitude);
 

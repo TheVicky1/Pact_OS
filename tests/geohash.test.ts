@@ -35,6 +35,13 @@ describe('Geohash Precision Encoder & Proximity Bounding Box', () => {
       expect(hashNan).toHaveLength(7);
     });
 
+    it('rejects non-finite latitude or longitude coordinates', () => {
+      expect(() => encodeGeohash(NaN, 0)).toThrow('Latitude must be a finite number');
+      expect(() => encodeGeohash(0, NaN)).toThrow('Longitude must be a finite number');
+      expect(() => encodeGeohash(Infinity, 0)).toThrow('Latitude must be a finite number');
+      expect(() => encodeGeohash(0, -Infinity)).toThrow('Longitude must be a finite number');
+    });
+
     it('clamps latitude and normalizes longitude boundaries', () => {
       // Over-clamped north pole
       const north = encodeGeohash(95.0, 0.0, 5);
@@ -76,7 +83,7 @@ describe('Geohash Precision Encoder & Proximity Bounding Box', () => {
       expect(box.maxLng).toBeGreaterThanOrEqual(lng);
     });
 
-    it('throws descriptive error on invalid base32 characters', () => {
+    it('throws descriptive error on invalid base32 characters or whitespace-only geohash', () => {
       expect(() => getGeohashBoundingBox('abc1234')).toThrow(
         'Invalid geohash character'
       );
@@ -84,6 +91,9 @@ describe('Geohash Precision Encoder & Proximity Bounding Box', () => {
         'Invalid geohash character'
       );
       expect(() => decodeGeohash('')).toThrow(
+        'Geohash must be a non-empty string'
+      );
+      expect(() => decodeGeohash('   ')).toThrow(
         'Geohash must be a non-empty string'
       );
     });
@@ -104,6 +114,8 @@ describe('Geohash Precision Encoder & Proximity Bounding Box', () => {
       // Invalid coordinates return false gracefully
       expect(isPointInsideGeohash(NaN, targetLng, targetGeohash)).toBe(false);
       expect(isPointInsideGeohash(targetLat, NaN, targetGeohash)).toBe(false);
+      expect(isPointInsideGeohash(Infinity, targetLng, targetGeohash)).toBe(false);
+      expect(isPointInsideGeohash(targetLat, -Infinity, targetGeohash)).toBe(false);
     });
   });
 });
