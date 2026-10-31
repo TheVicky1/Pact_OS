@@ -80,6 +80,42 @@ describe('Delta-RLE Timestamp Compression & Decompression Engine', () => {
         'Timestamp at index 1 must be a finite number'
       );
     });
+
+    it('rejects non-array input with explicit descriptive error', () => {
+      expect(() => compressTimestampDeltas(null as any)).toThrow(
+        'timestamps must be an array'
+      );
+      expect(() => compressTimestampDeltas('not-array' as any)).toThrow(
+        'timestamps must be an array'
+      );
+      expect(() => compressTimestampDeltas({} as any)).toThrow(
+        'timestamps must be an array'
+      );
+    });
+
+    it('ensures massive timestamp streams maintain non-zero compression ratio', () => {
+      // 100,000 timestamps with constant interval
+      const base = 1730000000000;
+      const count = 100000;
+      const timestamps: number[] = new Array(count);
+      for (let i = 0; i < count; i++) {
+        timestamps[i] = base + i * 100;
+      }
+
+      const compressed = compressTimestampDeltas(timestamps);
+      expect(compressed.totalCount).toBe(100000);
+      expect(compressed.chunks).toHaveLength(1);
+      // Compression ratio must strictly be positive and not round to 0
+      expect(compressed.compressionRatio).toBeGreaterThan(0);
+      expect(Number.isFinite(compressed.compressionRatio)).toBe(true);
+    });
+
+    it('guards against timestamps exceeding safe integer bounds', () => {
+      const unsafe = Number.MAX_SAFE_INTEGER + 10;
+      expect(() => compressTimestampDeltas([1000, unsafe])).toThrow(
+        'must be a safe integer'
+      );
+    });
   });
 
   describe('decompressTimestampDeltas & Lossless Round-Trip Invariant', () => {
@@ -156,6 +192,35 @@ describe('Delta-RLE Timestamp Compression & Decompression Engine', () => {
           compressionRatio: 1,
         })
       ).toThrow('Invalid chunk');
+
+      // Non-empty chunks when totalCount is 0 or 1
+      expect(() =>
+        decompressTimestampDeltas({
+          initialTimestamp: 0,
+          totalCount: 0,
+          chunks: [{ delta: 100, count: 1 }],
+          compressionRatio: 1,
+        })
+      ).toThrow('chunks must be empty when totalCount is 0');
+
+      expect(() =>
+        decompressTimestampDeltas({
+          initialTimestamp: 1000,
+          totalCount: 1,
+          chunks: [{ delta: 100, count: 1 }],
+          compressionRatio: 1,
+        })
+      ).toThrow('chunks must be empty when totalCount is 1');
+
+      // Exceeds max allocation limit
+      expect(() =>
+        decompressTimestampDeltas({
+          initialTimestamp: 1000,
+          totalCount: 99_000_000,
+          chunks: [],
+          compressionRatio: 1,
+        })
+      ).toThrow('exceeds maximum allowed allocation limit');
     });
   });
 });
