@@ -6,7 +6,7 @@ const testDir = path.resolve(process.cwd(), 'tests');
 const nodeBin = process.execPath;
 const jitiCli = path.resolve(process.cwd(), 'node_modules/jiti/lib/jiti-cli.mjs');
 const vitestCli = path.resolve(process.cwd(), 'node_modules/vitest/vitest.mjs');
-const vitestTests = new Set(['constant-time.test.ts', 'elo-rating.test.ts']);
+const vitestTests = new Set(['constant-time.test.ts', 'elo-rating.test.ts', 'shamir-secret.test.ts']);
 
 // Authoritative offline unit, domain, security, and integration test suites
 const liveDbTests = new Set([

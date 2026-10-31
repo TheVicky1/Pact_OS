@@ -216,8 +216,12 @@ export function reconstructSecret(
     if (!Number.isInteger(s.shareIndex) || s.shareIndex < 1 || s.shareIndex > 255) {
       throw new Error(`Invalid share index: ${s.shareIndex}`);
     }
-    if (!isHex(s.shareDataHex)) {
+    // Check non-hex characters first, then odd length
+    if (!/^[0-9a-f]+$/.test(s.shareDataHex)) {
       throw new Error('Invalid share data encoding');
+    }
+    if (s.shareDataHex.length % 2 !== 0) {
+      throw new Error('Invalid share data length');
     }
     if (seenIndices.has(s.shareIndex)) {
       throw new Error(`Duplicate share index detected: ${s.shareIndex}`);
