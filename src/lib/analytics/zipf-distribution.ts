@@ -150,7 +150,12 @@ export function evaluateZipfPriorityDistribution(
   } else {
     diagnosis = 'diffuse_attention_warning';
     isPowerLawDistributed = false;
-    actionableInsight = `High priority diffusion detected (RMSE = ${rootMeanSquareError}): Focus is spread too evenly across ${N} tasks without clear power-law leverage. Protect deep work blocks for Priority #1.`;
+    const topIdealShare = idealShares[0] ?? 0;
+    if (topPriorityFocusRatio > topIdealShare) {
+      actionableInsight = `Focus is more concentrated than a power-law curve: Priority #1 (${validTasks[0].taskTitle}) receives ${(topPriorityFocusRatio * 100).toFixed(1)}% vs ideal ${(topIdealShare * 100).toFixed(1)}%. Consider balancing efforts into high-impact secondary priorities.`;
+    } else {
+      actionableInsight = `High priority diffusion detected (RMSE = ${rootMeanSquareError}): Focus is spread too evenly across ${N} tasks without clear power-law leverage. Protect deep work blocks for Priority #1.`;
+    }
   }
 
   return {
