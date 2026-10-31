@@ -57,6 +57,11 @@ describe('Geohash Precision Encoder & Proximity Bounding Box', () => {
       const wrappedLng = encodeGeohash(0.0, 190.0, 6);
       const normalLng = encodeGeohash(0.0, -170.0, 6);
       expect(wrappedLng).toBe(normalLng);
+
+      // Preserves longitudes just below 180 degrees without rounding to -180
+      const nearEdge = encodeGeohash(0.0, 179.99999999999997, 6);
+      const decodedNearEdge = decodeGeohash(nearEdge);
+      expect(decodedNearEdge.longitude).toBeGreaterThan(170.0);
     });
   });
 
@@ -110,6 +115,9 @@ describe('Geohash Precision Encoder & Proximity Bounding Box', () => {
 
       // Far away point is outside
       expect(isPointInsideGeohash(21.5, 106.0, targetGeohash)).toBe(false);
+
+      // Antimeridian boundary edge check (box ending at 180 degrees)
+      expect(isPointInsideGeohash(60, 180, 'z')).toBe(true);
 
       // Invalid coordinates return false gracefully
       expect(isPointInsideGeohash(NaN, targetLng, targetGeohash)).toBe(false);

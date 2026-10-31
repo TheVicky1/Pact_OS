@@ -35,14 +35,18 @@ for (let i = 0; i < BASE32.length; i++) {
 }
 
 /**
- * Normalizes longitude to [-180, 180] degrees.
+ * Normalizes longitude to [-180, 180) degrees.
+ * Applies modulo before range shifting to preserve precision near antimeridian boundaries.
  */
 function normalizeLongitude(lng: number): number {
-  let normalized = (lng + 180) % 360;
-  if (normalized < 0) {
+  let normalized = lng % 360;
+  if (normalized < -180) {
     normalized += 360;
   }
-  return normalized - 180;
+  if (normalized >= 180) {
+    normalized -= 360;
+  }
+  return normalized;
 }
 
 /**
@@ -229,11 +233,13 @@ export function isPointInsideGeohash(
   const lng = normalizeLongitude(longitude);
 
   const box = getGeohashBoundingBox(targetGeohash);
+  const longitudeInside =
+    (lng >= box.minLng && lng <= box.maxLng) ||
+    (lng === -180 && box.maxLng === 180);
 
   return (
     lat >= box.minLat &&
     lat <= box.maxLat &&
-    lng >= box.minLng &&
-    lng <= box.maxLng
+    longitudeInside
   );
 }
