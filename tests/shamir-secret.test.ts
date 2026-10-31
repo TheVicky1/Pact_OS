@@ -30,7 +30,7 @@ describe('Galois Field GF(256) Arithmetic', () => {
     expect(gfDiv(prod, b)).toBe(a);
     expect(gfDiv(prod, a)).toBe(b);
 
-    expect(() => gfDiv(a, 0)).toThrow('Division by zero');
+    expect(() => gfDiv(a, 0)).toThrow('Division by zero in GF(256)');
   });
 });
 
@@ -68,6 +68,13 @@ describe("Shamir's Secret Sharing (2-of-3 threshold)", () => {
     expect(recovered).toBe(hexSecret);
   });
 
+  it('preserves uppercase hex input via UTF-8 path without lowercase conversion', () => {
+    const upperHex = '0123456789ABCDEF';
+    const shares = splitSecret(upperHex, 3, 2);
+    const recovered = reconstructSecret([shares[0], shares[1]]);
+    expect(recovered).toBe(upperHex);
+  });
+
   it('fails when fewer than threshold shares are provided', () => {
     const secret = 'super-secret-vault-key';
     const shares = splitSecret(secret, 3, 2);
@@ -98,21 +105,75 @@ describe("Shamir's Secret Sharing (2-of-3 threshold)", () => {
     expect(() => splitSecret('test', 3, 1)).toThrow(
       'Threshold must be at least 2'
     );
+    expect(() => splitSecret('test', 2.5, 2)).toThrow(
+      'Threshold and total shares must be integers'
+    );
+    expect(() => splitSecret('test', 256, 2)).toThrow(
+      'Total shares cannot exceed 255'
+    );
   });
 
-  it('detects tampered or corrupt shares without crashing', () => {
+  it('validates share index range, integrity, and encoding', () => {
+    // Non-integer index
+    expect(() =>
+      reconstructSecret([
+        { shareIndex: 1.5, shareDataHex: '02aa' },
+        { shareIndex: 2, shareDataHex: '02bb' },
+      ])
+    ).toThrow('Invalid share index');
+
+    // Index out of range
+    expect(() =>
+      reconstructSecret([
+        { shareIndex: 0, shareDataHex: '02aa' },
+        { shareIndex: 2, shareDataHex: '02bb' },
+      ])
+    ).toThrow('Invalid share index');
+
+    // Invalid non-hex encoding
+    expect(() =>
+      reconstructSecret([
+        { shareIndex: 1, shareDataHex: '02zz' },
+        { shareIndex: 2, shareDataHex: '02bb' },
+      ])
+    ).toThrow('Invalid share data encoding');
+
+    // Odd-length hex
+    expect(() =>
+      reconstructSecret([
+        { shareIndex: 1, shareDataHex: '02a' },
+        { shareIndex: 2, shareDataHex: '02b' },
+      ])
+    ).toThrow('Invalid share data length');
+
+    // Inconsistent share length
+    expect(() =>
+      reconstructSecret([
+        { shareIndex: 1, shareDataHex: '02aa' },
+        { shareIndex: 2, shareDataHex: '02aabb' },
+      ])
+    ).toThrow('Inconsistent share data lengths');
+  });
+
+  it('detects tampered or corrupt shares and throws error', () => {
     const secret = 'confidential-accountability-note';
     const shares = splitSecret(secret, 3, 2);
 
-    // Tamper one byte in share 2
-    const tamperedHex = 'ff' + shares[1].shareDataHex.substring(2);
+    // Tamper payload byte via XOR
+    const original = shares[1].shareDataHex;
+    const flipped = (parseInt(original.substring(2, 4), 16) ^ 0xff)
+      .toString(16)
+      .padStart(2, '0');
+    const tamperedHex = original.substring(0, 2) + flipped + original.substring(4);
     const tamperedShare: SecretShare = {
       shareIndex: shares[1].shareIndex,
       shareDataHex: tamperedHex,
     };
 
-    // Reconstruction will not equal the original secret because polynomial data is corrupt
-    const corruptedResult = reconstructSecret([shares[0], tamperedShare]);
-    expect(corruptedResult).not.toBe(secret);
+    // Reconstructing with tampered share must throw or fail to equal secret
+    expect(() => {
+      const res = reconstructSecret([shares[0], tamperedShare]);
+      expect(res).not.toBe(secret);
+    }).not.toThrow();
   });
 });

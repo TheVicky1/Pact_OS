@@ -38,19 +38,31 @@ const LOG_TABLE = new Uint8Array(GF_SIZE);
   LOG_TABLE[0] = 0; // log(0) undefined, sentinel
 })();
 
+/**
+ * Adds two elements in GF(256) using XOR addition.
+ */
 export function gfAdd(a: number, b: number): number {
   return (a ^ b) & 0xff;
 }
 
+/**
+ * Subtracts two elements in GF(256) (equivalent to addition in characteristic 2).
+ */
 export function gfSub(a: number, b: number): number {
   return (a ^ b) & 0xff;
 }
 
+/**
+ * Multiplies two elements in GF(256) using precomputed generator log/exp tables.
+ */
 export function gfMul(a: number, b: number): number {
   if (a === 0 || b === 0) return 0;
   return EXP_TABLE[LOG_TABLE[a] + LOG_TABLE[b]];
 }
 
+/**
+ * Divides element a by element b in GF(256). Throws an error on division by zero.
+ */
 export function gfDiv(a: number, b: number): number {
   if (b === 0) throw new Error('Division by zero in GF(256)');
   if (a === 0) return 0;
@@ -61,7 +73,7 @@ export function gfDiv(a: number, b: number): number {
 // Helpers: Hex & UTF-8 Conversion
 // ---------------------------------------------------------------------------
 function isHex(str: string): boolean {
-  return str.length > 0 && str.length % 2 === 0 && /^[0-9a-fA-F]+$/.test(str);
+  return str.length > 0 && str.length % 2 === 0 && /^[0-9a-f]+$/.test(str);
 }
 
 function hexToBytes(hex: string): Uint8Array {
@@ -101,7 +113,7 @@ function getRandomByte(): number {
     crypto.getRandomValues(arr);
     return arr[0];
   }
-  return Math.floor(Math.random() * 256);
+  throw new Error('Secure random source (crypto.getRandomValues) is unavailable');
 }
 
 // ---------------------------------------------------------------------------
@@ -120,6 +132,9 @@ export function splitSecret(
   if (!secretUtf8OrHex) {
     throw new Error('Secret cannot be empty');
   }
+  if (!Number.isInteger(threshold) || !Number.isInteger(totalShares)) {
+    throw new Error('Threshold and total shares must be integers');
+  }
   if (threshold < 2) {
     throw new Error('Threshold must be at least 2');
   }
@@ -130,8 +145,8 @@ export function splitSecret(
     throw new Error('Total shares cannot exceed 255 in GF(256)');
   }
 
-  // Detect format: If string is prefixed with hex metadata or valid hex format,
-  // we record whether input was raw hex or text.
+  // Detect format: If string is pure lowercase hex, we treat it as raw hex format.
+  // Otherwise, encode as UTF-8 so original casing or text is fully preserved.
   let secretBytes: Uint8Array;
   let isInputHex = false;
 
@@ -195,11 +210,14 @@ export function reconstructSecret(
     throw new Error('Insufficient shares to reconstruct secret');
   }
 
-  // Check unique share indices
+  // Check unique share indices and data formatting
   const seenIndices = new Set<number>();
   for (const s of shares) {
-    if (!s.shareIndex || s.shareIndex < 1 || s.shareIndex > 255) {
+    if (!Number.isInteger(s.shareIndex) || s.shareIndex < 1 || s.shareIndex > 255) {
       throw new Error(`Invalid share index: ${s.shareIndex}`);
+    }
+    if (!isHex(s.shareDataHex)) {
+      throw new Error('Invalid share data encoding');
     }
     if (seenIndices.has(s.shareIndex)) {
       throw new Error(`Duplicate share index detected: ${s.shareIndex}`);
@@ -259,19 +277,13 @@ export function reconstructSecret(
 
   if (formatTag === 0x01) {
     return bytesToHex(secretBytes);
-  } else if (formatTag === 0x02) {
+  }
+  if (formatTag === 0x02) {
     try {
       return bytesToUtf8(secretBytes);
     } catch {
-      // Fallback to hex if corrupted
-      return bytesToHex(secretBytes);
-    }
-  } else {
-    // If format tag unrecognized, attempt UTF-8 decode or hex fallback
-    try {
-      return bytesToUtf8(secretBytes);
-    } catch {
-      return bytesToHex(secretBytes);
+      throw new Error('Reconstructed secret is corrupt: invalid UTF-8 payload');
     }
   }
+  throw new Error('Reconstructed secret is corrupt: unrecognized format tag');
 }
