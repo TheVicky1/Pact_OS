@@ -1,3 +1,4 @@
+```typescript
 /**
  * Galois Field GF(2^8 = 256) Arithmetic and Shamir's Secret Sharing (2-of-3) Threshold Key Splitter.
  * Target: src/lib/security/shamir-secret.ts
@@ -291,3 +292,4 @@ export function reconstructSecret(
   }
   throw new Error('Reconstructed secret is corrupt: unrecognized format tag');
 }
+```
