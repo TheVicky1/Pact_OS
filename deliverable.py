@@ -1,32 +1,42 @@
-# Updated implementation of Zipf's Law priority power-law distribution validator
-# based on the maintainer's feedback.
-
 from math import sqrt
 from typing import List, Dict, Any
 
-def calculate_rmse(observed: List[float], expected: List[float]) -> float:
+def calculate_rmse(raw_observed: List[float], raw_ideal: List[float]) -> float:
     """
-    Calculate the Root Mean Square Error (RMSE) between observed and expected values.
+    Calculate the Root Mean Square Error (RMSE) between raw observed and raw ideal values.
     """
-    if len(observed) != len(expected):
-        raise ValueError("Observed and expected lists must have the same length.")
+    if len(raw_observed) != len(raw_ideal):
+        raise ValueError("Observed and ideal lists must have the same length.")
     
-    squared_errors = [(o - e) ** 2 for o, e in zip(observed, expected)]
+    squared_errors = [(o - e) ** 2 for o, e in zip(raw_observed, raw_ideal)]
     mean_squared_error = sum(squared_errors) / len(squared_errors)
     return sqrt(mean_squared_error)
 
-def diagnose_zipf_distribution(observed: List[float], ideal_shares: List[float]) -> Dict[str, Any]:
+def diagnose_zipf_distribution(
+    observed: List[float], ideal_shares: List[float]
+) -> Dict[str, Any]:
     """
     Diagnose the Zipf distribution based on observed and ideal shares.
     """
-    rmse = calculate_rmse(observed, ideal_shares)
-    top_priority_focus_ratio = observed[0] / sum(observed) if observed else 0
+    # Preserve raw values before rounding
+    raw_observed = observed[:]
+    raw_ideal = ideal_shares[:]
 
-    if rmse <= 0.08:
+    # Round observed and ideal shares for display purposes
+    observed = [round(x, 4) for x in observed]
+    ideal_shares = [round(x, 4) for x in ideal_shares]
+
+    # Calculate exact RMSE using raw values
+    exact_rmse = calculate_rmse(raw_observed, raw_ideal)
+    rounded_rmse = round(exact_rmse, 4)
+
+    top_priority_focus_ratio = raw_observed[0] / sum(raw_observed) if raw_observed else 0
+
+    if exact_rmse <= 0.08:
         diagnosis = "perfect_hierarchy"
         actionable_insight = "No action needed; distribution is ideal."
-    elif rmse <= 0.18:
-        if top_priority_focus_ratio > ideal_shares[0]:
+    elif exact_rmse <= 0.18:
+        if top_priority_focus_ratio > raw_ideal[0]:
             diagnosis = "over_concentrated_focus"
             actionable_insight = "Reduce focus on top priority to balance distribution."
         else:
@@ -37,10 +47,10 @@ def diagnose_zipf_distribution(observed: List[float], ideal_shares: List[float])
         actionable_insight = "Increase focus on top priorities to improve distribution."
 
     return {
-        "rootMeanSquareError": rmse,
+        "rootMeanSquareError": rounded_rmse,
         "diagnosis": diagnosis,
         "actionableInsight": actionable_insight,
-        "isPowerLawDistributed": rmse <= 0.18
+        "isPowerLawDistributed": exact_rmse <= 0.18
     }
 
 # Example test cases for the updated implementation
