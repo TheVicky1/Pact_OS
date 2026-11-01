@@ -1,3 +1,5 @@
+import math
+
 def evaluate_cognitive_ramping(time_minutes, inflection_minutes=None, steepness_k=None):
     """
     Evaluate the cognitive ramping score using a logistic sigmoid function.
@@ -12,24 +14,24 @@ def evaluate_cognitive_ramping(time_minutes, inflection_minutes=None, steepness_
     Returns:
     - float: The cognitive ramping score (between 0 and 1).
     """
-    # Default values
     DEFAULT_INFLECTION_MINUTES = 10.0
     DEFAULT_STEEPNESS_K = 1.0
 
     # Validate inflection_minutes
-    if inflection_minutes is None or not (isinstance(inflection_minutes, (int, float)) and inflection_minutes > 0):
+    if not (isinstance(inflection_minutes, (int, float)) and math.isfinite(inflection_minutes) and inflection_minutes > 0):
         inflection_minutes = DEFAULT_INFLECTION_MINUTES
 
     # Validate steepness_k
-    if steepness_k is None or not (isinstance(steepness_k, (int, float)) and steepness_k > 0):
+    if not (isinstance(steepness_k, (int, float)) and math.isfinite(steepness_k) and steepness_k > 0):
         steepness_k = DEFAULT_STEEPNESS_K
 
-    # Logistic sigmoid function
-    import math
     try:
-        logistic_score = 1 / (1 + math.exp(-steepness_k * (time_minutes - inflection_minutes)))
+        exponent = -steepness_k * (time_minutes - inflection_minutes)
+        raw_probability = 1 / (1 + math.exp(exponent))
     except OverflowError:
         # Handle extreme values gracefully
-        logistic_score = 0.0 if time_minutes < inflection_minutes else 1.0
+        raw_probability = 0.0 if time_minutes < inflection_minutes else 1.0
 
-    return logistic_score
+    # Bound within [0.0, 1.0] and format to 4 decimal precision
+    flow_probability_fraction = max(0.0, min(1.0, round(raw_probability, 4)))
+    return flow_probability_fraction
