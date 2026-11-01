@@ -49,7 +49,6 @@ for (let i = 0; i < BASE32.length; i++) {
 
 /**
  * Normalizes longitude to [-180, 180) degrees.
- * Applies modulo before range shifting to preserve precision near antimeridian boundaries.
  */
 function normalizeLongitude(lng: number): number {
   let normalized = lng % 360;
@@ -73,11 +72,6 @@ function clampLatitude(lat: number): number {
 
 /**
  * Encodes a latitude and longitude pair into a canonical base32 Geohash string.
- *
- * @param latitude - Latitude in degrees [-90.0, 90.0]
- * @param longitude - Longitude in degrees [-180.0, 180.0]
- * @param precision - Length of geohash string (default: 7, ~152m resolution)
- * @returns Base32 encoded geohash string
  */
 export function encodeGeohash(
   latitude: number,
@@ -103,7 +97,7 @@ export function encodeGeohash(
   const lngInterval: [number, number] = [-180.0, 180.0];
 
   let geohash = '';
-  let isEven = true; // Even bits correspond to longitude, odd to latitude
+  let isEven = true;
   let ch = 0;
   let bit = 0;
 
@@ -143,9 +137,6 @@ export function encodeGeohash(
 
 /**
  * Computes the latitude/longitude bounding box for a given geohash.
- *
- * @param geohash - Target base32 geohash string
- * @returns BoundingBox with minLat, maxLat, minLng, maxLng
  */
 export function getGeohashBoundingBox(geohash: string): BoundingBox {
   if (!geohash || typeof geohash !== 'string') {
@@ -198,9 +189,6 @@ export function getGeohashBoundingBox(geohash: string): BoundingBox {
 
 /**
  * Decodes a geohash string into its center latitude, longitude, and precision error margins.
- *
- * @param geohash - Target base32 geohash string
- * @returns DecodedGeohash containing coordinates and error margin
  */
 export function decodeGeohash(geohash: string): DecodedGeohash {
   const box = getGeohashBoundingBox(geohash);
@@ -222,11 +210,6 @@ export function decodeGeohash(geohash: string): DecodedGeohash {
 
 /**
  * Determines whether a given coordinate point lies inside a target geohash bounding box.
- *
- * @param latitude - Latitude of query point
- * @param longitude - Longitude of query point
- * @param targetGeohash - Geohash string to test against
- * @returns boolean true if inside, false otherwise
  */
 export function isPointInsideGeohash(
   latitude: number,
@@ -259,10 +242,6 @@ export function isPointInsideGeohash(
 
 /**
  * Calculates the adjacent neighboring geohash in a given cardinal direction ('n', 's', 'e', 'w').
- *
- * @param geohash - Base geohash string
- * @param direction - Cardinal direction ('n' | 's' | 'e' | 'w')
- * @returns Adjacent neighboring geohash string with identical precision
  */
 export function getGeohashNeighbor(
   geohash: string,
@@ -300,9 +279,6 @@ export function getGeohashNeighbor(
 
 /**
  * Calculates all 8 surrounding neighboring geohash cells (N, NE, E, SE, S, SW, W, NW).
- *
- * @param geohash - Base geohash string
- * @returns GeohashNeighbors object containing all 8 adjacent geohash strings
  */
 export function getGeohashNeighbors(geohash: string): GeohashNeighbors {
   const cleanGeohash = geohash.toLowerCase().trim();
