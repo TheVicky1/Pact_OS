@@ -3,6 +3,8 @@ class DeltaRLECompressor:
     A class to handle Delta-RLE timestamp compression and decompression.
     """
 
+    MAX_SUPPORTED_COUNT = 10**6  # Example limit for supported count
+
     def __init__(self):
         pass
 
@@ -47,8 +49,12 @@ class DeltaRLECompressor:
             if deltas[i] == deltas[i - 1]:
                 count += 1
             else:
+                if count > DeltaRLECompressor.MAX_SUPPORTED_COUNT:
+                    raise ValueError(f"Count exceeds maximum supported value: {DeltaRLECompressor.MAX_SUPPORTED_COUNT}")
                 compressed.append((deltas[i - 1], count))
                 count = 1
+        if count > DeltaRLECompressor.MAX_SUPPORTED_COUNT:
+            raise ValueError(f"Count exceeds maximum supported value: {DeltaRLECompressor.MAX_SUPPORTED_COUNT}")
         compressed.append((deltas[-1], count))
 
         return compressed
@@ -72,6 +78,8 @@ class DeltaRLECompressor:
         for delta, count in compressed:
             if delta < 0:
                 raise ValueError("Delta values must be non-negative.")
+            if count > DeltaRLECompressor.MAX_SUPPORTED_COUNT:
+                raise ValueError(f"Count exceeds maximum supported value: {DeltaRLECompressor.MAX_SUPPORTED_COUNT}")
             timestamps.extend([timestamps[-1] + delta] * count)
 
         return timestamps
