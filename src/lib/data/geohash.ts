@@ -298,3 +298,11 @@ export function getGeohashNeighbors(geohash: string): GeohashNeighbors {
     nw: getGeohashNeighbor(n, 'w'),
   };
 }
+
+/**
+ * Adds a public operation to retrieve neighboring geohashes for a given geohash.
+ * This function is a wrapper for `getGeohashNeighbors` to ensure it is exposed as part of the module's API.
+ */
+export function getNeighboringCells(geohash: string): GeohashNeighbors {
+  return getGeohashNeighbors(geohash);
+}
