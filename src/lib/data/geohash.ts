@@ -230,7 +230,7 @@ export function isPointInsideGeohash(
 
   const box = getGeohashBoundingBox(targetGeohash);
   const longitudeInside =
-    (lng >= box.minLng && lng <= box.maxLng) ||
+    (lng >= box.minLng && lng < box.maxLng) ||
     (lng === -180 && box.maxLng === 180);
 
   return (
