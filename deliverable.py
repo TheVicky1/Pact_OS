@@ -53,8 +53,12 @@ def diagnose_zipf_distribution(
             diagnosis = "moderate_hierarchy"
             actionable_insight = "Maintain current distribution; slight adjustments may improve balance."
     else:
-        diagnosis = "diffuse_attention"
-        actionable_insight = "Increase focus on top priorities to improve distribution."
+        if top_priority_focus_ratio > raw_ideal[0]:
+            diagnosis = "diffuse_attention"
+            actionable_insight = "Reduce focus on top priority to improve distribution."
+        else:
+            diagnosis = "diffuse_attention"
+            actionable_insight = "Increase focus on top priorities to improve distribution."
 
     return {
         "rootMeanSquareError": rounded_rmse,
