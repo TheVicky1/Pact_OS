@@ -8,7 +8,13 @@ def calculate_rmse(raw_observed: List[float], raw_ideal: List[float]) -> float:
     if len(raw_observed) != len(raw_ideal):
         raise ValueError("Observed and ideal lists must have the same length.")
     
+    if not raw_observed:  # Guard against empty lists
+        return 0.0
+
     squared_errors = [(o - e) ** 2 for o, e in zip(raw_observed, raw_ideal)]
+    if not squared_errors:  # Guard against empty squared errors
+        return 0.0
+
     mean_squared_error = sum(squared_errors) / len(squared_errors)
     return sqrt(mean_squared_error)
 
@@ -30,7 +36,11 @@ def diagnose_zipf_distribution(
     exact_rmse = calculate_rmse(raw_observed, raw_ideal)
     rounded_rmse = round(exact_rmse, 4)
 
-    top_priority_focus_ratio = raw_observed[0] / sum(raw_observed) if raw_observed else 0
+    # Guard against empty observed list or zero sum
+    if not raw_observed or sum(raw_observed) == 0:
+        top_priority_focus_ratio = 0
+    else:
+        top_priority_focus_ratio = raw_observed[0] / sum(raw_observed)
 
     if exact_rmse <= 0.08:
         diagnosis = "perfect_hierarchy"
@@ -89,6 +99,14 @@ def test_diagnose_zipf_distribution():
     assert result_4["diagnosis"] == "diffuse_attention"
     assert result_4["isPowerLawDistributed"] is False
     assert result_4["rootMeanSquareError"] > 0.18
+
+    # Test case 5: Empty observed list
+    observed_5 = []
+    ideal_shares_5 = [50, 25, 12.5, 6.25, 6.25]
+    result_5 = diagnose_zipf_distribution(observed_5, ideal_shares_5)
+    assert result_5["diagnosis"] == "diffuse_attention"
+    assert result_5["isPowerLawDistributed"] is False
+    assert result_5["rootMeanSquareError"] == 0.0
 
 # Run test cases
 if __name__ == "__main__":
