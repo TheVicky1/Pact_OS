@@ -61,6 +61,7 @@ export interface DecisionBudgetAssessment {
   canTakeHighStakesTask: boolean;
   recommendedAction: DecisionRecommendationAction;
   breakdownByComplexity: Record<DecisionComplexity, number>;
+  resolvedComplexityWeights: Record<DecisionComplexity, number>;
 }
 
 export interface NextDecisionCapacityResult {
@@ -217,13 +218,12 @@ export function calculateDecisionFatigue(
   const dailyBudgetPoints = resolvedConfig.dailyBudgetPoints;
   const budgetRemainingPoints = Math.max(0, dailyBudgetPoints - consumedPoints);
 
-  const rawRemainingPercentage = Math.round(
-    ((dailyBudgetPoints - consumedPoints) / dailyBudgetPoints) * 100
-  );
-  const budgetRemainingPercentage = Math.max(0, Math.min(100, rawRemainingPercentage));
+  const rawRemainingPercentage =
+    ((dailyBudgetPoints - consumedPoints) / dailyBudgetPoints) * 100;
+  const budgetRemainingPercentage = Math.max(0, Math.min(100, Math.round(rawRemainingPercentage)));
 
   const { zone, canTakeHighStakesTask, recommendedAction } = determineFatigueZone(
-    budgetRemainingPercentage
+    rawRemainingPercentage
   );
 
   return {
@@ -236,6 +236,7 @@ export function calculateDecisionFatigue(
     canTakeHighStakesTask,
     recommendedAction,
     breakdownByComplexity: breakdown,
+    resolvedComplexityWeights: weights,
   };
 }
 
@@ -244,8 +245,7 @@ export function calculateDecisionFatigue(
  */
 export function assessNextDecisionCapacity(
   currentAssessment: DecisionBudgetAssessment,
-  nextComplexity: DecisionComplexity,
-  config?: Partial<DecisionBudgetConfig>
+  nextComplexity: DecisionComplexity
 ): NextDecisionCapacityResult {
   if (!currentAssessment || typeof currentAssessment !== 'object') {
     throw new TypeError('currentAssessment must be a valid DecisionBudgetAssessment object');
@@ -257,17 +257,16 @@ export function assessNextDecisionCapacity(
     );
   }
 
-  const resolvedConfig = resolveDecisionBudgetConfig(config);
-  const weights = resolvedConfig.complexityWeights || DEFAULT_COMPLEXITY_WEIGHTS;
+  const weights = currentAssessment.resolvedComplexityWeights;
   const cost = weights[nextComplexity];
 
   const projectedConsumed = currentAssessment.consumedPoints + cost;
   const budget = currentAssessment.dailyBudgetPoints;
 
-  const rawProjectedPct = Math.round(((budget - projectedConsumed) / budget) * 100);
-  const projectedRemainingPercentage = Math.max(0, Math.min(100, rawProjectedPct));
+  const rawProjectedPct = ((budget - projectedConsumed) / budget) * 100;
+  const projectedRemainingPercentage = Math.max(0, Math.min(100, Math.round(rawProjectedPct)));
 
-  const { zone, canTakeHighStakesTask } = determineFatigueZone(projectedRemainingPercentage);
+  const { zone, canTakeHighStakesTask } = determineFatigueZone(rawProjectedPct);
 
   const isOverBudget = projectedConsumed > budget;
   const isHighStakesBlocked =
