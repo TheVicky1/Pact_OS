@@ -460,3 +460,23 @@ Before opening an issue or asking for help, please gather the following informat
 | **Reproduction Steps** | 1. Cloned repo, 2. Ran `npm install`, 3. Ran `npm run dev` |
 
 Once gathered, please open an issue on the [PACT GitHub Issues page](https://github.com/TheVicky1/Pact_OS/issues) or consult [SUPPORT.md](../SUPPORT.md).
+
+## 14. Offline PWA & Service Worker Troubleshooting
+
+### 14.1 Offline PWA & Service Worker Caching Issues
+
+**Symptoms**:
+Changes to components don't reflect even after page refresh, or the console displays `ServiceWorker registration failed` or stale assets loaded.
+
+**Likely Causes**:
+The Service Worker is serving cached static assets locally instead of fetching updated build files, or stale local state persists inside browser storage.
+
+**Try This**:
+1. Open Chrome DevTools (`F12` or right-click -> **Inspect**).
+2. Navigate to **Application** -> **Service Workers**, then check **Bypass for network** and **Update on reload**.
+3. In the **Service Workers** pane, click **Unregister** on the active service worker.
+4. Navigate to **Application** -> **Storage** and click **Clear site data**.
+5. In the **Network** tab, ensure **Disable cache** is checked while DevTools remains open, then perform a hard refresh (`Ctrl + Shift + R` or `Cmd + Shift + R`).
+6. Navigate to **Application** -> **Storage** -> **IndexedDB** to inspect or clear local offline task and habit records.
+
+---
