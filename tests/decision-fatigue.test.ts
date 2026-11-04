@@ -8,7 +8,7 @@ import {
   DEFAULT_DECISION_BUDGET_CONFIG,
   DEFAULT_COMPLEXITY_WEIGHTS,
   type DecisionRecord,
-} from '../src/lib/discipline/decision-fatigue.ts';
+} from '../src/lib/discipline/decision-fatigue';
 
 describe('Decision Fatigue Index & Daily Choice Budget Allocator (decision-fatigue.ts)', () => {
   describe('resolveDecisionBudgetConfig: Invariants & Boundaries', () => {
