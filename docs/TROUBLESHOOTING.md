@@ -472,11 +472,11 @@ Changes to components don't reflect even after page refresh, or the console disp
 The Service Worker is serving cached static assets locally instead of fetching updated build files, or stale local state persists inside browser storage.
 
 **Try This**:
-1. Open Chrome DevTools (`F12` or right-click -> **Inspect**).
-2. Navigate to **Application** -> **Service Workers**, then check **Bypass for network** and **Update on reload**.
-3. In the **Service Workers** pane, click **Unregister** on the active service worker.
-4. Navigate to **Application** -> **Storage** and click **Clear site data**.
-5. In the **Network** tab, ensure **Disable cache** is checked while DevTools remains open, then perform a hard refresh (`Ctrl + Shift + R` or `Cmd + Shift + R`).
-6. Navigate to **Application** -> **Storage** -> **IndexedDB** to inspect or clear local offline task and habit records.
+1. Open Chrome DevTools (`F12` or right-click -> Inspect).
+2. Navigate to Application -> Service Workers, then check "Bypass for network" and "Update on reload".
+3. In the Service Workers pane, click Unregister on the active service worker.
+4. Navigate to Application -> Storage and click Clear site data.
+5. In the Network tab, ensure "Disable cache" is checked while DevTools remains open, then perform a hard refresh (`Ctrl + Shift + R` or `Cmd + Shift + R`).
+6. Navigate to Application -> Storage -> IndexedDB to inspect or clear local offline task and habit records.
 
 ---
