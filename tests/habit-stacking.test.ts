@@ -9,7 +9,7 @@ import {
   validateTargetHabit,
   type HabitAnchor,
   type TargetHabit,
-} from '../src/lib/habits/habit-stacking.ts';
+} from '../src/lib/habits/habit-stacking';
 
 describe('Habit Stacking Anchor Compatibility & Transition Latency Scorer (habit-stacking.ts)', () => {
   const baseAnchor: HabitAnchor = {

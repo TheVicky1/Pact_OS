@@ -204,6 +204,20 @@ export function computeFrequencyPenalty(
     };
   }
 
+  if (anchorFreq === 'weekends' && targetFreq === 'weekdays') {
+    return {
+      penalty: 35,
+      warning: 'Schedule collision: Weekends anchor does not occur during weekday target days.',
+    };
+  }
+
+  if (anchorFreq === 'weekly' && (targetFreq === 'weekdays' || targetFreq === 'weekends')) {
+    return {
+      penalty: 30,
+      warning: 'Anti-pattern: Target occurs more often than the weekly anchor.',
+    };
+  }
+
   if (anchorFreq === 'daily' && targetFreq === 'weekly') {
     return {
       penalty: 10,
