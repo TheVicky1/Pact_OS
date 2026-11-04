@@ -296,17 +296,20 @@ export function TaskFormModal({
         </div>
 
         {/* Priority Selection Pills */}
-        <div>
-          <label className="block text-xs font-semibold uppercase tracking-wider text-zinc-400 mb-1.5">
+        <fieldset>
+          <legend className="sr-only">Task Priority</legend>
+          <div className="block text-xs font-semibold uppercase tracking-wider text-zinc-400 mb-1.5">
             Priority Level
-          </label>
-          <div className="grid grid-cols-4 gap-2">
+          </div>
+          <div role="radiogroup" aria-label="Task Priority" className="grid grid-cols-4 gap-2">
             {priorityOptions.map((opt) => {
               const isSelected = priority === opt.value;
               return (
                 <button
                   key={opt.value}
                   type="button"
+                  role="radio"
+                  aria-checked={isSelected}
                   onClick={() => setPriority(opt.value)}
                   className={`rounded-xl py-2 px-3 text-xs font-semibold border transition-all cursor-pointer text-center ${
                     isSelected
@@ -325,7 +328,7 @@ export function TaskFormModal({
               );
             })}
           </div>
-        </div>
+        </fieldset>
 
         {/* Status Picker (Only for existing task edit) */}
         {taskToEdit && (
