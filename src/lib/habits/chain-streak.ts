@@ -46,15 +46,17 @@ function isValidDateString(dateString: string): boolean {
  *
  * @param checkins Check-in records in any order. The array is not mutated.
  * @param referenceDateString 'YYYY-MM-DD' date to evaluate as of. Defaults to the
- *   current UTC date; callers that know the user's timezone should pass their
- *   local date (see `getLocalDateString`).
+ *   current date in `timeZone`.
+ * @param timeZone IANA timezone used to resolve the default reference date, normally
+ *   the user's profile timezone. Unused when `referenceDateString` is provided.
  * @throws {RangeError} If `referenceDateString` is not a valid calendar date.
  */
 export function evaluateChainStreak(
   checkins: DayCheckin[],
-  referenceDateString?: string
+  referenceDateString?: string,
+  timeZone: string = 'UTC'
 ): ChainStreakReport {
-  const referenceDate = referenceDateString ?? getLocalDateString(defaultClock.now(), 'UTC');
+  const referenceDate = referenceDateString ?? getLocalDateString(defaultClock.now(), timeZone);
   if (!isValidDateString(referenceDate)) {
     throw new RangeError(`Invalid reference date: "${referenceDate}". Expected YYYY-MM-DD.`);
   }
