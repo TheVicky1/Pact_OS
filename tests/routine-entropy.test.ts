@@ -4,7 +4,7 @@ import {
   calculateRoutineEntropy,
   extractHourFromTimestamp,
   type RoutineEntropyAssessment,
-} from '../src/lib/analytics/routine-entropy.ts';
+} from '../src/lib/analytics/routine-entropy';
 
 describe('Shannon Entropy Routine Predictability & Chaos Index (routine-entropy.ts)', () => {
   describe('extractHourFromTimestamp: Input Formats & Parsing', () => {
