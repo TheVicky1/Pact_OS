@@ -38,6 +38,6 @@ export function validateLuhnString(fullCode: string): boolean {
 
 export function generateLuhnBondCode(prefix: string, payloadDigits: string): string {
   const cleanPayload = payloadDigits.replace(/\D/g, '');
-  const checkDigit = calculateLuhnCheckDigit(cleanPayload);
+  const checkDigit = calculateLuhnCheckDigit(`${prefix}${cleanPayload}`);
   return `${prefix}-${cleanPayload}${checkDigit}`;
 }
