@@ -107,8 +107,13 @@ describe('Luhn Checksum Validator for Accountability Bond IDs', () => {
     it('strips non-digits from payload and attaches valid check digit', () => {
       const bondCode = generateLuhnBondCode('PACT-SEC', '123-456');
       const cleanDigits = '123456';
-      const expectedCheckDigit = calculateLuhnCheckDigit(cleanDigits);
+      const expectedCheckDigit = calculateLuhnCheckDigit('123456');
       assert.equal(bondCode, `PACT-SEC-${cleanDigits}${expectedCheckDigit}`);
+      assert.equal(validateLuhnString(bondCode), true);
+    });
+
+    it('handles prefixes containing digits so the full bond code validates cleanly', () => {
+      const bondCode = generateLuhnBondCode('BOND2', '7992739871');
       assert.equal(validateLuhnString(bondCode), true);
     });
   });
