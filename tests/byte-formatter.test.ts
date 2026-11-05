@@ -79,12 +79,9 @@ describe('formatByteSize', () => {
       assert.throws(() => formatByteSize(NaN), TypeError);
       assert.throws(() => formatByteSize(Infinity), TypeError);
       assert.throws(() => formatByteSize(-Infinity), TypeError);
-      // @ts-expect-error testing invalid type
-      assert.throws(() => formatByteSize('1024' as unknown as number), TypeError);
-      // @ts-expect-error testing invalid type
-      assert.throws(() => formatByteSize(null as unknown as number), TypeError);
-      // @ts-expect-error testing invalid type
-      assert.throws(() => formatByteSize(undefined as unknown as number), TypeError);
+      assert.throws(() => (formatByteSize as unknown as (val: unknown) => string)('1024'), TypeError);
+      assert.throws(() => (formatByteSize as unknown as (val: unknown) => string)(null), TypeError);
+      assert.throws(() => (formatByteSize as unknown as (val: unknown) => string)(undefined), TypeError);
     });
 
     it('throws TypeError for invalid precision', () => {
