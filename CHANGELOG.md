@@ -10,7 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
-- **Hacktoberfest Issue Factory Expansion**: Designed, validated, and published 62 brand-new, zero-collision micro-task issues across seven distinct batches:
+- **Hacktoberfest Issue Factory Expansion**: Designed, validated, and published 91 brand-new, zero-collision micro-task issues across 11 distinct batches:
   - Batch 1 (`#577`–`#587`): Multi-locale currency formatter, DST shift detector, CRC-32 checksum calculator, Luhn PIN verifier, binaural beats frequency detuner, 5-second rule countdown evaluator, conic progress gradients, hex opacity appender, habit momentum index, JSON-LD generator, and natural recurrence describer.
   - Batch 2 (`#591`–`#601`): Haversine distance & geofence evaluator, RFC 6238 TOTP URI builder, 90-minute ultradian sleep cycle calculator, aspect ratio box fitting, bounded in-memory LRU cache, Levenshtein distance & similarity index, compounding penalty accrual, daily hydration target calculator, safe Markdown auto-closure truncator, 31-day bitmask check-in flags, and Heckbert "nice numbers" axis tick scale generator.
   - Batch 3 (`#604`–`#608`): Audio frequency to musical pitch note translator, exponential XP progression curve calculator, Base58 unambiguous verification token encoder/decoder, Soundex phonetic matching code generator, and Run-Length Encoding (RLE) streak record compressor.
@@ -18,7 +18,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Batch 5 (`#661`–`#670`): Implementation intentions "If-Then" trigger parser, streak shield insurance points, task opportunity cost allocator, Pomodoro work-to-rest auto-tuner, EMA habit consistency smoother, WCAG 2.2 modular typographic scale, 4-7-8 & box breathing recovery cycles, temptation bundling matcher, circadian cortisol awakening response planner, and Pearson correlation coefficient matrix.
   - Batch 6 (`#671`–`#675`): Shannon entropy habit routine predictability, parked distraction triage queue, Fogg behavior model task friction diagnostic, delta-RLE timestamp compression engine, and commitment bond slashing schedule.
   - Batch 7 (`#676`–`#685`): ISO 226 equal-loudness contour filter, habit stacking anchor compatibility scorer, Shamir's secret sharing (2-of-3) key splitter, decision fatigue choice budget, Zipf's law power-law distribution validator, geohash precision encoder, cognitive warm-up sigmoid ramping, six-attribute character skill tree, social jetlag calculator, and Dutch auction escalating penalty price decaying multiplier.
+  - Batch 8 (`#717`–`#726`): Eat-the-frog priority ranker, two-minute rule starter, Pomodoro combo multiplier, anti-impulse 24h cooling-off timer, ultradian 90-min peak rhythm finder, Luhn accountability bond checksum verifier, daily hydration sip pacing engine, Eisenhower matrix priority classifier, 5-second rule countdown engine, and Seinfeld "Don't Break the Chain" streak checker.
+  - Batch 9 (`#728`–`#734`): VS Code recommended extensions, environment variables fallback matrix, first-time contributor FAQ, WCAG 2.1 AA component checklist, Pomodoro interval customization guide, habit psychology cue-craving-response-reward primer, and offline PWA service worker debugging guide.
+  - Batch 10 (`#739`–`#742`): Emergency fund runway calculator, Pomodoro streak combo bonus points multiplier, reading time & word count estimator, and human-readable byte size formatter (SI and IEC binary units).
+  - Batch 11 (`#745`–`#752`): URL-safe slug generator, daily step count to calorie expenditure estimator, 20-20-20 eye strain & micro-break cadence scheduler, fair bill split divider with cent remainder balancing, linear amplitude to decibel attenuation converter, tiered badge milestone progression tracker, case-insensitive tag sanitizer & deduplicator, and pure array chunker & batch paginator.
 - **Community Contributions & Merged Features**:
+  - Two-minute rule evaluator, daily hydration target calculator, and habit chain streak momentum evaluator (#727, #736, #738) by Ritin (`@Ritin1308`).
+  - Luhn algorithm checksum validator for accountability bond IDs, Decision Fatigue Index & Daily Choice Budget allocator, Habit Stacking Anchor compatibility evaluator, Shannon Entropy routine predictability calculator, and Geohash precision encoder (#702, #709, #710, #711, #737) by `@hieuk48`.
+  - Offline PWA and service worker troubleshooting guide (#735) by `@questelalex7-coder`.
+  - Accessibility enhancements for focus timer controls, keyboard shortcuts tooltips, finance category color pickers, and task priority selector radio groups (#707, #708, #712, #713) by Jary Winters (`@JaryWinters`).
+  - Habit elasticity recovery model with non-linear decay (#700) by Vicky Patel (`@TheVicky1`).
+  - IndexedDB migration and schema upgrade recovery runbook (#695) by `@Logic769`.
+  - Social jetlag and sleep debt circadian phase delay calculator (#690) by Hirujan R (`@Hirujan-R`).
+  - Core dependency upgrades: bumped `framer-motion` to 14.9.0 (#630), `@vitejs/plugin-react` to 6.1.2 (#632), `jsdom` to 30.1.3 (#631), `@types/react-dom` to 19.2.3 (#633), and `globals` to 17.3.0 (#634).
   - Dutch auction escalating penalty decaying multiplier (#686) by Aryan (`@Aryan9891`).
   - Inverted index search, SRI hash calculator, XP level progression, and focus efficiency ratio (#650, #651, #652, #653) by Toyes (`@toyes3429`).
   - Constant-time string/buffer comparisons and Elo rating calculator (#648, #649) by Akshat (`@akshatXD-hash`).
@@ -37,8 +49,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Deterministic category tag color palette generator (#576) by Ayaan Qazi (`@ayaan-qazi`).
   - Daily ritual step progress & completion calculator (#575) by Naman Goyal (`@namangoyal176-10`).
   - Comprehensive documentation guides for webhooks, troubleshooting, offline sync, PWA service workers, code review policy, timezone setup, and Supabase RLS (#544–#553) by Arthur Joseph Lawson (`@ArthurJosephLawson`).
-- **Community Contributors Hall of Fame Update**: Expanded `CONTRIBUTORS.md` recognizing all 51 community contributors and their specific merged pull requests across core engineering, accessibility, quality assurance, theming, and technical writing.
-- **Test Matrix Expansion**: Automated test matrix expanded to 102 complete test suites with 100% pass rate covering all domain validations, utilities, and security guarantees.
+- **Community Contributors Hall of Fame Update**: Expanded `CONTRIBUTORS.md` recognizing all 55 community contributors and their specific merged pull requests across core engineering, accessibility, quality assurance, theming, and technical writing.
+- **Test Matrix Expansion**: Automated test matrix expanded to 112 complete test suites with 100% pass rate covering all domain validations, utilities, and security guarantees.
 
 
 ## [0.2.0] - 2026-09-20

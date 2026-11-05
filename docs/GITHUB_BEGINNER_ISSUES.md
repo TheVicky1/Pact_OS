@@ -3,6 +3,7 @@
 This document contains the canonical catalog of **curated, validated, and beginner-friendly issues** designed for first-time open-source and **Hacktoberfest** contributors joining the PACT project.
 
 > 📁 **Latest Issue Catalogs**:
+> - [**Issues #717–#752 Catalog** (29 Algorithmic, Utility & Docs Tasks)](GITHUB_BEGINNER_ISSUES_717_752.md)
 > - [**Issues #671–#685 Catalog** (15 Algorithmic & Security Tasks)](GITHUB_HACKTOBERFEST_ISSUES_671_685.md)
 > - [**Issues #661–#670 Catalog** (10 Discipline & Focus Tasks)](GITHUB_HACKTOBERFEST_ISSUES_661_670.md)
 > - [**Issues #655–#659 Catalog** (5 Focus Recovery & Elasticity Tasks)](GITHUB_HACKTOBERFEST_ISSUES_655_659.md)

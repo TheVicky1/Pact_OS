@@ -342,7 +342,7 @@ To keep PR diffs clean and prevent accidental leaks:
 
 ## 17. Testing & Local Validation Protocol
 
-Before opening a pull request, execute the local validation suite. All 102 authoritative domain and security tests run in a completely offline environment without requiring live Supabase or Stripe credentials:
+Before opening a pull request, execute the local validation suite. All 112 authoritative domain and security tests run in a completely offline environment without requiring live Supabase or Stripe credentials:
 
 ```bash
 # 1. Code style & linting check
@@ -351,7 +351,7 @@ npm run lint
 # 2. Strict TypeScript type check
 npm run typecheck
 
-# 3. Run all 102 authoritative domain test suites
+# 3. Run all 112 authoritative domain test suites
 npm test
 # (or: node scratch/run-tests.mjs)
 
@@ -458,7 +458,7 @@ Before submitting your pull request, please verify:
 - [ ] For UI changes, I have adhered to the luxury Obsidian/Gold design system and tested responsiveness.
 - [ ] `npm run lint` passes with 0 errors.
 - [ ] `npx tsc --noEmit` passes with 0 errors.
-- [ ] `npm test` passes all 56 authoritative automated test suites.
+- [ ] `npm test` passes all 112 authoritative automated test suites.
 - [ ] `node scratch/secret-scan.mjs` confirms 0 committed secrets.
 - [ ] `npm run build` succeeds without build failures.
 - [ ] My pull request references the issue it addresses (e.g., `Closes #123` or `Fixes #123`).
