@@ -17,19 +17,21 @@ describe('Bond Slashing & Strike Reduction Engine', () => {
   });
 
   describe('calculateSlashingPenalty', () => {
-    it('handles 0 consecutive breaches with zero penalty and intact bond', () => {
+    it('handles non-positive consecutive breaches (0, negative numbers) with zero penalty and intact bond', () => {
       const staked = 10000;
-      const result = calculateSlashingPenalty(staked, 0);
+      for (const nonPos of [0, -1, -5, -100]) {
+        const result = calculateSlashingPenalty(staked, nonPos);
 
-      assert.equal(result.currentStrikeCount, 0);
-      assert.equal(result.penaltyPercentage, 0);
-      assert.equal(result.slashedAmountCents, 0);
-      assert.equal(result.remainingBondCents, staked);
-      assert.equal(result.charityDisbursementCents, 0);
-      assert.equal(result.partnerDisbursementCents, 0);
-      assert.equal(result.isFullyLiquidated, false);
-      assert.equal(typeof result.consequenceSummary, 'string');
-      assert.ok(result.consequenceSummary.length > 0);
+        assert.equal(result.currentStrikeCount, 0);
+        assert.equal(result.penaltyPercentage, 0);
+        assert.equal(result.slashedAmountCents, 0);
+        assert.equal(result.remainingBondCents, staked);
+        assert.equal(result.charityDisbursementCents, 0);
+        assert.equal(result.partnerDisbursementCents, 0);
+        assert.equal(result.isFullyLiquidated, false);
+        assert.equal(typeof result.consequenceSummary, 'string');
+        assert.ok(result.consequenceSummary.length > 0);
+      }
     });
 
     it('handles Strike 1 (0% grace tier in default policy)', () => {
@@ -121,7 +123,7 @@ describe('Bond Slashing & Strike Reduction Engine', () => {
       const splits = [0, 0.123, 0.333333, 0.5, 0.666667, 0.8, 1];
 
       for (const staked of oddStakes) {
-        for (let strikes = 0; strikes <= 6; strikes++) {
+        for (let strikes = -2; strikes <= 6; strikes++) {
           for (const charitySplitFraction of splits) {
             const res = calculateSlashingPenalty(staked, strikes, {
               charitySplitFraction,
@@ -276,9 +278,8 @@ describe('Bond Slashing & Strike Reduction Engine', () => {
       );
     });
 
-    it('throws RangeError on negative numerical inputs', () => {
+    it('throws RangeError on negative numerical inputs where strictly required', () => {
       assert.throws(() => calculateSlashingPenalty(-100, 1), RangeError);
-      assert.throws(() => calculateSlashingPenalty(1000, -1), RangeError);
       assert.throws(() => evaluateComebackStrikeReduction(-1, 5), RangeError);
       assert.throws(() => evaluateComebackStrikeReduction(2, -5), RangeError);
     });
