@@ -30,6 +30,12 @@ function assertNonNegativeSafeInteger(value: unknown, name: string): asserts val
   }
 }
 
+function assertSafeInteger(value: unknown, name: string): asserts value is number {
+  if (typeof value !== 'number' || !Number.isSafeInteger(value)) {
+    throw new TypeError(`${name} must be a safe integer.`);
+  }
+}
+
 function resolveSlashingPolicy(policy?: Partial<SlashingPolicy>): SlashingPolicy {
   const resolved: SlashingPolicy = {
     penaltyTiersPercentage:
@@ -92,7 +98,7 @@ export function calculateSlashingPenalty(
   policy?: Partial<SlashingPolicy>
 ): SlashingAssessmentResult {
   assertNonNegativeSafeInteger(stakedAmountCents, 'stakedAmountCents');
-  assertNonNegativeSafeInteger(consecutiveBreaches, 'consecutiveBreaches');
+  assertSafeInteger(consecutiveBreaches, 'consecutiveBreaches');
   const resolvedPolicy = resolveSlashingPolicy(policy);
 
   if (consecutiveBreaches <= 0) {
