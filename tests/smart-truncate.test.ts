@@ -4,7 +4,7 @@ import { smartTruncate } from '../src/lib/text/smart-truncate';
 
 describe('smartTruncate', () => {
   it('returns text unchanged when it fits within maxLength', () => {
-    assert.strictEqual(smartTruncate('Build a habit', 13), 'Build a habit');
+    assert.strictEqual(smartTruncate('Build a habit', 20), 'Build a habit');
   });
 
   it('truncates at a whitespace boundary by default', () => {
@@ -12,6 +12,17 @@ describe('smartTruncate', () => {
       smartTruncate('Master algorithmic problem solving', 24),
       'Master algorithmic…',
     );
+  });
+
+  it('handles whitespace exactly at the truncation budget boundary', () => {
+    assert.strictEqual(
+      smartTruncate('abcdefghijk lmn', 12),
+      'abcdefghijk…',
+    );
+  });
+
+  it('falls back to character truncation when leading whitespace leaves no content', () => {
+    assert.strictEqual(smartTruncate(' abcdefghij', 5), ' abc…');
   });
 
   it('removes trailing punctuation at a word boundary', () => {

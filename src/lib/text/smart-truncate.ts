@@ -5,6 +5,9 @@ export interface SmartTruncateOptions {
   preserveWordBoundary?: boolean;
 }
 
+/**
+ * Truncates text to a maximum length while optionally preserving word boundaries.
+ */
 export function smartTruncate(
   text: string,
   maxLength: number,
@@ -47,7 +50,9 @@ export function smartTruncate(
       .slice(0, whitespaceIndex)
       .trimEnd()
       .replace(/[,;:.!?]+$/, '');
-    return `${truncated}${ellipsis}`;
+    if (truncated.length > 0) {
+      return `${truncated}${ellipsis}`;
+    }
   }
 
   return `${text.slice(0, budget)}${ellipsis}`;
