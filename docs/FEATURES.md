@@ -71,7 +71,10 @@ This document provides the authoritative inventory of all 14 integrated product 
 
 #### Recovery & Environment Guidelines
 - **Screen-Free Recovery**: Step away from screens during rest intervals to reduce cognitive load and attention residue between focus blocks.
-- **Ambient Audio Pairing**: Users can pair focus sessions with external ambient audio tools (such as white, pink, or brown noise generators) alongside the built-in workspace completion chime.
+- **Ambient Audio Pairing**: While the focus workspace includes an integrated completion chime, sound generators are not built-in and must be supplied by external audio tools. Choose an external noise profile based on your environment:
+  - **White Noise**: Equal energy across all audible frequencies (like steady fan static), best for masking sharp background distractions.
+  - **Pink Noise**: Balanced profile with softer high frequencies (like steady rain), providing a gentler option for extended focus.
+  - **Brown (Red) Noise**: Low-frequency emphasis with a heavy, muffled rumble (like distant thunder), ideal for deep concentration blocks.
 
 ---
 
