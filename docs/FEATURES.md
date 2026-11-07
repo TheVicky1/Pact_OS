@@ -62,6 +62,14 @@ This document provides the authoritative inventory of all 14 integrated product 
 - **Routine Templates**: Structured stacks of daily habits (e.g., Morning Kickoff, Evening Wind-down).
 - **Streak Calculation**: Pure deterministic calculation handling rest days and timezone roll-overs.
 
+### 2.7 Optimal Focus Intervals & The Pomodoro Method
+- **The Three Core Focus Rhythms**:
+  - **Classic Pomodoro (25m Work / 5m Rest)**: Designed for task initiation, clearing routine administrative backlogs, and overcoming initial procrastination inertia.
+  - **Extended Deep Work (50m Work / 10m Rest)**: Tailored for high-cognition objectives—such as system architecture design, technical documentation drafting, and complex algorithmic debugging—that demand sustained concentration.
+  - **Ultradian Sprint (90m Work / 20m Rest)**: Synchronized with human 90-minute Basic Rest-Activity Cycles (BRAC) to achieve uninterrupted flow states during intensive problem-solving.
+- **Managing Rest Intervals**: Protects focus by discouraging screen time during break windows to eliminate cognitive switching costs—checking messages or social media creates attention residue that drains mental stamina. Recommends active recovery routines including proper hydration, 20-second distant visual refocusing, and light physical movement.
+- **Ambient Soundscapes**: Integrates white, pink, and brown noise options engineered to mask erratic environmental speech distractions and stabilize ongoing concentration blocks.
+
 ---
 
 ## 3. Scope Boundaries & Future Directions
