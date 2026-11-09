@@ -474,8 +474,8 @@ Service workers are only registered in production environments (`process.env.NOD
 **Try This**:
 1. Confirm the application is running a production build (`npm run dev` does not register a service worker).
 2. Open Chrome DevTools (`F12` or right-click -> Inspect).
-3. Navigate to Application -> Service Workers and check "Bypass for network" and "Update on reload". (If `/sw.js` returns a 404, inspect the console error and network response, as clearing data won't fix it).
-4. Click Unregister on the active service worker, then delete `pact-static-v1` under Application -> Cache Storage before disabling bypass and reloading.
+3. Navigate to Application -> Service Workers. If `/sw.js` returns 404 or fails registration, inspect the console error and `/sw.js` network response (status and content type).
+4. If an active service worker exists, check "Bypass for network" and "Update on reload", click Unregister, and delete `pact-static-v1` under Cache Storage.
 5. Navigate to Application -> Storage -> Local Storage, select the app origin, and inspect or remove the `pact_local_entity_cache_v2` key.
 6. (Destructive Last Resort) Navigate to Application -> Storage and click Clear site data. Warning: Sync or export offline data first, as this will permanently delete unsynced task and habit records.
 7. In the Network tab, ensure "Disable cache" is checked while DevTools remains open, then perform a hard refresh (`Ctrl + Shift + R` or `Cmd + Shift + R`).
