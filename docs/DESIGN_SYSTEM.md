@@ -272,7 +272,7 @@ To eliminate intrusive native browser tooltips that obstruct adjacent controls:
 
 - [ ] **Touch Targets**: Mobile buttons and interactive icons must have a minimum touch target size of **44x44** pixels.
 
-- [ ] **Screen Reader State**: Toggles and accordions must communicate their state via `aria-expanded` or `aria-pressed`.
+- [ ] **Screen Reader State**: Switches must communicate their state via `aria-checked`, toggle buttons via `aria-pressed`, and accordion triggers via `aria-expanded`.
 
 ---
 
