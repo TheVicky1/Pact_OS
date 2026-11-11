@@ -266,7 +266,7 @@ To eliminate intrusive native browser tooltips that obstruct adjacent controls:
 
 - [ ] **Keyboard Navigation**: All interactive elements (buttons, inputs, dropdowns) must be reachable via `Tab` and activate via `Enter` or `Space`.
 
-- [ ] **Focus Rings**: Never use `outline: none` without a high-visibility replacement (`focus-visible:ring-2 focus-visible:ring-gold-500`).
+- [ ] **Focus Rings**: Never use `outline: none` without a high-visibility replacement (`focus-visible:ring-2 focus-visible:ring-gold-500`). Here is a bad example, (`  lass="inline-block px-4 py-2 bg-indigo-500 text-white font-semibold rounded-lg shadow-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-400`).
 
 - [ ] **Icon-Only Buttons**: Any button without visible text must have an explicit `aria-label` (e.g. `aria-label="Close dialog"`).
 
