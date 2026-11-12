@@ -81,6 +81,21 @@ describe('Daily Focus Score & Work Allocation Analytics (focus-score.ts)', () =>
       assert.strictEqual(assessment2.deepWorkRatio, 0.67);
     });
 
+    it('correctly rounds decimal ties using decimal exponent shifting (e.g. 0.145 -> 0.15)', () => {
+      // 145 deep / 1000 total = 0.145 -> rounds to 0.15
+      const assessment = calculateDailyFocusScore({
+        deepWorkMinutes: 145,
+        shallowWorkMinutes: 855,
+        interruptionCount: 0,
+        targetDeepWorkMinutes: 156,
+      });
+
+      assert.strictEqual(assessment.deepWorkRatio, 0.15);
+      // Volume = (145/156)*70 = 65.064, Quality = 0.15 * 30 = 4.5 -> sum = 69.564 -> rounds to 70
+      assert.strictEqual(assessment.score, 70);
+      assert.strictEqual(assessment.tier, 'productive');
+    });
+
     it('always produces an integer composite score', () => {
       const assessment = calculateDailyFocusScore({
         deepWorkMinutes: 147,
@@ -125,6 +140,19 @@ describe('Daily Focus Score & Work Allocation Analytics (focus-score.ts)', () =>
         interruptionCount: 50,
       });
       assert.strictEqual(assessment50.interruptionPenalty, 25);
+    });
+
+    it('does not describe capped high interruptions as manageable in takeaway summary', () => {
+      const assessment = calculateDailyFocusScore({
+        deepWorkMinutes: 240,
+        shallowWorkMinutes: 0,
+        interruptionCount: 50,
+      });
+
+      assert.strictEqual(assessment.score, 75);
+      assert.strictEqual(assessment.tier, 'productive');
+      assert.strictEqual(assessment.summary.includes('manageable'), false);
+      assert.ok(assessment.summary.includes('50 interruptions'));
     });
 
     it('clamps the composite score to a minimum of 0 when penalties exceed accumulated score', () => {
@@ -269,6 +297,17 @@ describe('Daily Focus Score & Work Allocation Analytics (focus-score.ts)', () =>
       assert.throws(() => calculateDailyFocusScore({ deepWorkMinutes: 120, shallowWorkMinutes: 0, interruptionCount: 0, targetDeepWorkMinutes: '240' }), TypeError);
       assert.throws(() => calculateDailyFocusScore({ deepWorkMinutes: 120, shallowWorkMinutes: 0, interruptionCount: 0, targetDeepWorkMinutes: NaN }), TypeError);
       assert.throws(() => calculateDailyFocusScore({ deepWorkMinutes: 120, shallowWorkMinutes: 0, interruptionCount: 0, targetDeepWorkMinutes: Infinity }), TypeError);
+    });
+
+    it('throws TypeError if interruptionCount is a fractional number', () => {
+      assert.throws(
+        () => calculateDailyFocusScore({ deepWorkMinutes: 120, shallowWorkMinutes: 0, interruptionCount: 0.5 }),
+        TypeError
+      );
+      assert.throws(
+        () => calculateDailyFocusScore({ deepWorkMinutes: 120, shallowWorkMinutes: 0, interruptionCount: 2.7 }),
+        TypeError
+      );
     });
 
     it('throws RangeError if any metric is negative', () => {

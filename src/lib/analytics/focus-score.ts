@@ -28,23 +28,34 @@ export interface DailyFocusAssessment {
 }
 
 /**
- * Rounds a floating-point number to 2 decimal places avoiding floating-point representation artifacts.
+ * Rounds a floating-point number to 2 decimal places using decimal exponent shifting
+ * to prevent IEEE 754 precision artifacts and ensure accurate tie-breaking.
  */
 function roundTo2Decimals(value: number): number {
-  const rounded = Math.round(value * 100) / 100;
+  const rounded = Number(Math.round(Number(`${value}e2`)) + 'e-2');
   return Object.is(rounded, -0) ? 0 : rounded;
 }
 
 /**
  * Derives a human-readable summary message based on qualitative focus tier and metrics.
  */
-function generateFocusSummary(tier: FocusTier, score: number, deepRatio: number): string {
+function generateFocusSummary(
+  tier: FocusTier,
+  score: number,
+  deepRatio: number,
+  interruptionCount: number
+): string {
   const deepPct = Math.round(deepRatio * 100);
   switch (tier) {
     case 'optimal':
       return `Optimal focus (${score}/100): Outstanding deep work volume (${deepPct}%) with minimal disruptions.`;
-    case 'productive':
-      return `Productive session (${score}/100): Solid deep work baseline (${deepPct}%) with manageable interruptions.`;
+    case 'productive': {
+      const disruptionText =
+        interruptionCount <= 3
+          ? 'manageable interruptions'
+          : `${interruptionCount} interruptions`;
+      return `Productive session (${score}/100): Solid deep work baseline (${deepPct}%) with ${disruptionText}.`;
+    }
     case 'fragmented':
       return `Fragmented focus (${score}/100): High interruption count or elevated shallow work volume (${100 - deepPct}% shallow).`;
     case 'unfocused':
@@ -82,8 +93,12 @@ export function calculateDailyFocusScore(
   if (typeof shallowWorkMinutes !== 'number' || !Number.isFinite(shallowWorkMinutes)) {
     throw new TypeError('shallowWorkMinutes must be a finite number');
   }
-  if (typeof interruptionCount !== 'number' || !Number.isFinite(interruptionCount)) {
-    throw new TypeError('interruptionCount must be a finite number');
+  if (
+    typeof interruptionCount !== 'number' ||
+    !Number.isFinite(interruptionCount) ||
+    !Number.isInteger(interruptionCount)
+  ) {
+    throw new TypeError('interruptionCount must be a finite integer');
   }
   if (typeof targetDeepWorkMinutes !== 'number' || !Number.isFinite(targetDeepWorkMinutes)) {
     throw new TypeError('targetDeepWorkMinutes must be a finite number');
@@ -134,7 +149,7 @@ export function calculateDailyFocusScore(
   }
 
   // Brief Takeaway Summary
-  const summary = generateFocusSummary(tier, score, deepWorkRatio);
+  const summary = generateFocusSummary(tier, score, deepWorkRatio, interruptionCount);
 
   return {
     score,
