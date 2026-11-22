@@ -62,6 +62,14 @@ function validate(debts: readonly DebtItem[], extraMonthlyBudgetCents: number): 
   }
 }
 
+/** Finite inputs can still overflow (e.g. a huge APR), so every derived cent amount is checked. */
+function checkedCents(value: number): number {
+  if (!Number.isSafeInteger(value)) {
+    throw new RangeError('Debt simulation exceeded the safe integer range for cent amounts.');
+  }
+  return value;
+}
+
 // Sort is stable, so full ties keep input order.
 const comparators: Record<PayoffStrategy, (a: ActiveDebt, b: ActiveDebt) => number> = {
   snowball: (a, b) => a.balance - b.balance || b.apr - a.apr,
@@ -81,8 +89,8 @@ export function simulateDebtPayoff(
     minimum: d.minimumMonthlyPaymentCents,
   }));
   // Minimums of paid-off debts stay in the budget and roll over to the target debt.
-  const monthlyBudget = extraMonthlyBudgetCents + active.reduce((sum, d) => sum + d.minimum, 0);
-  const startingPrincipal = active.reduce((sum, d) => sum + d.balance, 0);
+  const monthlyBudget = checkedCents(extraMonthlyBudgetCents + active.reduce((sum, d) => sum + d.minimum, 0));
+  const startingPrincipal = checkedCents(active.reduce((sum, d) => sum + d.balance, 0));
 
   const monthlySchedule: PayoffMonthSnapshot[] = [];
   let totalInterestPaidCents = 0;
@@ -95,8 +103,8 @@ export function simulateDebtPayoff(
     let interest = 0;
     for (const d of open) {
       const accrued = Math.round(d.balance * (d.apr / 100 / 12));
-      d.balance += accrued;
-      interest += accrued;
+      d.balance = checkedCents(d.balance + checkedCents(accrued));
+      interest = checkedCents(interest + accrued);
     }
 
     let budget = monthlyBudget;
@@ -113,8 +121,8 @@ export function simulateDebtPayoff(
       budget -= pay;
     }
 
-    const newRemaining = active.reduce((sum, d) => sum + d.balance, 0);
-    totalInterestPaidCents += interest;
+    const newRemaining = checkedCents(active.reduce((sum, d) => sum + d.balance, 0));
+    totalInterestPaidCents = checkedCents(totalInterestPaidCents + interest);
     monthlySchedule.push({
       monthIndex: monthlySchedule.length + 1,
       remainingTotalPrincipalCents: newRemaining,

@@ -182,4 +182,14 @@ describe('input validation', () => {
     assert.throws(() => simulateDebtPayoff([ok], -1, 'snowball'), RangeError);
     assert.throws(() => comparePayoffStrategies([ok], -1), RangeError);
   });
+
+  it('rejects simulations whose cent amounts overflow the safe integer range', () => {
+    // Finite inputs, but the derived interest or sums leave the safe integer range.
+    assert.throws(() => simulateDebtPayoff([debt('a', 10_000, Number.MAX_VALUE, 1)], 0, 'snowball'), RangeError);
+    assert.throws(() => comparePayoffStrategies([debt('a', 10_000, Number.MAX_VALUE, 1)], 0), RangeError);
+    assert.throws(() => simulateDebtPayoff([debt('a', 10_000, 1e15, 1)], 0, 'avalanche'), RangeError);
+    const big = debt('big', Number.MAX_SAFE_INTEGER, 0, 1);
+    assert.throws(() => simulateDebtPayoff([big, big], 0, 'snowball'), RangeError);
+    assert.throws(() => simulateDebtPayoff([debt('a', 10_000, 0, Number.MAX_SAFE_INTEGER)], 1, 'snowball'), RangeError);
+  });
 });
