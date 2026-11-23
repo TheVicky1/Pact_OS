@@ -19,7 +19,6 @@ export default defineConfig({
       'tests/elo-rating.test.ts',
       'tests/array-utils.test.ts',
       'tests/geohash.test.ts',
-      'tests/stopwatch-formatter.test.ts',
     ],
   },
 });
