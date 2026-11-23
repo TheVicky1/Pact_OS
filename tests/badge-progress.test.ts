@@ -122,6 +122,15 @@ describe('calculateBadgeProgress', () => {
     assert.strictEqual(result.remainingCount, 20);
   });
 
+  it('rejects a non-finite custom threshold with TypeError', () => {
+    assert.throws(() => calculateBadgeProgress(0, { bronze: Number.NaN }), TypeError);
+    assert.throws(() => calculateBadgeProgress(0, { silver: Infinity }), TypeError);
+  });
+
+  it('rejects a negative custom threshold with RangeError', () => {
+    assert.throws(() => calculateBadgeProgress(0, { bronze: -1 }), RangeError);
+  });
+
   it('rejects a negative count with RangeError', () => {
     assert.throws(() => calculateBadgeProgress(-1), RangeError);
   });

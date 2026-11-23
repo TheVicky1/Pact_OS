@@ -46,6 +46,17 @@ export function calculateBadgeProgress(
     ...customThresholds,
   };
 
+  // Validate every merged threshold before scanning tiers.
+  for (const tier of TIER_ORDER) {
+    const threshold = thresholds[tier];
+    if (typeof threshold !== 'number' || !Number.isFinite(threshold)) {
+      throw new TypeError(`Threshold for ${tier} must be a finite number.`);
+    }
+    if (threshold < 0) {
+      throw new RangeError(`Threshold for ${tier} must be a non-negative number.`);
+    }
+  }
+
   // Find the highest tier whose threshold has already been reached.
   let currentIndex = 0;
   for (let i = TIER_ORDER.length - 1; i >= 0; i -= 1) {
