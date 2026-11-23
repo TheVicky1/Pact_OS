@@ -6,6 +6,10 @@ import {
   DEFAULT_SLASHING_POLICY,
   type SlashingPolicy,
 } from '../src/lib/finance/bond-slashing';
+import {
+  calculateBondSlashing,
+  type SlashingConfig,
+} from '../src/lib/discipline/bond-slashing';
 
 describe('Bond Slashing & Strike Reduction Engine', () => {
   describe('DEFAULT_SLASHING_POLICY', () => {
@@ -313,5 +317,100 @@ describe('Bond Slashing & Strike Reduction Engine', () => {
         RangeError
       );
     });
+  });
+});
+
+const bondSlashingConfig = (overrides: Partial<SlashingConfig> = {}): SlashingConfig => ({
+  stakedBondCents: 10_000,
+  gracePeriodMinutes: 15,
+  maximumLatenessMinutes: 115,
+  ...overrides,
+});
+
+describe('calculateBondSlashing', () => {
+  it('keeps the bond intact at zero lateness and throughout the grace period', () => {
+    for (const latenessMinutes of [0, 10, 15]) {
+      assert.deepEqual(calculateBondSlashing(latenessMinutes, bondSlashingConfig()), {
+        stakedBondCents: 10_000,
+        latenessMinutes,
+        slashedAmountCents: 0,
+        refundAmountCents: 10_000,
+        slashedPercentage: 0,
+        status: 'intact',
+      });
+    }
+  });
+
+  it('applies linear, quadratic, and grace-cliff rates after grace', () => {
+    const expected = [
+      ['linear', 5_000, 50],
+      ['quadratic', 2_500, 25],
+      ['grace_cliff', 6_250, 62.5],
+    ] as const;
+
+    for (const [model, slashedAmountCents, slashedPercentage] of expected) {
+      assert.deepEqual(calculateBondSlashing(65, bondSlashingConfig({ model })), {
+        stakedBondCents: 10_000,
+        latenessMinutes: 65,
+        slashedAmountCents,
+        refundAmountCents: 10_000 - slashedAmountCents,
+        slashedPercentage,
+        status: 'partially_slashed',
+      });
+    }
+
+    assert.equal(
+      calculateBondSlashing(16, bondSlashingConfig({ model: 'grace_cliff' })).slashedAmountCents,
+      2_575,
+    );
+  });
+
+  it('uses the defaults and fully forfeits the bond at maximum lateness', () => {
+    assert.deepEqual(calculateBondSlashing(180, { stakedBondCents: 525 }), {
+      stakedBondCents: 525,
+      latenessMinutes: 180,
+      slashedAmountCents: 525,
+      refundAmountCents: 0,
+      slashedPercentage: 100,
+      status: 'total_forfeiture',
+    });
+    assert.equal(calculateBondSlashing(240, { stakedBondCents: 525 }).slashedAmountCents, 525);
+  });
+
+  it('rounds forfeiture to integer cents and derives the refund from that amount', () => {
+    assert.deepEqual(
+      calculateBondSlashing(65, bondSlashingConfig({ stakedBondCents: 101, model: 'linear' })),
+      {
+        stakedBondCents: 101,
+        latenessMinutes: 65,
+        slashedAmountCents: 51,
+        refundAmountCents: 50,
+        slashedPercentage: (51 / 101) * 100,
+        status: 'partially_slashed',
+      },
+    );
+  });
+
+  it('rejects invalid bond, lateness, duration, and model values', () => {
+    assert.throws(() => calculateBondSlashing(0, bondSlashingConfig({ stakedBondCents: 0 })), RangeError);
+    assert.throws(() => calculateBondSlashing(0, bondSlashingConfig({ stakedBondCents: 1.5 })), RangeError);
+    assert.throws(() => calculateBondSlashing(-1, bondSlashingConfig()), RangeError);
+    assert.throws(() => calculateBondSlashing(Number.NaN, bondSlashingConfig()), RangeError);
+    assert.throws(
+      () => calculateBondSlashing(15, bondSlashingConfig({ gracePeriodMinutes: -1 })),
+      RangeError,
+    );
+    assert.throws(
+      () => calculateBondSlashing(15, bondSlashingConfig({ maximumLatenessMinutes: 15 })),
+      RangeError,
+    );
+    assert.throws(
+      () => calculateBondSlashing(15, bondSlashingConfig({ maximumLatenessMinutes: 15.5 })),
+      RangeError,
+    );
+    assert.throws(
+      () => calculateBondSlashing(65, bondSlashingConfig({ model: 'exponential' as SlashingConfig['model'] })),
+      RangeError,
+    );
   });
 });
