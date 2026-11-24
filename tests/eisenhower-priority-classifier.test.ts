@@ -1,6 +1,14 @@
 import { describe, it } from 'node:test';
 import assert from 'node:assert/strict';
-import { classifyEisenhowerQuadrant } from '../src/lib/tasks/eisenhower-matrix';
+
+async function loadClassifier() {
+  try {
+    return (await import('../src/lib/tasks/eisenhower-matrix'))
+      .classifyEisenhowerQuadrant;
+  } catch {
+    return undefined;
+  }
+}
 
 describe('classifyEisenhowerQuadrant', () => {
   const cases = [
@@ -47,7 +55,12 @@ describe('classifyEisenhowerQuadrant', () => {
   ] as const;
 
   for (const { task, expected } of cases) {
-    it(`classifies urgent=${task.isUrgent}, important=${task.isImportant}`, () => {
+    it(`classifies urgent=${task.isUrgent}, important=${task.isImportant}`, async () => {
+      const classifyEisenhowerQuadrant = await loadClassifier();
+      if (!classifyEisenhowerQuadrant) {
+        assert.fail('Eisenhower quadrant classifier must be implemented');
+      }
+
       assert.deepEqual(classifyEisenhowerQuadrant(task), expected);
     });
   }
