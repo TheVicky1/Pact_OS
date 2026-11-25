@@ -9,6 +9,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+- **Supabase Auth Profile Creation Lifecycle**: Fixed database trigger `public.handle_new_user()` which failed with `42703 (column profiles.email does not exist)` during Google OAuth and user creation callbacks. Realigned profile insertion and conflict handling with the authoritative 9-column `public.profiles` schema, secured execution privileges (`REVOKE ALL FROM PUBLIC; GRANT TO supabase_auth_admin`), enforced `SET search_path = public`, and guaranteed idempotent profile initialization without resetting existing user onboarding progress (`supabase/migrations/20261112000000_fix_auth_profile_creation.sql`).
+- **Account Data Export Email Sourcing**: Sourced account email directly from authoritative `auth.users` (`user.email`) in `src/app/api/user/export/route.ts` instead of relying on `public.profiles`.
+
 ### Added
 - **Hacktoberfest Issue Factory Expansion**: Designed, validated, and published 91 brand-new, zero-collision micro-task issues across 11 distinct batches:
   - Batch 1 (`#577`–`#587`): Multi-locale currency formatter, DST shift detector, CRC-32 checksum calculator, Luhn PIN verifier, binaural beats frequency detuner, 5-second rule countdown evaluator, conic progress gradients, hex opacity appender, habit momentum index, JSON-LD generator, and natural recurrence describer.

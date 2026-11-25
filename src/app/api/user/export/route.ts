@@ -101,7 +101,12 @@ export async function GET(request: NextRequest) {
     const rawArchive: RawUserDataArchive = {
       userId: user.id,
       exportedAt: nowIso,
-      profile: (profileRes.data as Record<string, unknown>) || null,
+      profile: profileRes.data
+        ? {
+            ...(profileRes.data as Record<string, unknown>),
+            email: user.email || '',
+          }
+        : null,
       goals: (goalsRes.data as Record<string, unknown>[]) || [],
       projects: (projectsRes.data as Record<string, unknown>[]) || [],
       tasks: (tasksRes.data as Record<string, unknown>[]) || [],

@@ -369,7 +369,7 @@ PACT is built with care by an open-source community dedicated to personal master
 
 [![PACT Contributors](https://contrib.rocks/image?repo=TheVicky1/Pact_OS)](https://github.com/TheVicky1/Pact_OS/graphs/contributors)
 
-*A huge thank you to all 51+ developers who have contributed to PACT OS!*
+*A huge thank you to all 61+ developers who have contributed to PACT OS!*
 
 👉 [**View all contributors on GitHub**](https://github.com/TheVicky1/Pact_OS/graphs/contributors) • [**Contributors Hall of Fame**](CONTRIBUTORS.md)
 

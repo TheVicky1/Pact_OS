@@ -12,10 +12,10 @@
 | **Integration Line** | `phase-6` |
 | **Contributor Expansion Branch** | `community/open-source-contributor-expansion` |
 | **Certified Application Baseline** | `9d83eb8` (Phase 14 Production Freeze) |
-| **Community Contributors** | **55 Total Contributors** ([CONTRIBUTORS.md](../CONTRIBUTORS.md)) |
+| **Community Contributors** | **61 Total Contributors** ([CONTRIBUTORS.md](../CONTRIBUTORS.md)) |
 | **Repository Issue Volume** | **514 Total Issues** (330 Open, 184 Closed) |
 | **Pull Request Throughput** | **170 Pull Requests** (145 Merged, 7 Open, 18 Closed) |
-| **Supabase Migrations** | **26/26 Sequential Migrations (Frozen)** |
+| **Supabase Migrations** | **27/27 Sequential Migrations (Frozen)** |
 | **Authoritative Test Matrix** | **112/112 Test Suites (100% Pass, 0 Failures)** |
 | **Quality Gates** | **TypeScript Strict (0 errors), ESLint (0 warnings), Release Preflight (12/12 PASS)** |
 
@@ -57,6 +57,7 @@ The community issue factory provides continuous, self-contained micro-contributi
 | **Issues #655–#659** | [`docs/GITHUB_HACKTOBERFEST_ISSUES_655_659.md`](GITHUB_HACKTOBERFEST_ISSUES_655_659.md) | High-impact cognitive recovery, statistics, cryptography, and behavioral elasticity utilities | First-timers & Hacktoberfest |
 | **Issues #661–#670** | [`docs/GITHUB_HACKTOBERFEST_ISSUES_661_670.md`](GITHUB_HACKTOBERFEST_ISSUES_661_670.md) | Implementation intentions, streak shields, opportunity cost, and circadian models | First-timers & Hacktoberfest |
 | **Issues #671–#685** | [`docs/GITHUB_HACKTOBERFEST_ISSUES_671_685.md`](GITHUB_HACKTOBERFEST_ISSUES_671_685.md) | Routine entropy, distraction triage, Fogg behavior model, delta-RLE, and Dutch auctions | First-timers & Hacktoberfest |
+| **Issues #808–#813** | [`docs/GITHUB_HACKTOBERFEST_ISSUES_808_813.md`](GITHUB_HACKTOBERFEST_ISSUES_808_813.md) | Hick's law, Dunbar bandwidth, circadian stability, Epworth somnolence, Ebbinghaus decay, and Fitts's law | First-timers & Hacktoberfest |
 
 ---
 
@@ -105,7 +106,7 @@ Fast-track Merge (Maintainer approval)
 
 Maintainers must protect the following core architecture boundaries from unintended modifications:
 
-1. **`supabase/migrations/`**: All 26 migrations are frozen. Schema changes require explicit migration review.
+1. **`supabase/migrations/`**: All 27 migrations are frozen. Schema changes require explicit migration review.
 2. **PostgreSQL RLS Policies**: Row Level Security policies governing multi-tenant data access must never be bypassed.
 3. **Authentication Boundaries**: Session handling, WebAuthn passkey challenges, and SSO replay protection.
 4. **Financial Arithmetic**: Integer-cent calculations in `src/lib/money.ts`.

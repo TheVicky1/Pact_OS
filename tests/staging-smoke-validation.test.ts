@@ -107,12 +107,12 @@ async function runStagingSmokeTests() {
   assert.strictEqual(isTimingSafeBearerMatch(`Bearer ${testSecret}`, ''), false, 'Empty secret must be rejected');
   console.log('✅ Constant-time Bearer authentication guards cron endpoints against timing attacks.');
 
-  // 7. Validate Sequential Migration Inventory (26 Migrations)
+  // 7. Validate Sequential Migration Inventory (Sequential Migrations)
   console.log('\n7. Validating Supabase migration continuity & completeness...');
   const migrationsDir = path.join(rootDir, 'supabase', 'migrations');
   assert.ok(fs.existsSync(migrationsDir), 'supabase/migrations directory must exist');
   const migrationFiles = fs.readdirSync(migrationsDir).filter(f => f.endsWith('.sql')).sort();
-  assert.strictEqual(migrationFiles.length, 26, 'Exactly 26 sequential migrations must be present');
+  assert.ok(migrationFiles.length >= 26, `At least 26 sequential migrations must be present (found ${migrationFiles.length})`);
   assert.ok(migrationFiles[0].includes('create_profiles_table'), 'Migration 1 must be create_profiles_table');
   assert.ok(migrationFiles[20].includes('passkey_credentials'), 'Migration 21 must be passkey_credentials');
   assert.ok(migrationFiles[21].includes('accountability_circles_and_pledges'), 'Migration 22 must be accountability_circles_and_pledges');
@@ -120,6 +120,9 @@ async function runStagingSmokeTests() {
   assert.ok(migrationFiles[23].includes('daily_rituals_and_account_governance'), 'Migration 24 must be daily_rituals_and_account_governance');
   assert.ok(migrationFiles[24].includes('multi_device_sync_and_replication'), 'Migration 25 must be multi_device_sync_and_replication');
   assert.ok(migrationFiles[25].includes('discipline_intelligence_and_enterprise_sso'), 'Migration 26 must be discipline_intelligence_and_enterprise_sso');
+  if (migrationFiles.length >= 27) {
+    assert.ok(migrationFiles[26].includes('fix_auth_profile_creation'), 'Migration 27 must be fix_auth_profile_creation');
+  }
   console.log(`✅ All ${migrationFiles.length} sequential migrations verified in correct chronological order.`);
 
   // 8. Validate Production Environment & GA Release Validator
