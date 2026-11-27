@@ -391,6 +391,16 @@ describe('calculateBondSlashing', () => {
     );
   });
 
+  it('rounds an exact half-cent linear penalty up after floating-point normalization', () => {
+    const result = calculateBondSlashing(
+      29.5,
+      bondSlashingConfig({ stakedBondCents: 100, model: 'linear' }),
+    );
+
+    assert.equal(result.slashedAmountCents, 15);
+    assert.equal(result.refundAmountCents, 85);
+  });
+
   it('rejects invalid bond, lateness, duration, and model values', () => {
     assert.throws(() => calculateBondSlashing(0, bondSlashingConfig({ stakedBondCents: 0 })), RangeError);
     assert.throws(() => calculateBondSlashing(0, bondSlashingConfig({ stakedBondCents: 1.5 })), RangeError);

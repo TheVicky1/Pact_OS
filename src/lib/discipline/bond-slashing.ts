@@ -72,7 +72,17 @@ export function calculateBondSlashing(
     }
   }
 
-  const slashedAmountCents = Math.min(stakedBondCents, Math.round(stakedBondCents * slashingRate));
+  const rawSlashedAmountCents = stakedBondCents * slashingRate;
+  const lowerCents = Math.floor(rawSlashedAmountCents);
+  const fractionalCent = rawSlashedAmountCents - lowerCents;
+  // Normalize floating-point values that represent an exact half cent but land
+  // just below .5 (for example, 100 * 0.145 is 14.499999999999998).
+  const halfCentTolerance = Number.EPSILON * Math.max(1, Math.abs(rawSlashedAmountCents));
+  const roundedSlashedAmountCents =
+    fractionalCent > 0 && Math.abs(fractionalCent - 0.5) <= halfCentTolerance
+      ? lowerCents + 1
+      : Math.round(rawSlashedAmountCents);
+  const slashedAmountCents = Math.min(stakedBondCents, roundedSlashedAmountCents);
   const refundAmountCents = stakedBondCents - slashedAmountCents;
   const slashedPercentage = (slashedAmountCents / stakedBondCents) * 100;
 
