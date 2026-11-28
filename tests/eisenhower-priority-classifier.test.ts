@@ -72,8 +72,7 @@ describe('classifyEisenhowerQuadrant', () => {
     }
 
     const first = classifyEisenhowerQuadrant({ isUrgent: true, isImportant: true });
-    first.label = 'mutated';
-    first.action = 'mutated';
+    first.quadrant = 4;
 
     assert.deepEqual(
       classifyEisenhowerQuadrant({ isUrgent: true, isImportant: true }),
