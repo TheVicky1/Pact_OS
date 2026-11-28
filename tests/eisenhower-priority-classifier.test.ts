@@ -64,4 +64,20 @@ describe('classifyEisenhowerQuadrant', () => {
       assert.deepEqual(classifyEisenhowerQuadrant(task), expected);
     });
   }
+
+  it('returns a fresh object so caller mutation does not leak into later results', async () => {
+    const classifyEisenhowerQuadrant = await loadClassifier();
+    if (!classifyEisenhowerQuadrant) {
+      assert.fail('Eisenhower quadrant classifier must be implemented');
+    }
+
+    const first = classifyEisenhowerQuadrant({ isUrgent: true, isImportant: true });
+    first.label = 'mutated';
+    first.action = 'mutated';
+
+    assert.deepEqual(
+      classifyEisenhowerQuadrant({ isUrgent: true, isImportant: true }),
+      cases[0].expected,
+    );
+  });
 });

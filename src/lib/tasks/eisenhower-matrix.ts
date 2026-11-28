@@ -58,5 +58,5 @@ export function classifyEisenhowerQuadrant(task: {
     isImportant: task.isImportant,
   });
 
-  return CLASSIFICATIONS[quadrant];
+  return { ...CLASSIFICATIONS[quadrant] };
 }
